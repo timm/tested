@@ -91,7 +91,7 @@ function are.tbl(s) --> ?"tab"; names ending the "s" are tables
 local dump,optimal,pretty,lines,dump
 
 function hint(s1,type) --> str; if we know a type, add to arg (else return arg)
-    return type and s1..":`"..type .. "`" or s1 end
+    return type and s1..":<tt>"..type .. "</tt>" or s1 end
 
 function pretty(s) --> str; clean up the signature (no spaces, no local vars)
   return s:gsub("    .*",     "")

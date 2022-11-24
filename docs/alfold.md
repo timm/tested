@@ -41,7 +41,7 @@ suffix fun  | suffix for functions
 ## Guessing types	
 
 <dl>
-<dt><b> are.of(s:`str`) &rArr;  ?str </b></dt><dd>   top level, guesses a variable's type </dd>
+<dt><b> are.of(s:<tt>str</tt>) &rArr;  ?str </b></dt><dd>   top level, guesses a variable's type </dd>
 </dl>
 
 Types are either singular (one thing) or plural (a set of	
@@ -52,26 +52,26 @@ Singulars are either `bools`, `fun` (function),
 `n` (number), `s` (string), or `t` (table).	
 
 <dl>
-<dt><b> are.bool(s:`str`) &rArr;  ?"bool" </b></dt><dd>  names starting with "is" are booleans </dd>
-<dt><b> are.fun(s:`str`) &rArr;  ?"fun" </b></dt><dd>  names ending in "fun" are functions </dd>
-<dt><b> are.num(s:`str`) &rArr;  ?"n" </b></dt><dd>  names start with "n" are numbers  </dd>
-<dt><b> are.str(s:`str`) &rArr;  ?"s" </b></dt><dd>  names starting with "s" are strings </dd>
-<dt><b> are.tbl(s:`str`) &rArr;  ?"tab" </b></dt><dd>  names ending the "s" are tables </dd>
+<dt><b> are.bool(s:<tt>str</tt>) &rArr;  ?"bool" </b></dt><dd>  names starting with "is" are booleans </dd>
+<dt><b> are.fun(s:<tt>str</tt>) &rArr;  ?"fun" </b></dt><dd>  names ending in "fun" are functions </dd>
+<dt><b> are.num(s:<tt>str</tt>) &rArr;  ?"n" </b></dt><dd>  names start with "n" are numbers  </dd>
+<dt><b> are.str(s:<tt>str</tt>) &rArr;  ?"s" </b></dt><dd>  names starting with "s" are strings </dd>
+<dt><b> are.tbl(s:<tt>str</tt>) &rArr;  ?"tab" </b></dt><dd>  names ending the "s" are tables </dd>
 </dl>
 
 ## Low-level utilities	
 
 <dl>
-<dt><b> hint(s1:`str`, type) &rArr;  str </b></dt><dd>  if we know a type, add to arg (else return arg) </dd>
-<dt><b> pretty(s:`str`) &rArr;  str </b></dt><dd>  clean up the signature (no spaces, no local vars) </dd>
-<dt><b> optional(s:`str`) &rArr;  str </b></dt><dd>  removes local vars, returns the rest as a string </dd>
-<dt><b> lines(sFilename:`str`,  fun:`fun`) &rArr;  nil </b></dt><dd>  call `fun` on csv rows. </dd>
+<dt><b> hint(s1:<tt>str</tt>, type) &rArr;  str </b></dt><dd>  if we know a type, add to arg (else return arg) </dd>
+<dt><b> pretty(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  clean up the signature (no spaces, no local vars) </dd>
+<dt><b> optional(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  removes local vars, returns the rest as a string </dd>
+<dt><b> lines(sFilename:<tt>str</tt>,  fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>  call `fun` on csv rows. </dd>
 <dt><b> dump() &rArr;  nil </b></dt><dd>  if we have any tbl contents, print them then zap tbl </dd>
 </dl>
 
 ## Main	
 
 <dl>
-<dt><b> main(sFiles:`{str}`) &rArr;  nil </b></dt><dd>  for all lines on command line, print doco to standard output </dd>
+<dt><b> main(sFiles:<tt>{str}</tt>) &rArr;  nil </b></dt><dd>  for all lines on command line, print doco to standard output </dd>
 </dl>
 
