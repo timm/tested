@@ -20,11 +20,11 @@ Options:
 -- (respectively).  Also, `s` as a suffix denotes a table of other
 -- types;  words in UPPERCASE are classes; and instances use lower
 -- case versions of the classes.
---
+--        
 -- For example, this file was generated via
---
+-- 
 --       lua alfold.lua alfold.lua > docs/alfold.md
---
+-- 
 -- ## Conventions
 --  
 -- 1. Lines with Markdown start with `-- ` (and  we will print those).
