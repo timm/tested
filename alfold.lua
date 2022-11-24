@@ -23,7 +23,7 @@ Options:
 --        
 -- For example, this file was generated via
 -- 
---       lua alfold.lua alfold.lua > docs/alfold.md
+--          lua alfold.lua alfold.lua > docs/alfold.md
 -- 
 -- ## Conventions
 --  
