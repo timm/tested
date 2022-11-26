@@ -54,9 +54,10 @@ function furthest2(lines)
 
 local project, half,tree,show
 function project(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `left,right`.
-  x1 = (a^2 + c^2 - b^2) / (2*c)
-  x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
-  return x, (x2^2 - a^2)^.5, math.abs(x1 - x2) > the.X  end
+  local x1 = (a^2 + c^2 - b^2) / (2*c)
+  local x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
+  local  y = (x2^2 - a^2)^.5
+  return x, y, math.abs(x1 - x2) > the.X  end
 
 function half(lines) --> lines1,lines2,n; all the lines, divided by distance to 2 distant points
   local far  = furthest2(lines)
