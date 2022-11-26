@@ -33,10 +33,10 @@ local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice  =
         lib.push, lib.slice  -- list tricks
 -----------------------------------------------------------------------------------------
 local LINE=obj"LINE"
-function LINE:new(cells,lhs,rhs)
-  self.cells, self.lhs, self.rhs = cells, lhs or "", rhs or "" end
+function LINE:new(raw, cells,lhs,rhs)
+  self.raw, self.cells, self.lhs, self.rhs = raw, cells, lhs or "", rhs or "" end
 
-local dist,furthest,furthests
+local dist,furthest,furthest2
 function dist(line1,line2)
   local n,d = 0,0
   for c,x in pairs(line1.cells) do 
@@ -87,10 +87,11 @@ function show(node, b4)
   b4 = b4 or ""
   if node then
     io.write(b4..(node.c and rnd(node.c) or ""))
-    print(node.left and "" or node.here.txt)
+    print(node.left and "" or (node.here.lhs .. ":"..node.here.rhs))
     tree(node.left,  "|.. ".. b4)
     tree(node.right, "|.. ".. b4) end  end
 
+local ok
 function ok(t)
   local template = {rows={},cols={},domain="string"}
   for key,eg in pairs(template) do
@@ -103,16 +104,33 @@ function ok(t)
     for c=2,#row-1 do 
       local x = row[c]
       assert(x//1 == x,fmt("[%s] not an int",x)) end end
-  return t,lo,hi end
+  return t end
 
 local function columns(cols)
-  local function asColumn(lo,hi,t) 
+  local lo,hi={},{}
+  local function lohi(col)
+    local j=0
+    for i=2,#col-2 do
+      local v= col[i]
+      j=j+1
+      if v ~= "?" then lo[j] = lo[j] and math.min(v, lo[c]) or v
+                       hi[j] = hi[j] and math.max(v, hi[c]) or v end end end 
+  local function asLines(lo,hi,t) 
     local tmp = slice(t,2,-2)
-    return {raw  = tmp,
-            cells= map(tmp, function(x) return (x - lo)/(hi - lo +1E-32) end),
-            lhs  = t[1], 
-            rhs  = t[#t]} end
-  return map(cols,asColumn) end
+    return LINE(raw,
+                map(tmp, function(x) return (x - lo)/(hi - lo +1E-32) end),
+                t[1], 
+                t[#t]) end
+  for _,col in pairs(cols) do
+    raw,c={},0
+    for i=2,#col-2 do
+      c=c+1
+      local v= col[i]
+      raw[1+#raw]=v
+      if c ~= "?" then lo[c] = lo[c] and math.min(v, lo[c]) or v
+                       hi[c] = hi[c] and math.max(v, hi[c]) or v end 
+      map(cols,lohi)
+  return map(cols,asLines) end
 
 ------------------------------------------------------------------------------------------
 --- ## Start-up
