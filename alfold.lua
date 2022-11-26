@@ -1,6 +1,6 @@
 if arg[1]=="-h" or arg[1]=="--help" then os.exit(print[[
   
-alfold.lua: LUA to Markdown. Assumes a little Hungarian notation.
+alfold.lua (v2.0) LUA to Markdown. Assumes a little Hungarian notation.
 (c) 2022 Tim Menzies <timm@ieee.org> BSD-2clause license
 
 Usage: lua readme.lua  [-h] [file1.lua file2.lua ...] > doco.md
@@ -27,22 +27,28 @@ Options:
 --  
 -- ## Conventions
 --  
--- 1. Lines with Markdown start with `-- ` (and  we will print those).
--- 2. We only show help on public function.
--- 3. Public functions are denoted with a  trailing "-->", followed by 
+-- 1. Anything after four dashes (`----`) is not included in the output.
+-- 2. Any line starting with two dashes and a space(`-- `( **is** included in the output.
+-- 3. We only show help on public function.
+-- 4. In function argument lists, 2,4 spaces denotes optional,local arguments.
+-- 5. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)
+-- 6. Public functions are denoted with a  trailing "-->", followed by 
 --    return type then some comment text. e.g.<br> 
 --    `function fred(s) --> str; Returns `s`, written as a string`<br>   
 --    Note the semi-colon. Do not skip it (its important).
--- 4. In public function arguments, lower case versions of class type 
+-- 7. In public function arguments, lower case versions of class type 
 --    (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 
 --    so `datas` is a list of `DATA` instances).
--- 5  Built in types are num, str, tab, bool, fun
--- 6. User-defined types are ny word starting with two upper case 
+-- 8  Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`
+-- 9. User-defined types are any word starting with two upper case 
 --    leading letters is a class; e.g. DATA
--- 7. Public function arguments have the following type hints:
---    
+-- 10. Public function arguments have the type hints shown in the following table.
+-- 11. All other variable names can be anything at all.
+--  
 -- What        | Notes                                                                            
--- :-----------|:--------------------------------------------
+-- :-----------|:------------------------------------------------------------------
+-- ----        | Anything after three dashes is deleted.
+-- "-- "       | Any line starting with two dashes and a space is printed to output.
 -- 2 blanks    | 2 blanks denote start of optional arguments 
 -- 4 blanks    | 4 blanks denote start of local arguments   
 -- n           | prefix for numerics                       
@@ -50,7 +56,17 @@ Options:
 -- s           | prefix for strings                   
 -- suffix s    | list of thing (so `sfiles` is list of strings)
 -- suffix fun  | suffix for functions                                            
---   
+--  
+-- ## Some Design Rationale
+--  
+-- Alfold has no third party libraries (so installing it is just a matter of downloading one file).
+--
+-- A wider range of numbers was considered instead of just `n` (e.g. `p,z,i` for posint, zeroOne, integer 
+-- respectfully) but on balance, the overhead of those details seemed more than their benefit.
+--
+-- Version 2 of Alfold stopped using two column tables of signatures and documentation 
+-- since these did not work so well when browsing Github markdown files on a phone.
+--
 --------------------------------------------------------------------------------
 local tbl= {} -- table of contents. dumped  (then reset) before every new heading
 local obj= {} -- upper case class names
@@ -88,7 +104,7 @@ function are.tbl(s) --> ?"tab"; names ending the "s" are tables
 
 --------------------------------------------------------------------------------
 -- ## Low-level utilities
-local dump,optimal,pretty,lines,dump
+local dumpDocStrings,optimal,pretty,lines
 
 function hint(s1,type) --> str; if we know a type, add to arg (else return arg)
     return type and s1..":<tt>"..type .. "</tt>" or s1 end
@@ -111,7 +127,7 @@ function lines(sFilename, fun) --> nil; call `fun` on csv rows.
     local s = io.read()
     if s then fun(s) else return io.close(src) end end end
 
-function dump() --> nil; if we have any tbl contents, print them then zap tbl
+function dumpDocStrings() --> nil; if we have any tbl contents, print them then zap tbl
   if #tbl>0 then
     print("\n<dl>")
     for _,two in pairs(tbl) do 
@@ -120,19 +136,21 @@ function dump() --> nil; if we have any tbl contents, print them then zap tbl
   tbl={} end 
 
 -- ## Main
-function main(sFiles) --> nil; for all lines on command line, print doco to standard output
-  for _,file in ipairs(sFiles) do
-    lines(file,function(line)
-      if line:find"^[-][-] " then
-        line:gsub("^[-][-] ([^\n]+)", 
-                  function(x) dump(); -- dump anything hat needs to go
-                              print(x:gsub(" [-][-][-][-][-].*",""),"") end) 
-      else  
-        line:gsub("[A-Z][A-Z]+", function(x) obj[x:lower()]=x end)
-        line:gsub("^function[%s]+([^(]+)[(]([^)]*).*[-][-][>]([^;]+);(.*)",
-                  function(fun,args,returns,comment) 
-                     tbl[1+#tbl]={fun..'('..optional(pretty(args))..') &rArr; '..returns..'',comment} 
-                     end) end end) 
-    dump() end  end
+local code, func, comments, main
+function comments(line) --> nil; handle comment lines; but first, handle outstanding docstrings.
+  line:gsub("^[-][-] ([^\n]+)", 
+         function(x) dumpDocStrings(); print(x:gsub(" [-][-][-][-][-].*",""),"") end)  end
 
-main(arg)
+function func(fun,args,returns,doctring) --> nil; handle functions (with docstring). Updates `tbl`.
+  tbl[1+#tbl] = {fun..'('..optional(pretty(args))..') &rArr; '..returns..'',docstring}  end
+
+function code(line) --> nil; handle code lines. Updates `obj`.
+  line:gsub("[A-Z][A-Z]+", function(x) obj[x:lower()]=x end)
+  line:gsub("^function[%s]+([^(]+)[(]([^)]*).*[-][-][>]([^;]+);(.*)", func) end
+
+function main(line) --> nil; handle each line
+  if line:find"^[-][-] " then comment(line) else code(line) end end
+
+-- ## Start uo
+for _,file in ipairs(arg) do lines(file,main) end
+dumpDocStrings() -- final dump to catch any finally pending docstrigns
