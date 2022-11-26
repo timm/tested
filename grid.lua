@@ -61,8 +61,8 @@ function project(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `le
 function half(lines) --> lines1,lines2,n; all the lines, divided by distance to 2 distant points
   local far  = furthest2(lines)
   local ymax,yfar = 0
-  local function fun(line,    a,b,x) 
-    local x1,y1 = project( dist(lline, far.left), dist(line, far.right), far.dist)
+  local function fun(line)
+    local x1,y1 = project( dist(line, far.left), dist(line, far.right), far.dist)
     if y1>ymax then ymax,yfar= y1,line end
     return {here=line,  x=x1,y=y1} end
   local lefts,rights = {},{}
