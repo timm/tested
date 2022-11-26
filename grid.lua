@@ -24,6 +24,7 @@ OPTIONS:
   -m  --min   min size for leaf clusters = .5
   -p  --p     distance coefficient       = 2
   -s  --seed  random number seed         = 937162211
+  -x  --X     small x change             = .1
 ]]
 local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice  =
         lib.obj,            -- object tricks
@@ -31,59 +32,65 @@ local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice  =
         lib.map, lib.shuffle, lib.lt, lib.gt, lib.sort, -- less strings
         lib.push, lib.slice  -- list tricks
 -----------------------------------------------------------------------------------------
-local dist,furthest,x2d,y2d,half,cluster,tree,asConstruct
+local LINE=obj"LINE"
+function LINE:new(cells,lhs,rhs)
+  self.cells, self.lhs, self.rhs = cells, lhs or "", rhs or "" end
 
+local dist,furthest,furthests
+function dist(line1,line2)
+  local n,d = 0,0
+  for c,x in pairs(line1.cells) do 
+    n = n + 1
+    d = d + math.abs(x - line2.cells[c])^the.p end
+  return (d/n)^(1/the.p) end
 
-function cluster(all)
-  local function dist(one,two)
-     local n,d = 0,0
-     for c,x in pairs(one.cells) do 
-       n = n+1
-       d = d+math.abs(x - two.cells[c])^the.p end
-    return (d/n)^(1/the.p) 
-  end --------------------
-  local function furthest(some)
-    local t={}
-    for i = 1,#some do
-      for j = i+1,#some do
-        local left,right = all[i], all[j]
-        push(t, {left=left, right=right, d=dist(left, right)}) end end
-    return sort(t, gt"d")[1] 
-  end ---------------------
-  local function half(some)
-    local far = furthest(some)
-    local left,right,c = far.left, far.right, far.d
-    local function project(this,    a,b,x) 
-      a,b = dist(this,left), dist(this,right)
-      x   = (a^2 + c^2 - b^2) / (2*c)
-      x   = math.max(0, math.min(1, x))
-      return {this=this,  x=x, y =(x^2 - a^2)^.5} end
-    local lefts,rights = {},{}
-    for n,one in pairs(sort(map(some, project), lt"x")) do
-      one.this.x = one.this.x or one.x
-      one.this.y = one.this.y or one.y
-      push(n <= (#some)//2 and lefts or rights, one.this) end
-    return lefts, rights, c 
-  end ---------------------
-  local function tree(some,min,    lefts,rights,node)
-    min = min or (#some)^the.min
-    if #rows > min then
-      lefts, rights, node.c = half(some)
-      node.left  = tree(lefts,min)
-      node.right = tree(rights,min) end
-    return node 
-  end --------- 
-  local function show(node, b4)
-    b4 = b4 or ""
-    if node then
-      io.write(b4..(node.c and rnd(node.c) or ""))
-      print(node.left and "" or node.txt)
-      tree(node.left,  "|.. ".. b4)
-      tree(node.right, "|.. ".. b4) end 
-  end ---------------------------------
-  return half, tree, show end
+function furthest(l1, lines)
+  local function fun(l2) 
+    if l1._id ~= l2._id then return {left=l1, right=l2, dist=dist(l1,l2)} end end
+  return sort(map(lines, fun), gt"dist")[1] end
 
-local function ok(t)
+function furthest2(lines)
+  return sort(map(lines, function(line1) return furthest(line1,lines) end), gt"dist") end
+
+local project, half,tree,show
+function project(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `left,right`.
+  x1 = (a^2 + c^2 - b^2) / (2*c)
+  x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
+  return x, (x2^2 - a^2)^.5, math.abs(x1 - x2) > the.X  end
+
+function half(lines) --> lines1,lines2,n; all the lines, divided by distance to 2 distant points
+  local far  = furthest2(lines)
+  local ymax,yfar = 0
+  local function fun(line,    a,b,x) 
+    local x1,y1 = project( dist(lline, far.left), dist(line, far.right), far.dist)
+    if y1>ymax then ymax,yfar= y1,line end
+    return {here=line,  x=x1,y=y1} end
+  local lefts,rights = {},{}
+  for n,one in pairs(sort(map(lines, fun), lt"x")) do
+    one.here.x = one.here.x or one.x
+    one.here.y = one.here.y or one.y/ymax 
+    push(n <= (#lines)//2 and lefts or rights, one.here) end
+  return lefts, rights, far.dist end
+
+function tree(lines,min,    node)
+  min = min or (#lines)^the.min
+  local node={}
+  if #rows > min then
+    local lefts, rights
+    lefts, rights, node.c = half(lines)
+    node.left  = tree(lefts,min)
+    node.right = tree(rights,min) end
+  return node end
+
+function show(node, b4)
+  b4 = b4 or ""
+  if node then
+    io.write(b4..(node.c and rnd(node.c) or ""))
+    print(node.left and "" or node.here.txt)
+    tree(node.left,  "|.. ".. b4)
+    tree(node.right, "|.. ".. b4) end  end
+
+function ok(t)
   local template = {rows={},cols={},domain="string"}
   for key,eg in pairs(template) do
     assert(t[key],                      fmt("[%s] missing",key))
