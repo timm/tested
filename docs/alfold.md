@@ -1,7 +1,3 @@
-
-![](img/banner.png)
-
-
 > Extract doco from LUA files to Markdown. Assumes a plain Hungarian notation.	
  	
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
@@ -51,10 +47,12 @@ suffix s    | list of thing (so `sfiles` is list of strings)
 suffix fun  | suffix for functions                                            	
  	
 ## Some Design Rationale	
- 	
+  	
 Alfold has no third party libraries (so installing it is just a matter of downloading one file).	
+   	
 A wider range of numbers was considered instead of just `n` (e.g. `p,z,i` for posint, zeroOne, integer 	
 respectfully) but on balance, the overhead of those details seemed more than their benefit.	
+   	
 Version 2 of Alfold stopped using two column tables of signatures and documentation 	
 since these did not work so well when browsing Github markdown files on a phone.	
 ## Guessing types	
