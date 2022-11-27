@@ -21,30 +21,39 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
+docs/%.md: %.lua
+		echo $@
+		echo "<img src=\"img/banner.png\">" > $@
+		echo "\`\`\`css" >> $@
+		lua $^ -h  >> $@
+		(echo "\`\`\`"; echo " "; echo "# $^"; echo " " )>> $@
+		lua alfold.lua $^  >> $@
+		if [ -f "var/$^.out" ]; then echo "" >> $@;  cat var/$^.out; >> $@; fi
+
 about:
 	echo "lua 101"
 
 mds: lib.md 101.md about.md ## update all mds
 
-lib.md: ../4readme/readme.lua lib.lua  ## update lib.md
-	echo "# $@"
-	printf "\n# $(word 2,$^)\n\nMisc tricks.\n\n" > $@
-	lua $< $(word 2,$^) >> $@
-
-101.md: ../4readme/readme.lua 101.lua 101.txt ## update 101.md
-	echo "# $@"
-	printf "\n<img align=right width=300 src='etc/img/begin.jpg'>\n\n" > $@
-	printf "\n# 101.lua\n\nBasic example of script idioms (test suites, help text).\n\n" >> $@
-	(printf "\n\`\`\`css\n"; lua $(word 2,$^) -h ; printf "\`\`\`\n") >> $@
-	lua $< $(word 2,$^) >> $@
-	cat 101.txt >> $@
-
-about.md: ../4readme/readme.lua about.lua ## update about.md
-	echo "# $@"
-	gawk 'sub(/^## /,"")' Makefile > $@
-	(printf "\n\`\`\`css\n"; lua about.lua -h ; printf "\`\`\`\n") >> $@
-	lua $< about.lua >> $@
-
+# lib.md: ../4readme/readme.lua lib.lua  ## update lib.md
+# 	echo "# $@"
+# 	printf "\n# $(word 2,$^)\n\nMisc tricks.\n\n" > $@
+# 	lua $< $(word 2,$^) >> $@
+#
+# 101.md: ../4readme/readme.lua 101.lua 101.txt ## update 101.md
+# 	echo "# $@"
+# 	printf "\n<img align=right width=300 src='etc/img/begin.jpg'>\n\n" > $@
+# 	printf "\n# 101.lua\n\nBasic example of script idioms (test suites, help text).\n\n" >> $@
+# 	(printf "\n\`\`\`css\n"; lua $(word 2,$^) -h ; printf "\`\`\`\n") >> $@
+# 	lua $< $(word 2,$^) >> $@
+# 	cat 101.txt >> $@
+#
+# about.md: ../4readme/readme.lua about.lua ## update about.md
+# 	echo "# $@"
+# 	gawk 'sub(/^## /,"")' Makefile > $@
+# 	(printf "\n\`\`\`css\n"; lua about.lua -h ; printf "\`\`\`\n") >> $@
+# 	lua $< about.lua >> $@
+#
 # changes to 3 cols and 101 chars/line
 ~/tmp/%.pdf: %.lua  ## .lua ==> .pdf
 	mkdir -p ~/tmp

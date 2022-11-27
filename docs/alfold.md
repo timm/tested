@@ -1,3 +1,17 @@
+<img src="img/banner.png">
+```css
+  
+alfold.lua (v2.0) LUA to Markdown. Assumes a little Hungarian notation.
+(c) 2022 Tim Menzies <timm@ieee.org> BSD-2clause license
+
+Usage: lua readme.lua  [-h] [file1.lua file2.lua ...] > doco.md
+
+Options:
+ -h --help Show help 
+```
+ 
+# alfold.lua
+ 
 > Extract doco from LUA files to Markdown. Assumes a plain Hungarian notation.	
  	
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
