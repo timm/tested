@@ -19,6 +19,7 @@ USAGE:   grid.lua  [OPTIONS]
 OPTIONS:
   -d  --dump  on crash, dump stack       = false
   -f  --file  csv file                   = etc/data/repgrid1.csv
+  -F  --Far   where to find far things   = 1
   -g  --go    start-up action            = data
   -h  --help  show help                  = false
   -m  --min   min size for leaf clusters = .5
@@ -32,64 +33,67 @@ local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice  =
         lib.map, lib.shuffle, lib.lt, lib.gt, lib.sort, -- less strings
         lib.push, lib.slice  -- list tricks
 -----------------------------------------------------------------------------------------
+local function cosine(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `left,right`.
+  local x1 = (a^2 + c^2 - b^2) / (2*c)
+  local x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
+  local  y = (x2^2 - a^2)^.5
+  return x, y, math.abs(x1 - x2) > the.X  end
+-----------------------------------------------------------------------------------------
 local LINE=obj"LINE"
 function LINE:new(raw, cells,lhs,rhs)
   self.raw, self.cells, self.lhs, self.rhs = raw, cells, lhs or "", rhs or "" end
 
-local dist,furthest,furthest2
-function dist(line1,line2)
+function LINE:__tostring()
+  return self.lhs..o(self.cells)..self.rhs end
+
+function LINE:__sub(other)
   local n,d = 0,0
   for c,x in pairs(line1.cells) do 
     n = n + 1
     d = d + math.abs(x - line2.cells[c])^the.p end
   return (d/n)^(1/the.p) end
 
-function furthest(l1, lines)
-  local function fun(l2) 
-    if l1._id ~= l2._id then return {left=l1, right=l2, dist=dist(l1,l2)} end end
-  return sort(map(lines, fun), gt"dist")[1] end
+function LINE:far(lines) --> t; return a pair that runes `the.Far` across `lines`
+  local function pole(line) 
+    if self._id ~= line._id then return {west=self, east=line, dist=self-line} end
+  return sort(map(lines, pole), lt"dist")[(the.Far * #lines)//1] end
+-----------------------------------------------------------------------------------------
+local DATA=obj"DATA"
+function DATA:new(t) self.lines=t end
 
-function furthest2(lines)
-  return sort(map(lines, function(line1) return furthest(line1,lines) end), gt"dist") end
+function DATA:furthest(lines) --> POLE; return the largest POLE found in `lines`
+  local n = (the.Far * #lines)//1
+  return sort(map(lines, function(line) return line:far(lines) end), lt"dist")[n] end
 
-local project, half,tree,show
-function project(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `left,right`.
-  local x1 = (a^2 + c^2 - b^2) / (2*c)
-  local x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
-  local  y = (x2^2 - a^2)^.5
-  return x, y, math.abs(x1 - x2) > the.X  end
+function DATA:half(lines) --> lines1,lines2,n; divide lines on distance to 2 poles
+  local cut  = furthest(lines)
+  local function project(line)
+    local x,y = cosine(dist(line, cut.left), dist(line, cut.right), cut.dist)
+    return {line=line, x=x, y=y} end
+  local wests,easts = {},{}
+  for n,tmp in pairs(sort(map(lines, project), lt"x")) do
+    tmp.line.x = tmp.line.x or tmp.x
+    tmp.line.y = tmp.line.y or tmp.y
+    push(n <= (#lines)//2 and wests or easts, tmp.line) end
+  return wests, easts, cut.dist end
 
-function half(lines) --> lines1,lines2,n; all the lines, divided by distance to 2 distant points
-  local far  = furthest2(lines)
-  local ymax,yfar = 0
-  local function fun(line)
-    local x1,y1 = project( dist(line, far.left), dist(line, far.right), far.dist)
-    if y1>ymax then ymax,yfar= y1,line end
-    return {here=line,  x=x1,y=y1} end
-  local lefts,rights = {},{}
-  for n,one in pairs(sort(map(lines, fun), lt"x")) do
-    one.here.x = one.here.x or one.x
-    one.here.y = one.here.y or one.y/ymax 
-    push(n <= (#lines)//2 and lefts or rights, one.here) end
-  return lefts, rights, far.dist end
-
-function tree(lines,min,    node)
+function DATA:tree(lines,min,    node)
   min = min or (#lines)^the.min
-  local node={}
+  local node={here=lines}
   if #rows > min then
-    local lefts, rights
-    lefts, rights, node.c = half(lines)
-    node.left  = tree(lefts,min)
-    node.right = tree(rights,min) end
+    local wests, easts
+    wests, easts, node.c = self:half(lines)
+    node.west = self:tree(wests, min)
+    node.east = self:tree(easts, min) end
   return node end
 
 function show(node, b4)
   b4 = b4 or ""
   if node then
     io.write(b4..(node.c and rnd(node.c) or ""))
-    print(node.left and "" or (node.here.lhs .. ":"..node.here.rhs))
-    tree(node.left,  "|.. ".. b4)
-    tree(node.right, "|.. ".. b4) end  end
+    print(node.c and "" or (node.here.lhs .. ":"..node.here.rhs))
+    tree(node.wests,  "|.. ".. b4)
+    tree(node.easts, "|.. ".. b4) end  end
 
 local ok
 function ok(t)
