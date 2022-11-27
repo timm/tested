@@ -141,15 +141,15 @@ function comments(line) --> nil; handle comment lines; but first, handle outstan
   line:gsub("^[-][-] ([^\n]+)", 
          function(x) dumpDocStrings(); print(x:gsub(" [-][-][-][-][-].*",""),"") end)  end
 
-function func(fun,args,returns,doctring) --> nil; handle functions (with docstring). Updates `tbl`.
-  tbl[1+#tbl] = {fun..'('..optional(pretty(args))..') &rArr; '..returns..'',docstring}  end
+function func(fun,args,returns,docstring) --> nil; handle functions (with docstring). Updates `tbl`.
+  tbl[1+#tbl] = {fun..'('..optional(pretty(args))..') &rArr; '..returns..'', docstring}  end
 
 function code(line) --> nil; handle code lines. Updates `obj`.
   line:gsub("[A-Z][A-Z]+", function(x) obj[x:lower()]=x end)
   line:gsub("^function[%s]+([^(]+)[(]([^)]*).*[-][-][>]([^;]+);(.*)", func) end
 
 function main(line) --> nil; handle each line
-  if line:find"^[-][-] " then comment(line) else code(line) end end
+  if line:find"^[-][-] " then comments(line) else code(line) end end
 
 -- ## Start uo
 for _,file in ipairs(arg) do lines(file,main) end

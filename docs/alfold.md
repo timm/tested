@@ -1,3 +1,7 @@
+
+![](img/banner.png)
+
+
 > Extract doco from LUA files to Markdown. Assumes a plain Hungarian notation.	
  	
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
@@ -16,22 +20,28 @@ For example, this file was generated via
  	
 ## Conventions	
  	
-1. Lines with Markdown start with `-- ` (and  we will print those).	
-2. We only show help on public function.	
-3. Public functions are denoted with a  trailing "-->", followed by 	
+1. Anything after four dashes (`----`) is not included in the output.	
+2. Any line starting with two dashes and a space(`-- `( **is** included in the output.	
+3. We only show help on public function.	
+4. In function argument lists, 2,4 spaces denotes optional,local arguments.	
+5. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
+6. Public functions are denoted with a  trailing "-->", followed by 	
    return type then some comment text. e.g.<br> 	
    `function fred(s) --> str; Returns `s`, written as a string`<br>   	
    Note the semi-colon. Do not skip it (its important).	
-4. In public function arguments, lower case versions of class type 	
+7. In public function arguments, lower case versions of class type 	
    (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
    so `datas` is a list of `DATA` instances).	
-5  Built in types are num, str, tab, bool, fun	
-6. User-defined types are ny word starting with two upper case 	
+8  Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
+9. User-defined types are any word starting with two upper case 	
    leading letters is a class; e.g. DATA	
-7. Public function arguments have the following type hints:	
-   	
+10. Public function arguments have the type hints shown in the following table.	
+11. All other variable names can be anything at all.	
+ 	
 What        | Notes                                                                            	
-:-----------|:--------------------------------------------	
+:-----------|:------------------------------------------------------------------	
+----        | Anything after three dashes is deleted.	
+"-- "       | Any line starting with two dashes and a space is printed to output.	
 2 blanks    | 2 blanks denote start of optional arguments 	
 4 blanks    | 4 blanks denote start of local arguments   	
 n           | prefix for numerics                       	
@@ -39,7 +49,14 @@ is          | prefix for booleans
 s           | prefix for strings                   	
 suffix s    | list of thing (so `sfiles` is list of strings)	
 suffix fun  | suffix for functions                                            	
-  	
+ 	
+## Some Design Rationale	
+ 	
+Alfold has no third party libraries (so installing it is just a matter of downloading one file).	
+A wider range of numbers was considered instead of just `n` (e.g. `p,z,i` for posint, zeroOne, integer 	
+respectfully) but on balance, the overhead of those details seemed more than their benefit.	
+Version 2 of Alfold stopped using two column tables of signatures and documentation 	
+since these did not work so well when browsing Github markdown files on a phone.	
 ## Guessing types	
 
 <dl>
@@ -68,12 +85,16 @@ Singulars are either `bools`, `fun` (function),
 <dt><b> pretty(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  clean up the signature (no spaces, no local vars) </dd>
 <dt><b> optional(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  removes local vars, returns the rest as a string </dd>
 <dt><b> lines(sFilename:<tt>str</tt>,  fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>  call `fun` on csv rows. </dd>
-<dt><b> dump() &rArr;  nil </b></dt><dd>  if we have any tbl contents, print them then zap tbl </dd>
+<dt><b> dumpDocStrings() &rArr;  nil </b></dt><dd>  if we have any tbl contents, print them then zap tbl </dd>
 </dl>
 
 ## Main	
 
 <dl>
-<dt><b> main(sFiles:<tt>{str}</tt>) &rArr;  nil </b></dt><dd>  for all lines on command line, print doco to standard output </dd>
+<dt><b> comments(line) &rArr;  nil </b></dt><dd>  handle comment lines; but first, handle outstanding docstrings. </dd>
+<dt><b> func(fun:<tt>fun</tt>, args:<tt>tab</tt>, returns:<tt>tab</tt>, docstring) &rArr;  nil </b></dt><dd>  handle functions (with docstring). Updates `tbl`. </dd>
+<dt><b> code(line) &rArr;  nil </b></dt><dd>  handle code lines. Updates `obj`. </dd>
+<dt><b> main(line) &rArr;  nil </b></dt><dd>  handle each line </dd>
 </dl>
 
+## Start uo	
