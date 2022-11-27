@@ -49,7 +49,7 @@ function LINE:__tostring()
 
 function LINE:normalize(lo,hi)
   for c,x in pairs(self.raw) do 
-    self.cells[c] = x=="?" and x or (x-lo[c])/(lo[c]-hi[c]) end end
+    self.cells[c] = x=="?" and x or (x - lo[c])/(hi[c] - lo[c] + 10^-32) end end
 
 function LINE:__sub(other)
   local n,d = 0,0
