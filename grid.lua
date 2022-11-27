@@ -41,11 +41,15 @@ local function cosine(a,b,c) -->  nx,ny,isStable; find x,y from a line connectin
   return x1, y, math.abs(x1 - x2) > the.X  end
 -----------------------------------------------------------------------------------------
 local LINE=obj"LINE"
-function LINE:new(raw,cooked,lhs,rhs)
-  self.raw, self.cells, self.lhs, self.rhs = raw, cooked, lhs or "", rhs or "" end
+function LINE:new(raw,lhs,rhs)
+  self.raw, self.cells, self.lhs, self.rhs = raw, {}, lhs or "", rhs or "" end
 
 function LINE:__tostring()
   return fmt("[%s] %s %s", o(self.cells), self.lhs, self.rhs ) end
+
+function LINE:normalize(lo,hi)
+  for c,x in pairs(self.raw) do 
+    self.cells[c] = x=="?" and x or (x-lo[c])/(lo[c]-hi[c]) end end
 
 function LINE:__sub(other)
   local n,d = 0,0
@@ -59,7 +63,19 @@ function LINE:far(lines) --> t; return a pair that runes `the.Far` across `lines
   return sort(map(lines, pole), lt"dist")[(the.Far * #lines)//1] end
 -----------------------------------------------------------------------------------------
 local DATA=obj"DATA"
-function DATA:new(t) self.lines=t end
+function DATA:new(t) 
+  self.lo, self.hi, self.lines = {},{},{}
+  for _,line in pairs(t or {}) do self:add(line) end 
+  self:normalize() end
+
+function DATA:add(line)
+  push(self.lines,line)
+  for c,x in pairs(line.raw) do
+    if x ~= "?" then self.lo[c] = math.min(x, self.lo[c] or  10^32)
+                     self.hi[c] = math.max(x, self.hi[c] or -10^32) end end end
+
+function DATA:normalize() 
+  for _,line in pairs(self.lines) do line:normalize(self.lo,self.hi) end end
 
 function DATA:furthest(lines) --> t; return the largest west,east found in `lines`
   local n = (the.Far * #lines)//1
@@ -89,15 +105,18 @@ function DATA:tree(  lines,min,    node)
   return node end
 -----------------------------------------------------------------------------------------
 local function show(node, b4)
-  local function mode(t) return t[#t//2 + (#t%2==1 and 1 or 0)] end
+  local function middle(t) return t[#t//2 + (#t%2==1 and 1 or 0)] end
   b4 = b4 or ""
   if node then
-    print(b4..(node.c and rnd(node.c) or o(mode(node.here).raw))) 
+    if   node.c 
+    then print(b4..fmt("%.0f",100*node.c))
+    else local it = middle(node.here)
+         print(b4..fmt("%s :: %s",it.lhs, it.rhs)) 
+    end
     show(node.west, "|.. ".. b4)
     show(node.east, "|.. ".. b4) end end
 
 local function ok(t)
-  local lo,hi={},{}
   local template = {rows={},cols={},domain="string"}
   for key,eg in pairs(template) do
     assert(t[key],                      fmt("[%s] missing",key))
@@ -108,21 +127,15 @@ local function ok(t)
     assert(type(row[#row]) == "string", fmt("row [%s] lacks RHS txt",r)) 
     for c=2,#row-1 do 
       local x = row[c]
-      assert(x//1 == x,fmt("[%s] not an int",x)) 
-      lo[c-1] = math.min(x, (lo[c-1] or  math.huge))
-      hi[c-1] = math.max(x, (hi[c-1] or -math.huge)) end end
-  return t,lo,hi end
+      assert(x//1 == x,fmt("[%s] not an int",x))  end end
+  return t end
 
-local function prep(cols,lo,hi)
+local function prep(cols)
   local lines = {}
   for _,t in pairs(cols) do
-    local raw,cooked = {},{}
-    for c=2,#cols-2 do
-      local lo1, hi1 = lo[c-1], hi[c-1]
-      local v = t[c]
-      raw[c-1]    = v
-      cooked[c-1] = v == "?" and v or (v - lo1)/(hi1 - lo1) end
-    lines[ 1+#lines ] = LINE(raw,cooked,t[1],t[#t]) end 
+    local raw = {}
+    for c=2,#cols-2 do raw[c-1] =  t[c] end
+    push(lines, LINE(raw,t[1],t[#t])) end 
   return lines end
 ------------------------------------------------------------------------------------------
 --- ## Start-up
@@ -131,17 +144,18 @@ local eg={}
 function eg.the()   lib.oo(the) end
 function eg.ok()    
   local t,lo,hi = ok(dofile(the.file)) 
-  for _,line in pairs(prep(t.cols,lo,hi)) do
-    oo(line) end end 
+  for _,line in pairs(prep(t.cols)) do oo(line) end end 
 
 function eg.dist()    
-  local t,lo,hi = ok(dofile(the.file)) 
-  local d=DATA(prep(t.cols,lo,hi))  
-  map(d:furthest(d.lines),oo)end 
+  local t = ok(dofile(the.file)) 
+  local d=DATA(prep(t.cols))  
+  local tmp = map(d.lines, function(line) return {line=line, d=line - d.lines[1]} end)
+  for _,x in pairs(sort(tmp, lt"d")) do 
+     print(rnd(x.d), o(x.line.raw)) end end
 
 function eg.tree()    
-  local t,lo,hi = ok(dofile(the.file)) 
-  local d=DATA(prep(t.cols,lo,hi))  
+  local t = ok(dofile(the.file)) 
+  local d=DATA(prep(t.cols))  
   show(d:tree(d.lines,1)) end 
 
 if lib.required() then return {cluster=cluster,columns=columns} else lib.main(the,eg) end 
