@@ -7,6 +7,8 @@ help: ## show help
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
 	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
 
+mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
+
 install: dotfiles  
 
 dotfiles: vims  ## install all
@@ -33,7 +35,6 @@ docs/%.md: %.lua
 about:
 	echo "lua 101"
 
-mds: lib.md 101.md about.md ## update all mds
 
 # lib.md: ../4readme/readme.lua lib.lua  ## update lib.md
 # 	echo "# $@"

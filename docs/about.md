@@ -1,4 +1,5 @@
-
+<img src="img/banner.png">
+ 
 ```css
 
 about.lua : summarize a table
@@ -13,36 +14,25 @@ OPTIONS:
   -h  --help  show help                 = false
 
 ```
+ 
+# about.lua
+ 
 ## NUM	
 Summarizes a stream of numbers	
 
-
-
-  
-**_NUM:new(  n:<tt>num</tt>?, s:<tt>str</tt>?) &rArr;  NUM_**  
-&nbsp;&nbsp;&nbsp;&nbsp;  constructor; optionally for column `n` named `s`     
-  
-**_NUM:add(n:<tt>num</tt>) &rArr;  NUM_**  
-&nbsp;&nbsp;&nbsp;&nbsp; add `n`, update min,max,standard deviation    
-  
-**_NUM:mid(x) &rArr;  n_**  
-&nbsp;&nbsp;&nbsp;&nbsp; return mean    
-  
-**_NUM:div(x) &rArr;  n_**  
-&nbsp;&nbsp;&nbsp;&nbsp; return standard deviation    
-
-
+<dl>
+<dt><b> NUM:new(  n:<tt>num</tt>?, s:<tt>str</tt>?) &rArr;  NUM </b></dt><dd>   constructor; optionally for column `n` named `s`  </dd>
+<dt><b> NUM:add(n:<tt>num</tt>) &rArr;  NUM </b></dt><dd>  add `n`, update min,max,standard deviation </dd>
+<dt><b> NUM:mid(x) &rArr;  n </b></dt><dd>  return mean </dd>
+<dt><b> NUM:div(x) &rArr;  n </b></dt><dd>  return standard deviation </dd>
+</dl>
 
 ## SYM	
 ## COLS	
 ## DATA	
 
-
-
-  
-**_DATA:new(src:<tt>str</tt>) &rArr;  DATA_**  
-&nbsp;&nbsp;&nbsp;&nbsp; `src` is either (a) a file name string or (b) list or rows    
-
-
+<dl>
+<dt><b> DATA:new(src:<tt>str</tt>) &rArr;  DATA </b></dt><dd>  `src` is either (a) a file name string or (b) list or rows </dd>
+</dl>
 
 ## Start-up	
