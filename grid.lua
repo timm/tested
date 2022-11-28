@@ -158,4 +158,10 @@ function eg.tree()
   local d=DATA(prep(t.cols))  
   show(d:tree(d.lines,1)) end 
 
+function eg.flip()
+  local t = ok(dofile(the.file)) 
+  local names = {}
+  for c,cells in pairs(t.rows) do names[#cells] = cells[#cells] end
+  oo(names) end
+
 if lib.required() then return {cluster=cluster,columns=columns} else lib.main(the,eg) end 
