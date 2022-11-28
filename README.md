@@ -91,17 +91,12 @@ NUM and SYM and classes to incrementally summarize numeric and symbolic informat
 Some ROWs are better than others. To sort the rows better to worse, some `__lt` operator. For
 single objectives, that is just a simple "&lt;" operator. For multi-objectives, some 
 
-## References
+ 
 
-
-[^Baltes22]: Baltes, S., Ralph, P. [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf);
-  Empir Software Eng 27, 94 (2022);
-  https://doi.org/10.1007/s10664-021-10072-8
+[^Baltes22]: Baltes, S., Ralph, P. [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf);  Empir Software Eng 27, 94 (2022);  https://doi.org/10.1007/s10664-021-10072-8.
 	
-[^Niu07]: Nan Niu, Steve M. Easterbrook: [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf);
-  IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651
+[^Niu07]: Nan Niu, Steve M. Easterbrook: [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
 	
-[^Vance13]:  Anthony Vance , Paul Benjamin Lowry & Dennis Eggett (2013); [Using Accountability to Reduce Access Policy Violations in Information Systems](https://www.tandfonline.com/doi/pdf/10.2753/MIS0742-1222290410);
-  Journal of Management Information Systems, 29:4, 263-290;  DOI: 10.2753/MIS0742-1222290410
+[^Vance13]:  Anthony Vance , Paul Benjamin Lowry & Dennis Eggett (2013); [Using Accountability to Reduce Access Policy Violations in Information Systems](https://www.tandfonline.com/doi/pdf/10.2753/MIS0742-1222290410); Journal of Management Information Systems, 29:4, 263-290;  DOI: 10.2753/MIS0742-1222290410.
 
 
