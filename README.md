@@ -27,9 +27,20 @@ about the stuff that does not work or could work better.
 - **_[lib](lib.md)_**: Standard tricks.
 
 ## Motivation
+The main goal here is to create systems that other people can understand, critique, 
+and suggest modifications. But how to foster such accountability?
+
+> Several mechanisms heighten an individual’s perception of
+accountability: identifiability, awareness of logging, awareness
+of audit, and electronic presence (_identifiability is a person’s
+“knowledge that his outputs could be linked to (them)” and _presence_
+is a state of mind in which self-focused attention is increased and
+performance is modified in the presence of those who can disapprove
+or approve of actions)[^Vance13].
+
 
 This code is an experiment in another way to teach AI. Instead of viewing AI as something machines do,
-this code has tools that emulate how humans sample a domain[^rep] [^sam]. Then we play the _fishing game_.
+this code has tools that emulate how humans sample a domain[^Niu07] [^Baltes22]. Then we play the _fishing game_.
 - First, all examples are labeled by some omniscient  being. The examples are sorted, most to least interesting (where "interesting" is a domain-specific criteria).
 - Second, humans go fishing  using some of the known sampling strategies seen in qualitative research or cognitive science.
 - Third, some AI algorithm goes fishing using anything at all.
@@ -82,12 +93,22 @@ single objectives, that is just a simple "&lt;" operator. For multi-objectives, 
 
 ## References
 
-[^rep]: Nan Niu, Steve M. Easterbrook:
-       [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf).
-       IEEE Softw. 24(2): 53-61 (2007)
-       https://ieeexplore.ieee.org/document/4118651
 
-[^sam]: Baltes, S., Ralph, P. 
-       [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf).
-       Empir Software Eng 27, 94 (2022). 
-       https://doi.org/10.1007/s10664-021-10072-8
+[^Baltes22]: Baltes, S., Ralph, P. 
+	[Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf).
+	Empir Software Eng 27, 94 (2022). 
+	https://doi.org/10.1007/s10664-021-10072-8
+	
+[^Niu07]: Nan Niu, Steve M. Easterbrook:
+	[So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf).
+	IEEE Softw. 24(2): 53-61 (2007)
+	https://ieeexplore.ieee.org/document/4118651
+	
+[^Vance13]:  Anthony Vance , Paul Benjamin Lowry & Dennis Eggett (2013) 
+	[Using Accountability to Reduce Access Policy Violations in Information Systems](https://www.tandfonline.com/doi/pdf/10.2753/MIS0742-1222290410),
+	Journal of Management Information Systems, 29:4, 263-290, 
+	DOI: 10.2753/MIS0742-1222290410
+
+   DOI: 10.2753/MIS0742-1222290410
+
+
