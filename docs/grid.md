@@ -41,3 +41,64 @@ OPTIONS:
 <dt><b> eg.trees() &rArr;  nil </b></dt><dd>  Runs the whole analysis. </dd>
 </dl>
 
+
+
+## Example
+
+1. Cluster attributes to find synonyms.
+
+        Attributes:
+        87
+        |.. 72
+        |.. |.. 34
+        |.. |.. |.. f) OnlyActAsProgrammed :: Semi-autonomous
+        |.. |.. |.. g) ConventionalSystem :: IntelligentSystem
+        |.. |.. 60
+        |.. |.. |.. e) ConventionalCommunication :: NovelCommunication
+        |.. |.. |.. a) DevelopmentTool :: Application
+        |.. 64
+        |.. |.. 47
+        |.. |.. |.. c) CommunicationTechnology :: ApplicationTechnology
+        |.. |.. |.. b) Multimedia :: Programming
+        |.. |.. 25
+        |.. |.. |.. h) TargetedOnInterface :: TargetedOnOverallSystem
+        |.. |.. |.. d) HumanOrientedTool :: SystemTool
+        
+2. Cluster examples to similarities.
+
+        Examples:
+        80
+        |.. 63
+        |.. |.. 20
+        |.. |.. |.. j) BroadbandNetworks :: 
+        |.. |.. |.. i) InformationHighway :: 
+        |.. |.. 48
+        |.. |.. |.. e) CrossPlatformGUIs :: 
+        |.. |.. |.. 28
+        |.. |.. |.. |.. c) MultimediaAndHypermedia :: 
+        |.. |.. |.. |.. a) ElectronicPublishing :: 
+        |.. 80
+        |.. |.. 48
+        |.. |.. |.. d) VisualProgramming :: 
+        |.. |.. |.. b) VirtualReality :: 
+        |.. |.. 71
+        |.. |.. |.. f) ObjectOrientedSystems :: 
+        |.. |.. |.. 42
+        |.. |.. |.. |.. h) IntelligentAgents :: 
+        |.. |.. |.. |.. g) KnowledgeBasedSystems :: 
+        
+3. Map examples onto a 2-by-2 grid
+  
+        Place:
+        {a                                 b      }
+        {                                         }
+        {                                         }
+        {                                         }
+        {                                         }
+        {                                         }
+        {                                         }
+        {                    d c                  }
+        {                                         }
+        {                  h                      }
+        {          e   f                          }
+        PASS ✅ on [trees]

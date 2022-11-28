@@ -28,7 +28,7 @@ docs/%.md: %.lua
 		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " "; echo "# $^"; echo " " )>> $@
 		lua alfold.lua $^  >> $@
-		if [ -f "var/$^.out" ]; then echo "" >> $@;  cat var/$^.out; >> $@; fi
+		if [ -f "var/$(basename $^).txt" ]; then echo "" >> $@; cat var/$(basename $^).txt >> $@; fi
 
 about:
 	echo "lua 101"
