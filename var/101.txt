@@ -1,5 +1,5 @@
 
-## Example output
+## Example output   
      
 1. Script supports help
 
