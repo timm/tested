@@ -137,7 +137,17 @@ local function prep(cols)
     for c=2,#cols-2 do raw[c-1] =  t[c] end
     push(lines, LINE(raw,t[1],t[#t])) end 
   return lines end
-------------------------------------------------------------------------------------------
+
+local function prepTranspose(t)
+  local names = {}
+  for c,cells in pairs(t.rows) do names[#cells] = cells[#cells] end
+  local rows = {}
+  for r,cells in pairs(t.cols) do 
+    for r=2,#cells-1 do
+      rows[r] = rows[r] or LINE({},names[r-1],"")
+      push(rows[r].raw, cells[r]) end end 
+  return rows end
+------------------------------------------------------------------------------------------
 --- ## Start-up
 local eg={}
 
@@ -160,8 +170,14 @@ function eg.tree()
 
 function eg.flip()
   local t = ok(dofile(the.file)) 
-  local names = {}
-  for c,cells in pairs(t.rows) do names[#cells] = cells[#cells] end
-  oo(names) end
+  local d=DATA(prepTranspose(t))
+  show(d:tree(d.lines,1)) end
+
+function eg.trees()
+  local t = ok(dofile(the.file)) 
+  local d1=DATA(prep(t.cols))  
+  local d2=DATA(prepTranspose(t))
+  show(d1:tree(d1.lines,1)) 
+  show(d2:tree(d2.lines,1)) end
 
 if lib.required() then return {cluster=cluster,columns=columns} else lib.main(the,eg) end 
