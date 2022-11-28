@@ -37,21 +37,21 @@ local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice,rnd  =
 local function cosine(a,b,c) -->  nx,ny,isStable; find x,y from a line connecting `left,right`.
   local x1 = (a^2 + c^2 - b^2) / (2*c)
   local x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
-  local  y = (x2^2 - a^2)^.5
+  local  y = (a^2 - x2^2)^.5
   return x1, y, math.abs(x1 - x2) > the.X  end
 -----------------------------------------------------------------------------------------
 local LINE=obj"LINE"
-function LINE:new(raw,lhs,rhs)
+function LINE:new(raw,lhs,rhs) --> LINE; constructor for a line.
   self.raw, self.cells, self.lhs, self.rhs = raw, {}, lhs or "", rhs or "" end
 
-function LINE:__tostring()
+function LINE:__tostring() --> s; generates pretty print string
   return fmt("[%s] %s %s", o(self.cells), self.lhs, self.rhs ) end
 
-function LINE:normalize(lo,hi)
+function LINE:normalize(lo,hi) --> nil; generates `cells` from `raw` via normalization
   for c,x in pairs(self.raw) do 
     self.cells[c] = x=="?" and x or (x - lo[c])/(hi[c] - lo[c] + 10^-32) end end
 
-function LINE:__sub(other)
+function LINE:__sub(other) --> n; returns distance between two lines
   local n,d = 0,0
   for c,x in pairs(self.cells) do 
     n = n + 1
@@ -63,18 +63,19 @@ function LINE:far(lines) --> t; return a pair that runes `the.Far` across `lines
   return sort(map(lines, pole), lt"dist")[(the.Far * #lines)//1] end
 -----------------------------------------------------------------------------------------
 local DATA=obj"DATA"
-function DATA:new(t) 
+function DATA:new(t)  --> DATA; constructor for thing holding many lines.
   self.lo, self.hi, self.lines = {},{},{}
   for _,line in pairs(t or {}) do self:add(line) end 
   self:normalize() end
 
-function DATA:add(line)
+function DATA:add(line) --> nil; add one `line`, update `lo` and `hi` for each numeric
+  line.tag = string.char(string.byte("a")  + #self.lines)
   push(self.lines,line)
   for c,x in pairs(line.raw) do
     if x ~= "?" then self.lo[c] = math.min(x, self.lo[c] or  10^32)
                      self.hi[c] = math.max(x, self.hi[c] or -10^32) end end end
 
-function DATA:normalize() 
+function DATA:normalize() --> nil; normalizes raw numbers 0..1, min..max
   for _,line in pairs(self.lines) do line:normalize(self.lo,self.hi) end end
 
 function DATA:furthest(lines) --> t; return the largest west,east found in `lines`
@@ -93,7 +94,7 @@ function DATA:half(lines) --> lines1,lines2,n; divide lines on distance to 2 pol
     push(n <= (#lines)//2 and wests or easts, tmp.line) end
   return wests, easts, cut.dist end
 
-function DATA:tree(  lines,min,    node)
+function DATA:tree(  lines,min,    node) --> t; returns `lines`, recursively bi-clustered.
   lines = lines or self.lines
   min = min or (#lines)^the.min
   local node={here=lines}
@@ -104,19 +105,19 @@ function DATA:tree(  lines,min,    node)
     node.east            = self:tree(easts, min) end
   return node end
 -----------------------------------------------------------------------------------------
-local function show(node, b4)
+local function show(node,  b4) --> nil; prints the tree generated from `DATA:tree`.
   local function middle(t) return t[#t//2 + (#t%2==1 and 1 or 0)] end
   b4 = b4 or ""
   if node then
     if   node.c 
     then print(b4..fmt("%.0f",100*node.c))
     else local it = middle(node.here)
-         print(b4..fmt("%s :: %s",it.lhs, it.rhs)) 
+         print(b4..fmt("%s) %s :: %s",it.tag, it.lhs, it.rhs)) 
     end
     show(node.west, "|.. ".. b4)
     show(node.east, "|.. ".. b4) end end
 
-local function ok(t)
+local function ok(t) --> t; runs sanity checks on the spec read from a file.
   local template = {rows={},cols={},domain="string"}
   for key,eg in pairs(template) do
     assert(t[key],                      fmt("[%s] missing",key))
@@ -130,7 +131,7 @@ local function ok(t)
       assert(x//1 == x,fmt("[%s] not an int",x))  end end
   return t end
 
-local function prep(cols)
+local function prep(cols) --> lines; clusters the attributes
   local lines = {}
   for _,t in pairs(cols) do
     local raw = {}
@@ -138,15 +139,15 @@ local function prep(cols)
     push(lines, LINE(raw,t[1],t[#t])) end 
   return lines end
 
-local function prepTranspose(t)
+local function prepTranspose(t) --> lines; clusters the examples
   local names = {}
   for c,cells in pairs(t.rows) do names[#cells] = cells[#cells] end
-  local rows = {}
+  local lines = {}
   for r,cells in pairs(t.cols) do 
     for r=2,#cells-1 do
-      rows[r] = rows[r] or LINE({},names[r-1],"")
-      push(rows[r].raw, cells[r]) end end 
-  return rows end
+      lines[r] = lines[r] or LINE({},names[r-1],"")
+      push(lines[r].raw, cells[r]) end end 
+  return lines end
 ------------------------------------------------------------------------------------------
 --- ## Start-up
 local eg={}
@@ -173,11 +174,28 @@ function eg.flip()
   local d=DATA(prepTranspose(t))
   show(d:tree(d.lines,1)) end
 
-function eg.trees()
+function eg.grid()
+  local t = ok(dofile(the.file)) 
+  local d=DATA(prepTranspose(t))
+  d:tree(d.lines,1)
+  for _,line in pairs(d.lines) do print(line.x,line.y) end end
+
+function eg.trees() --> nil; Runs the whole analysis.
   local t = ok(dofile(the.file)) 
   local d1=DATA(prep(t.cols))  
   local d2=DATA(prepTranspose(t))
+  print"\nAttributes:"
   show(d1:tree(d1.lines,1)) 
-  show(d2:tree(d2.lines,1)) end
+  print"\nExamples:"
+  show(d2:tree(d2.lines,1)) 
+  print"\nPlace:"
+  local g={}
+  for i=1,21 do g[i]={}; for j=1,21 do g[i][j]=" " end end 
+  local maxy=0
+  for _,line in pairs(d1.lines) do
+    local x,y= line.x*20//1, line.y*20//1
+    maxy = math.max(maxy,y+1)
+    g[y+1][x+1] = line.tag end
+  for y=1,maxy do oo(g[y]) end end
 
 if lib.required() then return {cluster=cluster,columns=columns} else lib.main(the,eg) end 
