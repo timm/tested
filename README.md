@@ -32,11 +32,11 @@ and suggest modifications. But how to foster such accountability?
 
 > Several mechanisms heighten an individual’s perception of
 accountability: identifiability, awareness of logging, awareness
-of audit, and electronic presence (_identifiability is a person’s
+of audit, and electronic presence (_identifiability_ is a person’s
 “knowledge that his outputs could be linked to (them)” and _presence_
-is a state of mind in which self-focused attention is increased and
+is "a state of mind in which self-focused attention is increased and
 performance is modified in the presence of those who can disapprove
-or approve of actions)[^Vance13].
+or approve of actions")[^Vance13].
 
 
 This code is an experiment in another way to teach AI. Instead of viewing AI as something machines do,
