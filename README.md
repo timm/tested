@@ -23,7 +23,7 @@ numerous short-cuts
 
 ```mermaid
 graph LR;
-    NUM--|summarizes|->DATA-->NaiveBayes;
+    NUM-- summarizes -->DATA-->NaiveBayes;
    SYM -->DATA;
     ROW-->DATA;
     DATA-->clustering;
