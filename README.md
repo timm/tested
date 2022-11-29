@@ -24,7 +24,7 @@ graph LR;
     clustering-->semiSupervisedLearning;
     zitzler-->optimization;
     DATA-->optimization;
-    DATA-->discretization;
+    DATA-->discretization --> B-->C[fa:fa-ban forbidden];
     RANGE-->discretization -->decisionTree
     decisionTree-->contrast;
     decisionTree-->plan;
