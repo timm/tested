@@ -23,8 +23,8 @@ numerous short-cuts
 
 ```mermaid
 graph LR;
-    NUM-->DATA-->NaiveBayes;
-   ( SYM; FRED) -->DATA;
+    NUM--|summarizes|->DATA-->NaiveBayes;
+   SYM -->DATA;
     ROW-->DATA;
     DATA-->clustering;
     aha-->clusteringl
