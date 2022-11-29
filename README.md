@@ -8,7 +8,23 @@ be a clean-up stage where lessons learned from all the work are used
 to
 clarify and simplify the code.
 
-So after 25 years of AI programming, here is my clean-up.  It is offered as a teaching tool
+So after 25 years of AI programming, here is my clean-up. 
+Based on all that experience, this code makes
+numerous short-cuts
+
+- The data structures used in one AI tool and reused for another.
+
+```mermaid
+graph LR;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+
+
+It is offered as a teaching tool
 for newbie AI people: 
 
 - The code
@@ -33,7 +49,7 @@ and suggest modifications. But how to foster such accountability?
 > Several mechanisms heighten an individual’s perception of
 accountability: identifiability, awareness of logging, awareness
 of audit, and electronic presence (_identifiability_ is a person’s
-“knowledge that his outputs could be linked to (them)” and _presence_
+“knowledge that (their) outputs could be linked to (them)” and _presence_
 is "a state of mind in which self-focused attention is increased and
 performance is modified in the presence of those who can disapprove
 or approve of actions")[^Vance13].
