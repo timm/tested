@@ -16,10 +16,16 @@ numerous short-cuts
 
 ```mermaid
 graph LR;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    NUM-->DATA-->NaiveBayes;
+    SYM-->DATA;
+    DATA-->clustering;
+    clustering->semiSupervisedLearning;
+    zitzler-->DATA-->optimization;
+    DATA-->discretization;
+    RANGE-->discretization;
+    decisionTree-->contrast;
+    decisionTree-->plan;
+    decisionTree-->minitor;
 ```
 
 
