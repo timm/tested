@@ -25,7 +25,7 @@ graph LR;
     zitzler-->optimization;
     DATA-->optimization;
     DATA-->discretization;
-    RANGE-->discretization;
+    RANGE-->discretization -->decisionTree
     decisionTree-->contrast;
     decisionTree-->plan;
     decisionTree-->minitor;
