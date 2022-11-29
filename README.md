@@ -19,7 +19,7 @@ graph LR;
     NUM-->DATA-->NaiveBayes;
     SYM-->DATA;
     DATA-->clustering;
-    clustering->semiSupervisedLearning;
+    clustering-->semiSupervisedLearning;
     zitzler-->DATA-->optimization;
     DATA-->discretization;
     RANGE-->discretization;
