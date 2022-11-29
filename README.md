@@ -12,19 +12,27 @@ So after 25 years of AI programming, here is my clean-up.
 Based on all that experience, this code makes
 numerous short-cuts
 
-- The data structures used in one AI tool and reused for another.
+- The data structures used in one AI tool can often be reused for another. e,g,
+  data miners and optimizers can reuse each's code for storing examples and keeping summaries
+  of each column.
+- One algorithm can often be approximated by another (so we can by with less code). For
+  example, a top-down bi-clustering algorithm can find similar rows. But if we transpose
+  the data, exactly the same algorithm can be used to find a hierarchy of attribute synonyms.
+- This code uses a lot of stochasitics to speed things up. For example, k-th nearest neighbor
+  need not explore the data (some small randomly elected subset can often suffice).
 
 ```mermaid
 graph LR;
     NUM-->DATA-->NaiveBayes;
     SYM-->DATA;
+    ROW-->DATA;
     DATA-->clustering;
     aha-->clusteringl
     clustering-->knn;
     clustering-->semiSupervisedLearning;
     zitzler-->optimization;
     DATA-->optimization;
-    DATA-->discretization --> B-->C[fa:fa-ban forbidden];
+    DATA-->discretization 
     RANGE-->discretization -->decisionTree
     decisionTree-->contrast;
     decisionTree-->plan;
