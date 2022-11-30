@@ -31,12 +31,16 @@ graph LR;
     end
        DSL-- describes -->DATA;
 
-    subgraph inferemce
-	    NUM-- 1col summary -->DATA-->NaiveBayes;
+    subgraph tables
+  NUM-- 1col summary -->DATA-->NaiveBayes;
 	   SYM -- 1col summart -->DATA;
 	    XY -- 2col summary -->discretization -->decisionTree
 	    ROW-->DATA;
-	    DATA-->clustering;
+
+    end
+
+    subgraph inferemce
+	  	    DATA-->clustering;
 	    aha-->clusteringl
 	    clustering-->knn;
 	    clustering-->semiSupervisedLearning;
