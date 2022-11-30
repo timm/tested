@@ -46,7 +46,7 @@ graph LR;
       XY[[XY]];
 	    XY-- 2col summary -->discretization -->decisionTree;
 	  	    D-->discretization;
-	  	    D-->NaiveBayes;
+	  	    D-->((NaiveBayes.lua));
 	  	    D-->clustering;
       f>fastmap93]
 	    a>aha91]-->distance-->f--> clustering;
