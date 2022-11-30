@@ -23,22 +23,29 @@ numerous short-cuts
 
 ```mermaid
 graph LR;
-    alfond-- documents --> 
-    settings-- configures -->
-    NUM-- 1col summary -->DATA-->NaiveBayes;
-   SYM -- 1col summart -->DATA;
-    XY -- 2col summary -->discretization -->decisionTree
-    ROW-->DATA;
-    DATA-->clustering;
-    aha-->clusteringl
-    clustering-->knn;
-    clustering-->semiSupervisedLearning;
-    zitzler-->optimization;
-    DATA-->optimization;
-    DATA-->discretization 
-    decisionTree-->contrast;
-    decisionTree-->plan;
-    decisionTree-->minitor;
+    subgraph scripting
+       C[faster coding];
+       alfond-- documents --> C;
+       DSL-->C;
+       eg-- unit tests -->C;
+    end
+
+    subgraph inferemce
+	    NUM-- 1col summary -->DATA-->NaiveBayes;
+	   SYM -- 1col summart -->DATA;
+	    XY -- 2col summary -->discretization -->decisionTree
+	    ROW-->DATA;
+	    DATA-->clustering;
+	    aha-->clusteringl
+	    clustering-->knn;
+	    clustering-->semiSupervisedLearning;
+	    zitzler-->optimization;
+	    DATA-->optimization;
+	    DATA-->discretization 
+	    decisionTree-->contrast;
+	    decisionTree-->plan;
+	    decisionTree-->minitor;
+    end
 ```
 
 
