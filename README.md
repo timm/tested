@@ -27,7 +27,7 @@ graph LR;
     settings-- configures -->
     NUM-- 1col summary -->DATA-->NaiveBayes;
    SYM -- 1col summart -->DATA;
-    XY|2col summary| -->discretization -->decisionTree
+    XY -- 2col summary -->discretization -->decisionTree
     ROW-->DATA;
     DATA-->clustering;
     aha-->clusteringl
