@@ -28,8 +28,8 @@ graph LR;
        alfond-- documents --> C;
        DSL-->C;
        eg-- unit tests -->C;
-       DSL-- describes -->DATA;
     end
+       DSL-- describes -->DATA;
 
     subgraph inferemce
 	    NUM-- 1col summary -->DATA-->NaiveBayes;
