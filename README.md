@@ -23,8 +23,9 @@ numerous short-cuts
 
 ```mermaid
 graph LR;
-    NUM-- summarizes -->DATA-->NaiveBayes;
-   SYM -->DATA;
+    NUM-- 1col summary -->DATA-->NaiveBayes;
+   SYM -- 1col summart -->DATA;
+    XY -- 2col summary -->discretization -->decisionTree
     ROW-->DATA;
     DATA-->clustering;
     aha-->clusteringl
@@ -33,7 +34,6 @@ graph LR;
     zitzler-->optimization;
     DATA-->optimization;
     DATA-->discretization 
-    RANGE-->discretization -->decisionTree
     decisionTree-->contrast;
     decisionTree-->plan;
     decisionTree-->minitor;
