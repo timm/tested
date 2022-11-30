@@ -51,6 +51,7 @@ graph LR;
       f>fastmap93]
 	    a>aha91]-->distance-->f--> clustering;
 	    clustering-->knn;
+      clustering-->optimization;
 	    clustering-->semiSupervisedLearning;
 	    z>zitzler04]-->optimization;
 	    D-->optimization;
