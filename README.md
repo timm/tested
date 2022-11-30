@@ -52,7 +52,7 @@ graph LR;
 	    a>aha91]-->distance-->f--> clustering;
 	    clustering-->knn;
       clustering-->optimization-->plan;
-      clustering-->optimization-->monitor;
+      optimization-->monitor;
 	    clustering-->semiSupervisedLearning;
 	    z>zitzler04]-->optimization;
 	    D-->optimization;
