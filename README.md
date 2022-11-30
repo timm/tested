@@ -28,6 +28,7 @@ graph LR;
        alfond-- documents --> C;
        DSL-->C;
        eg-- unit tests -->C;
+       DSL-- describes -->DATA;
     end
 
     subgraph inferemce
