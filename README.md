@@ -32,24 +32,28 @@ graph LR;
        DSL-- describes -->DATA;
 
     subgraph tables
+      R[[RPW]];
+      D[[DATA]];
+      S[[SYM]];
       N[[NUM]];
-  N-- 1col summary -->DATA;
-	   SYM -- 1col summart -->DATA;
-	    ROW-->DATA;
+  N-- 1col summary -->D;
+	   S-- 1col summart -->D;
+	    R>D;
 
     end
 
     subgraph inferemce
+      XY[[XY]]
 	    XY -- 2col summary -->discretization -->decisionTree
-	  	    DATA-->discretization;
-	  	    DATA-->NaiveBayes;
-	  	    DATA-->clustering;
+	  	    D-->discretization;
+	  	    D-->NaiveBayes;
+	  	    D-->clustering;
 	    aha-->clusteringl
 	    clustering-->knn;
 	    clustering-->semiSupervisedLearning;
 	    zitzler-->optimization;
-	    DATA-->optimization;
-	    DATA-->discretization 
+	    D-->optimization;
+	    D-->discretization 
 	    decisionTree-->contrast;
 	    decisionTree-->plan;
 	    decisionTree-->minitor;
