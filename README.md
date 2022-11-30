@@ -32,7 +32,8 @@ graph LR;
        DSL-- describes -->DATA;
 
     subgraph tables
-  [[NUM]]-- 1col summary -->DATA;
+      N[[NUM]];
+  N-- 1col summary -->DATA;
 	   SYM -- 1col summart -->DATA;
 	    ROW-->DATA;
 
