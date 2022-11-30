@@ -43,8 +43,8 @@ graph LR;
     end
 
     subgraph inferemce
-      XY[[XY]]
-	    XY -- 2col summary -->discretization -->decisionTree
+      XY[[XY]];
+	    XY -- 2col summary -->discretization -->decisionTree;
 	  	    D-->discretization;
 	  	    D-->NaiveBayes;
 	  	    D-->clustering;
