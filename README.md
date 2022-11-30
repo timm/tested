@@ -48,10 +48,10 @@ graph LR;
 	  	    D-->discretization;
 	  	    D-->NaiveBayes;
 	  	    D-->clustering;
-	    a(aha)-->clustering;
+	    a>aha91]-->clustering;
 	    clustering-->knn;
 	    clustering-->semiSupervisedLearning;
-	    z(zitzler)-->optimization;
+	    z>zitzler04]-->optimization;
 	    D-->optimization;
 	    D-->discretization 
 	    decisionTree-->contrast;
