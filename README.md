@@ -38,17 +38,17 @@ graph LR;
       N[[NUM]];
   N-- 1col summary -->D;
 	   S-- 1col summart -->D;
-	    R>D;
+	    R-->D;
 
     end
 
     subgraph inferemce
       XY[[XY]];
-	    XY -- 2col summary -->discretization -->decisionTree;
+	    XY-- 2col summary -->discretization -->decisionTree;
 	  	    D-->discretization;
 	  	    D-->NaiveBayes;
 	  	    D-->clustering;
-	    aha-->clusteringl
+	    aha-->clustering;
 	    clustering-->knn;
 	    clustering-->semiSupervisedLearning;
 	    zitzler-->optimization;
