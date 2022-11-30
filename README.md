@@ -32,7 +32,7 @@ graph LR;
        DSL-- describes -->DATA;
 
     subgraph tables
-  NUM-- 1col summary -->DATA-->NaiveBayes;
+  NUM-- 1col summary -->DATA;
 	   SYM -- 1col summart -->DATA;
 	    ROW-->DATA;
 
