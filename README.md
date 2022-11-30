@@ -48,7 +48,7 @@ graph LR;
 	  	    D-->discretization;
 	  	    D-->NaiveBayes;
 	  	    D-->clustering;
-	    a>aha91]-->clustering;
+	    a>aha91]-->distance-->f>fastmap93] -> clustering;
 	    clustering-->knn;
 	    clustering-->semiSupervisedLearning;
 	    z>zitzler04]-->optimization;
