@@ -29,7 +29,7 @@ graph LR;
        DSL-->C;
        eg-- unit tests -->C;
     end
-       DSL-- describes -->DATA;
+       DSL-- describes -->D;
 
     subgraph tables
       R[[RPW]];
