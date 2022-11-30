@@ -34,12 +34,14 @@ graph LR;
     subgraph tables
   NUM-- 1col summary -->DATA-->NaiveBayes;
 	   SYM -- 1col summart -->DATA;
-	    XY -- 2col summary -->discretization -->decisionTree
 	    ROW-->DATA;
 
     end
 
     subgraph inferemce
+	    XY -- 2col summary -->discretization -->decisionTree
+	  	    DATA-->discretization;
+	  	    DATA-->NaiveBayes;
 	  	    DATA-->clustering;
 	    aha-->clusteringl
 	    clustering-->knn;
