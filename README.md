@@ -32,7 +32,7 @@ graph LR;
        DSL-- describes -->D;
 
     subgraph tables
-      R[[RPW]];
+      R[[ROW]];
       D[[DATA]];
       S[[SYM]];
       N[[NUM]];
