@@ -22,7 +22,6 @@ numerous short-cuts
   need not explore the data (some small randomly elected subset can often suffice).
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ff0000'}}}%%
 graph LR;
     subgraph scripting
        C[faster coding];
@@ -33,7 +32,7 @@ graph LR;
        DSL-- describes -->DATA;
 
     subgraph tables
-  NUM-- 1col summary -->DATA;
+  [[NUM]]-- 1col summary -->DATA;
 	   SYM -- 1col summart -->DATA;
 	    ROW-->DATA;
 
