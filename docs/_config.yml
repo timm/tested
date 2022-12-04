@@ -1,5 +1,6 @@
 title: timm lua
-description: Minimal is a theme for GitHub Pages.
+logo: /img/logo.png
+description: it all made sense at the time....
 show_downloads: true
 google_analytics:
-theme: jekyll-theme-midnight
+theme: jekyll-theme-minimal
