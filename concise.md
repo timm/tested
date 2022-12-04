@@ -1,4 +1,8 @@
-<img src="docs/img/banner.png">
+ 
+# concise.lua
+ 
+![](docs/img/banner.png)      
+[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies
  
 ```css
 
