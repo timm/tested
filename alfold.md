@@ -22,6 +22,7 @@ Options:
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
 basin of approximately 8,000 km² shared by Hunary, Slovakia and	
 Austria.	
+  	
 Alfold.lua, on the other hand,  uses a little Hungarian notation	
 to document LUA code. In this ALFOLD language, `n`, `s`, `fun`,	
 `is`, `t` denotes numbers, strings, functions, booleans and tables	
