@@ -1,5 +1,15 @@
-<img src="img/banner.png">
- 
+&nbsp;<p><a name=top></a><center>
+
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="/docs/img/banner.png">
+
+</center>
+
+
+
+# grid.lua
+
 ```css
 
 grud.lua : row/column clustering for rep grids
@@ -22,8 +32,6 @@ OPTIONS:
   -x  --X     small x change             = .1
 
 ```
- 
-# grid.lua
  
 
 <dl>

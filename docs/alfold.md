@@ -1,5 +1,15 @@
-<img src="img/banner.png">
- 
+&nbsp;<p><a name=top></a><center>
+
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="/docs/img/banner.png">
+
+</center>
+
+
+
+# alfold.lua
+
 ```css
   
 alfold.lua (v2.0) LUA to Markdown. Assumes a little Hungarian notation.
@@ -11,43 +21,45 @@ Options:
  -h --help Show help 
 ```
  
-# alfold.lua
- 
 > Extract doco from LUA files to Markdown. Assumes a plain Hungarian notation.	
  	
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
 basin of approximately 8,000 km² shared by Hunary, Slovakia and	
 Austria.	
-Alfold.lua, on the other hand,  uses a little Hungarian notation	
-to document LUA code. In this ALFOLD language, `n`, `s`, `fun`,	
-`is`, `t` denotes numbers, strings, functions, booleans and tables	
+  	
+Alfold.lua, on the other hand,  is  a plain little Hungarian notation	
+for documenting LUA code. Lines of comments get rendered using Markdown.	
+Arguments of public functions are typed using  `n`, `s`, `fun`,	
+`is`, `t` for numbers, strings, functions, booleans and tables	
 (respectively).  Also, `s` as a suffix denotes a table of other	
 types;  words in UPPERCASE are classes; and instances use lower	
 case versions of the classes.	
        	
 For example, this file was generated via	
  	
-         lua alfold.lua alfold.lua > docs/alfold.md	
+     lua alfold.lua alfold.lua > docs/alfold.md	
  	
 ## Conventions	
  	
 1. Anything after four dashes (`----`) is not included in the output.	
 2. Any line starting with two dashes and a space(`-- `( **is** included in the output.	
-3. We only show help on public function.	
-4. In function argument lists, 2,4 spaces denotes optional,local arguments.	
-5. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
-6. Public functions are denoted with a  trailing "-->", followed by 	
+3. Public functions are denoted with a  trailing "-->", followed by 	
    return type then some comment text. e.g.<br> 	
    `function fred(s) --> str; Returns `s`, written as a string`<br>   	
    Note the semi-colon. Do not skip it (its important).	
-7. In public function arguments, lower case versions of class type 	
-   (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
-   so `datas` is a list of `DATA` instances).	
-8  Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
-9. User-defined types are any word starting with two upper case 	
-   leading letters is a class; e.g. DATA	
-10. Public function arguments have the type hints shown in the following table.	
-11. All other variable names can be anything at all.	
+4. Alfond only show help on public function.	
+5. In public function argument lists	
+    - 2,4 spaces denotes optional,local arguments.	
+    - In public function arguments, lower case versions of class type 	
+      (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
+      so `datas` is a list of `DATA` instances).	
+    - Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
+    - User-defined types are any word starting with two upper case 	
+      leading letters is a class; e.g. DATA	
+6. Any other local variable, or arguments to other functions, can be anything at all.	
+7. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
+ 	
+Summary of type hints (applies only to public functions):	
  	
 What        | Notes                                                                            	
 :-----------|:------------------------------------------------------------------	
@@ -110,4 +122,3 @@ Singulars are either `bools`, `fun` (function),
 <dt><b> main(line) &rArr;  nil </b></dt><dd>  handle each line </dd>
 </dl>
 
-## Start uo	

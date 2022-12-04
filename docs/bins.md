@@ -1,5 +1,15 @@
-<img src="img/banner.png">
- 
+&nbsp;<p><a name=top></a><center>
+
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="/docs/img/banner.png">
+
+</center>
+
+
+
+# bins.lua
+
 ```css
 
 bins.lua : report ranges that distinguish best rows from rest
@@ -20,8 +30,6 @@ OTHER OPTIONS:
   -h  --help   show help                  = false
 
 ```
- 
-# bins.lua
  
 ## NUM	
 

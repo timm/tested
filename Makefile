@@ -7,8 +7,7 @@ help: ## show help
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
 	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
 
-#mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
-mds:  $(subst .lua,.md,$(shell ls *.lua))
+mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
 
 install: dotfiles  
 
@@ -27,14 +26,14 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 #0
 #0 &nbsp;<p><a name=top></a><center>
 #0 
-#0 [Home](./README.md#top) :: [Tutorial]() :: [License](./LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+#0 [Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
 #0 
-#0 <img width=600 src="docs/img/banner.png">
+#0 <img width=600 src="/docs/img/banner.png">
 #0 
 #0 </center>
 #0 
 
-%.md: %.lua 
+docs/%.md: %.lua 
 		echo $@
 		gawk 'sub(/^#0 /,"")' Makefile > $@
 		printf "\n\n# "$^"\n\n" >> $@

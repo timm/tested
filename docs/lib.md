@@ -1,9 +1,17 @@
-<img src="img/banner.png">
- 
+&nbsp;<p><a name=top></a><center>
+
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="/docs/img/banner.png">
+
+</center>
+
+
+
+# lib.lua
+
 ```css
 ```
- 
-# lib.lua
  
 Some general LUA tricks.    	
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2 license	

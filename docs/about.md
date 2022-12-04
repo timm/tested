@@ -1,5 +1,15 @@
-<img src="img/banner.png">
- 
+&nbsp;<p><a name=top></a><center>
+
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="/docs/img/banner.png">
+
+</center>
+
+
+
+# about.lua
+
 ```css
 
 about.lua : summarize a table
@@ -14,8 +24,6 @@ OPTIONS:
   -h  --help  show help                 = false
 
 ```
- 
-# about.lua
  
 ## NUM	
 Summarizes a stream of numbers	
