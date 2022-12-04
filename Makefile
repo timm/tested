@@ -27,7 +27,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 %.md: %.lua 
 		echo $@
 		echo "[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   " > $@
-		echo "<hr>![](docs/img/banner.png)      " >> $@
+		(echo "<hr>  "; echo ""; echo ""; ![](docs/img/banner.png)   )   " >> $@
 		(echo " "; echo "# $^"; echo " " )>> $@
 		(echo " ";echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@
