@@ -25,7 +25,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
 #0
-#0 &nsbp;<p><a name=top></a><center>
+#0 &nbsp;<p><a name=top></a><center>
 #0 
 #0 [Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
 #0 

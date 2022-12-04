@@ -1,4 +1,4 @@
-&nsbp;<p><a name=top></a><center>
+&nbsp;<p><a name=top></a><center>
 
 [Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
 
