@@ -1,6 +1,6 @@
 &nbsp;<p><a name=top></a><center>
 
-[Home](./README.md#top) :: [Tutorial]() :: [License](./LICENSE) :: [Issues]() &copy; 2022 Tim Menzies   
+[Home](./README.md#top) :: [Tutorial]() :: [License](./LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
 
 <img width=600 src="docs/img/banner.png">
 
