@@ -27,7 +27,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 #0
 #0 &nbsp;<p><a name=top></a><center>
 #0 
-#0 [Home](README.md#top) :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
+#0 [Home](./README.md#top) :: [Tutorial]() :: [License](./LICENSE) :: [Issues]() &copy; 2022 Tim Menzies   
 #0 
 #0 <img width=600 src="docs/img/banner.png">
 #0 
