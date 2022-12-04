@@ -1,5 +1,5 @@
 [Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
-![](docs/img/banner.png)      
+<hr>![](docs/img/banner.png)      
  
 # alfold.lua
  
