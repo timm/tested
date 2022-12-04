@@ -37,6 +37,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 %.md: %.lua 
 		echo $@
 		gawk 'sub(/^#0 /,"")' Makefile > $@
+		printf "\n\n# "$0"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " ";)>> $@
