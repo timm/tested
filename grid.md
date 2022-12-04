@@ -1,13 +1,11 @@
-[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies<hr>
- 
- 
-![](docs/img/banner.png)
- 
-  
- 
-# grid.lua
- 
- 
+&nsbp;<p><a name=top></a><center>
+
+[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="docs/img/banner.png">
+
+</center>
+
 ```css
 
 grud.lua : row/column clustering for rep grids

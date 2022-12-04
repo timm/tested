@@ -1,13 +1,11 @@
-[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies<hr>
- 
- 
-![](docs/img/banner.png)
- 
-  
- 
-# bins.lua
- 
- 
+&nsbp;<p><a name=top></a><center>
+
+[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="docs/img/banner.png">
+
+</center>
+
 ```css
 
 bins.lua : report ranges that distinguish best rows from rest

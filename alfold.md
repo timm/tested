@@ -1,13 +1,11 @@
-[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies<hr>
- 
- 
-![](docs/img/banner.png)
- 
-  
- 
-# alfold.lua
- 
- 
+&nsbp;<p><a name=top></a><center>
+
+[Home]() :: [Tutorial]() :: [License]() :: [Issues]() &copy; 2022 Tim Menzies   
+
+<img width=600 src="docs/img/banner.png">
+
+</center>
+
 ```css
   
 alfold.lua (v2.0) LUA to Markdown. Assumes a little Hungarian notation.
