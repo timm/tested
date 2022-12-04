@@ -21,8 +21,6 @@ OTHER OPTIONS:
 
 ```
  
-# bins.lua
- 
 ## NUM	
 
 <dl>

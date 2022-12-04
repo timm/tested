@@ -11,8 +11,6 @@ Options:
  -h --help Show help 
 ```
  
-# alfold.lua
- 
 > Extract doco from LUA files to Markdown. Assumes a plain Hungarian notation.	
  	
 The Little Hungarian Plain or Little Alföld is a plain tectonic	

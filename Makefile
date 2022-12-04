@@ -24,12 +24,13 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
-%.md: %.lua
+%.md: %.lua 
 		echo $@
+		(echo " "; echo "# $^"; echo " " )>> $@
 		echo "<img src=\"docs/img/banner.png\">" > $@
 		(echo " ";echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@
-		(echo "\`\`\`"; echo " "; echo "# $^"; echo " " )>> $@
+		(echo "\`\`\`"; echo " ";)>> $@
 		lua alfold.lua $^  >> $@
 		if [ -f "var/$(basename $^).txt" ]; then echo "" >> $@; cat var/$(basename $^).txt >> $@; fi
 

@@ -3,8 +3,6 @@
 ```css
 ```
  
-# lib.lua
- 
 Some general LUA tricks.    	
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2 license	
 ## Linting	

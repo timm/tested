@@ -15,8 +15,6 @@ OPTIONS:
 
 ```
  
-# about.lua
- 
 ## NUM	
 Summarizes a stream of numbers	
 

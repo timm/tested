@@ -23,8 +23,6 @@ OPTIONS:
 
 ```
  
-# grid.lua
- 
 
 <dl>
 <dt><b> LINE:new(raw, lhs:<tt>tab</tt>, rhs:<tt>tab</tt>) &rArr;  LINE </b></dt><dd>  constructor for a line. </dd>

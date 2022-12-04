@@ -21,8 +21,6 @@ OTHER OPTIONS:
 
 ```
  
-# concise.lua
- 
 ## NUM	
 
 <dl>
