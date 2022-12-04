@@ -26,7 +26,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 
 %.md: %.lua
 		echo $@
-		echo "<img src=\"img/banner.png\">" > $@
+		echo "<img src=\"docs/img/banner.png\">" > $@
 		(echo " ";echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " "; echo "# $^"; echo " " )>> $@

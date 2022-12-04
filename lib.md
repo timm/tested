@@ -1,4 +1,4 @@
-<img src="img/banner.png">
+<img src="docs/img/banner.png">
  
 ```css
 ```
