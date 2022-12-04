@@ -39,21 +39,23 @@ For example, this file was generated via
  	
 1. Anything after four dashes (`----`) is not included in the output.	
 2. Any line starting with two dashes and a space(`-- `( **is** included in the output.	
-3. We only show help on public function.	
-4. In function argument lists, 2,4 spaces denotes optional,local arguments.	
-5. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
-6. Public functions are denoted with a  trailing "-->", followed by 	
+3. Public functions are denoted with a  trailing "-->", followed by 	
    return type then some comment text. e.g.<br> 	
    `function fred(s) --> str; Returns `s`, written as a string`<br>   	
    Note the semi-colon. Do not skip it (its important).	
-7. In public function arguments, lower case versions of class type 	
-   (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
-   so `datas` is a list of `DATA` instances).	
-8  Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
-9. User-defined types are any word starting with two upper case 	
-   leading letters is a class; e.g. DATA	
-10. Public function arguments have the type hints shown in the following table.	
-11. All other variable names can be anything at all.	
+4. Alfond only show help on public function.	
+5. In public function argument lists	
+    - 2,4 spaces denotes optional,local arguments.	
+    - In public function arguments, lower case versions of class type 	
+      (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
+      so `datas` is a list of `DATA` instances).	
+    - Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
+    - User-defined types are any word starting with two upper case 	
+      leading letters is a class; e.g. DATA	
+6. Any other local variable, or arguments to other functions, can be anything at all.	
+7. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
+ 	
+Summary of type hints (applies only to public functions):	
  	
 What        | Notes                                                                            	
 :-----------|:------------------------------------------------------------------	
