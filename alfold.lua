@@ -154,6 +154,6 @@ function code(line) --> nil; handle code lines. Updates `obj`.
 function main(line) --> nil; handle each line
   if line:find"^[-][-] " then comments(line) else code(line) end end
 
--- ## Start uo
+--- Start-up
 for _,file in ipairs(arg) do lines(file,main) end
 dumpDocStrings() -- final dump to catch any finally pending docstrigns

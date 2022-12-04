@@ -118,4 +118,3 @@ Singulars are either `bools`, `fun` (function),
 <dt><b> main(line) &rArr;  nil </b></dt><dd>  handle each line </dd>
 </dl>
 
-## Start uo	
