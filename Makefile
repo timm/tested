@@ -7,7 +7,8 @@ help: ## show help
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
 	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
 
-mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
+#mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
+mds:  $(subst .lua,.md,$(shell ls *.lua))
 
 install: dotfiles  
 
@@ -23,7 +24,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
-docs/%.md: %.lua
+%.md: %.lua
 		echo $@
 		echo "<img src=\"img/banner.png\">" > $@
 		(echo " ";echo "\`\`\`css" ) >> $@
