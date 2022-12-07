@@ -1,5 +1,5 @@
 &nbsp;<p><a name=top></a>
-[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+[Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 [timm](http://menzies.us)
 <img  src="/docs/img/banner.png">
 
 
