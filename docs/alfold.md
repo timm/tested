@@ -1,11 +1,6 @@
-&nbsp;<p><a name=top></a><center>
-
+&nbsp;<p><a name=top></a>
+<img  src="/docs/img/banner.png">
 [Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
-
-<img width=600 src="/docs/img/banner.png">
-
-</center>
-
 
 
 # alfold.lua

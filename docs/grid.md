@@ -1,11 +1,6 @@
-&nbsp;<p><a name=top></a><center>
-
+&nbsp;<p><a name=top></a>
+<img  src="/docs/img/banner.png">
 [Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
-
-<img width=600 src="/docs/img/banner.png">
-
-</center>
-
 
 
 # grid.lua
@@ -49,90 +44,3 @@ OPTIONS:
 <dt><b> eg.trees() &rArr;  nil </b></dt><dd>  Runs the whole analysis. </dd>
 </dl>
 
-
-
-
-
-## Example
-   
-Example input
-    
-        local _ = " "
-        return {
-         domain="dissementian platforms",
-         cols={   {'DevelopmentTool', 5, 3, 3, 1, 1, 1, 1, 3, 5, 5, 'Application'},
-                       {'Multimedia', 2, 1, 1, 5, 5, 5, 5, 5, 1, 2, 'Programming'},
-          {'CommunicationTechnology', 1, 3, 1, 3, 2, 5, 4, 3, 1, 1, 'ApplicationTechnology'},
-               {'HumanOrientedTool' , 2, 1, 1, 1, 3, 5, 3, 2, 2, 2, 'SystemTool'},
-        {'ConventionalCommunication', 1, 5, 3, 4, 1, 1, 4, 5, 4, 4, 'NovelCommunication'},
-              {'OnlyActAsProgrammed', 1, 4, 1, 1, 1, 1, 1, 5, 3, 1, 'Semi-autonomous'},
-               {'ConventionalSystem', 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 'IntelligentSystem'},
-              {'TargetedOnInterface', 1, 1, 1, 1, 1, 5, 5, 5, 3, 3, 'TargetedOnOverallSystem'}},
-        rows={                      { _, _, _, _, _, _, _, _, _, 'BroadbandNetworks'},
-                                    { _, _, _, _, _, _, _, _, 'InformationHighway'},
-                                    { _, _, _, _, _, _, _, 'IntelligentAgents'},
-                                    { _, _, _, _, _, _, 'KnowledgeBasedSystems'},
-                                    { _, _, _, _, _,  'ObjectOrientedSystems'},
-                                    { _, _, _, _,  'CrossPlatformGUIs'},
-                                    { _, _, _,  'VisualProgramming'},
-                                    { _, _,  'MultimediaAndHypermedia'},
-                                    { _, 'VirtualReality'},
-                                    {'ElectronicPublishing'}} }
-   
-1. Cluster attributes to find synonyms.
-
-        Attributes:
-        87
-        |.. 72
-        |.. |.. 34
-        |.. |.. |.. f) OnlyActAsProgrammed :: Semi-autonomous
-        |.. |.. |.. g) ConventionalSystem :: IntelligentSystem
-        |.. |.. 60
-        |.. |.. |.. e) ConventionalCommunication :: NovelCommunication
-        |.. |.. |.. a) DevelopmentTool :: Application
-        |.. 64
-        |.. |.. 47
-        |.. |.. |.. c) CommunicationTechnology :: ApplicationTechnology
-        |.. |.. |.. b) Multimedia :: Programming
-        |.. |.. 25
-        |.. |.. |.. h) TargetedOnInterface :: TargetedOnOverallSystem
-        |.. |.. |.. d) HumanOrientedTool :: SystemTool
-        
-2. Cluster examples to similarities.
-
-        Examples:
-        80
-        |.. 63
-        |.. |.. 20
-        |.. |.. |.. j) BroadbandNetworks :: 
-        |.. |.. |.. i) InformationHighway :: 
-        |.. |.. 48
-        |.. |.. |.. e) CrossPlatformGUIs :: 
-        |.. |.. |.. 28
-        |.. |.. |.. |.. c) MultimediaAndHypermedia :: 
-        |.. |.. |.. |.. a) ElectronicPublishing :: 
-        |.. 80
-        |.. |.. 48
-        |.. |.. |.. d) VisualProgramming :: 
-        |.. |.. |.. b) VirtualReality :: 
-        |.. |.. 71
-        |.. |.. |.. f) ObjectOrientedSystems :: 
-        |.. |.. |.. 42
-        |.. |.. |.. |.. h) IntelligentAgents :: 
-        |.. |.. |.. |.. g) KnowledgeBasedSystems :: 
-        
-3. Map examples onto a 2-by-2 grid
-  
-        Place:
-        {a                                 b      }
-        {                                         }
-        {                                         }
-        {                                         }
-        {                                         }
-        {                                         }
-        {                                         }
-        {                    d c                  }
-        {                                         }
-        {                  h                      }
-        {          e   f                          }
-        PASS ✅ on [trees]

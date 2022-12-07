@@ -7,7 +7,7 @@ help: ## show help
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
 	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
 
-mds:  $(addprefix docs/,$(subst .lua,.md,$(shell ls *.lua)))
+mds:  $(addprefix $R/docs/,$(subst .lua,.md,$(shell ls *.lua)))
 
 install: dotfiles  
 
@@ -24,24 +24,23 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
 #0
-#0 &nbsp;<p><a name=top></a><center>
-#0 
+#0 &nbsp;<p><a name=top></a>
+#0
+#0
+#0 <img  src="/docs/img/banner.png">
+#0
 #0 [Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
-#0 
-#0 <img width=600 src="/docs/img/banner.png">
-#0 
-#0 </center>
-#0 
+#0
 
-docs/%.md: %.lua 
+$R/docs/%.md: %.lua 
 		echo $@
-		gawk 'sub(/^#0 /,"")' Makefile > $@
+		gawk 'sub(/^#0 /,"")' $R/Makefile > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " ";)>> $@
-		lua alfold.lua $^  >> $@
-		if [ -f "var/$(basename $^).txt" ]; then echo "" >> $@; cat var/$(basename $^).txt >> $@; fi
+		lua $R/src/alfold.lua $^  >> $@
+		if [ -f "var/$(basename $^).txt" ]; then echo "" >> $@; cat $R/var/$(basename $^).txt >> $@; fi
 
 about:
 	echo "lua 101"
