@@ -1,6 +1,6 @@
 &nbsp;<p><a name=top></a>
-<img  src="/docs/img/banner.png">
 [Home](/README.md#top) :: [Tutorial]() :: [License](/LICENSE.md) :: [Issues]() &copy; 2022 Tim Menzies   
+<img  src="/docs/img/banner.png">
 
 
 # bins.lua
