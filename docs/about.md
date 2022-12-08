@@ -3,7 +3,7 @@
 <a name=top></a>
 <p>
 <table><tr>
-<td bgcolor=green><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">Home</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
 </tr></table>
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
