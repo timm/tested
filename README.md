@@ -40,7 +40,7 @@ methods that let outsiders probe a system, looking for interesting
 make conclusions based on a small sample of the total data space
 (so humans are not overwhelmed with excessive questions).
 
-[^Vance16]: Vance, Anthony, Paul Benjamin Lowry, and Dennis Eggett. 
+[^Vance2016]: Vance, Anthony, Paul Benjamin Lowry, and Dennis Eggett. 
   "Increasing Accountability Through User-Interface Design Artifacts." 
   MIS quarterly 39.2 (2015): 345-366.
 
