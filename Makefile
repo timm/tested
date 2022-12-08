@@ -43,7 +43,7 @@ $R/docs/%.md: %.lua
 		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " ";)>> $@
 		lua $R/src/alfold.lua $^  >> $@
-		if [ -f "var/$(basename $^).txt" ]; then echo "" >> $@; cat $R/var/$(basename $^).txt >> $@; fi
+		if [ -f "txt/$(basename $^).txt" ]; then echo "" >> $@; cat $R/txt/$(basename $^).txt >> $@; fi
 
 about:
 	echo "lua 101"
