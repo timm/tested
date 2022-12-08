@@ -77,6 +77,23 @@ Check your installation
     cd tested/src
     lua 101.lua -g all # should show one crash and several passes
 
+## Concepts
+
+TESTED has five layers:
+
+- The underlying language (Lua);
+- The scripting layer; includes:
+  - Test-driven development 
+    (see the `eg` object in, for example, [about.lua](/src/about.lua));
+  - Command-line tools
+    (see the `the` variable in, for example, [about.lua](/src/about.lua));
+  - Documentation tools
+    (see [alfold.lua](/src/alfold.lua) which generates, say,
+         [alfold.md](/docs/alfold.md)).
+- The data layer: see the classes NUM, SYM, ROW, DATA) in [about.lua](/docs/about.md);
+- The application layer: 
+  - Lots of examples of different data mining tools.
+
 ## Homeworks
 
 ### Homework1: Test-Driven Development
