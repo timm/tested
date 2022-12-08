@@ -17,6 +17,13 @@ they must reproduce in any other language they like (except Lua).
 suitable for homeworks or (by combining several modules) a large
 end-of-term project.  
 
+(Just an aside, the way I do weekly programming homeworks is that every weekend, everyone
+has to submit something, even if it is broken. Homeworks can get submitted multiple times
+so I grade them 0,1,2 where:
+- "2" means good;
+- "1" means "invited to resubmit";
+- "0" means "bad" or "no submission".)
+
 TESTED assumes that the best way to test something is to give it
 to someone else, and watch them break it.  
 - This is actually a core
@@ -70,4 +77,6 @@ Check your installation
     cd tested/src
     lua 101.lua -g all # should show one crash and several passes
 
+## Homeworks
 
+### Homework1: Test-Driven Development
