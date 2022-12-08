@@ -3,7 +3,7 @@
 <p align=center>
 <a name=top></a>
 <a href="/README.md#top">Home</a>
-:: <a href="http:github.com/timm/tested/issues">issues</a><br>
+:: <a href="http:github.com/timm/tested/issues">issues</a><hr>
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
 </p>
@@ -19,7 +19,7 @@ they must reproduce in any other language they like (except Lua).
 suitable for homeworks or (by combining several modules) a large
 end-of-term project.  
 
-(Just an aside, the way I do weekly programming homeworks is that every weekend, everyone
+(Just an aside, the way I do weekly homeworks is that every week, everyone
 has to submit something, even if it is broken. Homeworks can get submitted multiple times
 so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
 
