@@ -23,21 +23,9 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
-#0
-#0 &nbsp;<p><a name=top></a>
-#0
-#0 {{ [Home](/README.md#top) :: [Tutorial]() :: [Issues]().}} [&copy;2022,2023](/LICENSE.md) by [Tim Menzies](http://menzies.us)
-#0
-#0 _____________
-#0 
-#0 <img  width=600 src="/docs/img/banner.png">
-#0
-#0 </center>
-#0 
-
 $R/docs/%.md: %.lua 
 		echo $@
-		gawk 'sub(/^#0 /,"")' $R/Makefile > $@
+		gawk 'BEGIN {RS="";FS="\n"} {print; exit}' $R/README.md  > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@

@@ -1,10 +1,11 @@
-&nbsp;<p><a name=top></a>
-{{ [Home](/README.md#top) :: [Tutorial]() :: [Issues]().}} [&copy;2022,2023](/LICENSE.md) by [Tim Menzies](http://menzies.us)
-_____________
-
+<center>
+<p><a name=top></a><p>&nbsp;
+<a href="/README.md#top">Home</a>
+:: <a href="http:github.com/timm/tested/issues">issues</a> 
+{{ <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a> }}
+<hr>
 <img  width=600 src="/docs/img/banner.png">
 </center>
-
 
 
 # bins.lua
