@@ -79,7 +79,7 @@ Check your installation
 
 ## Concepts
 
-TESTED has five layers:
+TESTED has four layers:
 
 |Layer|Notes|
 |----|------|
@@ -90,4 +90,6 @@ TESTED has five layers:
 
 ## Homeworks
 
-### Homework1: Test-Driven Development
+### Homework1: 101.lua Test-Driven Development
+
+Since some students are stronger than others (w.r.t. scripting)
