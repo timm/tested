@@ -1,9 +1,12 @@
 <p>
 &nbsp;
-<p align=center>
 <a name=top></a>
-<a href="/README.md#top">Home</a>
-:: <a href="http:github.com/timm/tested/issues">issues</a><hr>
+<p>
+<table><tr>
+<td><a href="/README.md#top">Home</a>
+<td><a href="http:github.com/timm/tested/issues">issues</a>
+</tr>
+</table><hr>
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
 </p>
