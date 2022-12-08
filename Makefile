@@ -30,7 +30,7 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 #0
 #0 _____________
 #0 
-#0 <img  src="/docs/img/banner.png">
+#0 <img  width=600 src="/docs/img/banner.png">
 #0
 #0 </center>
 #0 
