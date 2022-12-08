@@ -1,11 +1,13 @@
-<center>
-<p><a name=top></a><p>&nbsp;
+<p>
+&nbsp;
+<p align=center>
+<a name=top></a>
 <a href="/README.md#top">Home</a>
 :: <a href="http:github.com/timm/tested/issues">issues</a> 
-{{ <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a> }}
 <hr>
-<img  width=600 src="/docs/img/banner.png">
-</center>
+<img  width=600 src="/docs/img/banner.png"><br clear=all>
+<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
+</p>
 
 
 # concise.lua
