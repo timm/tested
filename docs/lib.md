@@ -1,6 +1,9 @@
 &nbsp;<p><a name=top></a>
-[Home](/README.md#top) :: [Tutorial]() :: [Issues](). [&copy;2022,2023](/LICENSE.md) by [Tim Menzies](http://menzies.us)
+<center>
+[Home](/README.md#top) :: [Tutorial]() :: [Issues](). [&copy;2022,2023](/LICENSE.md) by [Tim Menzies](http://menzies.us)<hr>
 <img  src="/docs/img/banner.png">
+</center>
+
 
 
 # lib.lua

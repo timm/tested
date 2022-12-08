@@ -53,7 +53,7 @@ function NUM:add(x)
     self.lo = math.min(x, self.lo)
     self.hi = math.max(x, self.hi) end end
 
-function NUM:mid(x) return self.mu end
+function NUM:mid(x) return self.mu  end
 function NUM:div(x) return self.sd end 
 function NUM:norm(x)
   if x=="?" then return x end
