@@ -5,6 +5,7 @@
 <td><a href="http:github.com/timm/tested/issues">issues</a>
 </tr></table>
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
+
  <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
  src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> <img 
