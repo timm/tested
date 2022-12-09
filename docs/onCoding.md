@@ -36,38 +36,36 @@ with the same rights as conventional values like numbers and strings.
 
 ## DI: Dialog independence
 
-- In the guts of your code, no direct writes to "print" but rather to some `log` function that may or may not write to the screen.
-- Can you turn off all logging (no log string generation, nothing logged/printed anywhere)?
+1. In the guts of your code, no direct writes to "print" but rather to some `log` function that may or may not write to the screen.
+2. Can you turn off all logging (no log string generation, nothing logged/printed anywhere)?
 
 ## Ab: Abstraction
-- Using try:catch, try:except, (Lua) pcall,
+1. Using try:catch, try:except, (Lua) pcall,
   - See `pcall` in `run1`
-- You writing your own iterators ? 
+2. You writing your own iterators ? 
   - e.g. lib.lua#csv calls `fun` for every row in a csv file
 
 ## OO: Object-oriented programming
 
-- Are you using polymorphism? (same name, different methods);
-- Are you using inheritance (consider doing less of that)?
+1. Are you using polymorphism? (same name, different methods);
+2. Are you using inheritance (consider doing less of that)?
   - [Hatton98](http://www.cs.kent.edu/~jmaletic/cs69995-PC/papers/Hatton98.pdf)
   - [Jabangwe14](https://www.wohlin.eu/emse14b.pdf)
   - [Al Dallal18](https://www.computer.org/csdl/journal/ts/2018/01/07833023/13rRUwkxc76)
   - [Stop Writing Classes](https://www.youtube.com/watch?v=o9pEzgHorH0)
-- Do your objects have customized create function? (e.g. 101.lua#SYM:add)
-- Do your objects have customized sort functions? (e.g. Lua __lt)
-- Do your objects have customized print functions (e.g. Lua __tostring)
+3. Do your objects have customized create function? (e.g. 101.lua#SYM:add)
+4. Do your objects have customized sort functions? (e.g. Lua __lt)
+5. Do your objects have customized print functions (e.g. Lua __tostring)
 
-## DSL
-- Refactoring, on steroids.
-- Common processing, rewritten as a massive shortcuts
+## DSL: DSL
+1. Refactoring, on steroids.
+2. Common processing, rewritten as a massive shortcuts
   - e.g. regular expressions
     - see lib.lua#settings' processing of 101.lua#the
   - e.g. help string to options 101.lua#settings
 
-- usig existing DSLs (regular expresions, build systems)
-- do you write your own (docstring==> CLI)
-
-# Packaging
+## Packaging
+=
 
 ## XXX sharing
 - Is your code under some license that enables sharing?
@@ -129,6 +127,7 @@ with the same rights as conventional values like numbers and strings.
 - red
 - green
 - refactor
+  - rule of three
 - tests in different files
 
 beyond standard testing (other testing)
