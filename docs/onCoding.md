@@ -27,7 +27,13 @@ with the same rights as conventional values like numbers and strings.
 3. Useful for collecting results of an iteration (see lib.lub#map in lib.lua#o)
 4. Writing function that return functions (see lib.lua#lt)
 
-## DbI: Data Independence
+## Te: Test suite
+1. Do you have half a dozen tests per person working on the project per week of work?
+2. Can all the tests be run in batch?
+3. From the command line can you run just one test?
+4. If a test fails and crashes, can the rest of the tests still run (hint try:except:)
+
+### DbI: Data Independence
 
 1. Your internal model is isolated from I/O operations 
    - When reading csv files, conversions  from strings to types happens once, 
@@ -64,26 +70,34 @@ with the same rights as conventional values like numbers and strings.
     - see lib.lua#settings' processing of 101.lua#the
   - e.g. help string to options 101.lua#settings
 
-## Packaging
-=
+## Pa: Packaging
+1. N-1 globals better than N.
+2. What are you exporting?
+   - See [Python tips](https://stackoverflow.com/questions/26813545/how-to-structure-a-python-module-to-limit-exported-symbols)
 
-## XXX sharing
-- Is your code under some license that enables sharing?
-- Does your project have a web site?
-- Does your web site include test data, documentation, test suite results?
-- Is your code routinely explored by  static code analysis tools (which can be very  simple e.g. syntastic or very complex and slow to run e.g. your model checker of choice)?
-- Does your code follow standard formatting conventions?
-- Does your code support short release cycles (no standard test is slow, really slow things are explored for optimization)
-- Does your code have zero internal boundaries (e.g. everyone uses same tools, config files for those tools in repo)
+## Sh: Sharing
+1. Code released under some license that enables sharing.
+2. Project has a web site.
+   - Note: my "web" site is markdown files that share the first para of "/README.md"
+   - So my web site "build" system is about 10 lines of code in "/Makefile"
+3. Repo includes test data, documentation, test suite results.
+   - e.g. for Python pydoc and [sublime](https://menzies.us/sublime/sublime.html)
+   - e.g. for Lua, [ldoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html)
+   - e.g. for Lua, [alfold](https://github.com/timm/tested/blob/main/docs/alfold.md)
+4. Code routinely explored by  static code analysis tools (which can be very  simple e.g. 
+    syntastic or very complex and slow to run e.g. your model checker of choice)?
+5. Code follow standard formatting conventions:
+   - e.g. Python Flake8 is a popular lint wrapper for python. Under the hood, 
+     runs the `pep8` style checker,
+     `pyflakes` for checking syntax,
+     `mccabe` for checking complexity
+6. Does your code support short release cycles 
+   (no standard test is slow, really slow things are explored for optimization)
+7. Does your code have zero internal boundaries 
+   (e.g. everyone uses same tools, config files for those tools in repo)
 
 
-## Test suite
-- Do you have half a dozen tests per person working on the project per week of work?
-- Can all the tests be run in batch?
-- From the command line can you run just one test?
-- If a test fails and crashes, can the rest of the tests still run (hint try:except:)
-
-## Source control
+# Source control
 - Is your code in some version control system?
 - Everyday you write code, does some branch get updated?
 - Is the test suite triggered by each new commit? 
