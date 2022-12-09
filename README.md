@@ -96,3 +96,32 @@ TESTED has four layers:
 
 Since some students are stronger than others (w.r.t. scripting). So the
 first task is more of a balancing exerice to get everyone up to speed.
+
+DM1
+- regular expressions [^Cox07] [^Thom68]
+- incremental, when you can
+- stochastic (see reservoir sampling)
+  - control your seed (or else)
+- NUMs, SYMs
+- mid (middle) div(diversity)
+
+- Lehmer [^Lehmer69] (a.k.a. Park-Miller)
+- Fisher Yates shuffle [^Fisher38], randomizing in linear time, sorting in place
+- resevoir sampling [^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
+  where n is either a very large or unknown number. Typically n is large enough that the list doesn’t fit into main memory. For example, a list of search queries in Google and Facebook.
+- Shannon entropy [^Shannon48] <img src="https://en.wikipedia.org/wiki/Entropy_(information_theory)#/media/File:Binary_entropy_plot.svg" align=right width=200>
+- sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of precision due to catastrophic cancellation, 
+- sd via resevoir
+  - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
+    can be computed by the difference between large numbers and small numbers in an array.
+
+
+[^Cox07]: Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...), Russ Cox rsc@swtch.com, January 2007
+[^Fisher38]: Fisher, Ronald A.; Yates, Frank (1948) [1938]. Statistical tables for biological, agricultural and medical research (3rd ed.). London: Oliver & Boyd. pp. 26–27. OCLC 14222135. 
+[^Lehmer69]: W. H. Payne; J. R. Rabung; T. P. Bogyo (1969). "Coding the Lehmer pseudo-random number generator" (PDF). Communications of the ACM. 12 (2): 85–86. doi:10.1145/362848.362860
+[^ResXX]: Bad me. I can recall where on the web I found this one.
+[^Shannon48]: Shannon, Claude E. (July 1948). "A Mathematical Theory of Communication". Bell System Technical Journal. 27 (3): 379–423. doi:10.1002/j.1538-7305.1948.tb01338.x. hdl:10338.dmlcz/101429. (PDF, archived from here)
+[^Thom68]: Ken Thompson, “Regular expression search algorithm,” Communications of the ACM 11(6) (June 1968), pp. 419–422. http://doi.acm.org/10.1145/363347.363387 
+  <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
+[^Welford62]: Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
+
