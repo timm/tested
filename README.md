@@ -7,7 +7,7 @@
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
 
- <img src="https://img.shields.io/badge/task-ai-blue-violet"><a
+ <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
  src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> <img 
  src="https://img.shields.io/badge/language-lua-orange"> <img 
