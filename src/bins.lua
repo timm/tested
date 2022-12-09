@@ -61,7 +61,7 @@ function NUM:norm(x)
 
 function NUM:discretize(n) --> num; discretize `Num`s,rounded to (hi-lo)/Bins
   local tmp = (self.hi - self.lo)/(the.Bins - 1)
-  return self.hi == self.lo and 1 or math.floor(n/tmp + .5)*tmp end 
+return self.hi == self.lo and 1 or math.floor(n/tmp + .5)*tmp end 
 
 function NUM:merge(b4,min) 
   local function fillInGaps(t)

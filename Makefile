@@ -7,7 +7,8 @@ help: ## show help
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
 	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
 
-mds:  $(addprefix $R/docs/,$(subst .lua,.md,$(shell ls *.lua)))
+mds:  
+	$(MAKE) $(addprefix $R/docs/,$(subst .lua,.md,$(shell ls *.lua)))
 
 install: dotfiles  
 
@@ -23,15 +24,16 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
-ONE=gawk  'BEGIN {RS="";FS="\n"} NF==1 {print; exit}' $R/README.md
-REST=gawk 'BEGIN {RS="";FS="\n"} NF>1  {print "\n"$0}' 
+H=awk  'BEGIN {RS="";FS="\n"} NR==1 {print; exit}' $R/README.md
+B=awk 'BEGIN {RS="";FS="\n"} NR>1  {print "\n"; print}' 
 
-ons:
-	$(forall f,$(shell $R/docs/on*.md), $(ONE)>tmp; $(TWO) $f>>tmp; mv tmp $f;)
+zzz:
+	$(foreach f, $(wildcard $R/docs/on*.md),\
+		 echo "# $(notdir $f)"; $H>tmp;$B $f>>tmp;mv tmp $f;)
 
 $R/docs/%.md: %.lua 
 		echo $@
-		$(ONE)  > $@
+	  $H  > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@

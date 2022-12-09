@@ -63,8 +63,7 @@ make conclusions based on a small sample of the total data space
 
 Install Lua (version 5.3 or higher).
 
-    # on mac os/x
-    brew install lua
+    brew install lua       # on max os/x
 
 Check-out this repo
 
@@ -90,4 +89,5 @@ TESTED has four layers:
 
 ### Homework1: 101.lua Test-Driven Development
 
-Since some students are stronger than others (w.r.t. scripting)
+Since some students are stronger than others (w.r.t. scripting). So the
+first task is more of a balancing exerice to get everyone up to speed.

@@ -16,7 +16,7 @@ USAGE:   about.lua  [OPTIONS]
 
 OPTIONS:
   -d  --dump  on crash, print stackdump = false
-  -f  --file  csv file                  = ../data/auto93.csv
+  -f  --file  csv file                  = ../etc/data/auto93.csv
   -g  --go    start-up action           = data
   -h  --help  show help                 = false
 ]]
