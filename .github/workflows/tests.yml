@@ -7,8 +7,8 @@ jobs:
     - uses: actions/checkout@master
     - uses: leafo/gh-actions-lua@v5
       with:
-        luaVersion: "5.4"
-    - uses: leafo/gh-actions-luarocks@v2
+        luaVersion: "5.3"
     - name: test
       run: |
+        lua -v
         cd src; lua about.lua -g all
