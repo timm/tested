@@ -142,6 +142,9 @@ with the same rights as conventional values like numbers and strings.
 - green
 - refactor
   - rule of three
+  - YAGNI 
+  - forever stunned at how small is the useful core of larger systems
+  - the need for smalller code
 - tests in different files
 
 beyond standard testing (other testing)
