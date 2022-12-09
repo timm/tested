@@ -5,10 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: leafo/gh-actions-lua@v5
+    - uses: leafo/gh-actions-lua@v9
       with:
-        luaVersion: "5.3"
+        luaVersion: "5.4.4"   
     - name: test
       run: |
-        lua -v
-        cd src; lua about.lua -g all
+        cd ./src; lua about.lua -g all  
+    - run: echo "🍏 This job's status is ${{ job.status }}."
+     
