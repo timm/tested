@@ -15,6 +15,10 @@
 
 Idioms for useful code
 
+
+## LIM: Less is More
+1. Most functions are v.short
+
 ## FP: Functional programming
 
 > "first-class values":  a function is a value 
@@ -63,7 +67,7 @@ with the same rights as conventional values like numbers and strings.
 4. Do your objects have customized sort functions? (e.g. Lua __lt)
 5. Do your objects have customized print functions (e.g. Lua __tostring)
 
-## DSL: DSL
+## DSL DSL
 1. Refactoring, on steroids.
 2. Common processing, rewritten as a massive shortcuts
   - e.g. regular expressions
@@ -74,6 +78,8 @@ with the same rights as conventional values like numbers and strings.
 1. N-1 globals better than N.
 2. What are you exporting?
    - See [Python tips](https://stackoverflow.com/questions/26813545/how-to-structure-a-python-module-to-limit-exported-symbols)
+3. Are you using nested functions (to  hide or  clarify tedious details)
+   - e.g. lib.lua#'function want'.
 
 ## Sh: Sharing
 1. Code released under some license that enables sharing.
