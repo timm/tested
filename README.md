@@ -12,6 +12,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
+
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
 
 # Hello!
