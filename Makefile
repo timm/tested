@@ -23,9 +23,15 @@ vims: ~/.vim/bundle/Vundle.vim ## sub-routine. just install vim
 ~/.vim/bundle/Vundle.vim:
 	- [[ ! -d "$@" ]] && git clone https://github.com/VundleVim/Vundle.vim.git $@
 
+ONE=gawk  'BEGIN {RS="";FS="\n"} NF==1 {print; exit}' $R/README.md
+REST=gawk 'BEGIN {RS="";FS="\n"} NF>1  {print "\n"$0}' 
+
+ons:
+	$(forall f,$(shell $R/docs/on*.md), $(ONE)>tmp; $(TWO) $f>>tmp; mv tmp $f;)
+
 $R/docs/%.md: %.lua 
 		echo $@
-		gawk 'BEGIN {RS="";FS="\n"} {print; exit}' $R/README.md  > $@
+		$(ONE)  > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
 		lua $^ -h  >> $@

@@ -20,9 +20,9 @@ OPTIONS:
   -g  --go    start-up action           = data
   -h  --help  show help                 = false
 ]]
-local csv,push,kap,o,oo,obj,rnd = 
+local csv,copy,push,kap,o,oo,obj,rnd = 
          l.csv,        -- file tricks
-         l.push,l.kap, -- list tricks
+         l.copy,l.push,l.kap, -- list tricks
          l.o,l.oo,     -- printing tricks
          l.obj,        -- object tricks
          l.rnd         -- random number tricks
@@ -47,6 +47,9 @@ function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
 
 function NUM:mid(x) return self.mu end --> n; return mean
 function NUM:div(x) return self.sd end --> n; return standard deviation
+
+function NUM:bin(x) 
+  return x=="?" and "?" or (x - self.lo) / (self.hi - self.lo + 1E-31) end
 --------------------------------------------------------------------------------
 -- ## SYM
 local SYM = obj"SYM"
@@ -68,8 +71,13 @@ function SYM:div(x)
   local function fun(p) return p*math.log(p,2) end
   local e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
   return e end
+
+function SYM:bin(x) return x end
 --------------------------------------------------------------------------------------------
--- ## COLS
+-- ## ROW
+local ROW = obj"ROWS"
+function ROW:new(t) self.raw=t; self.cells=copy(t) end
+--------------------------------------------------------------------------------------------
 local COLS = obj"COLS"
 function COLS:new(t)
   self.names, self.all, self.x, self.y = t,{},{},{} 
@@ -78,10 +86,10 @@ function COLS:new(t)
     if not s:find"X$" then
       push(s:find"[!+-]$" and self.y or self.x, col) end end end
     
-function COLS:add(row)
-  for _,cols in pairs{self.x, self.y} do
+function COLS:add(t)
+  for _,cols in pairs({self.x, self.y}) do
     for _,col in pairs(cols) do
-      col:add(row[col.at]) end end 
+      col:add(t[col.at]) end end
   return row end
 --------------------------------------------------------------------------------------------
 -- ## DATA
@@ -93,7 +101,15 @@ function DATA:new(src) --> DATA; `src` is either (a) a file name string or (b) l
   else map(src or {}, function(row) self:add(row) end) end end
 
 function DATA:add(row) 
-  if self.cols then push(self.rows, self.cols:add(row)) else self.cols = COLS(row) end end
+  local cells = row.cells and cells or row
+  local row   = row.cells and row or ROW(cells)
+  if self.cols then push(self.rows, self.cols:add(cells)) else self.cols = COLS(cells) end end
+
+function DATA:bins()
+  for _,row in pairs(rows) do
+    for _,col in pairs(self.cols.x) do
+      row.cells[col.at] = col:bin(row.raw[col.at]) end end 
+  return self end
 
 function DATA:stats(  fun,cols,places)
   local t={}

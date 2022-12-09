@@ -39,7 +39,7 @@ Summarizes a stream of numbers
 </dl>
 
 ## SYM	
-## COLS	
+## ROW	
 ## DATA	
 
 <dl>
