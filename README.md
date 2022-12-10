@@ -98,7 +98,7 @@ Since some students are stronger than others (w.r.t. scripting). So the
 first task is more of a balancing exerice to get everyone up to speed.
 
 DM1
-- Regular expressions [^Cox07] [^Thom68] <img src="/etc/img/fsm.png" align=right width=500>
+- Regular expressions [^Cox07] [^Thom68] <img src="/etc/img/fsm.png" align=right width=400>
   are a text form a state-transition diagram with a special `accept` state. If some stream of characters
   can walk the transitions and arrive at the accept state, then we say the pattern matches the characters.
 - When you can, be incremental; e.g. 101.lua@SYM, 101.lua@SYM.
