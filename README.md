@@ -109,7 +109,7 @@ DM1
 - Fisher Yates shuffle [^Fisher38], randomizing in linear time, sorting in place
 - resevoir sampling [^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
   where n is either a very large or unknown number. Typically n is large enough that the list doesn’t fit into main memory. For example, a list of search queries in Google and Facebook.
-- <img src="/etc/img/norm.png" align=right width=400>
+- <img src="/etc/img/norm.png" align=right width=600>
   normal distribution [^deMoi1718]:  that probabilities associated with discretely 
   generated random variables (such as are obtained by flipping a coin or rolling a die) can 
   be approximated by the area under the graph of an exponential function.
