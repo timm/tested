@@ -125,7 +125,11 @@ DM1
 - sd via resevoir
   - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
-- Shannon entropy [^Shannon48] <img src="https://en.wikipedia.org/wiki/Entropy_(information_theory)#/media/File:Binary_entropy_plot.svg" align=right width=200>
+- Shannon entropy [^Shannon48] <img src="https://en.wikipedia.org/wiki/Entropy_(information_theory)#/media/File:Binary_entropy_plot.svg" align=right width=200>.
+  Many ways to define it, but consider it the effort required to recreate a signal.
+  Given a bit stream of size `n` and two structures using `n1` then `n2` bits then
+  a binary search can find them after $$\sum_i log_2(\frac{n_i}{n})$$ prunings
+  of the space. This o
 
 
 [^Cox07]:      Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...), Russ Cox rsc@swtch.com, January 2007
