@@ -138,8 +138,11 @@ DM1
 
 - Sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of 
   precision due to catastrophic cancellation, 
-- Sd via reservoir <img src="/etc/img/128.png" align=right width=300>
-  - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
+- Sd via reservoir 
+  - ±2,2.58,3 σ is 66,90,95%, 
+    <img src="/etc/img/128.png" align=right width=300>
+    of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. 
+    To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
 [^Cox07]:      [Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...)](https://swtch.com/~rsc/regexp/regexp1.html), 
   Russ Cox rsc@swtch.com, January 2007
