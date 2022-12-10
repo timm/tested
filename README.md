@@ -119,16 +119,17 @@ DM1
   into the first central limit theorem, which proved that probabilities for almost 
   all independent and identically distributed random variables converge rapidly 
   (with sample size) to the area under an exponential function—that is, to a normal 
-  distribution. 
+  distribution.  Extended, extensively by Gaussian. Now its a curve with an area under the curve of one.
+  As standard deviation shrinks, the curve spikes upwards.
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
 - sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of 
   precision due to catastrophic cancellation, 
-- sd via reservoir <img src="/etc/img/128.png" align=right width=400>
+- sd via reservoir <img src="/etc/img/128.png" align=right width=300>
   - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
-- Shannon entropy [^Shannon48] <img src="https://en.wikipedia.org/wiki/Entropy_(information_theory)#/media/File:Binary_entropy_plot.svg" align=right width=200>.
+- Shannon entropy [^Shannon48] <img align=right width=300 src="https://www.researchgate.net/profile/Shruti-Jadon-2/publication/342520628/figure/fig2/AS:907606478553088@1593401655516/Graph-of-Binary-Cross-Entropy-Loss-Function-Here-Entropy-is-defined-on-Y-axis-and.ppm">
   Many ways to define it, but consider it the effort required to recreate a signal.
   Given a bit stream of size `n` and two structures using `n1` then `n2` bits at probability
   $p_1=\frac{n_1}{n}$ and
