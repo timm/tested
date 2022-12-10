@@ -98,21 +98,34 @@ Since some students are stronger than others (w.r.t. scripting). So the
 first task is more of a balancing exerice to get everyone up to speed.
 
 DM1
-- regular expressions [^Cox07] [^Thom68]
-- incremental, when you can
-- stochastic (see reservoir sampling)
-  - control your seed (or else)
-- NUMs, SYMs
-- mid (middle) div(diversity)
+- Regular expressions [^Cox07] [^Thom68] <img src="/etc/img/fsm.png" align=right width=500>
+  are a text form a state-transition diagram with a special `accept` state. If some stream of characters
+  can walk the transitions and arrive at the accept state, then we say the pattern matches the characters.
+- When you can, be incremental; e.g. 101.lua@SYM, 101.lua@SYM.
+- Stochastic sampling can tame hard problems (see reservoir sampling and 101.lua@SOME))
 
-- Lehmer [^Lehmer69] (a.k.a. Park-Miller)
-- Fisher Yates shuffle [^Fisher38], randomizing in linear time, sorting in place
-- reservoir sampling[^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
+- Lehmer [^Lehmer69] (a.k.a. Park-Miller) a pseudorandom number algorithm  for generating 
+  a sequence of numbers whose properties approximate the properties of sequences of random numbers. 
+  The sequence is not truly random, because it is completely determined by an initial value, 
+  called the `seed`. By resetting the seed, the entire "random" sequence can be recreated.
+  - Control your seed (or else)
+- Fisher Yates shuffle [^Fisher38], randomizing in linear time algorithm for sorting a list of numbers.
+  To save memory, it sorts in the same space as the array.
+- A reservoir sampling[^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
   where n is either a very large or unknown number. Typically n is large enough that the list does not 
   fit into main memory. For example, a list of search queries in Google and Facebook.
-- normal distribution:
+- NUM/SYM middle point is mode/mean
+- NUM/SYM div(diversity) is standard deviation or entropy
+- Shannon entropy [^Shannon48] <img align=right width=300 src="/etc/img/shannon.png">
+  Many ways to define it, but consider it the effort required to recreate a signal.
+  Given a bit stream of size `n` and two structures using `n1` then `n2` bits at probability
+  $p_1=\frac{n_1}{n}$ and
+  $p_2=\frac{n_2}{n}$ and
+  we hunt for these via a binary chop, then that effort is
+  $$-\sum_i p_i \log_2(p_i)$$
+- _Normal distribution_:
   The French mathematician Abraham de Moivre [^deMo1718]
-  that probabilities associated with discretely 
+  notes that probabilities associated with discretely 
   generated random variables (such as are obtained by flipping a coin or rolling a die) can 
   be approximated by the area under the graph of an exponential function.
   Generalized by  Laplace[^Lap1812] 
@@ -124,20 +137,11 @@ DM1
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
-- sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of 
+- Sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of 
   precision due to catastrophic cancellation, 
-- sd via reservoir <img src="/etc/img/128.png" align=right width=300>
+- Sd via reservoir <img src="/etc/img/128.png" align=right width=300>
   - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
-- Shannon entropy [^Shannon48] <img align=right width=300 src="/etc/img/shannon.png">
-  Many ways to define it, but consider it the effort required to recreate a signal.
-  Given a bit stream of size `n` and two structures using `n1` then `n2` bits at probability
-  $p_1=\frac{n_1}{n}$ and
-  $p_2=\frac{n_2}{n}$ and
-  we hunt for these via a binary chop, then that effort is
-  $$\sum_i p_i \log_2(p_i)$$
-
-
 [^Cox07]:      Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...), Russ Cox rsc@swtch.com, January 2007
 [^deMo1718]:   Schneider, Ivor (2005), "Abraham De Moivre, The Doctrine of Chances (1718, 1738, 1756)", in Grattan-Guinness, I. (ed.), Landmark Writings in Western Mathematics 1640–1940, Amsterdam: Elsevier, pp. 105–120, ISBN 0-444-50871-6.
 [^Fisher38]:   Fisher, Ronald A.; Yates, Frank (1948) [1938]. Statistical tables for biological, agricultural and medical research (3rd ed.). London: Oliver & Boyd. pp. 26–27. OCLC 14222135. 
