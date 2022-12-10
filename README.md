@@ -129,7 +129,7 @@ DM1
 - sd via reservoir <img src="/etc/img/128.png" align=right width=300>
   - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
-- Shannon entropy [^Shannon48] <img align=right width=300 src="https://www.researchgate.net/profile/Shruti-Jadon-2/publication/342520628/figure/fig2/AS:907606478553088@1593401655516/Graph-of-Binary-Cross-Entropy-Loss-Function-Here-Entropy-is-defined-on-Y-axis-and.ppm">
+- Shannon entropy [^Shannon48] <img align=right width=300 src="/etc/img/shannon.png">
   Many ways to define it, but consider it the effort required to recreate a signal.
   Given a bit stream of size `n` and two structures using `n1` then `n2` bits at probability
   $p_1=\frac{n_1}{n}$ and
