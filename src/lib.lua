@@ -8,6 +8,26 @@ function l.rogues() --> nil; report rogue locals
   for k,v in pairs(_ENV) do
     if not b4[k] then print( l.fmt("#W ?%s %s",k,type(v)) ) end end end
 -----------------------------------------------------------------------------------------
+-- ### Random number generator
+-- The LUA doco says its random number generator is not stable across platforms.
+-- Hence, we use our own (using Park-Miller).
+local Seed=937162211
+function l.srand(n)  --> nil; reset random number seed (defaults to 937162211) 
+  Seed = n or 937162211 end
+
+function l.rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
+  nlo, nhi = nlo or 0, nhi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return nlo + (nhi-nlo) * Seed / 2147483647 end
+
+function l.rint(nlo,nhi)  --> int; returns integer from `nlo`..`nhi` (default 0..1)
+  return math.floor(0.5 + l.rand(nlo,nhi)) end
+
+function l.norm(mu,sd) --> float; return a number from normal curve with `mu,sd`
+  mu=mu or 0
+  sd=sd or 1
+  return mu + sd*math.sqrt(-2*math.log(l.rand()))*math.cos(2*math.pi*l.rand()) end
+-----------------------------------------------------------------------------------------
 -- ## Maths
 function l.max(...) return math.max(...) end --> n; return max
 function l.min(...) return math.min(...) end --> n; return min
@@ -24,21 +44,24 @@ function  l.per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
 
 function l.pers(t,nps) --> t; return the `nps` items of sorted list `t`
    return l.map(nps,function(p) return l.per(t,p) end) end
+
 -----------------------------------------------------------------------------------------
--- ### Random number generator
--- The LUA doco says its random number generator is not stable across platforms.
--- Hence, we use our own (using Park-Miller).
-local Seed=937162211
-function l.srand(n)  --> nil; reset random number seed (defaults to 937162211) 
-  Seed = n or 937162211 end
+-- ## Maths
+function l.max(...) return math.max(...) end --> n; return max
+function l.min(...) return math.min(...) end --> n; return min
 
-function l.rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
-  nlo, nhi = nlo or 0, nhi or 1
-  Seed = (16807 * Seed) % 2147483647
-  return nlo + (nhi-nlo) * Seed / 2147483647 end
+function l.same(x,...) --> x; return `x` unmodified
+  return x end
 
-function l.rint(nlo,nhi)  --> int; returns integer from `nlo`..`nhi` (default 0..1)
-  return math.floor(0.5 + l.rand(nlo,nhi)) end
+function l.rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
+  local mult = 10^(nPlaces or 3)
+  return math.floor(n * mult + 0.5) / mult end
+
+function  l.per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
+  p=math.floor(((p or .5)*#t)+.5); return t[math.max(1,math.min(#t,p))] end
+
+function l.pers(t,nps) --> t; return the `nps` items of sorted list `t`
+   return l.map(nps,function(p) return l.per(t,p) end) end
 -----------------------------------------------------------------------------------------
 -- ## Lists
 function l.list(t) --> t; ensure `t` has indexes `1.. size(t)`
