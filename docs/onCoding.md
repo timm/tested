@@ -33,7 +33,7 @@ This function was generalized by  Laplace[^Lap1812]
   into the first central limit theorem, which proved that probabilities for almost 
   all independent and identically distributed random variables converge rapidly 
   (with sample size) to the area under an exponential function—that is, to a normal 
-  distribution.  
+  distribution.
 This function was extended, extensively by Gaussian. Now its a curve with an area under the curve of one.
   As standard deviation shrinks, the curve spikes upwards.
 
