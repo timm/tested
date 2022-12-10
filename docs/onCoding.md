@@ -41,13 +41,14 @@ This function was extended, extensively by Gaussian. Now its a curve with an are
 
 _Example:_ See [101.lua#NUM](/src/101.lua)
 
-_Personnel view:_ Gaussianns  are still a guess and while
+_Personnel view:_ 
+Many things get improved by going beyond the Gaussian guess [^dou95]:
+Gaussianns  are still a guess and while
 a useful engineering approximation, they do not capture the details
 of many real world shapes.
 
 <img width=500 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
-Many things get improved by going beyond the Gaussian guess [^dou95]:
 
 
 ### Regular expressions 
