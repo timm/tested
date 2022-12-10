@@ -110,7 +110,9 @@ DM1
 - reservoir sampling[^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
   where n is either a very large or unknown number. Typically n is large enough that the list does not 
   fit into main memory. For example, a list of search queries in Google and Facebook.
-- normal distribution [^deMo1718]:  that probabilities associated with discretely 
+- normal distribution:
+  The French mathematician Abraham de Moivre [^deMo1718]
+  that probabilities associated with discretely 
   generated random variables (such as are obtained by flipping a coin or rolling a die) can 
   be approximated by the area under the graph of an exponential function.
   Generalized by  Laplace[^Lap1812] 
@@ -121,8 +123,9 @@ DM1
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
-- sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of precision due to catastrophic cancellation, 
-- sd via resevoir
+- sd via Welford's algorithm [^Welford62]. This algorithm is much less prone to loss of 
+  precision due to catastrophic cancellation, 
+- sd via reservoir <img src="/etc/img/128.png" align=right width=400>
   - ±2, 2.58, 3 σ is 66,90,95%, of the mass.  So one standard deviation is (90-10)th divide by 2.58 times σ. To say that another way, the diversity
     can be computed by the difference between large numbers and small numbers in an array.
 - Shannon entropy [^Shannon48] <img src="https://en.wikipedia.org/wiki/Entropy_(information_theory)#/media/File:Binary_entropy_plot.svg" align=right width=200>.
