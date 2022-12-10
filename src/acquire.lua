@@ -1,24 +1,25 @@
 #!/usr/bin/env lua
----                       _        __
----     ____ _   _____   (_)  ____/ /
----    / __ `/  / ___/  / /  / __  / 
----   / /_/ /  / /     / /  / /_/ /  
----   \__, /  /_/     /_/   \__,_/   
----   /____/                           
-                                           
+---                                        __                   
+---    __       ___      __       __  __  /\_\    _ __     __   
+---  /'__`\    /'___\  /'__`\    /\ \/\ \ \/\ \  /\`'__\ /'__`\ 
+--- /\ \L\.\_ /\ \__/ /\ \L\ \   \ \ \_\ \ \ \ \ \ \ \/ /\  __/ 
+--- \ \__/.\_\\ \____\\ \___, \   \ \____/  \ \_\ \ \_\ \ \____\
+---  \/__/\/_/ \/____/ \/___/\ \   \/___/    \/_/  \/_/  \/____/
+---                         \ \_\                               
+---                          \/_/                               
 local lib = require"lib"
 local the = lib.settings[[   
-grud.lua : row/column clustering for rep grids
+acquire.lua : row/column clustering for rep grids
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 
 Reads a csv file where row1 is column names and col1,coln
 is dimension left,right and all other cells are numerics.
 
-USAGE:   grid.lua  [OPTIONS]
+USAGE:   lua acquire.lua  [OPTIONS]
 
 OPTIONS:
   -d  --dump  on crash, dump stack       = false
-  -f  --file  csv file                   = etc/data/repgrid1.csv
+  -f  --file  csv file                   = ../etc/data/repgrid1.csv
   -F  --Far   where to find far things   = 1
   -g  --go    start-up action            = data
   -h  --help  show help                  = false
