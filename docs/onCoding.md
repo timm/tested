@@ -47,7 +47,7 @@ Gaussianns  are still a guess and while
 a useful engineering approximation, they do not capture the details
 of many real world shapes.
 
-<img width=500 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+<img width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
 
 
