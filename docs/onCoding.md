@@ -1,15 +1,143 @@
-<p>
 &nbsp;
 <a name=top></a>
-<p>
 <table><tr>
 <td><a href="/README.md#top">Home</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
 </tr></table>
 <img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
+ <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
+href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
+ src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> <img 
+ src="https://img.shields.io/badge/language-lua-orange"> <img 
+ src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
+ href="https://zenodo.org/badge/latestdoi/569981645"> <img 
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a>
-</p>
 
+
+
+
+# OnCoding (notes on 101.lua)
+
+## Theory 
+
+101.md code uses the following theory.
+
+### Normal (Gaussian) Distribution
+_Problem:_ summarize a wide range of numeric samples.
+
+_Solution:_ The French mathematician Abraham de Moivre [^deMo1718]
+  notes that probabilities associated with discretely 
+  generated random variables (such as are obtained by flipping a coin or rolling a die) can 
+  be approximated by the area under the graph of an exponential function.
+This function was generalized by  Laplace[^Lap1812] 
+  into the first central limit theorem, which proved that probabilities for almost 
+  all independent and identically distributed random variables converge rapidly 
+  (with sample size) to the area under an exponential function—that is, to a normal 
+  distribution.  
+This function was extended, extensively by Gaussian. Now its a curve with an area under the curve of one.
+  As standard deviation shrinks, the curve spikes upwards.
+
+<p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
+
+_Example:_ See [101.lua#NUM](/src/101.lua)
+
+_Personnel view:_ Gaussianns  are still a guess and while
+a useful engineering approximation, they do not capture the details
+of many real world shapes.
+
+<img src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+
+Many things get improved by going beyond the Gaussian guess [^dou95]:
+
+
+### Regular expressions 
+_Problem:_  build "little languages": parsers for short-cut specialized languages
+
+_Solution:_ Regular expressions [^Cox07] [^Thom68] 
+<img src="/etc/img/fsm.png" align=right width=400>
+are a text form of a state-transition diagram
+with some special `accept` state. If some stream of characters can
+walk the transitions and arrive at the accept state, then we say
+the pattern matches the characters.
+
+_Example:_  see lib.lua#settings' processing of [101.lua#the](/src/101.lua)
+ 
+### Incremental Learning
+_Problem:_ learn a summary from an infinite stream of data.
+
+_Solution #1:_ (for symbols): e.g. [101.lua@SYM](/src/101.lua)
+_Solution #2:_ (for numerics)
+A one-pass Sd via Welford's algorithm [^Welford62] (see [101.lua#NUM](/src/101.lua).
+This algorithm is much less prone to loss of 
+precision due to catastrophic cancellation, 
+
+_Solution #3:_ (for numerics). See reservoir sampling
+
+### Reservoir Sampling
+_Problem:_ Summarize an infinite stream of numbers.
+
+_Solution:_
+A reservoir sampling[^ResXX]  is a family of randomized algorithms for randomly choosing k samples from a list of n items,i
+where n is either a very large or unknown number. Typically n is large enough that the list does not 
+fit into main memory. For example, a list of search queries in Google and Facebook.
+
+Using the reservoir sampler, we can compute standard deviation as follows.
+Diversity
+can be computed by looking at the difference between large numbers and small numbers in an array.
+Lets use that:
+- When the reservoir changed, set a flag to `false`.
+- When you want the reservoir, sort it and set flag to `true`.
+  - overtime, you will sort, less and less 
+- We know that
+  ±2,2.58,3 standard deviations covers 66,90,95%, 
+    <img src="/etc/img/128.png" align=right width=300>
+    of the mass.  
+- So one standard deviation is (90-10)th divide by 2.58 times σ. 
+
+_Example:_ [SOME](/src/101.lua)
+
+Prob
+- Stochastic sampling can tame hard problems (see reservoir sampling and 101.lua@SOME))
+- Lehmer [^Lehmer69] (a.k.a. Park-Miller) a pseudorandom number algorithm  for generating 
+  a sequence of numbers whose properties approximate the properties of sequences of random numbers. 
+  The sequence is not truly random, because it is completely determined by an initial value, 
+  called the `seed`. By resetting the seed, the entire "random" sequence can be recreated.
+  - Control your seed (or else)
+- Fisher Yates shuffle [^Fisher38], randomizing in linear time algorithm for sorting a list of numbers.
+  To save memory, it sorts in the same space as the array.
+- NUM/SYM middle point is mode/mean
+- NUM/SYM div(diversity) is standard deviation or entropy
+- Shannon entropy [^Shannon48] <img align=right width=300 src="/etc/img/shannon.png">
+  Many ways to define it, but consider it the effort required to recreate a signal.
+  Given a bit stream of size `n` and two structures using `n1` then `n2` bits at probability
+  $p_1=\frac{n_1}{n}$ and
+  $p_2=\frac{n_2}{n}$ and
+  we hunt for these via a binary chop, then that effort is
+  $$-\sum_i p_i \log_2(p_i)$$
+
+
+[^Cox07]:      [Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...)](https://swtch.com/~rsc/regexp/regexp1.html), 
+  Russ Cox rsc@swtch.com, January 2007
+[^deMo1718]:   Schneider, Ivor (2005), "Abraham De Moivre, The Doctrine of Chances (1718, 1738, 1756)", 
+  in Grattan-Guinness, I. (ed.), Landmark Writings in Western Mathematics 1640–1940, Amsterdam: Elsevier, pp. 105–120, ISBN 0-444-50871-6.
+[^dou95]: James Dougherty, Ron Kohavi, and Mehran Sahami. 1995. 
+  [Supervised and unsupervised discretization of continuous features](https://ai.stanford.edu/~ronnyk/disc.pdf)
+  In Proceedings of the Twelfth International Conference on International Conference 
+  on Machine Learning (ICML'95). Morgan Kaufmann Publishers Inc., San Francisco, 
+  CA, USA, 194–202.
+[^Fisher38]:   Fisher, Ronald A.; Yates, Frank (1948) [1938]. Statistical tables for biological, agricultural and medical research (3rd ed.). 
+  London: Oliver & Boyd. pp. 26–27. OCLC 14222135. 
+[^Lap1812]:    Pierre-Simon Laplace, Théorie analytique des probabilités 1812, “Analytic Theory of Probability"
+[^Lehmer69]:   W. H. Payne; J. R. Rabung; T. P. Bogyo (1969). "Coding the Lehmer pseudo-random number generator" (PDF). 
+  Communications of the ACM. 12 (2): 85–86. doi:10.1145/362848.362860
+[^ResXX]:      Bad me. I can recall where on the web I found this one.
+[^Shannon48]:  Shannon, Claude E. (July 1948). "A Mathematical Theory of Communication". Bell System Technical Journal. 27 (3): 379–423. 
+  doi:10.1002/j.1538-7305.1948.tb01338.x. hdl:10338.dmlcz/101429. 
+  <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">(PDF)</a>
+[^Thom68]:     Ken Thompson, “Regular expression search algorithm,” Communications of the ACM 11(6) (June 1968), pp. 419–422. 
+  http://doi.acm.org/10.1145/363347.363387 <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
+[^Welford62]:  Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
 
 # On Coding
 Idioms for useful code
