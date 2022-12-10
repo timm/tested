@@ -12,11 +12,9 @@
 
 
 # On Coding
-
 Idioms for useful code
 
-
-## LIM: Less is More
+## LE: Less is More
 1. Most functions are v.short
 
 ## FP: Functional programming
@@ -31,21 +29,26 @@ with the same rights as conventional values like numbers and strings.
 3. Useful for collecting results of an iteration (see lib.lub#map in lib.lua#o)
 4. Writing function that return functions (see lib.lua#lt)
 
-## Te: Test suite
+## TE: Test suite
 1. Do you have half a dozen tests per person working on the project per week of work?
 2. Can all the tests be run in batch?
 3. From the command line can you run just one test?
 4. If a test fails and crashes, can the rest of the tests still run (hint try:except:)
 
-### DbI: Data Independence
+## SO: Source control
+1. Is your code in some version control system?
+2. Everyday you write code, does some branch get updated?
+3. Is the test suite <a href="https://github.com/timm/tested/actions/workflows/tests.yml">triggered by each new commit</a>?
+4. Do you have an automated build system (Make, Ant, Maven, Cargo, Flutter, Elm, etc etc etc) for all the tedious details.
+5. Is the build system included in the documentation?
 
+## DI: Data Independence
 1. Your internal model is isolated from I/O operations 
    - When reading csv files, conversions  from strings to types happens once, 
      and once only, before data is loaded into your model
    - All my file I/O routines are isolated (in lib.lua#csv)
 
-## DI: Dialog independence
-
+## DD: Dialog independence
 1. In the guts of your code, no direct writes to "print" but rather to some `log` function that may or may not write to the screen.
 2. Can you turn off all logging (no log string generation, nothing logged/printed anywhere)?
 
@@ -103,14 +106,7 @@ with the same rights as conventional values like numbers and strings.
    (e.g. everyone uses same tools, config files for those tools in repo)
 
 
-# Source control
-- Is your code in some version control system?
-- Everyday you write code, does some branch get updated?
-- Is the test suite triggered by each new commit? 
-- Do you have an automated build system (Make, Ant, Maven, Cargo, Flutter, Elm, etc etc etc) for all the tedious details.
-- Is the build system included in the documentation?
-
-## Documentation
+# Documentation
 - Do you have (at least) your public functions and classes documented?
 - Can you generate doco from comments and type hints in the source code?
 - Does your code follow any well-known patterns? Does the doco mention those patterns?
