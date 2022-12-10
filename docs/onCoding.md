@@ -67,6 +67,7 @@ _Example:_  see lib.lua#settings' processing of [101.lua#the](/src/101.lua)
 _Problem:_ learn a summary from an infinite stream of data.
 
 _Solution #1:_ (for symbols): e.g. [101.lua@SYM](/src/101.lua)
+
 _Solution #2:_ (for numerics)
 A one-pass Sd via Welford's algorithm [^Welford62] (see [101.lua#NUM](/src/101.lua).
 This algorithm is much less prone to loss of 
