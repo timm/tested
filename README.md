@@ -99,11 +99,10 @@ first task is more of a balancing exerice to get everyone up to speed.
 
 DM1
 - Regular expressions [^Cox07] [^Thom68] <img src="/etc/img/fsm.png" align=right width=400>
-  are a text form a state-transition diagram with a special `accept` state. If some stream of characters
+  are a text form of a state-transition diagram with some special `accept` state. If some stream of characters
   can walk the transitions and arrive at the accept state, then we say the pattern matches the characters.
 - When you can, be incremental; e.g. 101.lua@SYM, 101.lua@SYM.
 - Stochastic sampling can tame hard problems (see reservoir sampling and 101.lua@SOME))
-
 - Lehmer [^Lehmer69] (a.k.a. Park-Miller) a pseudorandom number algorithm  for generating 
   a sequence of numbers whose properties approximate the properties of sequences of random numbers. 
   The sequence is not truly random, because it is completely determined by an initial value, 
