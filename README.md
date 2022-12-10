@@ -153,7 +153,8 @@ DM1
   Communications of the ACM. 12 (2): 85–86. doi:10.1145/362848.362860
 [^ResXX]:      Bad me. I can recall where on the web I found this one.
 [^Shannon48]:  Shannon, Claude E. (July 1948). "A Mathematical Theory of Communication". Bell System Technical Journal. 27 (3): 379–423. 
-  doi:10.1002/j.1538-7305.1948.tb01338.x. hdl:10338.dmlcz/101429. (PDF, archived from here)
+  doi:10.1002/j.1538-7305.1948.tb01338.x. hdl:10338.dmlcz/101429. 
+  <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">(PDF)</a>
 [^Thom68]:     Ken Thompson, “Regular expression search algorithm,” Communications of the ACM 11(6) (June 1968), pp. 419–422. 
   http://doi.acm.org/10.1145/363347.363387 <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
 [^Welford62]:  Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
