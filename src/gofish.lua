@@ -1,4 +1,3 @@
-
 --[[
 In this language
 - vars are global by default unless marked with "local"
@@ -17,91 +16,94 @@ In my function arguments:
 - UPPER = class
 - lower = instance. e.g. col is instance of COL
 --]]
-
-the={bins=8} -- global config
+local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end -- trivia; used to find rogue locals
+local the={bins=16} -- global config
 --------------------------------------------------------------------------------------------------
-function push(t,x) t[1+#t]=x; return x end
-function any(t) return t[math.random(#t)] end
+-- library functions
+local fmt,any,push,map,want,keys,oo,o
+fmt=string.format
+function any(t)     return t[math.random(#t)] end
+function push(t,x)  t[1+#t]=x; return x end
+function map(t,fun) local u={}; for _,x in pairs(t) do u[1+#u] = fun(x) end; return u end
+
+function copy(t)
+  if type(t) ~= "table" then return t end
+  local u={}; for k,v in pairs(t) do u[k] = copy(v) end
+  return u end
+
+function want(k) if tostring(k):sub(1,1) ~= "_" then return k end end
+function keys(t)
+  local u={}; for k,v in pairs(t) do if want(k) then u[1+#u] = k end end; return sort(u) end
+
+function oo(x) print(o(x)); return x end
+function o(t,     u)
+  if type(t) ~= "table" then return tostring(t) end
+  u= #t>0 and map(t,tostring) or map(keys(t), function(k) return fmt(":%s %s",k,o(t[k])) end) 
+  return "{".. table.concat(u," ").."}" end
 --------------------------------------------------------------------------------------------------
-function RANGE(col,how,val) 
-  return {col=col,val=val,fun=how,n=0} end
-
-lt = function(a,b) return a < b end
-gt = function(a,b) return a > b end
-
-function accept(range,row) 
-  return range.fun(cell(range.col,row),range.val) end
-
-function accepts(range,rows)
-  local t={}
-  for _,row in pairs(rows) do if accept(range,row) then push(t, row) end end
-  return t end
---------------------------------------------------------------------------------------------------
-function COL(n,s) 
-  return {name=s or "", at=n or 0, like=(s or ""):find"+",
-          nump=(s or ""):find"^[A-Z]+",
-          ranges= {},
-          lo=  math.huge,
-          hi= -math.huge} end 
-
-function cell(col,row) return row.cells[col.at] end
-
-function update(col,row)
-  local x = cell(col,row)
+local COL,bin,raw,add,norm,bin
+function COL(n,s)
+  return { name   = s or "", 
+           at     = n or 0, 
+           goal    = (s or ""):find"+$" and 1 or 0,
+           nump   = (s or ""):find"^[A-Z]+",
+           ranges = {},
+           lo     =  math.huge,
+           hi     = -math.huge } end
+  
+function add(col,x)
   if x ~= "?" then
-    col.lo=math.min(col.lo,x)
-    col.hi=math.max(col.hi,x) end end
+    self.lo = math.min(self.lo, x)
+    self.hi = math.max(self.hi, x) end
+  return row end
+
+function norm(col,n)
+  return n=="?" and x or (n - col.lo)/(col.hi - col.lo + 1E-32) end
 
 function discretize(col,n)
   if n=="?" then return n end
   local tmp = (self.hi - self.lo)/(the.bins - 1)
-  return math.floor(n/tmp + .5)*tmp end 
-
-function range(col,how,val)
-  for _,range2 in pairs(col.ranges) do 
-    if   range2.col.at == col.at and range2.how == how and range2.val == val 
-    then return range2 end end 
-  return push(col.ranges, RANGE(col,how,val)) end
+  return self.lo + tmp*math.floor(n/tmp) end 
 --------------------------------------------------------------------------------------------------
-function ROW(header,t)
-  local row = {cells=t}
-  for _,cols in pairs{header.x,header.y} do
-    for _,col in pairs(cols) do update(col,row) end end 
+local ROW,cook
+function ROW(cols,t)
+  local row = {raw=t,bins=copy(t)}
+  for _,col in pairs(cols.x) do add(col,t[col.at]) end
   return row end
+
+function cook(row,cols)
+  for _,col in pairs(cols) do
+    row.bins[col.at] = discretize(col, row.raw[col.at]) end end
 --------------------------------------------------------------------------------------------------
-function HEADER(t) 
-  local header={x={}, y={}}
-  for at,txt in pairs(t) do
-    push(txt:find"[+-]$" and header.y or header.x, COL(at,txt) ) end
- return header end
+local COLS,dist2goal
+function COLS(t) 
+  local cols={all={},x={}, y={}}
+  for n,s in pairs(t) do
+    local col = push(cols.all, COL(n,s))
+    if not s:find"X$" then 
+      push(s:find"[+-]$" and cols.y or cols.x, col) end end
+  return cols end
 
-function better(header,row1,row2)
-  local worse,better=0,0
-  for _,col in pairs{header.y} do
-    y1,y2= row1[col.at], row2[col.at]
-    if col.like 
-    then better = better + (y1 > y2 and 1 or 0); worse  = worse  + (y1 < y2 and 1 or 0)
-    else better = better + (y1 < y2 and 1 or 0); worse  = worse  + (y1 > y2 and 1 or 0) end end
-  return better > 0 and worse == 0 end 
-
-function reward(header,one,two)
-  for _,col in pairs(header.x) do
-    x1,x2 = cell(col,one), cell(col,two)
-    x1,x2 = discretize(col,x1), discretize(col,x2)
-    if x1 ~= x2 and x1 ~= "?" and x2 ~= "?" then
-      what = x1 < x2 and range(col,gt,x1) or range(col,lt,x2)
-      what.n = what.n + 1 end end end 
-
-function snowball(header,data)
-  local one,two=any(data),any(data)
-  if better(one,two) then reward(header,one,two) end
-  if better(two,one) then reward(header,two,one) end
-  
-
-
-
-data={
-  {"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
+function dist2goal(cols,row)
+  map(cols.y, function(col) add(col, row.raw[col.at]) end)
+  local tmp,n = 0,0
+  for _,col in pairs(cols.y) do 
+    local x = row.raw[col.at]
+    if x ~= "?" then
+      n   = n+1
+      tmp = tmp + math.abs(norm(col,x) - col.goal)^2 end end 
+  return (tmp/n)^(1/2) end
+--------------------------------------------------------------------------------------------------
+local DATA
+function DATA(t)
+  local data = {rows={}, cols=COLS(table.remove(t,1))}
+  for _,t1 in pairs(t) do push(data.rows, ROW(data.cols,t1)) end
+  for _,row in pairs(data.rows) do cook(row,cols.x) end
+  return data end
+--------------------------------------------------------------------------------------------------
+local main
+local data={
+{"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
 {8,304.0,193,4732,18.5,70,1,10},
 {8,360,215,4615,14,70,1,10},
 {8,307,200,4376,15,70,1,10},
@@ -501,5 +503,5 @@ data={
 {4,91,67,1850,13.8,80,3,40},
 {4,86,65,2110,17.9,80,3,50}
 }
-
-main(data)
+--main(data)
+for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
