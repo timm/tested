@@ -39,10 +39,10 @@ function keys(t)
   local u={}; for k,v in pairs(t) do if want(k) then u[1+#u] = k end end; return sort(u) end
 
 function oo(x) print(o(x)); return x end
-function o(t,     u)
+function o(t,     u,key)
   if type(t) ~= "table" then return tostring(t) end
-  u= #t>0 and map(t,function(x) return o(x) end) or 
-              map(keys(t), function(k) return fmt(":%s %s",k,o(t[k])) end) 
+  function key(k) return fmt(":%s %s",k,o(t[k])) end
+  u= #t>0 and map(t,o) or map(keys(t), key)
   return "{".. table.concat(u," ").."}" end
 --------------------------------------------------------------------------------------------------
 local COL,add,norm,discretize
