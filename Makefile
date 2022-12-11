@@ -69,7 +69,7 @@ about:
 	mkdir -p ~/tmp
 	echo "pdf-ing $@ ... "
 	a2ps                 \
-		-BR                 \
+		-Br                 \
 		--chars-per-line 100  \
 		--file-align=fill      \
 		--line-numbers=1        \
@@ -77,7 +77,7 @@ about:
 		--pro=color               \
 		--left-title=""            \
 		--pretty-print="$R/etc/lua.ssh" \
-		--columns  2                 \
+		--columns  3                 \
 		-M letter                     \
 		--footer=""                    \
 		--right-footer=""               \

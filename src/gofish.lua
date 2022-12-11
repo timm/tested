@@ -19,10 +19,73 @@ In my function arguments:
 - lower = instance. e.g. col is instance of COL
 --]]
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end -- trivia; used to find rogue locals
-local the={bins=16} -- global config
---------------------------------------------------------------------------------------------------
--- library functions
+local the={bins=16,
+           seed=1} -- global config
 local fmt,any,push,map,sort,want,copy,keys,oo,o
+--------------------------------------------------------------------------------------------------
+local COL,add,norm,discretize
+function COL(n,s)
+  return { name   = s or "", 
+           at     = n or 0, 
+           is     ={goal= (s or ""):find"[+-]$" and true or false,
+                    num= (s or ""):find"^[A-Z]+",
+                    ignored=(s or ""):find"X$"},
+           pos    = {},
+           neg    = {},
+           lo     =  math.huge,
+           hi     = -math.huge } end
+
+function add(col,x)
+  if col.is.num and x ~= "?" then
+    col.lo = math.min(col.lo, x)
+    col.hi = math.max(col.hi, x) end
+  return row end
+
+function norm(col,n)
+  if not col.is.num then return n end
+  return n=="?" and n or (n - col.lo)/(col.hi - col.lo + 1E-32) end
+
+function discretize(col,n)
+  if n=="?" or not col.is.num then return n end
+  local tmp = (col.hi - col.lo)/the.bins
+  return tmp*math.floor(n/tmp) end 
+--------------------------------------------------------------------------------------------------
+local COLS,dist2goals
+function COLS(t) 
+  local cols={all={},x={}, y={}}
+  for n,s in pairs(t) do
+    local col = push(cols.all, COL(n,s))
+    if not col.is.ignored then
+      push(col.is.goal and cols.y or cols.x, col) end end
+  return cols end
+
+function dist2goals(cols,t)
+  map(cols.y, function(col) add(col, t[col.at]) end)
+  local tmp,n,sq = 0,0,math.sqrt
+  for _,col in pairs(cols.y) do 
+    local x = t[col.at]
+    if x ~= "?" then
+      n   = n+1
+      tmp = tmp + math.abs(norm(col,x) - (col.is.goal and 1 or 0))^2 end end 
+  return sq(tmp)/sq(n) end
+--------------------------------------------------------------------------------------------------
+local DATA,delta
+function DATA(t)
+  local data = {rows={}, cols=COLS(table.remove(t,1))}
+  for n,t1 in pairs(t) do 
+    push(data.rows, t1)
+    for _,col in pairs(data.cols.x) do add(col,t1[col.at]) end end
+  return data end
+
+function delta(data)
+  for i=1,100 do 
+    local one,two=any(data.rows), any(data.rows) 
+    print""
+    print(o(one),dist2goals(data.cols,one))
+    print(o(two),dist2goals(data.cols,two)) end
+  end
+--------------------------------------------------------------------------------------------------
+-- library functions
 fmt=string.format
 function any(t)     return t[math.random(#t)] end
 function push(t,x)  t[1+#t]=x; return x end
@@ -44,69 +107,8 @@ function o(t,     u,key)
   function key(k) return fmt(":%s %s",k,o(t[k])) end
   u= #t>0 and map(t,o) or map(keys(t), key)
   return "{".. table.concat(u," ").."}" end
---------------------------------------------------------------------------------------------------
-local COL,add,norm,discretize
-function COL(n,s)
-  return { name   = s or "", 
-           at     = n or 0, 
-           goal    = (s or ""):find"+$" and 1 or 0,
-           isNum   = (s or ""):find"^[A-Z]+" and true or false,
-           ranges = {},
-           lo     =  math.huge,
-           hi     = -math.huge } end
-
-function add(col,x)
-  if col.isNum and x ~= "?" then
-    col.lo = math.min(col.lo, x)
-    col.hi = math.max(col.hi, x) end
-  return row end
-
-function norm(col,n)
-  if not col.isNum then return n end
-  return n=="?" and n or (n - col.lo)/(col.hi - col.lo + 1E-32) end
-
-function discretize(col,n)
-  if n=="?" or not col.isNum then return n end
-  local tmp = (col.hi - col.lo)/the.bins
-  return tmp*math.floor(n/tmp) end 
---------------------------------------------------------------------------------------------------
-local COLS,dist2goals
-function COLS(t) 
-  local cols={all={},x={}, y={}}
-  for n,s in pairs(t) do
-    local col = push(cols.all, COL(n,s))
-    if not s:find"X$" then 
-      push(s:find"[+-]$" and cols.y or cols.x, col) end end
-  return cols end
-
-function dist2goals(cols,t)
-  map(cols.y, function(col) add(col, t[col.at]) end)
-  local tmp,n = 0,0
-  for _,col in pairs(cols.y) do 
-    local x = t[col.at]
-    if x ~= "?" then
-      n   = n+1
-      tmp = tmp + math.abs(norm(col,x) - col.goal)^2 end end 
-  return (tmp/n)^(1/2) end
---------------------------------------------------------------------------------------------------
-local DATA,delta
-function DATA(t)
-  local data = {rows={}, cols=COLS(table.remove(t,1))}
-  for n,t1 in pairs(t) do 
-    push(data.rows, t1)
-    for _,col in pairs(data.cols.x) do add(col,t1[col.at]) end end
-  return data end
-
-function delta(data)
-  for i=1,100 do 
-    local one,two=any(data.rows), any(data.rows) 
-    print""
-    print(o(one),dist2goals(data.cols,one))
-    print(o(two),dist2goals(data.cols,two)) end
-  end
-
---------------------------------------------------------------------------------------------------
-local auto93={
+--------------------------------------------------------------------------------------------------
+local function auto93() return copy{
 {"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
 {8,304.0,193,4732,18.5,70,1,10},
 {8,360,215,4615,14,70,1,10},
@@ -498,7 +500,7 @@ local auto93={
 {4,79,58,1755,16.9,81,3,40},
 {4,85,70,2070,18.6,78,3,40},
 {4,85,65,2110,19.2,80,3,40},
-{4,85,">",1835,17.3,80,2,40},
+{4,85,"?",1835,17.3,80,2,40},
 {4,98,76,2144,14.7,80,2,40},
 {4,90,48,1985,21.5,78,2,40},
 {4,90,48,2335,23.7,80,2,40},
@@ -506,16 +508,19 @@ local auto93={
 {4,90,48,2085,21.7,80,2,40},
 {4,91,67,1850,13.8,80,3,40},
 {4,86,65,2110,17.9,80,3,50}
-}
+} end
+
 local eg={}
 function eg.all() 
+  local b4 = copy(the)
  for _,k in pairs(keys(eg)) do 
-   print(k)
-   if k ~="all" then  eg[k]() end end end
+   if k ~="all" then
+     math.randomseed(the.seed or 1)
+     eg[k]() 
+     for k,v in pairs(b4) do the[k]=v end end end end
 
-function eg.load() oo(DATA(auto93).cols.x[4]) end
-function eg.delta() delta(DATA(auto93)) end
+function eg.load() oo(DATA(auto93()).cols.x[4]) end
+function eg.delta() delta(DATA(auto93())) end
 
-math.randomseed(1)
 eg[arg[1] or "all"]()
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
