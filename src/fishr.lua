@@ -16,74 +16,75 @@ In my function arguments:
 - x == anything
 - fun == function
 - UPPER = class
-- lower = instance. e.g. col is instance of COL
 --]]
-local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end -- trivia; used to find rogue locals
+local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
 local the={bins=16,
            seed=1} -- global config
 local fmt,any,push,map,sort,want,copy,keys,oo,o
+local _id=0
+function obj(s,    t,new) --> t; create a klass and a constructor + print method
+  function new(k,...) 
+    _id=_id+1; local x=setmetatable({_id=_id},k); t.new(x,...); return x end
+  t={_is=s, __tostring = o}
+  t.__index = t;return setmetatable(t,{__call=new}) end
 --------------------------------------------------------------------------------------------------
-local COL,add,norm,discretize
-function COL(n,s)
-  return { name   = s or "", 
-           at     = n or 0, 
-           is     ={goal= (s or ""):find"[+-]$" and true or false,
-                    num= (s or ""):find"^[A-Z]+",
-                    ignored=(s or ""):find"X$"},
-           pos    = {},
-           neg    = {},
-           lo     =  math.huge,
-           hi     = -math.huge } end
+local COL= obj"COL"
+function COL:new(n,s)
+  self.name = s or "" 
+  self.at   = n or 0 
+  self.is   = {goal= (s or ""):find"[+-]$" and true or false,
+               num= (s or ""):find"^[A-Z]+",
+               ignored=(s or ""):find"X$"}
+  self.pos  = {}
+  self.neg  = {}
+  self.lo   =  math.huge
+  self.hi   = -math.huge end
 
-function add(col,x)
-  if col.is.num and x ~= "?" then
-    col.lo = math.min(col.lo, x)
-    col.hi = math.max(col.hi, x) end
-  return row end
+function COL:add(x)
+  if self.is.num and x ~= "?" then
+    self.lo = math.min(self.lo, x)
+    self.hi = math.max(self.hi, x) end end
 
-function norm(col,n)
-  if not col.is.num then return n end
-  return n=="?" and n or (n - col.lo)/(col.hi - col.lo + 1E-32) end
+function COL:norm(n)
+  if not self.is.num then return n end
+  return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
 
-function discretize(col,n)
-  if n=="?" or not col.is.num then return n end
-  local tmp = (col.hi - col.lo)/the.bins
+function COL:bin(n)
+  if n=="?" or not self.is.num then return n end
+  local tmp = (self.hi - self.lo)/the.bins
   return tmp*math.floor(n/tmp) end 
 --------------------------------------------------------------------------------------------------
-local COLS,dist2goals
-function COLS(t) 
-  local cols={all={},x={}, y={}}
+local COLS =obj"COLS"
+function COLS:new(t) 
+  self.all,self.x,self.y = {},{},{}
   for n,s in pairs(t) do
-    local col = push(cols.all, COL(n,s))
+    local col = push(self.all, col.new(n,s))
     if not col.is.ignored then
-      push(col.is.goal and cols.y or cols.x, col) end end
-  return cols end
+      push(col.is.goal and self.y or self.x, col) end end end
 
-function dist2goals(cols,t)
-  map(cols.y, function(col) add(col, t[col.at]) end)
-  local tmp,n,sq = 0,0,math.sqrt
-  for _,col in pairs(cols.y) do 
+function COLS:height(t)
+  map(self.y, function(col) col:add(t[col.at]) end)
+  local height,n,sq = 0,0,math.sqrt
+  for _,col in pairs(self.y) do 
     local x = t[col.at]
     if x ~= "?" then
       n   = n+1
-      tmp = tmp + math.abs(norm(col,x) - (col.is.goal and 1 or 0))^2 end end 
+      height = height + math.abs(norm(col,x) - (col.is.goal and 0 or 1))^2 end end 
   return sq(tmp)/sq(n) end
 --------------------------------------------------------------------------------------------------
-local DATA,delta
+local DATA = obj"DATA"
 function DATA(t)
-  local data = {rows={}, cols=COLS(table.remove(t,1))}
-  for n,t1 in pairs(t) do 
-    push(data.rows, t1)
-    for _,col in pairs(data.cols.x) do add(col,t1[col.at]) end end
-  return data end
+  self.rows, self.cols = {}, COLS(table.remove(t,1))
+  for n,t1 in pairs(t or {}) do 
+    push(self.rows, t1)
+    for _,col in pairs(i.cols.x) do col:add(t1[col.at]) end end end
 
-function delta(data)
-  for i=1,100 do 
-    local one,two=any(data.rows), any(data.rows) 
+function DATA:delta()
+  for x=1,100 do 
+    local one,two=any(self.rows), any(self.rows) 
     print""
-    print(o(one),dist2goals(data.cols,one))
-    print(o(two),dist2goals(data.cols,two)) end
-  end
+    print(o(one),i.cols:height(one))
+    print(o(two),i.cols:height(two)) end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -513,14 +514,14 @@ local function auto93() return copy{
 local eg={}
 function eg.all() 
   local b4 = copy(the)
- for _,k in pairs(keys(eg)) do 
-   if k ~="all" then
-     math.randomseed(the.seed or 1)
-     eg[k]() 
-     for k,v in pairs(b4) do the[k]=v end end end end
+  for _,key in pairs(keys(eg)) do 
+    if key ~="all" then
+      math.randomseed(the.seed or 1)
+      eg[key]() 
+      for x,y in pairs(b4) do the[x]=y end end end end
 
 function eg.load() oo(DATA(auto93()).cols.x[4]) end
-function eg.delta() delta(DATA(auto93())) end
+function eg.delta() dataDelta(DATA(auto93())) end
 
 eg[arg[1] or "all"]()
-for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
+for x,y in pairs(_ENV) do if not b4[x] then print("?",x,type(y)) end end
