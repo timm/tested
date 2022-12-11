@@ -12,7 +12,9 @@ In my function arguments:
 - n == number
 - s == string
 - t == table
+- is == boolean
 - x == anything
+- fun == function
 - UPPER = class
 - lower = instance. e.g. col is instance of COL
 --]]
@@ -20,12 +22,13 @@ local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end -- trivia; used to find rogue
 local the={bins=16} -- global config
 --------------------------------------------------------------------------------------------------
 -- library functions
-local fmt,any,push,map,want,keys,oo,o
+local fmt,any,push,map,sort,want,copy,keys,oo,o
 fmt=string.format
 function any(t)     return t[math.random(#t)] end
 function push(t,x)  t[1+#t]=x; return x end
 function map(t,fun) local u={}; for _,x in pairs(t) do u[1+#u] = fun(x) end; return u end
 
+function sort(t,fun) table.sort(t,fun); return t end
 function copy(t)
   if type(t) ~= "table" then return t end
   local u={}; for k,v in pairs(t) do u[k] = copy(v) end
@@ -38,42 +41,34 @@ function keys(t)
 function oo(x) print(o(x)); return x end
 function o(t,     u)
   if type(t) ~= "table" then return tostring(t) end
-  u= #t>0 and map(t,tostring) or map(keys(t), function(k) return fmt(":%s %s",k,o(t[k])) end) 
+  u= #t>0 and map(t,function(x) return o(x) end) or 
+              map(keys(t), function(k) return fmt(":%s %s",k,o(t[k])) end) 
   return "{".. table.concat(u," ").."}" end
 --------------------------------------------------------------------------------------------------
-local COL,bin,raw,add,norm,bin
+local COL,add,norm,discretize
 function COL(n,s)
   return { name   = s or "", 
            at     = n or 0, 
            goal    = (s or ""):find"+$" and 1 or 0,
-           nump   = (s or ""):find"^[A-Z]+",
+           isNum   = (s or ""):find"^[A-Z]+" and true or false,
            ranges = {},
            lo     =  math.huge,
            hi     = -math.huge } end
-  
+
 function add(col,x)
-  if x ~= "?" then
-    self.lo = math.min(self.lo, x)
-    self.hi = math.max(self.hi, x) end
+  if col.isNum and x ~= "?" then
+    col.lo = math.min(col.lo, x)
+    col.hi = math.max(col.hi, x) end
   return row end
 
 function norm(col,n)
-  return n=="?" and x or (n - col.lo)/(col.hi - col.lo + 1E-32) end
+  if not col.nump then return n end
+  return n=="?" and n or (n - col.lo)/(col.hi - col.lo + 1E-32) end
 
 function discretize(col,n)
-  if n=="?" then return n end
-  local tmp = (self.hi - self.lo)/(the.bins - 1)
-  return self.lo + tmp*math.floor(n/tmp) end 
---------------------------------------------------------------------------------------------------
-local ROW,cook
-function ROW(cols,t)
-  local row = {raw=t,bins=copy(t)}
-  for _,col in pairs(cols.x) do add(col,t[col.at]) end
-  return row end
-
-function cook(row,cols)
-  for _,col in pairs(cols) do
-    row.bins[col.at] = discretize(col, row.raw[col.at]) end end
+  if n=="?" or not col.nump then return n end
+  local tmp = (col.hi - col.lo)/the.bins
+  return tmp*math.floor(n/tmp) end 
 --------------------------------------------------------------------------------------------------
 local COLS,dist2goal
 function COLS(t) 
@@ -84,11 +79,11 @@ function COLS(t)
       push(s:find"[+-]$" and cols.y or cols.x, col) end end
   return cols end
 
-function dist2goal(cols,row)
-  map(cols.y, function(col) add(col, row.raw[col.at]) end)
+function dist2goal(cols,t)
+  map(cols.y, function(col) add(col, t[col.at]) end)
   local tmp,n = 0,0
   for _,col in pairs(cols.y) do 
-    local x = row.raw[col.at]
+    local x = t[col.at]
     if x ~= "?" then
       n   = n+1
       tmp = tmp + math.abs(norm(col,x) - col.goal)^2 end end 
@@ -97,12 +92,12 @@ function dist2goal(cols,row)
 local DATA
 function DATA(t)
   local data = {rows={}, cols=COLS(table.remove(t,1))}
-  for _,t1 in pairs(t) do push(data.rows, ROW(data.cols,t1)) end
-  for _,row in pairs(data.rows) do cook(row,cols.x) end
+  for n,t1 in pairs(t) do 
+    push(data.rows, t1)
+    for _,col in pairs(data.cols.x) do add(col,t1[col.at]) end end
   return data end
 --------------------------------------------------------------------------------------------------
-local main
-local data={
+local auto93={
 {"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
 {8,304.0,193,4732,18.5,70,1,10},
 {8,360,215,4615,14,70,1,10},
@@ -503,5 +498,5 @@ local data={
 {4,91,67,1850,13.8,80,3,40},
 {4,86,65,2110,17.9,80,3,50}
 }
---main(data)
+oo(DATA(auto93).cols.x[4])
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
