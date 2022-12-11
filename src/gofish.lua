@@ -62,15 +62,15 @@ function add(col,x)
   return row end
 
 function norm(col,n)
-  if not col.nump then return n end
+  if not col.isNum then return n end
   return n=="?" and n or (n - col.lo)/(col.hi - col.lo + 1E-32) end
 
 function discretize(col,n)
-  if n=="?" or not col.nump then return n end
+  if n=="?" or not col.isNum then return n end
   local tmp = (col.hi - col.lo)/the.bins
   return tmp*math.floor(n/tmp) end 
 --------------------------------------------------------------------------------------------------
-local COLS,dist2goal
+local COLS,dist2goals
 function COLS(t) 
   local cols={all={},x={}, y={}}
   for n,s in pairs(t) do
@@ -79,7 +79,7 @@ function COLS(t)
       push(s:find"[+-]$" and cols.y or cols.x, col) end end
   return cols end
 
-function dist2goal(cols,t)
+function dist2goals(cols,t)
   map(cols.y, function(col) add(col, t[col.at]) end)
   local tmp,n = 0,0
   for _,col in pairs(cols.y) do 
@@ -89,13 +89,22 @@ function dist2goal(cols,t)
       tmp = tmp + math.abs(norm(col,x) - col.goal)^2 end end 
   return (tmp/n)^(1/2) end
 --------------------------------------------------------------------------------------------------
-local DATA
+local DATA,delta
 function DATA(t)
   local data = {rows={}, cols=COLS(table.remove(t,1))}
   for n,t1 in pairs(t) do 
     push(data.rows, t1)
     for _,col in pairs(data.cols.x) do add(col,t1[col.at]) end end
   return data end
+
+function delta(data)
+  for i=1,100 do 
+    local one,two=any(data.rows), any(data.rows) 
+    print""
+    print(o(one),dist2goals(data.cols,one))
+    print(o(two),dist2goals(data.cols,two)) end
+  end
+
 --------------------------------------------------------------------------------------------------
 local auto93={
 {"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
@@ -498,5 +507,15 @@ local auto93={
 {4,91,67,1850,13.8,80,3,40},
 {4,86,65,2110,17.9,80,3,50}
 }
-oo(DATA(auto93).cols.x[4])
+local eg={}
+function eg.all() 
+ for _,k in pairs(keys(eg)) do 
+   print(k)
+   if k ~="all" then  eg[k]() end end end
+
+function eg.load() oo(DATA(auto93).cols.x[4]) end
+function eg.delta() delta(DATA(auto93)) end
+
+math.randomseed(1)
+eg[arg[1] or "all"]()
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
