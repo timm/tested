@@ -27,6 +27,7 @@ In my function arguments:
 --]]
 local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
 local the={bins=16,
+           samples=16,
            seed=1} -- global config
 local fmt,any,push,map,sort,want,copy,keys,oo,o,show,obj
 local _id=0
@@ -40,6 +41,7 @@ function COL:new(n,s)
   self.name = s or "" 
   self.at   = n or 0 
   self.is   = {goal    = (s or ""):find"[+-]$",
+               good    = (s or ""):find"[+]$",
                num     = (s or ""):find"^[A-Z]+",
                ignored = (s or ""):find"X$"}
   self.pos  = {}
@@ -56,10 +58,17 @@ function COL:norm(n)
   if not self.is.num then return n end
   return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
 
-function COL:bin(n)
-  if n=="?" or not self.is.num then return n end
+function COL:bin(x)
+  if x=="?" or not self.is.num then return x end
   local tmp = (self.hi - self.lo)/the.bins
-  return tmp*math.floor(n/tmp) end 
+  return tmp*math.floor(x/tmp) end 
+
+function COL:hundred()
+  for _,t in pairs{self.pos,self.neg} do
+    local n=0
+    for _,y in pairs(t) do n = n + y end
+    for x,y in pairs(t) do t[x] = y/n end end 
+  return self end
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t) 
@@ -69,29 +78,63 @@ function COLS:new(t)
     if not col.is.ignored then
       push(col.is.goal and self.y or self.x, col) end end end
 
-function COLS:height(t)
-  map(self.y, function(col) col:add(t[col.at]) end)
+function COLS:height(row)
+  if not row.evaluated then
+    row.evaluated = true
+    map(self.y, function(col) col:add(row.cells[col.at]) end) end
   local height,n,sq = 0,0,math.sqrt
   for _,col in pairs(self.y) do 
-    local x = t[col.at]
+    local x = row.cells[col.at]
     if x ~= "?" then
       n   = n+1
-      height = height + math.abs(col:norm(x) - (col.is.goal and 0 or 1))^2 end end 
+      height = height + math.abs(col:norm(x) - (col.is.good and 0 or 1))^2 end end 
   return sq(height)/sq(n) end
+
+function COLS:reinforce(row1,row2)
+  local h1,h2 = self:height(row1), self:height(row2)
+  if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
+  local delta = math.abs(h1 - h2)
+  for _,col in pairs(self.x) do
+    local x1,x2 = col:bin(row1.cells[col.at]), col:bin(row2.cells[col.at])
+    if x1 ~= "?" and x2 ~= "?" then
+      col.pos[x1] = (col.pos[x1] or 0) + delta
+      col.neg[x2] = (col.neg[x2] or 0) + delta end end end
+--------------------------------------------------------------------------------------------------
+local ROW=obj"ROW"
+function ROW:new(t) self.cells = t; self.evaluated = false end
+
+function ROW:rank(cols)
+  local pos,neg = 0,0
+  for _,col in pairs(cols.x) do
+    local x = col:bin(self.cells[col.at])
+    if x ~= "?" then 
+      pos = pos + (col.pos[x] or 0)
+      neg = neg + (col.neg[x] or 0) end end
+  return  pos/neg end
 --------------------------------------------------------------------------------------------------
 local DATA = obj"DATA"
 function DATA:new(t)
   self.rows, self.cols = {}, COLS(table.remove(t,1))
-  for n,t1 in pairs(t or {}) do 
-    push(self.rows, t1)
-    for _,col in pairs(self.cols.x) do col:add(t1[col.at]) end end end
+  for _,t1 in pairs(t or {}) do self:add(t1) end end
 
-function DATA:delta() 
-  for x=1,100 do 
-    local one,two=any(self.rows), any(self.rows) 
-    print""
-    print(o(one),self.cols:height(one))
-    print(o(two),self.cols:height(two)) end  end 
+function DATA:add(t)
+  local row = t.cells and t or ROW(t)
+  push(self.rows, row)
+  for _,col in pairs(self.cols.x) do col:add(row.cells[col.at]) end end 
+
+function DATA:truth(t)
+  return sort(t or self.rows, 
+              function(r1,r2) return self.cols:height(r1) < self.cols:height(r2) end) end
+
+function DATA:guess()
+  for _,col in pairs(self.cols.x) do col:hundred() end
+  return sort(self.rows, function(r1,r2) return r1:rank(self.cols) < r2:rank(self.cols) end) end
+
+function DATA:learn() 
+  local n,some = the.samples,{}
+  for _=1,n do push(some, any(self.rows)) end
+  for i=1,n do
+    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -528,7 +571,30 @@ function eg.all()
 
 function eg.one() DATA(auto93()) end
 function eg.load() oo(DATA(auto93()).cols.x[4]) end
-function eg.delta() DATA(auto93()):delta() end
+function eg.learn() 
+ local data= DATA(auto93())
+ data:learn() 
+ oo(data.cols.x[1]:hundred().pos) 
+ oo(data.cols.x[1]:hundred().neg) end
+
+function eg.rank() 
+ local data= DATA(auto93())
+ local some ={}
+ for i=1,16 do push(some, any(data.rows)) end
+ some = data:truth(some)
+ for i=16,1,-1 do
+   print("random",i, o(some[i].cells)) end 
+
+ local tmp=data:truth()
+ print""
+ for i=#tmp,1,-50 do print("truth",i, o(tmp[i].cells)) end 
+ print""
+ data:learn() 
+ local tmp=data:guess() 
+ for i=#tmp,1,-50 do print("guess",i, o(tmp[i].cells)) end end
+
+math.randomseed(1)
+if arg[2] then math.randomseed(tonumber(arg[2])) end
 
 eg[arg[1] or "all"]()
 for x,y in pairs(_ENV) do if not b4[x] then print("?",x,type(y)) end end
