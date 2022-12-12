@@ -20,11 +20,10 @@ In my function arguments:
 local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
 local the={bins=16,
            seed=1} -- global config
-local fmt,any,push,map,sort,want,copy,keys,oo,o
+local fmt,any,push,map,sort,want,copy,keys,oo,o,show,obj
 local _id=0
 function obj(s,    t,new) --> t; create a klass and a constructor + print method
-  function new(k,...) 
-    _id=_id+1; local x=setmetatable({_id=_id},k); t.new(x,...); return x end
+  function new(k,...) _id=_id+1; local x=setmetatable({_id=_id},k); t.new(x,...); return x end
   t={_is=s, __tostring = o}
   t.__index = t;return setmetatable(t,{__call=new}) end
 --------------------------------------------------------------------------------------------------
@@ -32,9 +31,9 @@ local COL= obj"COL"
 function COL:new(n,s)
   self.name = s or "" 
   self.at   = n or 0 
-  self.is   = {goal= (s or ""):find"[+-]$" and true or false,
-               num= (s or ""):find"^[A-Z]+",
-               ignored=(s or ""):find"X$"}
+  self.is   = {goal    = (s or ""):find"[+-]$",
+               num     = (s or ""):find"^[A-Z]+",
+               ignored = (s or ""):find"X$"}
   self.pos  = {}
   self.neg  = {}
   self.lo   =  math.huge
@@ -58,7 +57,7 @@ local COLS =obj"COLS"
 function COLS:new(t) 
   self.all,self.x,self.y = {},{},{}
   for n,s in pairs(t) do
-    local col = push(self.all, col.new(n,s))
+    local col = push(self.all, COL(n,s))
     if not col.is.ignored then
       push(col.is.goal and self.y or self.x, col) end end end
 
@@ -69,22 +68,22 @@ function COLS:height(t)
     local x = t[col.at]
     if x ~= "?" then
       n   = n+1
-      height = height + math.abs(norm(col,x) - (col.is.goal and 0 or 1))^2 end end 
-  return sq(tmp)/sq(n) end
+      height = height + math.abs(col:norm(x) - (col.is.goal and 0 or 1))^2 end end 
+  return sq(height)/sq(n) end
 --------------------------------------------------------------------------------------------------
 local DATA = obj"DATA"
-function DATA(t)
+function DATA:new(t)
   self.rows, self.cols = {}, COLS(table.remove(t,1))
   for n,t1 in pairs(t or {}) do 
     push(self.rows, t1)
-    for _,col in pairs(i.cols.x) do col:add(t1[col.at]) end end end
+    for _,col in pairs(self.cols.x) do col:add(t1[col.at]) end end end
 
-function DATA:delta()
+function DATA:delta() 
   for x=1,100 do 
     local one,two=any(self.rows), any(self.rows) 
     print""
-    print(o(one),i.cols:height(one))
-    print(o(two),i.cols:height(two)) end end
+    print(o(one),self.cols:height(one))
+    print(o(two),self.cols:height(two)) end  end 
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -98,16 +97,15 @@ function copy(t)
   local u={}; for k,v in pairs(t) do u[k] = copy(v) end
   return u end
 
-function want(k) if tostring(k):sub(1,1) ~= "_" then return k end end
-function keys(t)
-  local u={}; for k,v in pairs(t) do if want(k) then u[1+#u] = k end end; return sort(u) end
+function show(k) if tostring(k):sub(1,1) ~= "_" then return k end end
+function keys(t,    u) u={};for k,v in pairs(t) do if show(k) then u[1+#u]=k end end; return u end
 
 function oo(x) print(o(x)); return x end
 function o(t,     u,key)
   if type(t) ~= "table" then return tostring(t) end
   function key(k) return fmt(":%s %s",k,o(t[k])) end
-  u= #t>0 and map(t,o) or map(keys(t), key)
-  return "{".. table.concat(u," ").."}" end
+  u= #t>0 and map(t,o) or map(sort(keys(t)), key)
+  return (t._is or "").."{".. table.concat(u," ").."}" end
 --------------------------------------------------------------------------------------------------
 local function auto93() return copy{
 {"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
@@ -514,14 +512,15 @@ local function auto93() return copy{
 local eg={}
 function eg.all() 
   local b4 = copy(the)
-  for _,key in pairs(keys(eg)) do 
+  for _,key in pairs(sort(keys(eg))) do 
     if key ~="all" then
       math.randomseed(the.seed or 1)
       eg[key]() 
       for x,y in pairs(b4) do the[x]=y end end end end
 
+function eg.one() DATA(auto93()) end
 function eg.load() oo(DATA(auto93()).cols.x[4]) end
-function eg.delta() dataDelta(DATA(auto93())) end
+function eg.delta() DATA(auto93()):delta() end
 
 eg[arg[1] or "all"]()
 for x,y in pairs(_ENV) do if not b4[x] then print("?",x,type(y)) end end
