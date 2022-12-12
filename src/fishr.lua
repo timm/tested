@@ -16,6 +16,14 @@ In my function arguments:
 - x == anything
 - fun == function
 - UPPER = class
+
+      /`·.¸
+     /¸...¸`:·
+ ¸.·´  ¸   `·.¸.·´)
+: © ):´;      ¸  {
+ `·.¸ `·  ¸.·´\`·¸)
+     `\\´´\¸.·´
+
 --]]
 local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
 local the={bins=16,
