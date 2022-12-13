@@ -7,7 +7,7 @@ d2={x={3,4,2,6,2,5},
     y={9,7,5,10,6,8}}
 
 d3={usual={8,7,6,2,5,8,7,3},
-    new={9,9,7,8,10,9,6}}
+    new={  9,9,7,8,10,9,6}}
 
 function critical(c,n1,n2)
   local t={
@@ -93,8 +93,29 @@ function mwu(pop1,pop2)
   u1 = #pop1*#pop2 + #pop1*(#pop1+1)/2 -r1
   u2 = #pop1*#pop2 + #pop2*(#pop2+1)/2 -r2
   c  = critical(95,#pop1,#pop2)
-  return math.min(u1,u2)< c end -- fail to reject h0 ; i.e. return "same"
+  oo{r1=r1,r2=r2,u1=u1,u2=u2,u=math.min(u1,u2),c=c}
+  return math.min(u1,u2)<c  end -- fail to reject h0 ; i.e. return "same"
                                 -- we do not have sufficient evidence to say the populations are different
 
-print(mwu(d3.usual,d3.new))
+local d=1
+math.randomseed(1)
+for i=1,100 do
+  local t1,t2={},{}
+  for j=1,200 do local x=math.floor(100*math.random()^2);t1[1+#t1]=x; t2[1+#t2]=d*x end
+  print(d,mwu(t1,t2))
+  d=d+0.05 end
+
+
+print("false",mwu(d3.usual,d3.usual))
+print("true",mwu(d3.usual,d3.new))
+
+print("true",mwu({ 0.34, 0.49,  0.51,  0.6, .34,   .49,   .51,   .6}, -- x1
+    {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9})) --x2
+
+print("true", mwu({0.15,  0.25,  0.4 ,  0.35, 0.15, 0.25,  0.4 ,  0.35}, --x3
+              {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+print("false",mwu(    {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9}, --x2
+              {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+-- x5  0.1   0.2   0.3   0.4
+--
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
