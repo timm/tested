@@ -1,5 +1,49 @@
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
 local d1,d2,d3,fmt,map,o,oo,lt,sort,rank,ranks,mwu,critical, criticals
+data ={x1={ 0.34, 0.49,  0.51,  0.6, .34,   .49,   .51,   .6}, 
+       x2={0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9},
+       x3={0.15,  0.25,  0.4 ,  0.35, 0.15, 0.25,  0.4 ,  0.35},
+       x4={0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9},
+       x5={0.1,  0.2,  0.3,  0.4,   0.1,  0.2,  0.3,  0.4}}
+
+function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
+function sort(t,fun) table.sort(t,fun) return t end
+function append(t1,t2)
+  local t3={}
+  for _,t in pairs{t1,t2} do 
+    for _,x in pairs(t) do t3[1+#t3] = x end end
+  return t3 end
+
+function RX(t,s,has)
+  t = sort(t)
+  local n = #t//2
+  return {name=s or"", pop=t, rank=0, has=has,
+          median=(#t%2)==0 and (t[n] +t[n+1])/2 or t[n+1]} end
+
+function merge(t)
+  local i,tmp = 1,{}
+  while i <= #t do
+    local rx=t[i]
+    if i<#t then 
+      if mwu(t[i].pop, t[i+1].pop) then
+        rx = RX( append(t[i].pop, t[i+1].pop))
+        rx.has = {t[i],t[i+1]} 
+        i=i+1 end end
+    tmp[ 1 + #tmp ] = rx
+    i=i+1 end
+  return #tmp == #t and t and merge(tmp) end 
+    
+  
+function scottknott(d)
+  local rxs={}
+  for k,t in pairs(d) do rxs[1+#rxs] = RX(t,k) end 
+  for rank,rx1 in pairs(merge(sort(rxs, lt"median"))) do
+    for _,rx2 in pairs(rx1.has) do 
+      rx1.rank=rank end end
+  return rxs end
+
+
+  table.sort(t, function
 d1={placebo={7,5,6,4,12},
       data={3,6,4,2,1}}
 
@@ -14,15 +58,11 @@ function map(t,fun)
   local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
 
 function oo(t)  print(o(t)); return t end 
-function o(t,    ok,cat,kat)   
-  function ok(k)  return tostring(k):sub(1,1) ~= "_" end
-  function cat(t) return '{'..table.concat(map(t,o),", ")..'}' end
-  function kat(t,    u)  
-    u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=fmt(":%s %s",k,o(v)) end end; return u end
-  return type(t) ~= "table" and tostring(t) or cat(#t>1 and t or sort(kat(t))) end
-
-function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
-function sort(t,fun) table.sort(t,fun) return t end
+function o(t,    ok,show,shows)   
+  function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
+  function show(k,v) if tostring(k):sub(1,1) ~= "_" then return fmt(":%s %s",k,o(v)) end end
+  function shows(t)  local u={}; for k,v in pairs(t) do  u[1+#u]=show(k,v) end;  return u end
+  return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
 
 function critical(c,n1,n2)
   local t={
