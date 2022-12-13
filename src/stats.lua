@@ -80,7 +80,7 @@ function ranks(pop1,pop2)
   x = t[1]
   u[x] = {x=x,n=1,ranks=1}
   for i=2,#t do
-    if t[i-1] ~= t[i] then x=t[i]; u[x] = {x=x, n=0,ranks=0}  end  
+    if t[i-1] ~= t[i] then x=t[i]; u[x] = {x=x, n=0,ranks=0}  end    
     u[x].x     = t[i]
     u[x].ranks = u[x].ranks + i 
     u[x].n     = u[x].n + 1 end
