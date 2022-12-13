@@ -9,6 +9,21 @@ d2={x={3,4,2,6,2,5},
 d3={usual={8,7,6,2,5,8,7,3},
     new={  9,9,7,8,10,9,6}}
 
+fmt=string.format
+function map(t,fun)
+  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
+
+function oo(t)  print(o(t)); return t end 
+function o(t,    ok,cat,kat)   
+  function ok(k)  return tostring(k):sub(1,1) ~= "_" end
+  function cat(t) return '{'..table.concat(map(t,o),", ")..'}' end
+  function kat(t,    u)  
+    u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=fmt(":%s %s",k,o(v)) end end; return u end
+  return type(t) ~= "table" and tostring(t) or cat(#t>1 and t or sort(kat(t))) end
+
+function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
+function sort(t,fun) table.sort(t,fun) return t end
+
 function critical(c,n1,n2)
   local t={
           [99]={{0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,3,3},
@@ -56,21 +71,6 @@ function critical(c,n1,n2)
     local n2 = math.min(n2,#u)
     return u[n2][n1] end
 
-fmt=string.format
-function map(t,fun)
-  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
-
-function oo(t)  print(o(t)); return t end 
-function o(t,    ok,cat,kat)   
-  function ok(k)  return tostring(k):sub(1,1) ~= "_" end
-  function cat(t) return '{'..table.concat(map(t,o),", ")..'}' end
-  function kat(t,    u)  
-    u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=fmt(":%s %s",k,o(v)) end end; return u end
-  return type(t) ~= "table" and tostring(t) or cat(#t>1 and t or sort(kat(t))) end
-
-function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
-function sort(t,fun) table.sort(t,fun) return t end
-
 function rank(t) return t.ranks/t.n end
 function ranks(pop1,pop2)
   local x,t,u = 0,{},{}
@@ -87,35 +87,49 @@ function ranks(pop1,pop2)
   return u end
 
 function mwu(pop1,pop2)
-  local t,r1,r2,u1,u2,c = ranks(pop1,pop2)
+  local t,r1,r2,u1,u2,c,n1,n2 = ranks(pop1,pop2)
   r1=0; for _,x in pairs(pop1) do r1=r1+ rank(t[x]) end
   r2=0; for _,x in pairs(pop2) do r2=r2+ rank(t[x]) end
-  u1 = #pop1*#pop2 + #pop1*(#pop1+1)/2 -r1
-  u2 = #pop1*#pop2 + #pop2*(#pop2+1)/2 -r2
+  n1,n2= #pop1, #pop2
+  u1 = n1*n2 + n1*(n1+1)/2 - r1
+  u2 = n1*n2 + n2*(n2+1)/2 - r2
   c  = critical(95,#pop1,#pop2)
-  oo{r1=r1,r2=r2,u1=u1,u2=u2,u=math.min(u1,u2),c=c}
-  return math.min(u1,u2)<c  end -- fail to reject h0 ; i.e. return "same"
-                                -- we do not have sufficient evidence to say the populations are different
+  local word = math.min(u1,u2)<=c and "~=" or "=="
+  return math.min(u1,u2)<=c, word  end -- fail to reject h0 ; i.e. return "same"
+                                       -- we do not have sufficient evidence to say the populations are different
+
+function norm(mu,sd) 
+  local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
+  return  mu + sd * sq(-2*log(R())) * cos(2*pi*R()) end
 
 local d=1
 math.randomseed(1)
-for i=1,100 do
+for i=1,20 do
   local t1,t2={},{}
-  for j=1,200 do local x=math.floor(100*math.random()^2);t1[1+#t1]=x; t2[1+#t2]=d*x end
-  print(d,mwu(t1,t2))
+  for j=1,2560 do t1[1+#t1]=norm(10,1); t2[1+#t2]=norm(d*10,1) end
+  print(d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
   d=d+0.05 end
-
 
 print("false",mwu(d3.usual,d3.usual))
 print("true",mwu(d3.usual,d3.new))
 
+print""
 print("true",mwu({ 0.34, 0.49,  0.51,  0.6, .34,   .49,   .51,   .6}, -- x1
-    {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9})) --x2
+                 {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9})) --x2
 
 print("true", mwu({0.15,  0.25,  0.4 ,  0.35, 0.15, 0.25,  0.4 ,  0.35}, --x3
-              {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+                  {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
 print("false",mwu(    {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9}, --x2
-              {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+                    {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+
+print""
+print("true",mwu({ 0.34, 0.49,  0.51,  0.6}, -- x1
+                 {0.6 ,  0.7,   0.8,   0.9})) --x2
+
+print("true", mwu({0.15,  0.25,  0.4 ,  0.35}, --x3
+                  {0.6 ,  0.7,   0.8,   0.9})) -- x4
+print("false",mwu(    {0.6 ,  0.7,   0.8,   0.9}, --x2
+                    {0.6 ,  0.7,   0.8,   0.9})) -- x4
 -- x5  0.1   0.2   0.3   0.4
 --
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
