@@ -168,7 +168,7 @@ local function tiles(rxs,width)
     u={};for i=1,width do u[1+#u]="" end
     a,b,c,d,e= #t*.1, #t*.3, #t*.5, #t*.7, #t*.9
     a,b,c,d,e= t[a//1], t[b//1], t[c//1], t[d//1], t[e//1]
-    a,b,c,d,e= norm(a), norm(b), norm(c), norm(d), norm(e)
+    a,b,c,d,e= norm(a), norm(b), norm(c), norm(d), norm(e) 
     for i=a,b do u[i]="-" end
     for i=d,e do u[i]="-" end
     u[#u//2] = "|"
