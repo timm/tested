@@ -9,10 +9,12 @@ function map(t,fun)
   local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
 
 function oo(t)  print(o(t)); return t end 
-function o(t,     out,show,shows)   
+function o(t,     ok,out,show,shows)
+  function ok(k)     return  tostring(k):sub(1,1) ~= "_" end
   function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
-  function show(k,v) if tostring(k):sub(1,1) ~= "_" then return fmt(":%s %s",k,o(v)) end end
-  function shows(t)  local u={}; for k,v in pairs(t) do  u[1+#u]=show(k,v) end;  return u end
+  function show(k,v) return fmt(":%s %s",k,o(v)) end 
+  function shows(t)  
+    local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
   return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
 
 function median(t) --> n; assumes t is sorted 
@@ -21,13 +23,13 @@ function median(t) --> n; assumes t is sorted
 ---------------------------------------------------------------------------------------------------
 local cliffsDelta
 function cliffsDelta(t1,t2, dull)
-  local n, gt,lt = 0,0,0
+  local n,gt,lt = 0,0,0
   for _,x in pairs(t1) do
     for _,y in pairs(t2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= 0.147 end
+  return math.abs(lt - gt)/n <= dull end
 ---------------------------------------------------------------------------------------------------
 local rank,ranks,mwu,critical
 function critical(c,n1,n2)
@@ -105,46 +107,76 @@ function mwu(pop1,pop2)
   -- we do not have sufficient evidence to say the populations are different
   return math.min(u1,u2)<=c, word  end 
 ---------------------------------------------------------------------------------------------------
-local RX,add,adds
+local RX,add,adds,sd
 function RX(t,s) return {name=s or"",rank=0,t=sort(t or {})} end
 
 function add(rx,t)
   rx = rx or RX()
+  t  = t and (t.rank and t.t or t) or {}
   local u={}
-  for _,t1 in pairs{rx.t, t} do
-    for _,x in pairs(t1) do u[1+#u] = x end end
+  for _,x in pairs(rx.t) do u[1+#u]=x end
+  for _,x in pairs(t)    do u[1+#u]=x end
   return RX(sort(u)) end
 
 function adds(t,lo,hi)
-  out=RX(); for i=lo,hi do out = add(out,t[i]) end; return out end
+  local out=RX(); for i=lo,hi do out = add(out,t[i]) end; return out end
+
+function sd(t) return (t[(.9*#t)//1] - t[(.1*#t)//1])/2.56 end
 ---------------------------------------------------------------------------------------------------
 local sk
-function sk(d,cohen)
+function sk(d,dull)
   local rank = 0
-  local rxs = sort(map(d, function(t) return RX(t) end), lt"median")
-  function sk1(lo,hi)
+  local rxs = {}
+  for k,t in pairs(d) do rxs[1+#rxs]= RX(t,k) end
+  rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end)
+  local tiny
+  local function sk1(lo,hi,lvl)
+    local pre=("|.. "):rep(lvl)
     local b4 = adds(rxs,lo,hi)
-    local max,mid,n = 0, median(b4.t), #b4.t
+    tiny = tiny or 0.35*sd(b4.t)
+    local max, mid, n = -1, median(b4.t), #b4.t
     local cut
     for i=lo,hi-1 do
       local l = adds(rxs,lo,i)
       local r = adds(rxs,i+1,hi)
       local n1,n2 = #l.t, #r.t
-      tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
+      local tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
       if tmp > max then 
-        if not mwu(l.t, r.t) and not cliffsDelta(l.r, r.t) then
-          max,cut = tmp,i end  end 
-    end
+          max,cut = tmp,i end 
+    end  
     if   cut 
-    then sk1(lo,cut)
-         sk1(cut+1,hi) 
-    else rank=rank+1
-         for i=lo,hi do rxs[i].rank = rank end end 
+    then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
+         --if median(r.t) - median(l.t) > tiny and mwu(r.t,l.t) then
+         if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t, dull or .147) then
+           sk1(lo,cut,lvl+1)
+           return sk1(cut+1,hi,lvl+1)  end end
+    rank=rank+1
+    for i=lo,hi do rxs[i].rank = rank  end
   end --------
-  sk1(1, #rxs)
+  sk1(1, #rxs,0)
+  return rxs end 
+---------------------------------------------------------------------------------------------------
+local function tiles(rxs,width)
+  width=width or 32
+  lo,hi = math.huge, -math.huge
+  for _,rx in pairs(rxs) do 
+    lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
+  local function norm(x) 
+     return math.max(1, math.min(width, width*(x-lo)/(hi-lo)//1)) end
+  for _,rx in pairs(rxs) do
+    t=rx.t
+    u={};for i=1,width do u[1+#u]="" end
+    a,b,c,d,e= #t*.1, #t*.3, #t*.5, #t*.7, #t*.9
+    a,b,c,d,e= t[a//1], t[b//1], t[c//1], t[d//1], t[e//1]
+    a,b,c,d,e= norm(a), norm(b), norm(c), norm(d), norm(e)
+    for i=a,b do u[i]="-" end
+    for i=d,e do u[i]="-" end
+    u[#u//2] = "|"
+    u[c] = "*" 
+    rx.show = table.concat(u,"") end 
   return rxs end
 ---------------------------------------------------------------------------------------------------
-local norm,eg1,eg2,eg3,eg4,eg5
+local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8
 function norm(mu,sd) 
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R()) end
@@ -181,13 +213,43 @@ function eg3()
     print(d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
     d=d+0.1 end end
 
+function eg0(txt,data)
+  print("\n"..txt)
+  for _,rx in pairs(sk(data)) do print("\t",rx.rank, o(rx.t)) end end
+
 function eg4()
-  local data={x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},
-              x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},
-              x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},
-              x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},
-              x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}} end
+  eg0("eg4",{
+         x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},
+         x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},
+         x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},
+         x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},
+         x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}) end
 
+function eg5()
+  eg0("eg5",{
+        x1= { 0.34,0.49,0.51,0.6,0.34,0.49,0.51,0.6},
+        x2={ 6,7,8,9 ,6,7,8,9}}) end
 
-eg3()
+function eg6()
+  eg0("eg6",{
+   x1={ 0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4},
+   x2={ 0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4},
+   x3={6,7,8,9,6,7,8,9}}) end
+
+function eg7()
+  eg0("eg7",{
+    x1={101,100,99,101,99.5,101,100,99,101,99.5},
+    x2={101,100,99,101,100,101,100,99,101,100},
+    x3={101,100,99.5,101,99,101,100,99.5,101,99},
+    x4={101,100,99,101,100,101,100,99,101,100}}) end
+
+function eg8()
+  eg0("eg8",{
+    x1={11,12,13,11,12,13},
+    x2={14,13,15 ,14,12,12},
+    x3={23,24,31,23,24,31},
+    x4={32,33,34,32,33,34}}) end
+
+eg4(); eg5(); eg6(); eg7();eg8()
+
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
