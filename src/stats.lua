@@ -1,37 +1,64 @@
+--[[
+         __                 __              
+        /\ \__             /\ \__           
+  ____  \ \ ,_\     __     \ \ ,_\    ____  
+ /',__\  \ \ \/   /'__`\    \ \ \/   /',__\ 
+/\__, `\  \ \ \_ /\ \L\.\_   \ \ \_ /\__, `\
+\/\____/   \ \__\\ \__/.\_\   \ \__\\/\____/
+ \/___/     \/__/ \/__/\/_/    \/__/ \/___/ 
+                                            
+In this code
+- vars are global by default unless marked with "local"
+- functions have to be defined before they are used.
+- #t is length of list t (and empty lists have #t==0)
+- tables start and end with {}
+- tables can have numeric or symbolic fields.
+- for pos,x in pairs(t) do is the same as python's 
+  for pos,x in enumerate(t) do
+
+In my function arguments:
+- n == number
+- s == string
+- t == table
+- is == boolean
+- x == anything
+- fun == function
+- UPPER = class
+- lower = instance; e.g. rx is an instance of RX
+- xs == a table of "x"; e.g. "ns" is a list of numbers
+--]]
+
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
-local lt,sort,fmt,map,oo,o,median
-
-function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
-function sort(t,fun) table.sort(t,fun) return t end
-
-fmt=string.format
-function map(t,fun)
-  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
-
-function oo(t)  print(o(t)); return t end 
-function o(t,     ok,out,show,shows)
-  function ok(k)     return  tostring(k):sub(1,1) ~= "_" end
-  function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
-  function show(k,v) return fmt(":%s %s",k,o(v)) end 
-  function shows(t)  
-    local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
-  return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
-
-function median(t) --> n; assumes t is sorted 
-  local n = #t//2
-  return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
----------------------------------------------------------------------------------------------------
+local lt,sort,fmt,map,oo,o,median,tiles
+---------------------------------------------------------------------------------------------------
 local cliffsDelta
-function cliffsDelta(t1,t2, dull)
+function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
-  for _,x in pairs(t1) do
-    for _,y in pairs(t2) do
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
   return math.abs(lt - gt)/n <= dull end
 ---------------------------------------------------------------------------------------------------
-local rank,ranks,mwu,critical
+local RX,add,adds,rank
+function RX(t,s)  --> RX; constructor for treatments. ensures treatment results are sorted
+  return {name=s or"",rank=0,t=sort(t or {})} end 
+
+function rank(rx) return rx.ranks/rx.n end --> n; returns average range in a treatment  
+
+function add(rx,ns) --> RX; returns a new rank combining an old rank with a list of numbers `ns`
+  rx = rx or RX()
+  ns = ns and (ns.rank and ns.t or ns) or {} -- ensure ns is a list
+  local u={}
+  for _,x in pairs(rx.t) do u[1+#u]=x end
+  for _,x in pairs(ns)   do u[1+#u]=x end
+  return RX(u) end
+
+function adds(rxs,lo,hi) --> RX; combines treatments from index `lo` to `hi` in `rxs. 
+  local rx=RX(); for i=lo,hi do rx = add(rx,rxs[i]) end; return rx end
+---------------------------------------------------------------------------------------------------
+local ranks,mwu,critical
 function critical(c,n1,n2)
   local t={
           [99]={{0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,3,3},
@@ -70,8 +97,6 @@ function critical(c,n1,n2)
                 {7,12,18,24,30,36,42,48,55,61,67,74,80,86,93,99,106,112},
                 {7,13,19,25,32,38,45,52,58,65,72,78,85,92,99,106,113,119},
                 {8,14,20,27,34,41,48,55,62,69,76,83,90,98,105,112,119,127}}}
-    assert(n1>=3,"must be 3 or more")
-    assert(n2>=2,"must be 3 or more")
     n1,n2 = n1-2,n2-2
     local u=t[c]
     assert(u,"confidence level unknown")
@@ -79,7 +104,6 @@ function critical(c,n1,n2)
     local n2 = math.min(n2,#u)
     return u[n2][n1] end
 
-function rank(t) return t.ranks/t.n end
 function ranks(pop1,pop2)
   local x,t,u = 0,{},{}
   for _,pop in pairs{pop1,pop2} do
@@ -94,69 +118,73 @@ function ranks(pop1,pop2)
     u[x].n     = u[x].n + 1 end
   return u end
 
-function mwu(pop1,pop2)
-  local t,r1,r2,u1,u2,c,n1,n2 = ranks(pop1,pop2)
-  r1=0; for _,x in pairs(pop1) do r1=r1+ rank(t[x]) end
-  r2=0; for _,x in pairs(pop2) do r2=r2+ rank(t[x]) end
-  n1,n2= #pop1, #pop2
+function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at confidence `nConf`
+  local t,r1,r2,u1,u2,c = ranks(ns1,ns2)
+  local n1,n2= #ns1, #ns2
+  assert(n1>=3,"must be 3 or more")
+  assert(n2>=3,"must be 3 or more")
+  c  = critical(nConf or 95,n1,n2)
+  r1=0; for _,x in pairs(ns1) do r1=r1+ rank(t[x]) end
+  r2=0; for _,x in pairs(ns2) do r2=r2+ rank(t[x]) end
   u1 = n1*n2 + n1*(n1+1)/2 - r1
   u2 = n1*n2 + n2*(n2+1)/2 - r2
-  c  = critical(95,#pop1,#pop2)
-  local word = math.min(u1,u2)<=c and "~=" or "=="
-  -- fail to reject h0 ; i.e. return "same"
-  -- we do not have sufficient evidence to say the populations are different
-  return math.min(u1,u2)<=c, word  end 
----------------------------------------------------------------------------------------------------
-local RX,add,adds,sd
-function RX(t,s) return {name=s or"",rank=0,t=sort(t or {})} end
-
-function add(rx,t)
-  rx = rx or RX()
-  t  = t and (t.rank and t.t or t) or {}
-  local u={}
-  for _,x in pairs(rx.t) do u[1+#u]=x end
-  for _,x in pairs(t)    do u[1+#u]=x end
-  return RX(sort(u)) end
-
-function adds(t,lo,hi)
-  local out=RX(); for i=lo,hi do out = add(out,t[i]) end; return out end
-
-function sd(t) return (t[(.9*#t)//1] - t[(.1*#t)//1])/2.56 end
+  local word = math.min(u1,u2)<=c 
+  return math.min(u1,u2)<=c  end  -- not evidence evidence to say they are the same
 ---------------------------------------------------------------------------------------------------
 local sk
-function sk(d,dull)
-  local rank = 0
-  local rxs = {}
-  for k,t in pairs(d) do rxs[1+#rxs]= RX(t,k) end
-  rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end)
-  local tiny
-  local function sk1(lo,hi,lvl)
-    local pre=("|.. "):rep(lvl)
-    local b4 = adds(rxs,lo,hi)
-    tiny = tiny or 0.35*sd(b4.t)
-    local max, mid, n = -1, median(b4.t), #b4.t
-    local cut
+function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median, ranked by stats
+  nDull = nDull or 0.147 -- for effect size test; threshold for "small effect"
+  nWidth = nWidth or 40  -- width of text display of numbers
+  nConf  = nConf  or 95  -- for significance test; confidence for testing 'distinguish-ability'
+  local ranking,rxs,argmax
+  function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
+    local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
+    b4 = adds(rxs,lo,hi)
+    max, mid, n = -1, median(b4.t), #b4.t
     for i=lo,hi-1 do
-      local l = adds(rxs,lo,i)
-      local r = adds(rxs,i+1,hi)
-      local n1,n2 = #l.t, #r.t
-      local tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
-      if tmp > max then 
-          max,cut = tmp,i end 
+      local l,r,n1,n2,tmp
+      l = adds(rxs,lo,i)
+      r = adds(rxs,i+1,hi)
+      n1,n2 = #l.t, #r.t
+      tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
+      if tmp > max then max,cut = tmp,i end 
     end  
     if   cut 
     then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
-         --if median(r.t) - median(l.t) > tiny and mwu(r.t,l.t) then
-         if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t, dull or .147) then
-           sk1(lo,cut,lvl+1)
-           return sk1(cut+1,hi,lvl+1)  end end
-    rank=rank+1
-    for i=lo,hi do rxs[i].rank = rank  end
-  end --------
-  sk1(1, #rxs,0)
+         if mwu(r.t,l.t,nConf) and not cliffsDelta(r.t, l.t, nDull) then
+           argmax(lo,cut)
+           return argmax(cut+1,hi)  end end -- return here (so we skip over the next 2 lines) 
+    for i=lo,hi do rxs[i].rank = ranking end -- if we did not cut, label all current `rx` as `rank`
+    ranking = ranking+1 -- increment `rank` (so next thing has rank+1)
+  end --------------------------------------------------------------------
+  ranking = 1
+  rxs = {}
+  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(t1,k) end
+  rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
+  argmax(1, #rxs) -- recursively split
+  --return tiles(rxs,nWidth) end 
   return rxs end 
----------------------------------------------------------------------------------------------------
-local function tiles(rxs,width)
+---------------------------------------------------------------------------------------------------
+-- ##  Lib
+function sort(t,fun) table.sort(t,fun) return t end --> t; returns `t` sorted by `fun` 
+
+function map(t,fun) --> t; returns copy of `t`, all items filtered by `fun`.
+  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
+
+function oo(t)  print(o(t)); return t end 
+function o(t,     ok,out,show,shows)
+  function ok(k)     return  tostring(k):sub(1,1) ~= "_" end
+  function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
+  function show(k,v) return string.format(":%s %s",k,o(v)) end 
+  function shows(t)  
+    local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
+  return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
+
+function median(t) --> n; assumes t is sorted 
+  local n = #t//2
+  return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
+
+function tiles(rxs,width)
   width=width or 32
   lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
@@ -164,7 +192,8 @@ local function tiles(rxs,width)
   local function norm(x) 
      return math.max(1, math.min(width, width*(x-lo)/(hi-lo)//1)) end
   for _,rx in pairs(rxs) do
-    t=rx.t
+    local t=rx.t
+    oo(rx.t)
     u={};for i=1,width do u[1+#u]="" end
     a,b,c,d,e= #t*.1, #t*.3, #t*.5, #t*.7, #t*.9
     a,b,c,d,e= t[a//1], t[b//1], t[c//1], t[d//1], t[e//1]
@@ -175,7 +204,8 @@ local function tiles(rxs,width)
     u[c] = "*" 
     rx.show = table.concat(u,"") end 
   return rxs end
----------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--- TESTS
 local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8
 function norm(mu,sd) 
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
