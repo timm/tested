@@ -1,69 +1,35 @@
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
-local d1,d2,d3,fmt,map,o,oo,lt,sort,rank,ranks,mwu,critical, criticals
-data ={x1={ 0.34, 0.49,  0.51,  0.6, .34,   .49,   .51,   .6}, 
-       x2={0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9},
-       x3={0.15,  0.25,  0.4 ,  0.35, 0.15, 0.25,  0.4 ,  0.35},
-       x4={0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9},
-       x5={0.1,  0.2,  0.3,  0.4,   0.1,  0.2,  0.3,  0.4}}
+local lt,sort,fmt,map,oo,o,median
 
 function lt(x) return function(t1,t2) return t1[x] < t2[x] end end
 function sort(t,fun) table.sort(t,fun) return t end
-function append(t1,t2)
-  local t3={}
-  for _,t in pairs{t1,t2} do 
-    for _,x in pairs(t) do t3[1+#t3] = x end end
-  return t3 end
-
-function RX(t,s,has)
-  t = sort(t)
-  local n = #t//2
-  return {name=s or"", pop=t, rank=0, has=has,
-          median=(#t%2)==0 and (t[n] +t[n+1])/2 or t[n+1]} end
-
-function merge(t)
-  local i,tmp = 1,{}
-  while i <= #t do
-    local rx=t[i]
-    if i<#t then 
-      if mwu(t[i].pop, t[i+1].pop) then
-        rx = RX( append(t[i].pop, t[i+1].pop))
-        rx.has = {t[i],t[i+1]} 
-        i=i+1 end end
-    tmp[ 1 + #tmp ] = rx
-    i=i+1 end
-  return #tmp == #t and t and merge(tmp) end 
-    
-  
-function scottknott(d)
-  local rxs={}
-  for k,t in pairs(d) do rxs[1+#rxs] = RX(t,k) end 
-  for rank,rx1 in pairs(merge(sort(rxs, lt"median"))) do
-    for _,rx2 in pairs(rx1.has) do 
-      rx1.rank=rank end end
-  return rxs end
-
-
-  table.sort(t, function
-d1={placebo={7,5,6,4,12},
-      data={3,6,4,2,1}}
-
-d2={x={3,4,2,6,2,5},
-    y={9,7,5,10,6,8}}
-
-d3={usual={8,7,6,2,5,8,7,3},
-    new={  9,9,7,8,10,9,6}}
 
 fmt=string.format
 function map(t,fun)
   local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
 
 function oo(t)  print(o(t)); return t end 
-function o(t,    ok,show,shows)   
+function o(t,     out,show,shows)   
   function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
   function show(k,v) if tostring(k):sub(1,1) ~= "_" then return fmt(":%s %s",k,o(v)) end end
   function shows(t)  local u={}; for k,v in pairs(t) do  u[1+#u]=show(k,v) end;  return u end
   return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
 
+function median(t) --> n; assumes t is sorted 
+  local n = #t//2
+  return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
+---------------------------------------------------------------------------------------------------
+local cliffsDelta
+function cliffsDelta(t1,t2, dull)
+  local n, gt,lt = 0,0,0
+  for _,x in pairs(t1) do
+    for _,y in pairs(t2) do
+      n = n + 1
+      if x > y then gt = gt + 1 end
+      if x < y then lt = lt + 1 end end end
+  return math.abs(lt - gt)/n <= 0.147 end
+---------------------------------------------------------------------------------------------------
+local rank,ranks,mwu,critical
 function critical(c,n1,n2)
   local t={
           [99]={{0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,3,3},
@@ -135,41 +101,93 @@ function mwu(pop1,pop2)
   u2 = n1*n2 + n2*(n2+1)/2 - r2
   c  = critical(95,#pop1,#pop2)
   local word = math.min(u1,u2)<=c and "~=" or "=="
-  return math.min(u1,u2)<=c, word  end -- fail to reject h0 ; i.e. return "same"
-                                       -- we do not have sufficient evidence to say the populations are different
+  -- fail to reject h0 ; i.e. return "same"
+  -- we do not have sufficient evidence to say the populations are different
+  return math.min(u1,u2)<=c, word  end 
+---------------------------------------------------------------------------------------------------
+local RX,add,adds
+function RX(t,s) return {name=s or"",rank=0,t=sort(t or {})} end
 
+function add(rx,t)
+  rx = rx or RX()
+  local u={}
+  for _,t1 in pairs{rx.t, t} do
+    for _,x in pairs(t1) do u[1+#u] = x end end
+  return RX(sort(u)) end
+
+function adds(t,lo,hi)
+  out=RX(); for i=lo,hi do out = add(out,t[i]) end; return out end
+---------------------------------------------------------------------------------------------------
+local sk
+function sk(d,cohen)
+  local rank = 0
+  local rxs = sort(map(d, function(t) return RX(t) end), lt"median")
+  function sk1(lo,hi)
+    local b4 = adds(rxs,lo,hi)
+    local max,mid,n = 0, median(b4.t), #b4.t
+    local cut
+    for i=lo,hi-1 do
+      local l = adds(rxs,lo,i)
+      local r = adds(rxs,i+1,hi)
+      local n1,n2 = #l.t, #r.t
+      tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
+      if tmp > max then 
+        if not mwu(l.t, r.t) and not cliffsDelta(l.r, r.t) then
+          max,cut = tmp,i end  end 
+    end
+    if   cut 
+    then sk1(lo,cut)
+         sk1(cut+1,hi) 
+    else rank=rank+1
+         for i=lo,hi do rxs[i].rank = rank end end 
+  end --------
+  sk1(1, #rxs)
+  return rxs end
+---------------------------------------------------------------------------------------------------
+local norm,eg1,eg2,eg3,eg4,eg5
 function norm(mu,sd) 
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R()) end
 
-local d=1
-math.randomseed(1)
-for i=1,20 do
-  local t1,t2={},{}
-  for j=1,2560 do t1[1+#t1]=norm(10,1); t2[1+#t2]=norm(d*10,1) end
-  print(d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
-  d=d+0.05 end
+local d1={placebo={7,5,6,4,12},
+      data={3,6,4,2,1}}
 
-print("false",mwu(d3.usual,d3.usual))
-print("true",mwu(d3.usual,d3.new))
+local d2={x={3,4,2,6,2,5},
+    y={9,7,5,10,6,8}}
 
-print""
-print("true",mwu({ 0.34, 0.49,  0.51,  0.6, .34,   .49,   .51,   .6}, -- x1
-                 {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9})) --x2
+local d3={usual={8,7,6,2,5,8,7,3},
+    new={  9,9,7,8,10,9,6}}
 
-print("true", mwu({0.15,  0.25,  0.4 ,  0.35, 0.15, 0.25,  0.4 ,  0.35}, --x3
-                  {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
-print("false",mwu(    {0.6 ,  0.7,   0.8,   0.9, .6,   .7,     .8,    .9}, --x2
-                    {0.6 ,  0.7,   0.8,   0.9, 0.6,   0.7,   0.8,   0.9})) -- x4
+function eg1()
+  print("false",mwu(d3.usual,d3.usual))
+  print("true",mwu(d3.usual,d3.new)) end
 
-print""
-print("true",mwu({ 0.34, 0.49,  0.51,  0.6}, -- x1
-                 {0.6 ,  0.7,   0.8,   0.9})) --x2
+function eg2()
+  print""
+  print("true",mwu({0.34,0.49,0.51,0.6,.34,.49,.51,.6},{0.6,0.7,0.8,0.9,.6,.7,.8,.9}))
+  print("true",mwu({0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},{0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9}))
+  print("false",mwu({0.6,0.7,0.8,0.9,.6,.7,.8,.9},{0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9}))
+  print""
+  print("true",mwu({0.34,0.49,0.51,0.6},{0.6,0.7,0.8,0.9}))
+  print("true",mwu({0.15,0.25,0.4,0.35},{0.6,0.7,0.8,0.9}))
+  print("false",mwu({0.6,0.7,0.8,0.9},{0.6,0.7,0.8,0.9})) end
 
-print("true", mwu({0.15,  0.25,  0.4 ,  0.35}, --x3
-                  {0.6 ,  0.7,   0.8,   0.9})) -- x4
-print("false",mwu(    {0.6 ,  0.7,   0.8,   0.9}, --x2
-                    {0.6 ,  0.7,   0.8,   0.9})) -- x4
--- x5  0.1   0.2   0.3   0.4
---
+function eg3()
+  local d=1
+  math.randomseed(1)
+  for i=1,10 do
+    local t1,t2={},{}
+    for j=1,2560 do t1[1+#t1]=norm(10,1); t2[1+#t2]=norm(d*10,1) end
+    print(d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
+    d=d+0.1 end end
+
+function eg4()
+  local data={x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},
+              x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},
+              x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},
+              x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},
+              x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}} end
+
+
+eg3()
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
