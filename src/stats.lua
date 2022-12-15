@@ -27,7 +27,17 @@ In my function arguments:
 - lower = instance; e.g. rx is an instance of RX
 - xs == a table of "x"; e.g. "ns" is a list of numbers
 --]]
-
+-- ## Scott-Knott tests
+-- For those who mistrust statistics, Scott-Knott is a way to find differences in N
+-- treatments using at most $O(log2(N))$ comparisons. This is useful since some statistical
+-- tests are slow (e.g. bootstrap). Also,  ~if we run an all-pairs comparisons between
+-- N tests at confidence C, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
+-- This is far less than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
+-- e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus
+-- 75 percent (for Scott-Knott).
+-- =.95,.015,75$ confOne the other (Scott-knott sorts treatments by their median value, then finds a split in that sort
+-- that most increases the difference in the median before and after the split. If the
+-- two splits are statistically different, Scott-Knott re, some nonparametric tests are applied to check 
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
 local lt,sort,fmt,map,oo,o,median,tiles
 ---------------------------------------------------------------------------------------------------
