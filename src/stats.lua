@@ -205,24 +205,23 @@ function median(t) --> n; assumes t is sorted
 
 function tiles(rxs,width)
   width=width or 32
-  lo,hi = math.huge, -math.huge
+  local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
   local function of(x,max) return math.max(1, math.min(max, x)) end
   local function norm(x) 
-     return of(width*(x-lo)/(hi-lo)//1) end
+     return of(width*(x-lo)/(hi-lo+1E-32)//1,width) end
   for _,rx in pairs(rxs) do
-    local t=rx.t
-    oo(rx.t)
-    u={};for i=1,width do u[1+#u]="" end
+    local t,u,a,b,c,d,e = rx.t,{}
+    for i=1,width do u[1+#u]="" end
     a,b,c,d,e= #t*.1, #t*.3, #t*.5, #t*.7, #t*.9
     a,b,c,d,e= of(a//1,#t), of(b//1,#t), of(c//1,#t), of(d//1,#t), of(e//1,#t)
     a,b,c,d,e= t[a], t[b], t[c], t[d], t[e]
-    print(a,b,c,d,e)
     a,b,c,d,e= norm(a), norm(b), norm(c), norm(d), norm(e) 
+    print("pos",a,b,c,d,e)
     for i=a,b do u[i]="-" end
     for i=d,e do u[i]="-" end
-    u[#u//2] = "|"
+    u[(#u)//2] = "|"
     u[c] = "*" 
     rx.show = table.concat(u,"") end 
   return rxs end
@@ -267,7 +266,7 @@ function eg3()
 
 function eg0(txt,data)
   print("\n"..txt)
-  for _,rx in pairs(sk(data)) do print("\t",rx.rank, o(rx.t)) end end
+  for _,rx in pairs(sk(data)) do print("\t",rx.rank, o(rx.t),rx.show) end end
 
 function eg4()
   eg0("eg4",{
