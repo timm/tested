@@ -222,7 +222,7 @@ function tiles(rxs,width)
     for i=a,b do u[i]="-" end
     for i=d,e do u[i]="-" end
     u[(#u)//2] = "|"
-    u[c] = "*" 
+    u[width*.5//1] = "*" 
     rx.show = table.concat(u,"") end 
   return rxs end
 --------------------------------------------------------------------------------------------------
