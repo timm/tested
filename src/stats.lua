@@ -1,43 +1,52 @@
---[[
-         __                 __              
-        /\ \__             /\ \__           
-  ____  \ \ ,_\     __     \ \ ,_\    ____  
- /',__\  \ \ \/   /'__`\    \ \ \/   /',__\ 
-/\__, `\  \ \ \_ /\ \L\.\_   \ \ \_ /\__, `\
-\/\____/   \ \__\\ \__/.\_\   \ \__\\/\____/
- \/___/     \/__/ \/__/\/_/    \/__/ \/___/ 
+---          __                 __              
+---         /\ \__             /\ \__           
+---   ____  \ \ ,_\     __     \ \ ,_\    ____  
+---  /',__\  \ \ \/   /'__`\    \ \ \/   /',__\ 
+--- /\__, `\  \ \ \_ /\ \L\.\_   \ \ \_ /\__, `\
+--- \/\____/   \ \__\\ \__/.\_\   \ \__\\/\____/
+---  \/___/     \/__/ \/__/\/_/    \/__/ \/___/ 
                                             
-In this code
-- vars are global by default unless marked with "local"
-- functions have to be defined before they are used.
-- #t is length of list t (and empty lists have #t==0)
-- tables start and end with {}
-- tables can have numeric or symbolic fields.
-- for pos,x in pairs(t) do is the same as python's 
-  for pos,x in enumerate(t) do
-
-In my function arguments:
-- n == number
-- s == string
-- t == table
-- is == boolean
-- x == anything
-- fun == function
-- UPPER = class
-- lower = instance; e.g. rx is an instance of RX
-- xs == a table of "x"; e.g. "ns" is a list of numbers
---]]
 -- ## Scott-Knott tests
--- For those who mistrust statistics, Scott-Knott is a way to find differences in N
--- treatments using at most $O(log2(N))$ comparisons. This is useful since some statistical
--- tests are slow (e.g. bootstrap). Also,  ~if we run an all-pairs comparisons between
--- N tests at confidence C, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
--- This is far less than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
--- e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus
--- 75 percent (for Scott-Knott).
--- =.95,.015,75$ confOne the other (Scott-knott sorts treatments by their median value, then finds a split in that sort
--- that most increases the difference in the median before and after the split. If the
--- two splits are statistically different, Scott-Knott re, some nonparametric tests are applied to check 
+-- If statistics gets too complicated then the solution is easy: use less stats!
+-- Scott-Knott is a way to find differences in N
+-- treatments using at most $O(log2(N))$ comparisons. This is useful since:
+-- - Some statistical tests are slow (e.g. bootstrap). 
+-- - If we run an all-pairs comparisons between
+--   N tests at confidence C, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
+--   This is far less than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
+--   - e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus
+--    75 percent (for Scott-Knott).
+--  
+-- Scott-Knott sorts treatments on the their median values, then looks for the split
+-- that maximizes the difference in the split before and after the split. If statistical
+-- tests say that the splits are different, then we recurse on each half. This generates
+-- a tree of treatments where the treatments in the left-most node get ranked one, the next
+-- get ranked two, etc. 
+--
+-- As to stats tests, this code checks for difference in the splits using two non-parametric tests:
+-- - A MannWhitney U test that checks if the ranks of the two splits are distinguishable;
+-- - A CliffsDelta effect size test (which reports if there is enough difference in the splits)
+
+--- In this code:
+--- - vars are global by default unless marked with "local"
+--- - functions have to be defined before they are used.
+--- - #t is length of list t (and empty lists have #t==0)
+--- - tables start and end with {}
+--- - tables can have numeric or symbolic fields.
+--- - for pos,x in pairs(t) do is the same as python's 
+---   for pos,x in enumerate(t) do
+--- 
+--- In the function arguments, the following conventions apply:
+--- - n == number
+--- - s == string
+--- - t == table
+--- - is == boolean
+--- - x == anything
+--- - fun == function
+--- - UPPER = class
+--- - lower = instance; e.g. rx is an instance of RX
+--- - xs == a table of "x"; e.g. "ns" is a list of numbers
+
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
 local lt,sort,fmt,map,oo,o,median,tiles
 ---------------------------------------------------------------------------------------------------

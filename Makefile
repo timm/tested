@@ -36,7 +36,7 @@ $R/docs/%.md: %.lua
 	  $H  > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
-		lua $^ -h  >> $@
+		#lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " ";)>> $@
 		lua $R/src/alfold.lua $^  >> $@
 		if [ -f "$R/etc/txt/$(basename $^).txt" ]; then echo "" >> $@; cat $R/etc/txt/$(basename $^).txt >> $@; fi
