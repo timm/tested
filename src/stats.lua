@@ -203,8 +203,9 @@ function median(t) --> n; assumes t is sorted
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 
-function tiles(rxs,width)
+function tiles(rxs,width,fmt)
   width=width or 32
+  fmt=fmt or "%5.2s"
   local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
@@ -222,10 +223,11 @@ function tiles(rxs,width)
     for i=d,e,1 do u[i]="-" end
     u[width//2] = "|" 
     u[c] = "*"
-    rx.show = table.concat(u) .. table.concat(
-                                   map({a,b,c,d,e},function(x) 
-                                                     return string.format("%5.2f",x) end),
-                                   ", ")
+    rx.show = table.concat(u) .. 
+              " {"..table.concat(
+                      map({a,b,c,d,e},function(x) 
+                                      return string.format(fmt,x) end),
+                           ", ") .."}"
   end
   return rxs end
 --------------------------------------------------------------------------------------------------
