@@ -77,13 +77,16 @@ This code returns "rank: objects which contain
 - the `show` (which is a pretty print of the output).	
  	
 For example, here's data from five treatmetns:	
+ 	
             data= {	
                  x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},	
                  x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},	
                  x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},	
                  x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},	
                  x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}	
+ 	
 And here's the `show`:	
+ 	
             for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
         	
         		x5	1	-  * 	
