@@ -110,7 +110,7 @@ function eg.rand()
 function eg.norm()
   for _,n in pairs{10,10^2,10^3} do
      print""
-     local t,all={},0
+     local t,all,x={},0
      for i = 0,20 do t[i]=0 end
      for i=1,n do x=(.5+norm(10,2)) // 1; all=all+x; t[x]=1+(t[x] or 0) end
      for i = 4,16 do x=t[i]/all*100*100//1; print(fmt("sample=%-6.0f x=%-3s seen=%-5s = %5.1f%% %s",n,i,t[i],x/10,("*"):rep(x//5))) end end end

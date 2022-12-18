@@ -78,7 +78,8 @@ BUGS:
 --- - lower = instance; e.g. rx is an instance of RX
 --- - xs == a table of "x"; e.g. "ns" is a list of numbers
 
-local coerce,cli,lt,fmt,map,oo,o,median,settings,slurp,sort,tiles,words
+local coerce,cli,lt,fmt,map,oo,o,median,push,settings,slurp,sort,tiles,words
+local RX,rank,add,adds,sk,cliffsDelta,mwu,ranks,critical
 ----------------------------------------------------------------------------------------------------
 -- ## RX objects
 -- This code returns "rank: objects which contain
@@ -86,8 +87,26 @@ local coerce,cli,lt,fmt,map,oo,o,median,settings,slurp,sort,tiles,words
 -- - the list `t` of sorted values
 -- - the `rank` (computed by Scott-Knott)
 -- - the `show` (which is a pretty print of the output).
-
-local RX,add,adds,rank
+--  
+-- For example, here's data from five treatmetns:
+-- 
+--             data= {
+--                  x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},
+--                  x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},
+--                  x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},
+--                  x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},
+--                  x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}
+-- 
+-- And here's the `show`:
+-- 
+--             for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end
+--         
+--         		x5	1	-  *  ------   |                 { 0.10,  0.10,  0.20,  0.30,  0.40}
+--         		x3	1	-   *   ----   |                 { 0.15,  0.15,  0.25,  0.35,  0.40}
+--         		x1	2	        -     *|----             { 0.34,  0.34,  0.49,  0.51,  0.60}
+--         		x4	3	               |   -  *    ----- { 0.60,  0.60,  0.70,  0.80,  0.90}
+--         		x2	3	               |   -  *    ----- { 0.60,  0.60,  0.70,  0.80,  0.90}
+-- 
 function RX(t,s)  --> RX; constructor for treatments. ensures treatment results are sorted
   return {name=s or"",rank=0,t=sort(t or {})} end 
 
@@ -109,7 +128,6 @@ function adds(rxs,lo,hi) --> RX; combines treatments from index `rxs[lo]` to `rx
 -- - `sk` which is the top-level driver 
 -- - `cliffsDelta` which is the effect size test
 -- - `mwu` which is the Mann-Whitney U tess
-local sk
 function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
   the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
   the.dull  = nDull or the.dull or .147  -- width of text display of numbers
@@ -142,7 +160,6 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
   argmax(1, #rxs) -- recursively split
   return tiles(rxs) end 
 -----------------------------------------------------------------------------------------------
-local cliffsDelta
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
   for _,x in pairs(ns1) do
@@ -152,7 +169,6 @@ function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amo
       if x < y then lt = lt + 1 end end end
   return math.abs(lt - gt)/n <= (dull or the.dull) end
 ---------------------------------------------------------------------------------------------------
-local ranks,mwu,critical
 function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at confidence `nConf` 
   local t,r1,r2,u1,u2,c = ranks(ns1,ns2)
   local n1,n2= #ns1, #ns2
@@ -227,7 +243,7 @@ function ranks(ns1,ns2) -->t; numbers of both populations are jointly ranked
 
 ---------------------------------------------------------------------------------------------------
 -- ##  Misc
--- After the above, all the rest is LUSA miscellany.
+-- After the above, all the rest is LUA miscellany.
 -- ### String to Thing
 function cli(help,t) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(t) do
@@ -310,7 +326,7 @@ function tiles(rxs)
   return rxs end
 --------------------------------------------------------------------------------------------------
 --- TESTS
-local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9
+local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9,eg10
 function norm(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R())  end
@@ -400,6 +416,6 @@ the=cli(help,settings(help,the))
 
 --eg1(); eg2(); 
 --eg4(); eg5(); eg6(); eg7();eg8()
-eg10();
+eg4();
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
 --return pcall(debug.getlocal,4,1) and sk or main() 

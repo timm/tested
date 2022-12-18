@@ -75,6 +75,22 @@ This code returns "rank: objects which contain
 - the list `t` of sorted values	
 - the `rank` (computed by Scott-Knott)	
 - the `show` (which is a pretty print of the output).	
+ 	
+For example, here's data from five treatmetns:	
+            data= {	
+                 x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},	
+                 x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},	
+                 x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},	
+                 x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},	
+                 x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}	
+And here's the `show`:	
+            for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
+        	
+        		x5	1	-  * 	
+        		x3	1	-   *   ----   |                 { 0.15,  0.15,  0.25,  0.35,  0.40}	
+        		x1	2	        -     *|----             { 0.34,  0.34,  0.49,  0.51,  0.60}	
+        		x4	3	               |   -  *   	
+        		x2	3	               |   -  *   	
 
 <dl>
 <dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>  constructor for treatments. ensures treatment results are sorted </dd>
@@ -97,7 +113,7 @@ The three main stats tests are
 </dl>
 
 ##  Misc	
-After the above, all the rest is LUSA miscellany.	
+After the above, all the rest is LUA miscellany.	
 ### String to Thing	
 
 <dl>

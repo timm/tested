@@ -51,6 +51,7 @@ methods that let outsiders probe a system, looking for interesting
 make conclusions based on a small sample of the total data space
 (so humans are not overwhelmed with excessive questions).
 - Operators for learning the boundaries of a system’s competency;
+- Non-parametric tests for assuring that samples are truly different.
 
 [^Vance2015]: Vance, Anthony, Paul Benjamin Lowry, and Dennis Eggett. 
   "Increasing Accountability Through User-Interface Design Artifacts." 
@@ -65,9 +66,10 @@ make conclusions based on a small sample of the total data space
 
 ## Install
 
-Install Lua (version 5.3 or higher).
+Install Lua:
 
     brew install lua       # on max os/x
+    lua -v                 # TESTED needs at least LUA version 5.3
 
 Check-out this repo
 
