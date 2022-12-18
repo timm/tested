@@ -27,7 +27,7 @@ USAGE:
 OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
   -d --dull  effect size threshold (.147=small)       = .147
-  -f --file  file to read data                        = .
+  -f --file  file to read data                        = data.txt
   -F --Fmt   number format for display                = %5.2f
   -g --go    start-up actions                         = nothing
   -h --help  show help                                = false
@@ -129,6 +129,7 @@ function adds(rxs,lo,hi) --> RX; combines treatments from index `rxs[lo]` to `rx
 -- - `cliffsDelta` which is the effect size test
 -- - `mwu` which is the Mann-Whitney U tess
 function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
+  if type(t)=="string" then return sk(slurp(t),nConf,nDull,nWidth) end
   the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
   the.dull  = nDull or the.dull or .147  -- width of text display of numbers
   the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
@@ -302,11 +303,10 @@ function o(t,     ok,out,show,shows) --> s; generate string from `t`
     local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
   return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
 
-function tiles(rxs)
+function tiles(rxs) --> ss; makes on string per treatment showing rank, distribution, and values
   local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
-  oo{lo=lo,hi=hi}
   for _,rx in pairs(rxs) do
     local t,u = rx.t,{}
     local function of(x,max) return math.max(1, math.min(max, x)) end
@@ -412,10 +412,13 @@ function eg10()
   for i=1,1000 do push(data.x10, norm(30.1,1)) end
   eg0("eg10",data) end
 
-the=cli(help,settings(help,the))
+the=settings(help,the)
 
 --eg1(); eg2(); 
 --eg4(); eg5(); eg6(); eg7();eg8()
-eg4();
+--eg4();
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
---return pcall(debug.getlocal,4,1) and sk or main() 
+if   pcall(debug.getlocal,4,1) 
+then return sk
+else the=cli(help,the)
+     for _,rx in pairs(sk(the.file)) do print(rx.rank,rx.name,rx.show) end end

@@ -37,7 +37,7 @@ USAGE:
 OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
   -d --dull  effect size threshold (.147=small)       = .147
-  -f --file  file to read data                        = .
+  -f --file  file to read data                        = data.txt
   -F --Fmt   number format for display                = %5.2f
   -g --go    start-up actions                         = nothing
   -h --help  show help                                = false
@@ -210,6 +210,11 @@ After the above, all the rest is LUA miscellany.
 <dt><b> o(t:<tt>tab</tt>) &rArr;  s </b></dt><dd>
 
  generate string from `t` 
+
+</dd>
+<dt><b> tiles(rxs:<tt>{RX}</tt>) &rArr;  ss </b></dt><dd>
+
+ makes on string per treatment showing rank, distribution, and values
 
 </dd>
 <dt><b> norm(mu, sd:<tt>str</tt>) &rArr;  n </b></dt><dd>
