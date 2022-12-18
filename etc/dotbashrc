@@ -14,7 +14,7 @@ hi() {
     \/__/ \/____/ \/___/     \/__/ \/____/ \/__,_ /
 
 	EOF
-  tput bold; tput setaf 5
+  tput bold; tput setaf 14
   echo "Short cuts:"
   alias | sed 's/alias /  /'
   echo ""

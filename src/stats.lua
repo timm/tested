@@ -359,8 +359,13 @@ function eg8()
     x3={23,24,31,23,24,31},
     x4={32,33,34,32,33,34}}) end
 
+function eg9()
+  oo(slurp("../etc/data/stats.txt")) end
+
 the=settings(help,the)
 
-eg1(); eg2(); --eg4(); eg5(); eg6(); eg7();eg8()
+--eg1(); eg2(); 
+--eg4(); eg5(); eg6(); eg7();eg8()
+eg9();
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
 --return pcall(debug.getlocal,4,1) and sk or main() 
