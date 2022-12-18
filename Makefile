@@ -3,11 +3,11 @@ SHELL=/bin/bash
 R=$(shell git rev-parse --show-toplevel)
 
 help: ## show help
-	egrep -E '^[\.a-zA-Z0-9]+\s?:.*## .*$$' $(MAKEFILE_LIST) | sort | awk ' \
+	egrep -E '^[^[:space:]]+:.*## .*$$' $(MAKEFILE_LIST) | sort | awk ' \
 		BEGIN {FS=":"; print "\nmake[OPTIONS]\n\nOPTIONS:\n"} \
-	        {gsub(/^.*## /,"",$$3); printf "  \033[36m%-10s\033[0m %s\n",$$2,$$3}'
+	        {gsub(/^.*## /,"",$$2); printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
-mds:  
+mds: ## update all markdowns 
 	$(MAKE) $(addprefix $R/docs/,$(subst .lua,.md,$(shell ls *.lua)))
 
 install: dotfiles  
@@ -31,12 +31,13 @@ zzz:
 	$(foreach f, $(wildcard $R/docs/on*.md),\
 		 echo "# $(notdir $f)"; $H>tmp;$B $f>>tmp;mv tmp $f;)
 
-$R/docs/%.md: %.lua 
+../docs/%.md: $R/docs/%.md
+$R/docs/%.md: %.lua  ## make one markdown
 		echo $@
 	  $H  > $@
 		printf "\n\n# "$^"\n\n" >> $@
 		(echo "\`\`\`css" ) >> $@
-		#lua $^ -h  >> $@
+		lua $^ -h  >> $@
 		(echo "\`\`\`"; echo " ";)>> $@
 		lua $R/src/alfold.lua $^  >> $@
 		if [ -f "$R/etc/txt/$(basename $^).txt" ]; then echo "" >> $@; cat $R/etc/txt/$(basename $^).txt >> $@; fi

@@ -181,7 +181,7 @@ function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at
   return math.min(u1,u2)<=c  end  -- not evidence evidence to say they are the same
 ---------------------------------------------------------------------------------------------------
 local sk
-function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median, ranked by stats
+function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
   the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
   the.dull  = nDull or the.dull or .147  -- width of text display of numbers
   the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
@@ -213,7 +213,7 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median
   argmax(1, #rxs) -- recursively split
   return tiles(rxs) end 
 ---------------------------------------------------------------------------------------------------
--- ##  Lib
+-- ##  Misc
 -- ### String to Thing
 function cli(help,t) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(t) do

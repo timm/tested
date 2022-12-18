@@ -1,10 +1,18 @@
-&nbsp;
+<p>&nbsp;
 <a name=top></a>
 <table><tr>
 <td><a href="/README.md#top">Home</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
 </tr></table>
-<img  align=center width=600 src="/docs/img/banner.png"><br clear=all>
+<img  align=center width=600 src="/docs/img/banner.png"></p>
+<p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
+href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
+ src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> <img 
+ src="https://img.shields.io/badge/language-lua-orange"> <img 
+ src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
+ href="https://zenodo.org/badge/latestdoi/569981645"> <img 
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
+<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 
 # lib.lua
@@ -20,6 +28,17 @@ Some general LUA tricks.
 <dt><b> l.rogues() &rArr;  nil </b></dt><dd>  report rogue locals </dd>
 </dl>
 
+### Random number generator	
+The LUA doco says its random number generator is not stable across platforms.	
+Hence, we use our own (using Park-Miller).	
+
+<dl>
+<dt><b> l.srand(n:<tt>num</tt>) &rArr;  nil </b></dt><dd>  reset random number seed (defaults to 937162211)  </dd>
+<dt><b> l.rand(nlo:<tt>num</tt>, nhi:<tt>num</tt>) &rArr;  num </b></dt><dd>  return float from `nlo`..`nhi` (default 0..1) </dd>
+<dt><b> l.rint(nlo:<tt>num</tt>, nhi:<tt>num</tt>) &rArr;  int </b></dt><dd>  returns integer from `nlo`..`nhi` (default 0..1) </dd>
+<dt><b> l.norm(mu, sd:<tt>str</tt>) &rArr;  float </b></dt><dd>  return a number from normal curve with `mu,sd` </dd>
+</dl>
+
 ## Maths	
 
 <dl>
@@ -30,14 +49,14 @@ Some general LUA tricks.
 <dt><b> l.pers(t:<tt>tab</tt>, nps:<tt>{num}</tt>) &rArr;  t </b></dt><dd>  return the `nps` items of sorted list `t` </dd>
 </dl>
 
-### Random number generator	
-The LUA doco says its random number generator is not stable across platforms.	
-Hence, we use our own (using Park-Miller).	
+## Maths	
 
 <dl>
-<dt><b> l.srand(n:<tt>num</tt>) &rArr;  nil </b></dt><dd>  reset random number seed (defaults to 937162211)  </dd>
-<dt><b> l.rand(nlo:<tt>num</tt>, nhi:<tt>num</tt>) &rArr;  num </b></dt><dd>  return float from `nlo`..`nhi` (default 0..1) </dd>
-<dt><b> l.rint(nlo:<tt>num</tt>, nhi:<tt>num</tt>) &rArr;  int </b></dt><dd>  returns integer from `nlo`..`nhi` (default 0..1) </dd>
+<dt><b> l.max(...) &rArr;  n </b></dt><dd>  return max </dd>
+<dt><b> l.min(...) &rArr;  n </b></dt><dd>  return min </dd>
+<dt><b> l.same(x, ...) &rArr;  x </b></dt><dd>  return `x` unmodified </dd>
+<dt><b> l.per(t:<tt>tab</tt>, p) &rArr;  num </b></dt><dd>  return the `p`th(=.5) item of sorted list `t` </dd>
+<dt><b> l.pers(t:<tt>tab</tt>, nps:<tt>{num}</tt>) &rArr;  t </b></dt><dd>  return the `nps` items of sorted list `t` </dd>
 </dl>
 
 ## Lists	
