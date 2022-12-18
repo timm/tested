@@ -85,7 +85,7 @@ For example, here's data from five treatmetns:
                  x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},	
                  x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}	
  	
-And here's the `show`:	
+And here's the `show` (where the first two and the last two treatments have the same rank):	
  	
             for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
         	
