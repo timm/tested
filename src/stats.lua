@@ -5,8 +5,9 @@
 --- /\__, `\  \ \ \_ /\ \L\.\_   \ \ \_ /\__, `\
 --- \/\____/   \ \__\\ \__/.\_\   \ \__\\/\____/
 ---  \/___/     \/__/ \/__/\/_/    \/__/ \/___/ 
+
 local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
-local the,help=[[
+local the,help={},[[
 stats.lua: nom-parametric statistical ranking of treatmentsa
 (c)2022 Tim Menzies, timm@ieee.org BSD-2
 
@@ -26,7 +27,7 @@ USAGE:
 OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
   -d --dull  effect size threshold (.147=small)       = .147
-  -f --file  file to read data                        = nothing
+  -f --file  file to read data                        = .
   -F --fmt   number format for display                = %5.2f
   -g --go    start-up actions                         = nothing
   -h --help  show help                                = false
@@ -36,46 +37,6 @@ OPTIONS:
 BUGS:
   To view/add known bugs, see http://github.com/timm/tested/issues.
 ]]
-function main(t,options)
-  for k,v in pairs(options) do
-    assert(the[k], "unknown option "..k)
-    assert(type(v)==type(the[k]), "options "..k.." not of type "..type(the[k]))
-    the[k]=v end 
-  for _,rx in pairs(scottknott) do print(rx.rank,rx.show) end end
-
-
-function coerce(s) --> any; return int or float or bool or string from `s`
-  function fun(s1) 
-    if s1=="true" then return true else if s1=="false" then return false else return s1 end end end 
-  return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
-
-function settings(s,t)
-  s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
-  return t end
-
-function cli(t,help) --> t; update key,vals in `t` from command-line flags
-  for k,v in pairs(t) do
-    local v=tostring(v)
-    for n,x in ipairs(arg) do
-      if x=="-"..(k:sub(1,1)) or x=="--"..k then
-        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    t[k] = coerce(v) end
-  if t.help then os.exit(print(help)) end
-  return t end
-
-function words(sFile,fun) --> nil; call `fun` on all words (space seperatred) in file
-  local src,s  = io.input(sFile)
-  while true do
-    s = io.read()
-    if s then for x in s:gmatch("(%S+)") do fun(coerce(x)) end 
-         else return io.close(src) end end end
-
-function slurp(sFile) --> t; for a file with words and numbers, add numbers to the proceeding word
-  local t,t1,k={}
-  words(sFile,function(x) 
-          if type(x)=="string" then k=x else t1=t[k] or {}; t1[1+#t1]=x; t[k]=t1 end end)
-  return t end 
-
 -- ## Scott-Knott tests
 -- If statistics gets too complicated then the solution is easy: use less stats!
 -- Scott-Knott is a way to find differences in N
@@ -117,7 +78,7 @@ function slurp(sFile) --> t; for a file with words and numbers, add numbers to t
 --- - lower = instance; e.g. rx is an instance of RX
 --- - xs == a table of "x"; e.g. "ns" is a list of numbers
 
-local lt,sort,fmt,map,oo,o,median,tiles
+local coerce,cli,lt,fmt,map,oo,o,median,settings,slurp,sort,tiles,words
 ---------------------------------------------------------------------------------------------------
 local cliffsDelta
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
@@ -127,7 +88,7 @@ function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amo
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= dull end
+  return math.abs(lt - gt)/n <= (dull or the.dull) end
 ---------------------------------------------------------------------------------------------------
 local RX,add,adds,rank
 function RX(t,s)  --> RX; constructor for treatments. ensures treatment results are sorted
@@ -211,7 +172,7 @@ function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at
   local n1,n2= #ns1, #ns2
   assert(n1>=3,"must be 3 or more")
   assert(n2>=3,"must be 3 or more")
-  c  = critical(nConf or 95,n1,n2)
+  c  = critical(nConf or the.conf or 95,n1,n2)
   r1=0; for _,x in pairs(ns1) do r1=r1+ rank(t[x]) end
   r2=0; for _,x in pairs(ns2) do r2=r2+ rank(t[x]) end
   u1 = n1*n2 + n1*(n1+1)/2 - r1
@@ -221,9 +182,9 @@ function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at
 ---------------------------------------------------------------------------------------------------
 local sk
 function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median, ranked by stats
-  nDull = nDull or 0.147 -- for effect size test; threshold for "small effect"
-  nWidth = nWidth or 40  -- width of text display of numbers
-  nConf  = nConf  or 95  -- for significance test; confidence for testing 'distinguish-ability'
+  the.conf  = nConf or 95 -- for effect size test; threshold for "small effect"
+  the.dull  = nDull or .147  -- width of text display of numbers
+  the.width = nWidth  or 40  -- for significance test; confidence for testing 'distinguish-ability'
   local ranking,rxs,argmax
   function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
     local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
@@ -239,7 +200,7 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median
     end  
     if   cut 
     then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
-         if mwu(r.t,l.t,nConf) and not cliffsDelta(r.t, l.t, nDull) then
+         if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t) then
            argmax(lo,cut)
            return argmax(cut+1,hi)  end end -- return here (so we skip over the next 2 lines) 
     for i=lo,hi do rxs[i].rank = ranking end -- if we did not cut, label all current `rx` as `rank`
@@ -250,31 +211,67 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median
   for k,t1 in pairs(t) do rxs[1+#rxs]= RX(t1,k) end
   rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
   argmax(1, #rxs) -- recursively split
-  return tiles(rxs,nWidth) end 
+  return tiles(rxs) end 
   --return rxs end 
 ---------------------------------------------------------------------------------------------------
 -- ##  Lib
-function sort(t,fun) table.sort(t,fun) return t end --> t; returns `t` sorted by `fun` 
+-- ### String to Thing
+function cli(t,help) --> t; update key,vals in `t` from command-line flags
+  for k,v in pairs(t) do
+    local v=tostring(v)
+    for n,x in ipairs(arg) do
+      if x=="-"..(k:sub(1,1)) or x=="--"..k then
+        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
+    t[k] = coerce(v) end
+  if t.help then os.exit(print(help)) end
+  return t end
 
-function map(t,fun) --> t; returns copy of `t`, all items filtered by `fun`.
-  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
-
-function oo(t)  print(o(t)); return t end 
-function o(t,     ok,out,show,shows)
-  function ok(k)     return  tostring(k):sub(1,1) ~= "_" end
-  function out(t)    return '{'..table.concat(map(t,o),", ")..'}' end
-  function show(k,v) return string.format(":%s %s",k,o(v)) end 
-  function shows(t)  
-    local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
-  return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
+function coerce(s) --> any; return int or float or bool or string from `s`
+  local function fun(s1) 
+    if s1=="true" then return true else if s1=="false" then return false else return s1 end end end 
+  return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
 
 function median(t) --> n; assumes t is sorted 
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 
-function tiles(rxs,width,fmt)
-  width=width or 32
-  fmt=fmt or "%5.2s"
+function settings(s,t) --> t; extra key value pairs from the help string `s`
+  s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
+  return t end
+
+function slurp(sFile) --> t; for a file with words and numbers, add numbers to the proceeding word
+  local t,t1,k={}
+  words(sFile,function(x) 
+          if type(x)=="string" then k=x else t1=t[k] or {}; t1[1+#t1]=x; t[k]=t1 end end)
+  return t end 
+
+function words(sFile,fun) --> nil; call `fun` on all words (space separated) in file
+  local src,s  = io.input(sFile)
+  while true do
+    s = io.read()
+    if s then for x in s:gmatch("(%S+)") do fun(coerce(x)) end 
+         else return io.close(src) end end end
+
+-- ### Lists
+function sort(t,fun) table.sort(t,fun) return t end --> t; returns `t` sorted by `fun` 
+
+function map(t,fun) --> t; returns copy of `t`, all items filtered by `fun`.
+  local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
+
+-- ### Thing to String
+
+function oo(t)  --> t; print `t` then return `t`.
+  print(o(t)); return t end 
+
+function o(t,     ok,out,show,shows) --> s; generate string from `t` 
+  function ok(k) return  tostring(k):sub(1,1) ~= "_" end
+  function out(t)  return '{'..table.concat(map(t,o),", ")..'}' end
+  function show(k,v) return string.format(":%s %s",k,o(v)) end 
+  function shows(t)  
+    local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
+  return type(t) ~= "table" and tostring(t) or out(#t>1 and t or sort(shows(t))) end
+
+function tiles(rxs)
   local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
@@ -283,37 +280,28 @@ function tiles(rxs,width,fmt)
     local t,u,a,b,c,d,e = rx.t,{}
     local function at(x) 
        x=t[of(#t*x//1, #t)]
-       return math.floor(of(width*(x-lo)/(hi-lo+1E-32)//1,width)) end
-    for i=1,width do u[1+#u]=" " end
+       return math.floor(of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)) end
+    for i=1,the.width do u[1+#u]=" " end
     a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
     for i=a,b,1 do u[i]="-" end
     for i=d,e,1 do u[i]="-" end
-    u[width//2] = "|" 
+    u[the.width//2] = "|" 
     u[c] = "*"
     rx.show = table.concat(u) 
     rx.show = rx.show.." {",table.concat(map({a,b,c,d,e},function(x) 
-                                          return string.format(fmt,x) end),", ") .."}"
+                                          return string.format(the.fmt,x) end),", ") .."}"
   end
   return rxs end
 --------------------------------------------------------------------------------------------------
 --- TESTS
 local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8
-function norm(mu,sd) 
+function norm(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R()) end
 
-local d1={placebo={7,5,6,4,12},
-      data={3,6,4,2,1}}
-
-local d2={x={3,4,2,6,2,5},
-    y={9,7,5,10,6,8}}
-
-local d3={usual={8,7,6,2,5,8,7,3},
-    new={  9,9,7,8,10,9,6}}
-
 function eg1()
-  print("false",mwu(d3.usual,d3.usual))
-  print("true",mwu(d3.usual,d3.new)) end
+  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
+  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
 
 function eg2()
   print""
@@ -373,6 +361,6 @@ function eg8()
 
 the=settings(help,the)
 
-eg4(); eg5(); eg6(); eg7();eg8()
+eg1(); eg2(); --eg4(); eg5(); eg6(); eg7();eg8()
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
-return pcall(debug.getlocal,4,1) and scottknott or main() 
+--return pcall(debug.getlocal,4,1) and sk or main() 
