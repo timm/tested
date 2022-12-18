@@ -28,7 +28,7 @@ OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
   -d --dull  effect size threshold (.147=small)       = .147
   -f --file  file to read data                        = .
-  -F --fmt   number format for display                = %5.2f
+  -F --Fmt   number format for display                = %5.2f
   -g --go    start-up actions                         = nothing
   -h --help  show help                                = false
   -s --seed  random number seed                       = 1
@@ -182,9 +182,9 @@ function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at
 ---------------------------------------------------------------------------------------------------
 local sk
 function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median, ranked by stats
-  the.conf  = nConf or 95 -- for effect size test; threshold for "small effect"
-  the.dull  = nDull or .147  -- width of text display of numbers
-  the.width = nWidth  or 40  -- for significance test; confidence for testing 'distinguish-ability'
+  the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
+  the.dull  = nDull or the.dull or .147  -- width of text display of numbers
+  the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
   local ranking,rxs,argmax
   function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
     local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
@@ -208,15 +208,14 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; return treatments, sorted on median
   end --------------------------------------------------------------------
   ranking = 1
   rxs = {}
-  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(t1,k) end
+  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(sort(t1),k) end
   rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
   argmax(1, #rxs) -- recursively split
   return tiles(rxs) end 
-  --return rxs end 
 ---------------------------------------------------------------------------------------------------
 -- ##  Lib
 -- ### String to Thing
-function cli(t,help) --> t; update key,vals in `t` from command-line flags
+function cli(help,t) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(t) do
     local v=tostring(v)
     for n,x in ipairs(arg) do
@@ -234,6 +233,8 @@ function coerce(s) --> any; return int or float or bool or string from `s`
 function median(t) --> n; assumes t is sorted 
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
+
+function push(t,x) t[1+#t]=x; return x end
 
 function settings(s,t) --> t; extra key value pairs from the help string `s`
   s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
@@ -265,7 +266,7 @@ function oo(t)  --> t; print `t` then return `t`.
 
 function o(t,     ok,out,show,shows) --> s; generate string from `t` 
   function ok(k) return  tostring(k):sub(1,1) ~= "_" end
-  function out(t)  return '{'..table.concat(map(t,o),", ")..'}' end
+  function out(t)  return '{'..table.concat(map(t,o)," ")..'}' end
   function show(k,v) return string.format(":%s %s",k,o(v)) end 
   function shows(t)  
     local u={}; for k,v in pairs(t) do if ok(k) then u[1+#u]=show(k,v) end end;  return u end
@@ -275,29 +276,30 @@ function tiles(rxs)
   local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
-  local function of(x,max) return math.max(1, math.min(max, x)) end
+  oo{lo=lo,hi=hi}
   for _,rx in pairs(rxs) do
-    local t,u,a,b,c,d,e = rx.t,{}
-    local function at(x) 
-       x=t[of(#t*x//1, #t)]
-       return math.floor(of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)) end
+    local t,u = rx.t,{}
+    local function of(x,max) return math.max(1, math.min(max, x)) end
+    local function at(x)  return t[of(#t*x//1, #t)] end
+    local function pos(x) return math.floor(of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)) end
     for i=1,the.width do u[1+#u]=" " end
-    a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
-    for i=a,b,1 do u[i]="-" end
-    for i=d,e,1 do u[i]="-" end
+    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
+    local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e)
+    for i=A,B do u[i]="-" end
+    for i=D,E do u[i]="-" end
     u[the.width//2] = "|" 
-    u[c] = "*"
+    u[C] = "*"
     rx.show = table.concat(u) 
-    rx.show = rx.show.." {",table.concat(map({a,b,c,d,e},function(x) 
-                                          return string.format(the.fmt,x) end),", ") .."}"
+    rx.show = rx.show.." {"..table.concat(map({a,b,c,d,e},function(x) 
+                               return string.format(the.Fmt,x) end),", ") .."}"
   end
   return rxs end
 --------------------------------------------------------------------------------------------------
 --- TESTS
-local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8
+local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9
 function norm(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
-  return  mu + sd * sq(-2*log(R())) * cos(2*pi*R()) end
+  return  mu + sd * sq(-2*log(R())) * cos(2*pi*R())  end
 
 function eg1()
   print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
@@ -324,7 +326,7 @@ function eg3()
 
 function eg0(txt,data)
   print("\n"..txt)
-  for _,rx in pairs(sk(data)) do print("\t",rx.rank, rx.show) end end
+  for _,rx in pairs(sk(data)) do print("\t",rx.name,rx.rank, rx.show) end end
 
 function eg4()
   eg0("eg4",{
@@ -360,12 +362,22 @@ function eg8()
     x4={32,33,34,32,33,34}}) end
 
 function eg9()
-  oo(slurp("../etc/data/stats.txt")) end
+  map(sk(slurp("../etc/data/stats.txt")), 
+      function(rx) print(rx.rank,rx.name,rx.show) end) end
 
-the=settings(help,the)
+function eg10()
+  local data= {x1={},x2={},x3={},x4={},x5={}}
+  for i=1,10 do push(data.x1, norm(10,1)) end
+  for i=1,10 do push(data.x2, norm(10.1,1)) end
+  for i=1,10 do push(data.x3, norm(20,1)) end
+  for i=1,10 do push(data.x4, norm(30,1)) end
+  for i=1,10 do push(data.x5, norm(30.1,1)) end
+  eg0("eg10",data) end
+
+the=cli(help,settings(help,the))
 
 --eg1(); eg2(); 
 --eg4(); eg5(); eg6(); eg7();eg8()
-eg9();
+eg10();
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
 --return pcall(debug.getlocal,4,1) and sk or main() 
