@@ -596,5 +596,5 @@ function eg.rank()
 math.randomseed(1)
 if arg[2] then math.randomseed(tonumber(arg[2])) end
 
-eg[arg[1] or "all"]()
+--eg[arg[1] or "all"]()
 for x,y in pairs(_ENV) do if not b4[x] then print("?",x,type(y)) end end

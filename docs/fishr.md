@@ -18,3 +18,11 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 # fishr.lua
 
 ```css
+```
+ 
+
+<dl>
+<dt><b> obj(s:<tt>str</tt>) &rArr;  t </b></dt><dd>  create a klass and a constructor + print method </dd>
+</dl>
+
+library functions	

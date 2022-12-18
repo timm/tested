@@ -89,11 +89,11 @@ And here's the `show`:
  	
             for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
         	
-        		x5	1	-  * 	
+        		x5	1	-  *  ------   |                 ( 0.10,  0.10,  0.20,  0.30,  0.40)	
         		x3	1	-   *   ----   |                 ( 0.15,  0.15,  0.25,  0.35,  0.40)	
         		x1	2	        -     *|----             ( 0.34,  0.34,  0.49,  0.51,  0.60)	
-        		x4	3	               |   -  *   	
-        		x2	3	               |   -  *   	
+        		x4	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
+        		x2	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
 
 <dl>
 <dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>  constructor for treatments. ensures treatment results are sorted </dd>
