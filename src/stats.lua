@@ -366,12 +366,20 @@ function eg9()
       function(rx) print(rx.rank,rx.name,rx.show) end) end
 
 function eg10()
-  local data= {x1={},x2={},x3={},x4={},x5={}}
-  for i=1,10 do push(data.x1, norm(10,1)) end
-  for i=1,10 do push(data.x2, norm(10.1,1)) end
-  for i=1,10 do push(data.x3, norm(20,1)) end
-  for i=1,10 do push(data.x4, norm(30,1)) end
-  for i=1,10 do push(data.x5, norm(30.1,1)) end
+  local data= {
+                x1={},x2={},x3={},x4={},x5={},
+                x6={},x7={},x8={},x9={},x10={},
+              }
+  for i=1,1000 do push(data.x1, norm(10,1)) end
+  for i=1,1000 do push(data.x2, norm(10.1,1)) end
+  for i=1,1000 do push(data.x3, norm(20,1)) end
+  for i=1,1000 do push(data.x4, norm(30,1)) end
+  for i=1,1000 do push(data.x5, norm(30.1,1)) end
+  for i=1,1000 do push(data.x6, norm(10,1)) end
+  for i=1,1000 do push(data.x7, norm(10.1,1)) end
+  for i=1,1000 do push(data.x8, norm(20,1)) end
+  for i=1,1000 do push(data.x9, norm(30,1)) end
+  for i=1,1000 do push(data.x10, norm(30.1,1)) end
   eg0("eg10",data) end
 
 the=cli(help,settings(help,the))
