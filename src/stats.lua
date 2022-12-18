@@ -80,7 +80,7 @@ BUGS:
 
 local coerce,cli,lt,fmt,map,oo,o,median,settings,slurp,sort,tiles,words
 ----------------------------------------------------------------------------------------------------
--- ## Details
+-- ## RX objects
 -- This code returns "rank: objects which contain
 -- - `name` of treatment
 -- - the list `t` of sorted values

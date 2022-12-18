@@ -69,7 +69,7 @@ get ranked two, etc.
 As to stats tests, this code checks for difference in the splits using two non-parametric tests:	
 - A MannWhitney U test that checks if the ranks of the two splits are distinguishable;	
 - A CliffsDelta effect size test (which reports if there is enough difference in the splits)	
-## Details	
+## RX objects	
 This code returns "rank: objects which contain	
 - `name` of treatment	
 - the list `t` of sorted values	
