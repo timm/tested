@@ -5,15 +5,85 @@
 --- /\__, `\  \ \ \_ /\ \L\.\_   \ \ \_ /\__, `\
 --- \/\____/   \ \__\\ \__/.\_\   \ \__\\/\____/
 ---  \/___/     \/__/ \/__/\/_/    \/__/ \/___/ 
-                                            
+local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
+local the,help=[[
+stats.lua: nom-parametric statistical ranking of treatmentsa
+(c)2022 Tim Menzies, timm@ieee.org BSD-2
+
+USAGE:
+  local sk=require("stats")
+  sk(t, {nConf=95;dull=.147,fmt="%5.2s"})
+
+  or, from the shell:
+  lua stats.lua -f data [OPTIONS]
+
+  In the above `data` is a file of words and numbers were each
+  number is associated to a list defined for each proceeding
+  word. E.g. "a 1 2  b 1 2 a 3" would be parsed as rx["a"]={1,2,3}
+  and rx["b"]={1,2}. Data files can contain any number of 
+  spaces, tabs, and new lines.
+
+OPTIONS:
+  -c --conf  hypothesis test confidence; one of 95,99 = 95
+  -d --dull  effect size threshold (.147=small)       = .147
+  -f --file  file to read data                        = nothing
+  -F --fmt   number format for display                = %5.2f
+  -g --go    start-up actions                         = nothing
+  -h --help  show help                                = false
+  -s --seed  random number seed                       = 1
+  -w --width width of ascii plots                     = 32
+  
+BUGS:
+  To view/add known bugs, see http://github.com/timm/tested/issues.
+]]
+function main(t,options)
+  for k,v in pairs(options) do
+    assert(the[k], "unknown option "..k)
+    assert(type(v)==type(the[k]), "options "..k.." not of type "..type(the[k]))
+    the[k]=v end 
+  for _,rx in pairs(scottknott) do print(rx.rank,rx.show) end end
+
+
+function coerce(s) --> any; return int or float or bool or string from `s`
+  function fun(s1) 
+    if s1=="true" then return true else if s1=="false" then return false else return s1 end end end 
+  return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
+
+function settings(s,t)
+  s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
+  return t end
+
+function cli(t,help) --> t; update key,vals in `t` from command-line flags
+  for k,v in pairs(t) do
+    local v=tostring(v)
+    for n,x in ipairs(arg) do
+      if x=="-"..(k:sub(1,1)) or x=="--"..k then
+        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
+    t[k] = coerce(v) end
+  if t.help then os.exit(print(help)) end
+  return t end
+
+function words(sFile,fun) --> nil; call `fun` on all words (space seperatred) in file
+  local src,s  = io.input(sFile)
+  while true do
+    s = io.read()
+    if s then for x in s:gmatch("(%S+)") do fun(coerce(x)) end 
+         else return io.close(src) end end end
+
+function slurp(sFile) --> t; for a file with words and numbers, add numbers to the proceeding word
+  local t,t1,k={}
+  words(sFile,function(x) 
+          if type(x)=="string" then k=x else t1=t[k] or {}; t1[1+#t1]=x; t[k]=t1 end end)
+  return t end 
+
 -- ## Scott-Knott tests
 -- If statistics gets too complicated then the solution is easy: use less stats!
 -- Scott-Knott is a way to find differences in N
 -- treatments using at most $O(log2(N))$ comparisons. This is useful since:
 -- - Some statistical tests are slow (e.g. bootstrap). 
 -- - If we run an all-pairs comparisons between
---   N tests at confidence C, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
---   This is far less than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
+--   $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
+--   This is much, much smaller than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
 --   - e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus
 --    75 percent (for Scott-Knott).
 --  
@@ -47,7 +117,6 @@
 --- - lower = instance; e.g. rx is an instance of RX
 --- - xs == a table of "x"; e.g. "ns" is a list of numbers
 
-local b4={}; for k,_ in pairs(_ENV) do b4[k]=k end
 local lt,sort,fmt,map,oo,o,median,tiles
 ---------------------------------------------------------------------------------------------------
 local cliffsDelta
@@ -210,24 +279,20 @@ function tiles(rxs,width,fmt)
   for _,rx in pairs(rxs) do 
     lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
   local function of(x,max) return math.max(1, math.min(max, x)) end
-  local function norm(x) 
-     return math.floor(of(width*(x-lo)/(hi-lo+1E-32)//1,width)) end
   for _,rx in pairs(rxs) do
     local t,u,a,b,c,d,e = rx.t,{}
+    local function at(x) 
+       x=t[of(#t*x//1, #t)]
+       return math.floor(of(width*(x-lo)/(hi-lo+1E-32)//1,width)) end
     for i=1,width do u[1+#u]=" " end
-    a,b,c,d,e= #t*.1, #t*.3, #t*.5, #t*.7, #t*.9
-    a,b,c,d,e= of(a//1,#t), of(b//1,#t), of(c//1,#t), of(d//1,#t), of(e//1,#t)
-    a,b,c,d,e= t[a], t[b], t[c], t[d], t[e]
-    a,b,c,d,e= norm(a), norm(b), norm(c), norm(d), norm(e) 
+    a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
     for i=a,b,1 do u[i]="-" end
     for i=d,e,1 do u[i]="-" end
     u[width//2] = "|" 
     u[c] = "*"
-    rx.show = table.concat(u) .. 
-              " {"..table.concat(
-                      map({a,b,c,d,e},function(x) 
-                                      return string.format(fmt,x) end),
-                           ", ") .."}"
+    rx.show = table.concat(u) 
+    rx.show = rx.show.." {",table.concat(map({a,b,c,d,e},function(x) 
+                                          return string.format(fmt,x) end),", ") .."}"
   end
   return rxs end
 --------------------------------------------------------------------------------------------------
@@ -306,6 +371,8 @@ function eg8()
     x3={23,24,31,23,24,31},
     x4={32,33,34,32,33,34}}) end
 
-eg4(); eg5(); eg6(); eg7();eg8()
+the=settings(help,the)
 
+eg4(); eg5(); eg6(); eg7();eg8()
 for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
+return pcall(debug.getlocal,4,1) and scottknott or main() 

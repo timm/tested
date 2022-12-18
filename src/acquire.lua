@@ -27,6 +27,9 @@ OPTIONS:
   -p  --p     distance coefficient       = 2
   -s  --seed  random number seed         = 937162211
   -x  --X     small x change             = .1
+
+BUGS:
+  To view/add current bugs, see http://github.com/timm/tested/issues
 ]]
 local obj,fmt,o,oo,map,shuffle,lt,gt,sort,push,slice,rnd  =
         lib.obj,            -- object tricks
