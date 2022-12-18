@@ -103,6 +103,7 @@ function add(rx,ns) --> RX; returns a new rank combining an old rank with a list
 function adds(rxs,lo,hi) --> RX; combines treatments from index `rxs[lo]` to `rxs[hi]`
   local rx=RX(); for i=lo,hi do rx = add(rx,rxs[i]) end; return rx end
 ---------------------------------------------------------------------------------------------------
+-- ## Details
 -- The three main stats tests are
 -- - `sk` which is the top-level driver 
 -- - `cliffsDelta` which is the effect size test

@@ -81,6 +81,7 @@ This code returns "rank: objects which contain
 <dt><b> adds(rxs:<tt>{RX}</tt>, lo, hi) &rArr;  RX </b></dt><dd>  combines treatments from index `rxs[lo]` to `rxs[hi]` </dd>
 </dl>
 
+## Details	
 The three main stats tests are	
 - `sk` which is the top-level driver 	
 - `cliffsDelta` which is the effect size test	
