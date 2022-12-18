@@ -57,7 +57,7 @@ treatments using at most $O(log2(N))$ comparisons. This is useful since:
 - If we run an all-pairs comparisons between	
   $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2)}$ confident in the results.	
   This is much, much smaller than the $C_2=C_0^{log2(N)}$ confidence found from Scott-Knott;	
-  - e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus	
+  - e.g for N=10, $C_0=95$%, $C_1$ is less than one percent while $C_2$ is over	
    75 percent (for Scott-Knott).	
  	
 Scott-Knott sorts treatments on the their median values, then looks for the split	
