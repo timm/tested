@@ -41,7 +41,11 @@ OTHER OPTIONS:
 ## NUM	
 
 <dl>
-<dt><b> NUM:discretize(n:<tt>num</tt>) &rArr;  num </b></dt><dd>  discretize `Num`s,rounded to (hi-lo)/Bins </dd>
+<dt><b> NUM:discretize(n:<tt>num</tt>) &rArr;  num </b></dt><dd>
+
+ discretize `Num`s,rounded to (hi-lo)/Bins
+
+</dd>
 </dl>
 
 ## SYM	

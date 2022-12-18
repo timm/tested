@@ -96,10 +96,26 @@ And here's the `show` (where the first two and the last two treatments have the 
         		x2	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
 
 <dl>
-<dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>  constructor for treatments. ensures treatment results are sorted </dd>
-<dt><b> rank(rx:<tt>RX</tt>) &rArr;  n </b></dt><dd>  returns average range in a treatment   </dd>
-<dt><b> add(rx:<tt>RX</tt>, ns:<tt>{num}</tt>) &rArr;  RX </b></dt><dd>  returns a new rank combining an old rank with a list of numbers `ns` </dd>
-<dt><b> adds(rxs:<tt>{RX}</tt>, lo, hi) &rArr;  RX </b></dt><dd>  combines treatments from index `rxs[lo]` to `rxs[hi]` </dd>
+<dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>
+
+ constructor for treatments. ensures treatment results are sorted
+
+</dd>
+<dt><b> rank(rx:<tt>RX</tt>) &rArr;  n </b></dt><dd>
+
+ returns average range in a treatment  
+
+</dd>
+<dt><b> add(rx:<tt>RX</tt>, ns:<tt>{num}</tt>) &rArr;  RX </b></dt><dd>
+
+ returns a new rank combining an old rank with a list of numbers `ns`
+
+</dd>
+<dt><b> adds(rxs:<tt>{RX}</tt>, lo, hi) &rArr;  RX </b></dt><dd>
+
+ combines treatments from index `rxs[lo]` to `rxs[hi]`
+
+</dd>
 </dl>
 
 ## 3 Main functions	
@@ -109,10 +125,26 @@ The three main stats tests are
 - `mwu` which is the Mann-Whitney U tess	
 
 <dl>
-<dt><b> sk(t:<tt>tab</tt>,   nConf:<tt>num</tt>?, nDull:<tt>num</tt>?, nWidth:<tt>num</tt>?) &rArr;  rxs </b></dt><dd>  main. ranks treatments on stats </dd>
-<dt><b> cliffsDelta(ns1:<tt>num</tt>, ns2:<tt>num</tt>,  dull) &rArr;  bool </b></dt><dd>  true if different by a trivial amount </dd>
-<dt><b> mwu(ns1:<tt>num</tt>, ns2:<tt>num</tt>, nConf:<tt>num</tt>) &rArr; bool </b></dt><dd>  True if ranks of `ns1,ns2` are different at confidence `nConf`  </dd>
-<dt><b> ranks(ns1:<tt>num</tt>, ns2:<tt>num</tt>) &rArr; t </b></dt><dd>  numbers of both populations are jointly ranked  </dd>
+<dt><b> sk(t:<tt>tab</tt>,   nConf:<tt>num</tt>?, nDull:<tt>num</tt>?, nWidth:<tt>num</tt>?) &rArr;  rxs </b></dt><dd>
+
+ main. ranks treatments on stats
+
+</dd>
+<dt><b> cliffsDelta(ns1:<tt>num</tt>, ns2:<tt>num</tt>,  dull) &rArr;  bool </b></dt><dd>
+
+ true if different by a trivial amount
+
+</dd>
+<dt><b> mwu(ns1:<tt>num</tt>, ns2:<tt>num</tt>, nConf:<tt>num</tt>) &rArr; bool </b></dt><dd>
+
+ True if ranks of `ns1,ns2` are different at confidence `nConf` 
+
+</dd>
+<dt><b> ranks(ns1:<tt>num</tt>, ns2:<tt>num</tt>) &rArr; t </b></dt><dd>
+
+ numbers of both populations are jointly ranked 
+
+</dd>
 </dl>
 
 ##  Misc	
@@ -120,26 +152,70 @@ After the above, all the rest is LUA miscellany.
 ### String to Thing	
 
 <dl>
-<dt><b> cli(help, t:<tt>tab</tt>) &rArr;  t </b></dt><dd>  update key,vals in `t` from command-line flags </dd>
-<dt><b> coerce(s:<tt>str</tt>) &rArr;  any </b></dt><dd>  return int or float or bool or string from `s` </dd>
-<dt><b> median(t:<tt>tab</tt>) &rArr;  n </b></dt><dd>  assumes t is sorted  </dd>
-<dt><b> settings(s:<tt>str</tt>, t:<tt>tab</tt>) &rArr;  t </b></dt><dd>  extra key value pairs from the help string `s` </dd>
-<dt><b> slurp(sFile:<tt>str</tt>) &rArr;  t </b></dt><dd>  for a file with words and numbers, add numbers to the proceeding word </dd>
-<dt><b> words(sFile:<tt>str</tt>, fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>  call `fun` on all words (space separated) in file </dd>
+<dt><b> cli(help, t:<tt>tab</tt>) &rArr;  t </b></dt><dd>
+
+ update key,vals in `t` from command-line flags
+
+</dd>
+<dt><b> coerce(s:<tt>str</tt>) &rArr;  any </b></dt><dd>
+
+ return int or float or bool or string from `s`
+
+</dd>
+<dt><b> median(t:<tt>tab</tt>) &rArr;  n </b></dt><dd>
+
+ assumes t is sorted 
+
+</dd>
+<dt><b> settings(s:<tt>str</tt>, t:<tt>tab</tt>) &rArr;  t </b></dt><dd>
+
+ extra key value pairs from the help string `s`
+
+</dd>
+<dt><b> slurp(sFile:<tt>str</tt>) &rArr;  t </b></dt><dd>
+
+ for a file with words and numbers, add numbers to the proceeding word
+
+</dd>
+<dt><b> words(sFile:<tt>str</tt>, fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>
+
+ call `fun` on all words (space separated) in file
+
+</dd>
 </dl>
 
 ### Lists	
 
 <dl>
-<dt><b> sort(t:<tt>tab</tt>, fun:<tt>fun</tt>) &rArr;  t </b></dt><dd>  returns `t` sorted by `fun`  </dd>
-<dt><b> map(t:<tt>tab</tt>, fun:<tt>fun</tt>) &rArr;  t </b></dt><dd>  returns copy of `t`, all items filtered by `fun`. </dd>
+<dt><b> sort(t:<tt>tab</tt>, fun:<tt>fun</tt>) &rArr;  t </b></dt><dd>
+
+ returns `t` sorted by `fun` 
+
+</dd>
+<dt><b> map(t:<tt>tab</tt>, fun:<tt>fun</tt>) &rArr;  t </b></dt><dd>
+
+ returns copy of `t`, all items filtered by `fun`.
+
+</dd>
 </dl>
 
 ### Thing to String	
 
 <dl>
-<dt><b> oo(t:<tt>tab</tt>) &rArr;  t </b></dt><dd>  print `t` then return `t`. </dd>
-<dt><b> o(t:<tt>tab</tt>) &rArr;  s </b></dt><dd>  generate string from `t`  </dd>
-<dt><b> norm(mu, sd:<tt>str</tt>) &rArr;  n </b></dt><dd>  return a sample from a Gaussian with mean `mu` and sd `sd` </dd>
+<dt><b> oo(t:<tt>tab</tt>) &rArr;  t </b></dt><dd>
+
+ print `t` then return `t`.
+
+</dd>
+<dt><b> o(t:<tt>tab</tt>) &rArr;  s </b></dt><dd>
+
+ generate string from `t` 
+
+</dd>
+<dt><b> norm(mu, sd:<tt>str</tt>) &rArr;  n </b></dt><dd>
+
+ return a sample from a Gaussian with mean `mu` and sd `sd`
+
+</dd>
 </dl>
 

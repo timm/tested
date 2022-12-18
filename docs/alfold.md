@@ -92,7 +92,11 @@ since these did not work so well when browsing Github markdown files on a phone.
 ## Guessing types	
 
 <dl>
-<dt><b> are.of(s:<tt>str</tt>) &rArr;  ?str </b></dt><dd>   top level, guesses a variable's type </dd>
+<dt><b> are.of(s:<tt>str</tt>) &rArr;  ?str </b></dt><dd>
+
+  top level, guesses a variable's type
+
+</dd>
 </dl>
 
 Types are either singular (one thing) or plural (a set of	
@@ -103,29 +107,85 @@ Singulars are either `bools`, `fun` (function),
 `n` (number), `s` (string), or `t` (table).	
 
 <dl>
-<dt><b> are.bool(s:<tt>str</tt>) &rArr;  ?"bool" </b></dt><dd>  names starting with "is" are booleans </dd>
-<dt><b> are.fun(s:<tt>str</tt>) &rArr;  ?"fun" </b></dt><dd>  names ending in "fun" are functions </dd>
-<dt><b> are.num(s:<tt>str</tt>) &rArr;  ?"n" </b></dt><dd>  names start with "n" are numbers  </dd>
-<dt><b> are.str(s:<tt>str</tt>) &rArr;  ?"s" </b></dt><dd>  names starting with "s" are strings </dd>
-<dt><b> are.tbl(s:<tt>str</tt>) &rArr;  ?"tab" </b></dt><dd>  names ending the "s" are tables </dd>
+<dt><b> are.bool(s:<tt>str</tt>) &rArr;  ?"bool" </b></dt><dd>
+
+ names starting with "is" are booleans
+
+</dd>
+<dt><b> are.fun(s:<tt>str</tt>) &rArr;  ?"fun" </b></dt><dd>
+
+ names ending in "fun" are functions
+
+</dd>
+<dt><b> are.num(s:<tt>str</tt>) &rArr;  ?"n" </b></dt><dd>
+
+ names start with "n" are numbers 
+
+</dd>
+<dt><b> are.str(s:<tt>str</tt>) &rArr;  ?"s" </b></dt><dd>
+
+ names starting with "s" are strings
+
+</dd>
+<dt><b> are.tbl(s:<tt>str</tt>) &rArr;  ?"tab" </b></dt><dd>
+
+ names ending the "s" are tables
+
+</dd>
 </dl>
 
 ## Low-level utilities	
 
 <dl>
-<dt><b> hint(s1:<tt>str</tt>, type) &rArr;  str </b></dt><dd>  if we know a type, add to arg (else return arg) </dd>
-<dt><b> pretty(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  clean up the signature (no spaces, no local vars) </dd>
-<dt><b> optional(s:<tt>str</tt>) &rArr;  str </b></dt><dd>  removes local vars, returns the rest as a string </dd>
-<dt><b> lines(sFilename:<tt>str</tt>,  fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>  call `fun` on csv rows. </dd>
-<dt><b> dumpDocStrings() &rArr;  nil </b></dt><dd>  if we have any tbl contents, print them then zap tbl </dd>
+<dt><b> hint(s1:<tt>str</tt>, type) &rArr;  str </b></dt><dd>
+
+ if we know a type, add to arg (else return arg)
+
+</dd>
+<dt><b> pretty(s:<tt>str</tt>) &rArr;  str </b></dt><dd>
+
+ clean up the signature (no spaces, no local vars)
+
+</dd>
+<dt><b> optional(s:<tt>str</tt>) &rArr;  str </b></dt><dd>
+
+ removes local vars, returns the rest as a string
+
+</dd>
+<dt><b> lines(sFilename:<tt>str</tt>,  fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>
+
+ call `fun` on csv rows.
+
+</dd>
+<dt><b> dumpDocStrings() &rArr;  nil </b></dt><dd>
+
+ if we have any tbl contents, print them then zap tbl
+
+</dd>
 </dl>
 
 ## Main	
 
 <dl>
-<dt><b> comments(line) &rArr;  nil </b></dt><dd>  handle comment lines; but first, handle outstanding docstrings. </dd>
-<dt><b> func(fun:<tt>fun</tt>, args:<tt>tab</tt>, returns:<tt>tab</tt>, docstring) &rArr;  nil </b></dt><dd>  handle functions (with docstring). Updates `tbl`. </dd>
-<dt><b> code(line) &rArr;  nil </b></dt><dd>  handle code lines. Updates `obj`. </dd>
-<dt><b> main(line) &rArr;  nil </b></dt><dd>  handle each line </dd>
+<dt><b> comments(line) &rArr;  nil </b></dt><dd>
+
+ handle comment lines; but first, handle outstanding docstrings.
+
+</dd>
+<dt><b> func(fun:<tt>fun</tt>, args:<tt>tab</tt>, returns:<tt>tab</tt>, docstring) &rArr;  nil </b></dt><dd>
+
+ handle functions (with docstring). Updates `tbl`.
+
+</dd>
+<dt><b> code(line) &rArr;  nil </b></dt><dd>
+
+ handle code lines. Updates `obj`.
+
+</dd>
+<dt><b> main(line) &rArr;  nil </b></dt><dd>
+
+ handle each line
+
+</dd>
 </dl>
 

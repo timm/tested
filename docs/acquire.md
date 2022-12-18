@@ -45,17 +45,65 @@ BUGS:
  
 
 <dl>
-<dt><b> LINE:new(raw, lhs:<tt>tab</tt>, rhs:<tt>tab</tt>) &rArr;  LINE </b></dt><dd>  constructor for a line. </dd>
-<dt><b> LINE:__tostring() &rArr;  s </b></dt><dd>  generates pretty print string </dd>
-<dt><b> LINE:normalize(lo, hi) &rArr;  nil </b></dt><dd>  generates `cells` from `raw` via normalization </dd>
-<dt><b> LINE:__sub(other) &rArr;  n </b></dt><dd>  returns distance between two lines </dd>
-<dt><b> LINE:far(lines:<tt>{LINE}</tt>) &rArr;  t </b></dt><dd>  return a pair that runes `the.Far` across `lines` </dd>
-<dt><b> DATA:new(t:<tt>tab</tt>) &rArr;  DATA </b></dt><dd>  constructor for thing holding many lines. </dd>
-<dt><b> DATA:add(line:<tt>LINE</tt>) &rArr;  nil </b></dt><dd>  add one `line`, update `lo` and `hi` for each numeric </dd>
-<dt><b> DATA:normalize() &rArr;  nil </b></dt><dd>  normalizes raw numbers 0..1, min..max </dd>
-<dt><b> DATA:furthest(lines:<tt>{LINE}</tt>) &rArr;  t </b></dt><dd>  return the largest west,east found in `lines` </dd>
-<dt><b> DATA:half(lines:<tt>{LINE}</tt>) &rArr;  lines1,lines2,n </b></dt><dd>  divide lines on distance to 2 poles </dd>
-<dt><b> DATA:tree(  lines:<tt>{LINE}</tt>?, min?) &rArr;  t </b></dt><dd>  returns `lines`, recursively bi-clustered. </dd>
-<dt><b> eg.trees() &rArr;  nil </b></dt><dd>  Runs the whole analysis. </dd>
+<dt><b> LINE:new(raw, lhs:<tt>tab</tt>, rhs:<tt>tab</tt>) &rArr;  LINE </b></dt><dd>
+
+ constructor for a line.
+
+</dd>
+<dt><b> LINE:__tostring() &rArr;  s </b></dt><dd>
+
+ generates pretty print string
+
+</dd>
+<dt><b> LINE:normalize(lo, hi) &rArr;  nil </b></dt><dd>
+
+ generates `cells` from `raw` via normalization
+
+</dd>
+<dt><b> LINE:__sub(other) &rArr;  n </b></dt><dd>
+
+ returns distance between two lines
+
+</dd>
+<dt><b> LINE:far(lines:<tt>{LINE}</tt>) &rArr;  t </b></dt><dd>
+
+ return a pair that runes `the.Far` across `lines`
+
+</dd>
+<dt><b> DATA:new(t:<tt>tab</tt>) &rArr;  DATA </b></dt><dd>
+
+ constructor for thing holding many lines.
+
+</dd>
+<dt><b> DATA:add(line:<tt>LINE</tt>) &rArr;  nil </b></dt><dd>
+
+ add one `line`, update `lo` and `hi` for each numeric
+
+</dd>
+<dt><b> DATA:normalize() &rArr;  nil </b></dt><dd>
+
+ normalizes raw numbers 0..1, min..max
+
+</dd>
+<dt><b> DATA:furthest(lines:<tt>{LINE}</tt>) &rArr;  t </b></dt><dd>
+
+ return the largest west,east found in `lines`
+
+</dd>
+<dt><b> DATA:half(lines:<tt>{LINE}</tt>) &rArr;  lines1,lines2,n </b></dt><dd>
+
+ divide lines on distance to 2 poles
+
+</dd>
+<dt><b> DATA:tree(  lines:<tt>{LINE}</tt>?, min?) &rArr;  t </b></dt><dd>
+
+ returns `lines`, recursively bi-clustered.
+
+</dd>
+<dt><b> eg.trees() &rArr;  nil </b></dt><dd>
+
+ Runs the whole analysis.
+
+</dd>
 </dl>
 

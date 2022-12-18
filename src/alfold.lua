@@ -134,7 +134,7 @@ function dumpDocStrings() --> nil; if we have any tbl contents, print them then 
   if #tbl>0 then
     print("\n<dl>")
     for _,two in pairs(tbl) do 
-      print("<dt><b> "..two[1].." </b></dt><dd> ".. two[2] .." </dd>") end 
+      print("<dt><b> "..two[1].." </b></dt><dd>\n\n".. two[2] .."\n\n</dd>") end 
     print"</dl>\n" end
   tbl={} end 
 
