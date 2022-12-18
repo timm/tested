@@ -65,9 +65,11 @@ that maximizes the difference in the split before and after the split. If statis
 tests say that the splits are different, then we recurse on each half. This generates	
 a tree of treatments where the treatments in the left-most node get ranked one, the next	
 get ranked two, etc. 	
+ 	
 As to stats tests, this code checks for difference in the splits using two non-parametric tests:	
 - A MannWhitney U test that checks if the ranks of the two splits are distinguishable;	
 - A CliffsDelta effect size test (which reports if there is enough difference in the splits)	
+## Details	
 This code returns "rank: objects which contain	
 - `name` of treatment	
 - the list `t` of sorted values	
@@ -81,7 +83,7 @@ This code returns "rank: objects which contain
 <dt><b> adds(rxs:<tt>{RX}</tt>, lo, hi) &rArr;  RX </b></dt><dd>  combines treatments from index `rxs[lo]` to `rxs[hi]` </dd>
 </dl>
 
-## Details	
+## 3 Main functions	
 The three main stats tests are	
 - `sk` which is the top-level driver 	
 - `cliffsDelta` which is the effect size test	
