@@ -43,8 +43,8 @@ BUGS:
 -- treatments using at most $O(log2(N))$ comparisons. This is useful since:
 -- - Some statistical tests are slow (e.g. bootstrap). 
 -- - If we run an all-pairs comparisons between
---   $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.
---   This is much, much smaller than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;
+--   $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2)}$ confident in the results.
+--   This is much, much smaller than the $C_2=C_0^{log2(N)}$ confidence found from Scott-Knott;
 --   - e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus
 --    75 percent (for Scott-Knott).
 --  
@@ -79,17 +79,13 @@ BUGS:
 --- - xs == a table of "x"; e.g. "ns" is a list of numbers
 
 local coerce,cli,lt,fmt,map,oo,o,median,settings,slurp,sort,tiles,words
----------------------------------------------------------------------------------------------------
-local cliffsDelta
-function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
-  local n,gt,lt = 0,0,0
-  for _,x in pairs(ns1) do
-    for _,y in pairs(ns2) do
-      n = n + 1
-      if x > y then gt = gt + 1 end
-      if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= (dull or the.dull) end
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+-- This code returns "rank: objects which contain
+-- - `name` of treatment
+-- - the list `t` of sorted values
+-- - the `rank` (computed by Scott-Knott)
+-- - the `show` (which is a pretty print of the output).
+
 local RX,add,adds,rank
 function RX(t,s)  --> RX; constructor for treatments. ensures treatment results are sorted
   return {name=s or"",rank=0,t=sort(t or {})} end 
@@ -107,7 +103,67 @@ function add(rx,ns) --> RX; returns a new rank combining an old rank with a list
 function adds(rxs,lo,hi) --> RX; combines treatments from index `rxs[lo]` to `rxs[hi]`
   local rx=RX(); for i=lo,hi do rx = add(rx,rxs[i]) end; return rx end
 ---------------------------------------------------------------------------------------------------
+-- The three main stats tests are
+-- - `sk` which is the top-level driver 
+-- - `cliffsDelta` which is the effect size test
+-- - `mwu` which is the Mann-Whitney U tess
+local sk
+function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
+  the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
+  the.dull  = nDull or the.dull or .147  -- width of text display of numbers
+  the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
+  local ranking,rxs,argmax
+  function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
+    local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
+    b4 = adds(rxs,lo,hi)
+    max, mid, n = -1, median(b4.t), #b4.t
+    for i=lo,hi-1 do
+      local l,r,n1,n2,tmp
+      l = adds(rxs,lo,i)
+      r = adds(rxs,i+1,hi)
+      n1,n2 = #l.t, #r.t
+      tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
+      if tmp > max then max,cut = tmp,i end 
+    end  
+    if   cut 
+    then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
+         if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t) then
+           argmax(lo,cut)
+           return argmax(cut+1,hi)  end end -- return here (so we skip over the next 2 lines) 
+    for i=lo,hi do rxs[i].rank = ranking end -- if we did not cut, label all current `rx` as `rank`
+    ranking = ranking+1 -- increment `rank` (so next thing has rank+1)
+  end --------------------------------------------------------------------
+  ranking = 1
+  rxs = {}
+  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(sort(t1),k) end
+  rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
+  argmax(1, #rxs) -- recursively split
+  return tiles(rxs) end 
+-----------------------------------------------------------------------------------------------
+local cliffsDelta
+function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
+  local n,gt,lt = 0,0,0
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
+      n = n + 1
+      if x > y then gt = gt + 1 end
+      if x < y then lt = lt + 1 end end end
+  return math.abs(lt - gt)/n <= (dull or the.dull) end
+---------------------------------------------------------------------------------------------------
 local ranks,mwu,critical
+function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at confidence `nConf` 
+  local t,r1,r2,u1,u2,c = ranks(ns1,ns2)
+  local n1,n2= #ns1, #ns2
+  assert(n1>=3,"must be 3 or more")
+  assert(n2>=3,"must be 3 or more")
+  c  = critical(nConf or the.conf or 95,n1,n2)
+  r1=0; for _,x in pairs(ns1) do r1=r1+ rank(t[x]) end
+  r2=0; for _,x in pairs(ns2) do r2=r2+ rank(t[x]) end
+  u1 = n1*n2 + n1*(n1+1)/2 - r1
+  u2 = n1*n2 + n2*(n2+1)/2 - r2
+  local word = math.min(u1,u2)<=c 
+  return math.min(u1,u2)<=c  end  -- not evidence evidence to say they are the same
+
 function critical(c,n1,n2)
   local t={
     [99]={{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2,  2,  2,  3,  3},
@@ -167,51 +223,6 @@ function ranks(pop1,pop2)
     u[x].n     = u[x].n + 1 end
   return u end
 
-function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at confidence `nConf` 
-  local t,r1,r2,u1,u2,c = ranks(ns1,ns2)
-  local n1,n2= #ns1, #ns2
-  assert(n1>=3,"must be 3 or more")
-  assert(n2>=3,"must be 3 or more")
-  c  = critical(nConf or the.conf or 95,n1,n2)
-  r1=0; for _,x in pairs(ns1) do r1=r1+ rank(t[x]) end
-  r2=0; for _,x in pairs(ns2) do r2=r2+ rank(t[x]) end
-  u1 = n1*n2 + n1*(n1+1)/2 - r1
-  u2 = n1*n2 + n2*(n2+1)/2 - r2
-  local word = math.min(u1,u2)<=c 
-  return math.min(u1,u2)<=c  end  -- not evidence evidence to say they are the same
----------------------------------------------------------------------------------------------------
-local sk
-function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
-  the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
-  the.dull  = nDull or the.dull or .147  -- width of text display of numbers
-  the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
-  local ranking,rxs,argmax
-  function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
-    local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
-    b4 = adds(rxs,lo,hi)
-    max, mid, n = -1, median(b4.t), #b4.t
-    for i=lo,hi-1 do
-      local l,r,n1,n2,tmp
-      l = adds(rxs,lo,i)
-      r = adds(rxs,i+1,hi)
-      n1,n2 = #l.t, #r.t
-      tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
-      if tmp > max then max,cut = tmp,i end 
-    end  
-    if   cut 
-    then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
-         if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t) then
-           argmax(lo,cut)
-           return argmax(cut+1,hi)  end end -- return here (so we skip over the next 2 lines) 
-    for i=lo,hi do rxs[i].rank = ranking end -- if we did not cut, label all current `rx` as `rank`
-    ranking = ranking+1 -- increment `rank` (so next thing has rank+1)
-  end --------------------------------------------------------------------
-  ranking = 1
-  rxs = {}
-  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(sort(t1),k) end
-  rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
-  argmax(1, #rxs) -- recursively split
-  return tiles(rxs) end 
 ---------------------------------------------------------------------------------------------------
 -- ##  Misc
 -- ### String to Thing

@@ -55,8 +55,8 @@ Scott-Knott is a way to find differences in N
 treatments using at most $O(log2(N))$ comparisons. This is useful since:	
 - Some statistical tests are slow (e.g. bootstrap). 	
 - If we run an all-pairs comparisons between	
-  $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2}$ confident in the results.	
-  This is much, much smaller than the $C_2=Ci_0^{log2(N)}$ confidence found from Scott-Knott;	
+  $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2)}$ confident in the results.	
+  This is much, much smaller than the $C_2=C_0^{log2(N)}$ confidence found from Scott-Knott;	
   - e.g for N=10, at $C_1,C_2$ at $C_0=95$% confidence is one percent versus	
    75 percent (for Scott-Knott).	
  	
@@ -68,15 +68,28 @@ get ranked two, etc.
 As to stats tests, this code checks for difference in the splits using two non-parametric tests:	
 - A MannWhitney U test that checks if the ranks of the two splits are distinguishable;	
 - A CliffsDelta effect size test (which reports if there is enough difference in the splits)	
+This code returns "rank: objects which contain	
+- `name` of treatment	
+- the list `t` of sorted values	
+- the `rank` (computed by Scott-Knott)	
+- the `show` (which is a pretty print of the output).	
 
 <dl>
-<dt><b> cliffsDelta(ns1:<tt>num</tt>, ns2:<tt>num</tt>,  dull) &rArr;  bool </b></dt><dd>  true if different by a trivial amount </dd>
 <dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>  constructor for treatments. ensures treatment results are sorted </dd>
 <dt><b> rank(rx:<tt>RX</tt>) &rArr;  n </b></dt><dd>  returns average range in a treatment   </dd>
 <dt><b> add(rx:<tt>RX</tt>, ns:<tt>{num}</tt>) &rArr;  RX </b></dt><dd>  returns a new rank combining an old rank with a list of numbers `ns` </dd>
 <dt><b> adds(rxs:<tt>{RX}</tt>, lo, hi) &rArr;  RX </b></dt><dd>  combines treatments from index `rxs[lo]` to `rxs[hi]` </dd>
-<dt><b> mwu(ns1:<tt>num</tt>, ns2:<tt>num</tt>, nConf:<tt>num</tt>) &rArr; bool </b></dt><dd>  True if ranks of `ns1,ns2` are different at confidence `nConf`  </dd>
+</dl>
+
+The three main stats tests are	
+- `sk` which is the top-level driver 	
+- `cliffsDelta` which is the effect size test	
+- `mwu` which is the Mann-Whitney U tess	
+
+<dl>
 <dt><b> sk(t:<tt>tab</tt>,   nConf:<tt>num</tt>?, nDull:<tt>num</tt>?, nWidth:<tt>num</tt>?) &rArr;  rxs </b></dt><dd>  main. ranks treatments on stats </dd>
+<dt><b> cliffsDelta(ns1:<tt>num</tt>, ns2:<tt>num</tt>,  dull) &rArr;  bool </b></dt><dd>  true if different by a trivial amount </dd>
+<dt><b> mwu(ns1:<tt>num</tt>, ns2:<tt>num</tt>, nConf:<tt>num</tt>) &rArr; bool </b></dt><dd>  True if ranks of `ns1,ns2` are different at confidence `nConf`  </dd>
 </dl>
 
 ##  Misc	
