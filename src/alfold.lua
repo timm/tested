@@ -142,7 +142,7 @@ function dumpDocStrings() --> nil; if we have any tbl contents, print them then 
 local code, func, comments, main
 function comments(line) --> nil; handle comment lines; but first, handle outstanding docstrings.
   line:gsub("^[-][-] ([^\n]+)", 
-         function(x) dumpDocStrings(); print(x:gsub(" [-][-][-][-][-].*",""),"") end)  end
+         function(x) dumpDocStrings(); print(x:gsub("^[-][-][-][-][-].*",""),"") end)  end
 
 function func(fun,args,returns,docstring) --> nil; handle functions (with docstring). Updates `tbl`.
   tbl[1+#tbl] = {fun..'('..optional(pretty(args))..') &rArr; '..returns..'', docstring}  end
