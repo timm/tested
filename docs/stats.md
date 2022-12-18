@@ -93,9 +93,11 @@ The three main stats tests are
 <dt><b> sk(t:<tt>tab</tt>,   nConf:<tt>num</tt>?, nDull:<tt>num</tt>?, nWidth:<tt>num</tt>?) &rArr;  rxs </b></dt><dd>  main. ranks treatments on stats </dd>
 <dt><b> cliffsDelta(ns1:<tt>num</tt>, ns2:<tt>num</tt>,  dull) &rArr;  bool </b></dt><dd>  true if different by a trivial amount </dd>
 <dt><b> mwu(ns1:<tt>num</tt>, ns2:<tt>num</tt>, nConf:<tt>num</tt>) &rArr; bool </b></dt><dd>  True if ranks of `ns1,ns2` are different at confidence `nConf`  </dd>
+<dt><b> ranks(ns1:<tt>num</tt>, ns2:<tt>num</tt>) &rArr; t </b></dt><dd>  numbers of both populations are jointly ranked  </dd>
 </dl>
 
 ##  Misc	
+After the above, all the rest is LUSA miscellany.	
 ### String to Thing	
 
 <dl>

@@ -211,22 +211,23 @@ function critical(c,n1,n2)
     local n2 = math.min(n2,#u)
     return u[n2][n1] end
 
-function ranks(pop1,pop2)
+function ranks(ns1,ns2) -->t; numbers of both populations are jointly ranked 
   local x,t,u = 0,{},{}
-  for _,pop in pairs{pop1,pop2} do
-    for _,x in pairs(pop) do t[1+#t] = x end end
+  for _,ns in pairs{ns1,ns2} do
+    for _,x in pairs(ns) do t[1+#t] = x end end
   t = sort(t)
   x = t[1]
   u[x] = {x=x,n=1,ranks=1}
   for i=2,#t do
     if t[i-1] ~= t[i] then x=t[i]; u[x] = {x=x, n=0,ranks=0}  end    
     u[x].x     = t[i]
-    u[x].ranks = u[x].ranks + i 
+    u[x].ranks = u[x].ranks + i -- for repeated numbers, they share the rank of all the repeats
     u[x].n     = u[x].n + 1 end
   return u end
 
 ---------------------------------------------------------------------------------------------------
 -- ##  Misc
+-- After the above, all the rest is LUSA miscellany.
 -- ### String to Thing
 function cli(help,t) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(t) do
