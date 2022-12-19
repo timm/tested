@@ -94,13 +94,11 @@ function COLS:height(row)
 function COLS:reinforce(row1,row2)
   local h1,h2 = self:height(row1), self:height(row2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
-  local delta = math.abs(h1 - h2)
-  delta=1
   for _,col in pairs(self.x) do
     local x1,x2 = col:bin(row1.cells[col.at]), col:bin(row2.cells[col.at])
-    if x1 ~= "?" and x2 ~= "?" then
-      col.pos[x1] = (col.pos[x1] or 0) + delta
-      col.neg[x2] = (col.neg[x2] or 0) + delta end end end
+    if x1 ~= "?" and x2 ~= "?" and x1 ~= x2 then
+      col.pos[x1] = (col.pos[x1] or 0) + 1
+      col.neg[x2] = (col.neg[x2] or 0) + 1 end end end
 --------------------------------------------------------------------------------------------------
 local ROW=obj"ROW"
 function ROW:new(t) self.cells = t; self.evaluated = false end
@@ -130,7 +128,7 @@ function DATA:clone(inits)
   return data1 end
 
 function DATA:truth(t)
-  local function fun(row1,row2) return self.cols.height(row1) < self.cols:height(row2) end
+  local function fun(row1,row2) oo(row1); o(row2); return self.cols.height(row1) < self.cols:height(row2) end
   for rank,row in pairs(sort(t or self.rows, fun)) do row.rank = rank end 
   return self:clone(self.rows) end 
 
@@ -145,6 +143,7 @@ function DATA:learn(rows)
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
+function same(x)    return x end
 function any(t)     return t[math.random(#t)] end
 function many(t,n)  local u={}; for i=1,n do push(u,any(t)) end; return u end
 function push(t,x)  t[1+#t]=x; return x end
@@ -614,24 +613,23 @@ eg["learn"]={"learn from 1 example",function()
   oo(percents(data.cols.x[1].neg)) end}
 
 function display(prompt, data,n,t)
-  local tmp=map(t,function(row) 
-                    return {row=row.cells,h=math.floor(100*data.cols:height(row))} end)
-  tmp=sort(tmp,gt"h")
+  tmp=sort(t,gt"rank")
   print""
   for i=1,n,2 do print(prompt, i,tmp[i].h, o(tmp[i].row)) end end
 
 eg["learns"] = {"learn from different in a few examples", function() 
-  local data= DATA(auto93())
+  local data= DATA(map(auto93(),same))
 
   -- just look at the differences between a few examples
   data.rows=shuffle(data.rows)
+  data = data:truth()
   data:learn()
   display("guess       ",data,the.samples,data:guess()) 
   for _,col in pairs(data.cols.x) do
     print("\n\t"..col.name)
     local pos,neg = percents(col.pos), percents(col.neg)
     for _,k in pairs(sort(keys(neg))) do print("\t",k, pos[k],neg[k]) end end 
-  
+  if true then return true end 
   -- use all the information
   data.rows=shuffle(data.rows)
   display("ground truth",data,the.samples,data:truth(data.rows))
