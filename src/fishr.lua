@@ -130,8 +130,9 @@ function DATA:clone(inits)
   return data1 end
 
 function DATA:truth(t)
-  return sort(t or self.rows, 
-              function(r1,r2) return self.cols:height(r1) < self.cols:height(r2) end) end
+  local function fun(row1,row2) return self.cols.height(row1) < self.cols:height(row2) end
+  for rank,row in pairs(sort(t or self.rows, fun)) do row.rank = rank end 
+  return self:clone(self.rows) end 
 
 function DATA:guess()
   return sort(self.rows, function(r1,r2) return r1:rank(self.cols) < r2:rank(self.cols) end) end
