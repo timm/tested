@@ -57,7 +57,7 @@ function COL:new(n,s)
 
 function COL:add(x)
   if x=="?" then return x end
-  if   self.is.num 
+  if   self.is.num   -- asdas 
   then self.lo = math.min(self.lo, x)
        self.hi = math.max(self.hi, x) 
   else self.has[x] = 1 + (self.has[x] or 0) end end
