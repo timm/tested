@@ -72,8 +72,8 @@ function COL:bin(x)
   return tmp*math.floor(x/tmp) end 
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
-function COLS:new(t) 
-  self.all,self.x,self.y = {},{},{}
+function COLS:new(t)    
+  self.names,self.all,self.x,self.y = t,{},{},{}
   for n,s in pairs(t) do
     local col = push(self.all, COL(n,s))
     if not col.is.ignored then
@@ -123,6 +123,11 @@ function DATA:add(t)
   local row = t.cells and t or ROW(t)
   push(self.rows, row)
   for _,col in pairs(self.cols.x) do col:add(row.cells[col.at]) end end 
+
+function DATA:clone(inits)
+  local data1=DATA({self.cols.names})
+  map(inits or {}, function(t) data1:add(t)  end)
+  return data1 end
 
 function DATA:truth(t)
   return sort(t or self.rows, 
@@ -591,7 +596,16 @@ eg["cols"] = {"test cols creation", function()
     map(COLS(header).all,oo) end}
 
 eg["one"] = {"test basic load", function() DATA(auto93()) end}
-eg["load"]= {"test reading data", function() oo(DATA(auto93()).cols.x[4]) end}
+eg["load"]= {"test reading data", function() 
+  oo(DATA(auto93()).cols.x[4]) end}
+eg["clone"]= {"test clining data", function() 
+  local data1=DATA(auto93())
+  oo(data1.cols.x[4]) 
+  local data2=data1:clone(data1.rows)
+  oo(data2.cols.x[4]) 
+  oo(data2.cols.y[1]) 
+end}
+
 eg["learn"]={"learn from 1 example",function() 
   local data= DATA(auto93())
   data:learn() 
