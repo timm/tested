@@ -1,5 +1,17 @@
+local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
+local help=[[
+fishr.lua : fish for a few best in a large sea of many (basic demo)
+(c)2022 Tim Menzies <timm@ieee.org> BSD-2 license
+
+      /`·.¸
+     /¸...¸`:·
+ ¸.·´  ¸   `·.¸.·´)
+: © ):´;      ¸  {
+ `·.¸ `·  ¸.·´\`·¸)
+     `\\´´\¸.·´
+]]
 --[[
-In this language
+In this code
 - vars are global by default unless marked with "local"
 - functions have to be defined before they are used.
 - #t is length of list t (and empty lists have #t==0)
@@ -8,7 +20,7 @@ In this language
 - for pos,x in pairs(t) do is the same as python's 
   for pos,x in enumerate(t) do
 
-In my function arguments:
+In my pubic function arguments:
 - n == number
 - s == string
 - t == table
@@ -17,19 +29,11 @@ In my function arguments:
 - fun == function
 - UPPER = class
 
-      /`·.¸
-     /¸...¸`:·
- ¸.·´  ¸   `·.¸.·´)
-: © ):´;      ¸  {
- `·.¸ `·  ¸.·´\`·¸)
-     `\\´´\¸.·´
-
 --]]
-local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue locals
-local the={bins=16,
-           samples=16,
+local the={bins=8,
+           samples=9,
            seed=1} -- global config
-local fmt,any,push,map,sort,want,copy,keys,oo,o,show,obj
+local fmt,any,push,map,sort,want,gt,many,display,shuffle,copy,keys,oo,o,percents,show,obj
 local _id=0
 function obj(s,    t,new) --> t; create a klass and a constructor + print method
   function new(k,...) _id=_id+1; local x=setmetatable({_id=_id},k); t.new(x,...); return x end
@@ -38,37 +42,34 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
 --------------------------------------------------------------------------------------------------
 local COL= obj"COL"
 function COL:new(n,s)
-  self.name = s or "" 
-  self.at   = n or 0 
+  self.name = s or ""  -- column name
+  self.at   = n or 0   -- column index
   self.is   = {goal    = (s or ""):find"[+-]$",
                good    = (s or ""):find"[+]$",
                num     = (s or ""):find"^[A-Z]+",
                ignored = (s or ""):find"X$"}
-  self.pos  = {}
-  self.neg  = {}
-  self.lo   =  math.huge
-  self.hi   = -math.huge end
+  self.pos  = {} -- positive votes
+  self.neg  = {} -- negative votes
+  if    self.is.num 
+  then  self.lo   =  math.huge
+        self.hi   = -math.huge 
+  else  self.has={} end end 
 
 function COL:add(x)
-  if self.is.num and x ~= "?" then
-    self.lo = math.min(self.lo, x)
-    self.hi = math.max(self.hi, x) end end
+  if x=="?" then return x end
+  if   self.is.num 
+  then self.lo = math.min(self.lo, x)
+       self.hi = math.max(self.hi, x) 
+  else self.has[x] = 1 + (self.has[x] or 0) end end
 
 function COL:norm(n)
-  if not self.is.num then return n end
+  if x=="?" or not self.is.num then return n end
   return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
 
 function COL:bin(x)
   if x=="?" or not self.is.num then return x end
   local tmp = (self.hi - self.lo)/the.bins
   return tmp*math.floor(x/tmp) end 
-
-function COL:hundred()
-  for _,t in pairs{self.pos,self.neg} do
-    local n=0
-    for _,y in pairs(t) do n = n + y end
-    for x,y in pairs(t) do t[x] = y/n end end 
-  return self end
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t) 
@@ -94,6 +95,7 @@ function COLS:reinforce(row1,row2)
   local h1,h2 = self:height(row1), self:height(row2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
   local delta = math.abs(h1 - h2)
+  delta=1
   for _,col in pairs(self.x) do
     local x1,x2 = col:bin(row1.cells[col.at]), col:bin(row2.cells[col.at])
     if x1 ~= "?" and x2 ~= "?" then
@@ -110,7 +112,7 @@ function ROW:rank(cols)
     if x ~= "?" then 
       pos = pos + (col.pos[x] or 0)
       neg = neg + (col.neg[x] or 0) end end
-  return  pos/neg end
+  return  - neg end
 --------------------------------------------------------------------------------------------------
 local DATA = obj"DATA"
 function DATA:new(t)
@@ -127,22 +129,31 @@ function DATA:truth(t)
               function(r1,r2) return self.cols:height(r1) < self.cols:height(r2) end) end
 
 function DATA:guess()
-  for _,col in pairs(self.cols.x) do col:hundred() end
   return sort(self.rows, function(r1,r2) return r1:rank(self.cols) < r2:rank(self.cols) end) end
 
-function DATA:learn() 
+function DATA:learn(rows) 
   local n,some = the.samples,{}
-  for _=1,n do push(some, any(self.rows)) end
+  for _=1,n do push(some, any(rows or self.rows)) end
   for i=1,n do
     for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
 function any(t)     return t[math.random(#t)] end
+function many(t,n)  local u={}; for i=1,n do push(u,any(t)) end; return u end
 function push(t,x)  t[1+#t]=x; return x end
 function map(t,fun) local u={}; for _,x in pairs(t) do u[1+#u] = fun(x) end; return u end
+function shuffle(t,   j) --> t;  Randomly shuffle, in place, the list `t`.
+  for i=#t,2,-1 do j=math.random(i); t[i],t[j]=t[j],t[i] end; return t end
+
+
+function percents(t)
+  local n= 0
+  for k,v in pairs(t) do n=n+v end
+  local u={}; for k,v in pairs(t) do u[k] = math.floor(100*v/n) end; return u end
 
 function sort(t,fun) table.sort(t,fun); return t end
+function gt(x) return function(a,b) return a[x] > b[x] end end
 function copy(t)
   if type(t) ~= "table" then return t end
   local u={}; for k,v in pairs(t) do u[k] = copy(v) end
@@ -561,40 +572,68 @@ local function auto93() return copy{
 } end
 
 local eg={}
-function eg.all() 
+eg["--all"] = {"run all actions", function() 
   local b4 = copy(the)
   for _,key in pairs(sort(keys(eg))) do 
-    if key ~="all" then
-      math.randomseed(the.seed or 1)
-      eg[key]() 
-      for x,y in pairs(b4) do the[x]=y end end end end
+    if key:sub(1,1)  ~="-" then
+      print("seed",the.seed)
+      math.randomseed(the.seed)
+      eg[key][2]()  end end end }
 
-function eg.one() DATA(auto93()) end
-function eg.load() oo(DATA(auto93()).cols.x[4]) end
-function eg.learn() 
- local data= DATA(auto93())
- data:learn() 
- oo(data.cols.x[1]:hundred().pos) 
- oo(data.cols.x[1]:hundred().neg) end
+eg["-h"] = {"show help", function() 
+  print("\n"..help)
+  print("USAGE: lua stats.lua ACTION [SEED]\n\nACTIONS:")
+  for _,key in pairs(sort(keys(eg))) do  print(fmt("   %-10s  %s",key, eg[key][1])) end end}
 
-function eg.rank() 
- local data= DATA(auto93())
- local some ={}
- for i=1,16 do push(some, any(data.rows)) end
- some = data:truth(some)
- for i=16,1,-1 do
-   print("random",i, o(some[i].cells)) end 
+eg["cols"] = {"test cols creation", function()
+    local header={"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"}
+    print(o(header),"==>\n")
+    map(COLS(header).all,oo) end}
 
- local tmp=data:truth()
- print""
- for i=#tmp,1,-50 do print("truth",i, o(tmp[i].cells)) end 
- print""
- data:learn() 
- local tmp=data:guess() 
- for i=#tmp,1,-50 do print("guess",i, o(tmp[i].cells)) end end
+eg["one"] = {"test basic load", function() DATA(auto93()) end}
+eg["load"]= {"test reading data", function() oo(DATA(auto93()).cols.x[4]) end}
+eg["learn"]={"learn from 1 example",function() 
+  local data= DATA(auto93())
+  data:learn() 
+  oo(percents(data.cols.x[1].pos)) 
+  oo(percents(data.cols.x[1].neg)) end}
 
-math.randomseed(1)
-if arg[2] then math.randomseed(tonumber(arg[2])) end
+function display(prompt, data,n,t)
+  local tmp=map(t,function(row) 
+                    return {row=row.cells,h=math.floor(100*data.cols:height(row))} end)
+  tmp=sort(tmp,gt"h")
+  print""
+  for i=1,n,2 do print(prompt, i,tmp[i].h, o(tmp[i].row)) end end
 
---eg[arg[1] or "all"]()
+eg["learns"] = {"learn from different in a few examples", function() 
+  local data= DATA(auto93())
+
+  -- just look at the differences between a few examples
+  data.rows=shuffle(data.rows)
+  data:learn()
+  display("guess       ",data,the.samples,data:guess()) 
+  for _,col in pairs(data.cols.x) do
+    print("\n\t"..col.name)
+    local pos,neg = percents(col.pos), percents(col.neg)
+    for _,k in pairs(sort(keys(neg))) do print("\t",k, pos[k],neg[k]) end end 
+  
+  -- use all the information
+  data.rows=shuffle(data.rows)
+  display("ground truth",data,the.samples,data:truth(data.rows))
+
+  -- baseline against just trying a few examples random
+  data.rows=shuffle(data.rows)
+  display("random      ",data,the.samples,data:truth(many(data.rows,the.samples)))
+
+end}
+
+if arg[2] then the.seed=tonumber(arg[2]) end
+
+if arg[1] then 
+  assert(eg[arg[1]],"unknown action "..arg[1]) 
+  math.randomseed(the.seed)
+  print("seed",the.seed)
+  eg[arg[1]][2]()  end
+
 for x,y in pairs(_ENV) do if not b4[x] then print("?",x,type(y)) end end
+
