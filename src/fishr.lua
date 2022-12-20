@@ -3,12 +3,12 @@ local help=[[
 fishr.lua : fish for a few best in a large sea of many (basic demo)
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2 license
 
-      /`·.¸
-     /¸...¸`:·
- ¸.·´  ¸   `·.¸.·´)
-: © ):´;      ¸  {
- `·.¸ `·  ¸.·´\`·¸)
-     `\\´´\¸.·´
+      /\
+    _/./
+ ,-'    `-:..-'/
+: o )      _  (
+"`-....,--; `-.\
+    `'          Max
 ]]
 --[[
 In this code
@@ -40,6 +40,25 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
   t={_is=s, __tostring = o}
   t.__index = t;return setmetatable(t,{__call=new}) end
 --------------------------------------------------------------------------------------------------
+local BINS=obj"BINS"
+function BINS:new(min,max) --> BINS; returns 
+  self.min, self.max = min,max
+  self.all, self.indx, self.gap = {},{},(self.max - self.min)/the.bins 
+  for i=1,the.bins do 
+    local lo=self.min+self.gap*(i-1)
+    push(self.all,{v=0, lo=lo, hi=lo+self.gap}) end
+  for i,bin in pairs(the.bins) do
+    self.indx[bin.lo] = bin
+    bin.left = self.all[i-1]
+    bin.right = self.all[i+1] end
+  self.all[1].lo         = -math.huge
+  self.all[#self.all].hi = math.huge end
+
+function BINS:reinforce(x,inc)
+  local bin = self.all[self.min + self.gap+(math.floor((x - self.min)/self.gap))] 
+  assert(bin and bin.lo <= x and bin.hi >= x, "bad range lookup")
+  bin.v = bin.v + (inc or 1) end
+
 local COL= obj"COL"
 function COL:new(n,s)
   self.name = s or ""  -- column name
