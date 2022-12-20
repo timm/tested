@@ -45,7 +45,7 @@ function BINS:new(min,max) --> BINS; returns
   self.min, self.max = min,max
   self.all, self.indx, self.gap = {},{},(self.max - self.min)/the.bins 
   for i=1,the.bins do 
-    local lo=self.min+self.gap*(i-1)
+    local lo = self.min+self.gap*(i-1)
     push(self.all,{v=0, lo=lo, hi=lo+self.gap}) end
   for i,bin in pairs(the.bins) do
     self.indx[bin.lo] = bin
@@ -58,6 +58,7 @@ function BINS:reinforce(x,inc)
   local bin = self.all[self.min + self.gap+(math.floor((x - self.min)/self.gap))] 
   assert(bin and bin.lo <= x and bin.hi >= x, "bad range lookup")
   bin.v = bin.v + (inc or 1) end
+
 
 local COL= obj"COL"
 function COL:new(n,s)
@@ -624,15 +625,16 @@ eg["-h"] = {"show help", function()
   print("USAGE: lua stats.lua ACTION [SEED]\n\nACTIONS:")
   for _,key in pairs(sort(keys(eg))) do  print(fmt("   %-10s  %s",key, eg[key][1])) end end}
 
-eg["cols"] = {"test cols creation", function()
+eg.cols = {"test cols creation", function()
     local header={"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"}
     print(o(header),"==>\n")
     map(COLS(header).all,oo) end}
 
-eg["one"] = {"test basic load", function() DATA(map(auto93(),same)) end}
-eg["load"]= {"test reading data", function() 
+eg.bins ={"testing bins", function() BINS(0,10) end}
+eg.one = {"test basic load", function() DATA(map(auto93(),same)) end}
+eg.load= {"test reading data", function() 
   oo(DATA(map(auto93(),same)).cols.x[4]) end}
-eg["clone"]= {"test clining data", function() 
+eg.clone = {"test clining data", function() 
   local data1=DATA(auto93())
   oo(data1.cols.x[4]) 
   local data2=data1:clone(data1.rows)
@@ -640,7 +642,7 @@ eg["clone"]= {"test clining data", function()
   oo(data2.cols.y[1]) 
 end}
 
-eg["learn"]={"learn from 1 example",function() 
+eg.learn={"learn from 1 example",function() 
   local data= DATA(auto93())
   data:learn() 
   oo(percents(data.cols.x[1].pos)) 
