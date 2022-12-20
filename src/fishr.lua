@@ -30,8 +30,8 @@ In my pubic function arguments:
 - UPPER = class
 
 --]]
-local the={bins=17,
-           samples=32,
+local the={bins=16,
+           samples=20,
            seed=1} -- global config
 local fmt,any,push,map,sort,want,lt,many,display,same,shuffle,copy,keys,oo,o,percents,show,obj
 local _id=0
