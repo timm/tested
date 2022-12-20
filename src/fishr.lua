@@ -30,10 +30,10 @@ In my pubic function arguments:
 - UPPER = class
 
 --]]
-local the={bins=8,
-           samples=9,
+local the={bins=17,
+           samples=32,
            seed=1} -- global config
-local fmt,any,push,map,sort,want,gt,many,display,shuffle,copy,keys,oo,o,percents,show,obj
+local fmt,any,push,map,sort,want,lt,many,display,same,shuffle,copy,keys,oo,o,percents,show,obj
 local _id=0
 function obj(s,    t,new) --> t; create a klass and a constructor + print method
   function new(k,...) _id=_id+1; local x=setmetatable({_id=_id},k); t.new(x,...); return x end
@@ -66,10 +66,15 @@ function COL:norm(n)
   if x=="?" or not self.is.num then return n end
   return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
 
+function COL:bin0(x)
+  local tmp = (self.hi - self.lo)/the.bins
+  return tmp*math.floor(x/tmp)  end
+
 function COL:bin(x)
   if x=="?" or not self.is.num then return x end
+  local x1 = self:bin0(x)
   local tmp = (self.hi - self.lo)/the.bins
-  return tmp*math.floor(x/tmp) end 
+  return x1,  self:bin0(x1-tmp/2), self:bin0(x1+3*tmp/2) end
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t)    
@@ -80,9 +85,8 @@ function COLS:new(t)
       push(col.is.goal and self.y or self.x, col) end end end
 
 function COLS:height(row)
-  if not row.evaluated then
-    row.evaluated = true
-    map(self.y, function(col) col:add(row.cells[col.at]) end) end
+  row.evaluated = true
+  map(self.y, function(col) col:add(row.cells[col.at]) end) 
   local height,n,sq = 0,0,math.sqrt
   for _,col in pairs(self.y) do 
     local x = row.cells[col.at]
@@ -91,26 +95,35 @@ function COLS:height(row)
       height = height + math.abs(col:norm(x) - (col.is.good and 0 or 1))^2 end end 
   return sq(height)/sq(n) end
 
-function COLS:reinforce(row1,row2)
+function COLS:reinforce(row1,row2,delta)
   local h1,h2 = self:height(row1), self:height(row2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
   for _,col in pairs(self.x) do
-    local x1,x2 = col:bin(row1.cells[col.at]), col:bin(row2.cells[col.at])
-    if x1 ~= "?" and x2 ~= "?" and x1 ~= x2 then
-      col.pos[x1] = (col.pos[x1] or 0) + 1
-      col.neg[x2] = (col.neg[x2] or 0) + 1 end end end
+    local x1,x0,x2 = col:bin(row1.cells[col.at])
+    local y1,y0,y2 = col:bin(row2.cells[col.at])
+    if x1 ~= "?" and y1 ~= "?" then
+     if x1 ~= y1 then
+        col.pos[x1] = (col.pos[x1] or 0) + delta/2
+        col.neg[y1] = (col.neg[y1] or 0) + delta/2 end 
+     if x0 ~= y0 then
+        col.pos[x0] = (col.pos[x0] or 0) + delta/4
+        col.neg[y0] = (col.neg[y0] or 0) + delta/4 end 
+     if x2 ~= y2 then
+        col.pos[x2] = (col.pos[x2] or 0) + delta/4
+        col.neg[y2] = (col.neg[y2] or 0) + delta/4 end 
+  end end end
 --------------------------------------------------------------------------------------------------
 local ROW=obj"ROW"
-function ROW:new(t) self.cells = t; self.evaluated = false end
+function ROW:new(t) self.cells = t; self.evaluated = false; self.truth=0 end
 
 function ROW:rank(cols)
   local pos,neg = 0,0
   for _,col in pairs(cols.x) do
     local x = col:bin(self.cells[col.at])
     if x ~= "?" then 
-      pos = pos + (col.pos[x] or 0)
-      neg = neg + (col.neg[x] or 0) end end
-  return  - neg end
+      pos = pos + (col.pos[x] or 1E-31)
+      neg = neg + (col.neg[x] or 1E-31) end end
+  return  -neg end -- ==pos^2/(pos+neg+1E-32)  end --pos^2/(pos+neg) end
 --------------------------------------------------------------------------------------------------
 local DATA = obj"DATA"
 function DATA:new(t)
@@ -127,19 +140,22 @@ function DATA:clone(inits)
   map(inits or {}, function(t) data1:add(t)  end)
   return data1 end
 
-function DATA:truth(t)
-  local function fun(row1,row2) oo(row1); o(row2); return self.cols.height(row1) < self.cols:height(row2) end
-  for rank,row in pairs(sort(t or self.rows, fun)) do row.rank = rank end 
+function DATA:descending(t)
+  local function fun(row1,row2) return self.cols:height(row1) > self.cols:height(row2) end
+  return sort(t or self.rows,fun) end
+
+function DATA:truth()
+  for rank,row in pairs(self:descending()) do row.truth = math.floor(100*rank/(#self.rows)) end 
   return self:clone(self.rows) end 
 
-function DATA:guess()
-  return sort(self.rows, function(r1,r2) return r1:rank(self.cols) < r2:rank(self.cols) end) end
+function DATA:guess(t)
+  return sort(t or self.rows, function(r1,r2) return r1:rank(self.cols) > r2:rank(self.cols) end) end
 
 function DATA:learn(rows) 
-  local n,some = the.samples,{}
-  for _=1,n do push(some, any(rows or self.rows)) end
+  local n = the.samples
+  local some = many(rows or self.rows, the.samples)
   for i=1,n do
-    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end end
+    for j=i+1,n do  self.cols:reinforce(some[i], some[j],1/(n*(n+1)/2)) end end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -151,14 +167,13 @@ function map(t,fun) local u={}; for _,x in pairs(t) do u[1+#u] = fun(x) end; ret
 function shuffle(t,   j) --> t;  Randomly shuffle, in place, the list `t`.
   for i=#t,2,-1 do j=math.random(i); t[i],t[j]=t[j],t[i] end; return t end
 
-
 function percents(t)
   local n= 0
   for k,v in pairs(t) do n=n+v end
   local u={}; for k,v in pairs(t) do u[k] = math.floor(100*v/n) end; return u end
 
 function sort(t,fun) table.sort(t,fun); return t end
-function gt(x) return function(a,b) return a[x] > b[x] end end
+function lt(x) return function(a,b) return a[x] < b[x] end end
 function copy(t)
   if type(t) ~= "table" then return t end
   local u={}; for k,v in pairs(t) do u[k] = copy(v) end
@@ -175,7 +190,7 @@ function o(t,     u,key)
   return (t._is or "").."{".. table.concat(u," ").."}" end
 --------------------------------------------------------------------------------------------------
 local function auto93() return copy{
-{"Clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
+{"clndrs","Volume","HpX","Lbs-","Acc+","Model","origin","Mpg+"},
 {8,304.0,193,4732,18.5,70,1,10},
 {8,360,215,4615,14,70,1,10},
 {8,307,200,4376,15,70,1,10},
@@ -340,7 +355,7 @@ local function auto93() return copy{
 {6,200,85,2965,15.8,78,1,20},
 {6,232,90,3265,18.2,79,1,20},
 {6,200,88,3060,17.1,81,1,20},
-{5,131,103,2830,15.9,78,2,20},
+{4,131,103,2830,15.9,78,2,20},
 {6,231,105,3425,16.9,77,1,20},
 {6,200,95,3155,18.2,78,1,20},
 {6,225,100,3430,17.2,78,1,20},
@@ -417,7 +432,7 @@ local function auto93() return copy{
 {4,140,92,2572,14.9,76,1,30},
 {6,181,110,2945,16.4,82,1,30},
 {4,140,88,2720,15.4,78,1,30},
-{5,183,77,3530,20.1,79,2,30},
+{4,183,77,3530,20.1,79,2,30},
 {6,168,116,2900,12.6,81,3,30},
 {4,122,96,2300,15.5,77,1,30},
 {4,140,89,2755,15.8,77,1,30},
@@ -550,7 +565,7 @@ local function auto93() return copy{
 {4,135,84,2370,13,82,1,40},
 {4,98,66,1800,14.4,78,1,40},
 {4,91,60,1800,16.4,78,3,40},
-{5,121,67,2950,19.9,80,2,40},
+{4,121,67,2950,19.9,80,2,40},
 {4,119,92,2434,15,80,3,40},
 {4,85,65,1975,19.4,81,3,40},
 {4,91,68,2025,18.2,82,3,40},
@@ -595,9 +610,9 @@ eg["cols"] = {"test cols creation", function()
     print(o(header),"==>\n")
     map(COLS(header).all,oo) end}
 
-eg["one"] = {"test basic load", function() DATA(auto93()) end}
+eg["one"] = {"test basic load", function() DATA(map(auto93(),same)) end}
 eg["load"]= {"test reading data", function() 
-  oo(DATA(auto93()).cols.x[4]) end}
+  oo(DATA(map(auto93(),same)).cols.x[4]) end}
 eg["clone"]= {"test clining data", function() 
   local data1=DATA(auto93())
   oo(data1.cols.x[4]) 
@@ -613,30 +628,36 @@ eg["learn"]={"learn from 1 example",function()
   oo(percents(data.cols.x[1].neg)) end}
 
 function display(prompt, data,n,t)
-  tmp=sort(t,gt"rank")
   print""
-  for i=1,n,2 do print(prompt, i,tmp[i].h, o(tmp[i].row)) end end
+  for i=1,the.samples,2 do 
+    print(i,fmt("%s\ttruth=[%3s] %s",
+                 prompt, 
+                 t[i].truth, 
+                 o(t[i].cells))) end end
 
 eg["learns"] = {"learn from different in a few examples", function() 
   local data= DATA(map(auto93(),same))
 
   -- just look at the differences between a few examples
-  data.rows=shuffle(data.rows)
   data = data:truth()
-  data:learn()
-  display("guess       ",data,the.samples,data:guess()) 
-  for _,col in pairs(data.cols.x) do
-    print("\n\t"..col.name)
-    local pos,neg = percents(col.pos), percents(col.neg)
-    for _,k in pairs(sort(keys(neg))) do print("\t",k, pos[k],neg[k]) end end 
-  if true then return true end 
-  -- use all the information
   data.rows=shuffle(data.rows)
-  display("ground truth",data,the.samples,data:truth(data.rows))
+  data:learn()
+  for _,col in pairs(data.cols.x) do
+    local pos,neg = percents(col.pos), percents(col.neg)
+    for _,k in pairs(sort(keys(neg))) do 
+      local b=pos[k] or 0
+      local r=neg[k] or 0
+     print(col.name,fmt("%8.3f",k), neg[k],("*"):rep(neg[k])) end end
+  local tmp={}
+  for i,row in pairs(data:guess()) do if i <= the.samples then tmp[1+#tmp] = row end end 
+  display("guess       ",data,32,data:descending(tmp))
+  -- use all the information
+  --data.rows=shuffle(data.rows)
+  --display("ground truth",data,the.samples,data:truth(data.rows))
 
   -- baseline against just trying a few examples random
   data.rows=shuffle(data.rows)
-  display("random      ",data,the.samples,data:truth(many(data.rows,the.samples)))
+  display("random      ",data,the.samples, sort(many(data.rows,the.samples),lt"truth"))
 
 end}
 
