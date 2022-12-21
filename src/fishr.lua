@@ -41,24 +41,40 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
   t.__index = t;return setmetatable(t,{__call=new}) end
 --------------------------------------------------------------------------------------------------
 local BINS=obj"BINS"
-function BINS:new(min,max) --> BINS; returns 
-  self.min, self.max = min,max
-  self.all, self.indx, self.gap = {},{},(self.max - self.min)/the.bins 
-  for i=1,the.bins do 
-    local lo = self.min+self.gap*(i-1)
-    push(self.all,{v=0, lo=lo, hi=lo+self.gap}) end
-  for i,bin in pairs(the.bins) do
-    self.indx[bin.lo] = bin
-    bin.left = self.all[i-1]
-    bin.right = self.all[i+1] end
-  self.all[1].lo         = -math.huge
-  self.all[#self.all].hi = math.huge end
+function BINS:new(col) --> BINS; returns 
+  self.col, self.all, self.indx = col, {},{}
+  if col.is.num then
+    self.gap = (self.col.hi - self.col.lo)/the.bins 
+    for i=1,the.bins+1 do 
+      local lo = self.col.lo+self.gap*(i-1)
+      push(self.all,{v=0, lo=lo, hi=lo+self.gap}) end
+    for i,bin in pairs(self.all) do
+      self.indx[bin.lo] = bin
+      bin.left = self.all[i-1]
+      bin.right = self.all[i+1] end 
+  else
+    for k,_ in pairs(col.has) do
+      print("key",k)
+      self.indx[k] = push(self.all,{v=0,lo=k,hi=k}) end end end
 
 function BINS:reinforce(x,inc)
-  local bin = self.all[self.min + self.gap+(math.floor((x - self.min)/self.gap))] 
-  assert(bin and bin.lo <= x and bin.hi >= x, "bad range lookup")
-  bin.v = bin.v + (inc or 1) end
-
+  if x=="?" then return x end
+  inc = inc or 1
+  if self.col.is.num then
+    local want = self.col.lo + self.gap*(math.floor((x - self.col.lo)/self.gap)) 
+    local bin = self.indx[want]
+    assert(bin and bin.lo <= x and bin.hi >= x, "bad range lookup " .. x)
+    local left =bin.left;   local left2  = left and left.left
+    local right= bin.right; local right2 = right and right.right
+    bin.v                   = bin.v    + inc*.4 
+    if left   then left.v   = left.v   + inc*.2 end
+    if right  then right.v  = right.v  + inc*.2 end
+    if left2  then left2.v  = left2.v  + inc*.1 end
+    if right2 then right2.v = right2.v + inc*.1 end
+  else
+    local bin = self.indx[x]
+    assert(bin and bin.lo==x and bin.hi==x, "bad range lookup")
+    bin.v = bin.v + inc end end
 
 local COL= obj"COL"
 function COL:new(n,s)
@@ -68,8 +84,8 @@ function COL:new(n,s)
                good    = (s or ""):find"[+]$",
                num     = (s or ""):find"^[A-Z]+",
                ignored = (s or ""):find"X$"}
-  self.pos  = {} -- positive votes
-  self.neg  = {} -- negative votes
+  self.good  = nil -- positive votes
+  self.bad  = nil -- negative votes
   if    self.is.num 
   then  self.lo   =  math.huge
         self.hi   = -math.huge 
@@ -85,16 +101,6 @@ function COL:add(x)
 function COL:norm(n)
   if x=="?" or not self.is.num then return n end
   return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
-
-function COL:bin0(x)
-  local tmp = (self.hi - self.lo)/the.bins
-  return tmp*math.floor(x/tmp)  end
-
-function COL:bin(x)
-  if x=="?" or not self.is.num then return x end
-  local x1 = self:bin0(x)
-  local tmp = (self.hi - self.lo)/the.bins
-  return x1,  self:bin0(x1-tmp/2), self:bin0(x1+3*tmp/2) end
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t)    
@@ -115,23 +121,17 @@ function COLS:height(row)
       height = height + math.abs(col:norm(x) - (col.is.good and 0 or 1))^2 end end 
   return sq(height)/sq(n) end
 
-function COLS:reinforce(row1,row2,delta)
+function COLS:reinforce(row1,row2)
   local h1,h2 = self:height(row1), self:height(row2)
+  local gap = math.abs(h1 - h2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
   for _,col in pairs(self.x) do
-    local x1,x0,x2 = col:bin(row1.cells[col.at])
-    local y1,y0,y2 = col:bin(row2.cells[col.at])
+    if not col.good then col.good =  BINS(col); print("!",col.at,col.good)  end
+    if not col.bad then col.bad =  BINS(col) end
+    local x1,x2 = row1.cells[col.at], row2.cells[col.at]
     if x1 ~= "?" and y1 ~= "?" then
-     if x1 ~= y1 then
-        col.pos[x1] = (col.pos[x1] or 0) + delta/2
-        col.neg[y1] = (col.neg[y1] or 0) + delta/2 end 
-     if x0 ~= y0 then
-        col.pos[x0] = (col.pos[x0] or 0) + delta/4
-        col.neg[y0] = (col.neg[y0] or 0) + delta/4 end 
-     if x2 ~= y2 then
-        col.pos[x2] = (col.pos[x2] or 0) + delta/4
-        col.neg[y2] = (col.neg[y2] or 0) + delta/4 end 
-  end end end
+      col.good:reinforce(x1,gap)
+      col.bad:reinforce(x2,gap) end end end 
 --------------------------------------------------------------------------------------------------
 local ROW=obj"ROW"
 function ROW:new(t) self.cells = t; self.evaluated = false; self.truth=0 end
@@ -175,7 +175,7 @@ function DATA:learn(rows)
   local n = the.samples
   local some = many(rows or self.rows, the.samples)
   for i=1,n do
-    for j=i+1,n do  self.cols:reinforce(some[i], some[j],1/(n*(n+1)/2)) end end end
+    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -630,11 +630,15 @@ eg.cols = {"test cols creation", function()
     print(o(header),"==>\n")
     map(COLS(header).all,oo) end}
 
-eg.bins ={"testing bins", function() BINS(0,10) end}
+eg.bins ={"testing bins", function() 
+  local b=BINS({lo=2,hi=10,is={num=true}})
+  for i=2,10,0.01 do b:reinforce(i) end
+  for i,bin in pairs(b.indx) do print(i,bin.v) end
+end}
 eg.one = {"test basic load", function() DATA(map(auto93(),same)) end}
 eg.load= {"test reading data", function() 
   oo(DATA(map(auto93(),same)).cols.x[4]) end}
-eg.clone = {"test clining data", function() 
+eg.clone = {"test cloning data", function() 
   local data1=DATA(auto93())
   oo(data1.cols.x[4]) 
   local data2=data1:clone(data1.rows)
@@ -644,9 +648,12 @@ end}
 
 eg.learn={"learn from 1 example",function() 
   local data= DATA(auto93())
-  data:learn() 
-  oo(percents(data.cols.x[1].pos)) 
-  oo(percents(data.cols.x[1].neg)) end}
+  for _,col in pairs(data.cols.x) do col.good = BINS(col) end
+  local col = data.cols.x[1]
+  -- this should be 16 long
+  map(col.good,function(x) print("??",x,col.name,type(x)) end)
+  -- data:learn() 
+end}
 
 function display(prompt, data,n,t)
   print""
