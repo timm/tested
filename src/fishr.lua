@@ -2,13 +2,13 @@ local b4={}; for x,_ in pairs(_ENV) do b4[x]=x end -- trivia; used to find rogue
 local help=[[
 fishr.lua : fish for a few best in a large sea of many (basic demo)
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2 license
-
-      /\
-    _/./
- ,-'    `-:..-'/
-: o )      _  (
-"`-....,--; `-.\
-    `'          Max
+   
+         /\
+       _/./
+    ,-'    `-:..-'/
+   : o )      _  (
+   "`-....,--; `-.\
+       `'          Max
 ]]
 --[[
 In this code
@@ -40,42 +40,6 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
   t={_is=s, __tostring = o}
   t.__index = t;return setmetatable(t,{__call=new}) end
 --------------------------------------------------------------------------------------------------
-local BINS=obj"BINS"
-function BINS:new(col) --> BINS; returns 
-  self.col, self.all, self.indx = col, {},{}
-  if col.is.num then
-    self.gap = (self.col.hi - self.col.lo)/the.bins 
-    for i=1,the.bins+1 do 
-      local lo = self.col.lo+self.gap*(i-1)
-      push(self.all,{v=0, lo=lo, hi=lo+self.gap}) end
-    for i,bin in pairs(self.all) do
-      self.indx[bin.lo] = bin
-      bin.left = self.all[i-1]
-      bin.right = self.all[i+1] end 
-  else
-    for k,_ in pairs(col.has) do
-      print("key",k)
-      self.indx[k] = push(self.all,{v=0,lo=k,hi=k}) end end end
-
-function BINS:reinforce(x,inc)
-  if x=="?" then return x end
-  inc = inc or 1
-  if self.col.is.num then
-    local want = self.col.lo + self.gap*(math.floor((x - self.col.lo)/self.gap)) 
-    local bin = self.indx[want]
-    assert(bin and bin.lo <= x and bin.hi >= x, "bad range lookup " .. x)
-    local left =bin.left;   local left2  = left and left.left
-    local right= bin.right; local right2 = right and right.right
-    bin.v                   = bin.v    + inc*.4 
-    if left   then left.v   = left.v   + inc*.2 end
-    if right  then right.v  = right.v  + inc*.2 end
-    if left2  then left2.v  = left2.v  + inc*.1 end
-    if right2 then right2.v = right2.v + inc*.1 end
-  else
-    local bin = self.indx[x]
-    assert(bin and bin.lo==x and bin.hi==x, "bad range lookup")
-    bin.v = bin.v + inc end end
-
 local COL= obj"COL"
 function COL:new(n,s)
   self.name = s or ""  -- column name
@@ -84,8 +48,8 @@ function COL:new(n,s)
                good    = (s or ""):find"[+]$",
                num     = (s or ""):find"^[A-Z]+",
                ignored = (s or ""):find"X$"}
-  self.good  = nil -- positive votes
-  self.bad  = nil -- negative votes
+  self._good  = nil -- positive votes
+  self._bad  = nil -- positive votes
   if    self.is.num 
   then  self.lo   =  math.huge
         self.hi   = -math.huge 
@@ -101,6 +65,35 @@ function COL:add(x)
 function COL:norm(n)
   if x=="?" or not self.is.num then return n end
   return n=="?" and n or (n - self.lo)/(self.hi - self.lo + 1E-32) end
+
+function COL:bins()
+  local t={}
+  if self.is.num then
+    local gap = (self.hi - self.lo)/the.bins 
+    for i=1,the.bins do  
+      local lo = self.lo+gap*(i-1)
+      push(t,{n=0, lo=lo, hi=lo+gap})  end
+    t[ 1].lo = -math.huge
+    t[#t].hi =  math.huge
+  else 
+    for k,_ in pairs(self.has) do 
+      t[k] = {n=0, lo=k, hi=k} end end 
+  return t end 
+
+function COL:reinforce(bins, x, nForce)
+  if x=="?" then return end
+  for i,bin in pairs(bins) do 
+     if  bin.lo <= x and x <= bin.hi then
+       local l0    = bin
+       local l1,l2 = bins[i-1] or l0, bins[i-2] or l0
+       local r1,r2 = bins[i+1] or l0, bins[i+2] or l0
+       l0.n = l0.n + nForce*.4
+       l1.n = l1.n + nForce*.2; 
+       r1.n = r1.n + nForce*.2; 
+       l2.n = l2.n + nForce*.1
+       r2.n = r2.n + nForce*.1
+       return end end
+  assert(false,"bad lookup for ".. x) end
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t)    
@@ -126,12 +119,12 @@ function COLS:reinforce(row1,row2)
   local gap = math.abs(h1 - h2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
   for _,col in pairs(self.x) do
-    if not col.good then col.good =  BINS(col); print("!",col.at,col.good)  end
-    if not col.bad then col.bad =  BINS(col) end
-    local x1,x2 = row1.cells[col.at], row2.cells[col.at]
-    if x1 ~= "?" and y1 ~= "?" then
-      col.good:reinforce(x1,gap)
-      col.bad:reinforce(x2,gap) end end end 
+    print(333,col.name)
+    col._good = col._good or col:bins()
+    col._bad = col._bad or col:bins()
+    print(444)
+    col:reinforce(col._good, row1.cells[col.at], gap)
+    col:reinforce(col._bad,  row2.cells[col.at], gap) end end 
 --------------------------------------------------------------------------------------------------
 local ROW=obj"ROW"
 function ROW:new(t) self.cells = t; self.evaluated = false; self.truth=0 end
@@ -175,7 +168,7 @@ function DATA:learn(rows)
   local n = the.samples
   local some = many(rows or self.rows, the.samples)
   for i=1,n do
-    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end end
+    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) ; print(22) end end end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -630,11 +623,6 @@ eg.cols = {"test cols creation", function()
     print(o(header),"==>\n")
     map(COLS(header).all,oo) end}
 
-eg.bins ={"testing bins", function() 
-  local b=BINS({lo=2,hi=10,is={num=true}})
-  for i=2,10,0.01 do b:reinforce(i) end
-  for i,bin in pairs(b.indx) do print(i,bin.v) end
-end}
 eg.one = {"test basic load", function() DATA(map(auto93(),same)) end}
 eg.load= {"test reading data", function() 
   oo(DATA(map(auto93(),same)).cols.x[4]) end}
@@ -648,11 +636,7 @@ end}
 
 eg.learn={"learn from 1 example",function() 
   local data= DATA(auto93())
-  for _,col in pairs(data.cols.x) do col.good = BINS(col) end
-  local col = data.cols.x[1]
-  -- this should be 16 long
-  map(col.good,function(x) print("??",x,col.name,type(x)) end)
-  -- data:learn() 
+  data:learn() 
 end}
 
 function display(prompt, data,n,t)
