@@ -31,7 +31,7 @@ In my pubic function arguments:
 
 --]]
 local the={bins=16,
-           samples=20,
+           samples=10,
            seed=1} -- global config
 local fmt,any,push,map,sort,want,lt,many,display,same,shuffle,copy,keys,oo,o,percents,show,obj
 local _id=0
@@ -60,7 +60,7 @@ function COL:add(x)
   if   self.is.num   -- asdas 
   then self.lo = math.min(self.lo, x)
        self.hi = math.max(self.hi, x) 
-  else self.has[x] = 1 + (self.has[x] or 0) end end
+  else self.has[x] = true end end
 
 function COL:norm(n)
   if x=="?" or not self.is.num then return n end
@@ -72,12 +72,12 @@ function COL:bins()
     local gap = (self.hi - self.lo)/the.bins 
     for i=1,the.bins do  
       local lo = self.lo+gap*(i-1)
-      push(t,{n=0, lo=lo, hi=lo+gap})  end
+      push(t,{v=0, lo=lo, hi=lo+gap,n=0})  end
     t[ 1].lo = -math.huge
     t[#t].hi =  math.huge
   else 
     for k,_ in pairs(self.has) do 
-      t[k] = {n=0, lo=k, hi=k} end end 
+      t[k] = {v=0, lo=k, hi=k,n=0} end end 
   return t end 
 
 function COL:reinforce(bins, x, nForce)
@@ -87,11 +87,11 @@ function COL:reinforce(bins, x, nForce)
        local l0    = bin
        local l1,l2 = bins[i-1] or l0, bins[i-2] or l0
        local r1,r2 = bins[i+1] or l0, bins[i+2] or l0
-       l0.n = l0.n + nForce*.4
-       l1.n = l1.n + nForce*.2; 
-       r1.n = r1.n + nForce*.2; 
-       l2.n = l2.n + nForce*.1
-       r2.n = r2.n + nForce*.1
+       l0.v = l0.v + nForce*.4
+       l1.v = l1.v + nForce*.2; 
+       r1.v = r1.v + nForce*.2; 
+       l2.v = l2.v + nForce*.1
+       r2.v = r2.v + nForce*.1
        return end end
   assert(false,"bad lookup for ".. x) end
 --------------------------------------------------------------------------------------------------
@@ -119,24 +119,27 @@ function COLS:reinforce(row1,row2)
   local gap = math.abs(h1 - h2)
   if h2>h1 then row1,row2,h1,h2 = row2,row1,h2,h1 end
   for _,col in pairs(self.x) do
-    print(333,col.name)
     col._good = col._good or col:bins()
     col._bad = col._bad or col:bins()
-    print(444)
-    col:reinforce(col._good, row1.cells[col.at], gap)
-    col:reinforce(col._bad,  row2.cells[col.at], gap) end end 
+    col:reinforce(col._good, row1.cells[col.at], 1)
+    col:reinforce(col._bad,  row2.cells[col.at], 1) end end 
 --------------------------------------------------------------------------------------------------
 local ROW=obj"ROW"
 function ROW:new(t) self.cells = t; self.evaluated = false; self.truth=0 end
 
-function ROW:rank(cols)
-  local pos,neg = 0,0
-  for _,col in pairs(cols.x) do
-    local x = col:bin(self.cells[col.at])
-    if x ~= "?" then 
-      pos = pos + (col.pos[x] or 1E-31)
-      neg = neg + (col.neg[x] or 1E-31) end end
-  return  -neg end -- ==pos^2/(pos+neg+1E-32)  end --pos^2/(pos+neg) end
+function ROW:xrank(cols)
+  local pos,neg = 1E-31,1E-31
+  local function rank1(x,col)
+    if x ~= "?" then
+      for i,bin in pairs(col._good) do 
+        if  bin.lo <= x and x <= bin.hi then
+          pos = pos + (col._good[i].v or 1E-31)
+          neg = neg + (col._bad[i].v or 1E-31) end  end
+       return  end  end
+  for _,col in pairs(cols.x) do rank1(self.cells[col.at],col)  end
+  --pos=pos/(pos+neg);
+  --neg=neg/(pos+neg)
+  return  pos/neg  end -- ==pos^2/(pos+neg+1E-32)  end --pos^2/(pos+neg) end
 --------------------------------------------------------------------------------------------------
 local DATA = obj"DATA"
 function DATA:new(t)
@@ -153,22 +156,24 @@ function DATA:clone(inits)
   map(inits or {}, function(t) data1:add(t)  end)
   return data1 end
 
-function DATA:descending(t)
+function DATA:ydescending(t)
   local function fun(row1,row2) return self.cols:height(row1) > self.cols:height(row2) end
   return sort(t or self.rows,fun) end
 
-function DATA:truth()
-  for rank,row in pairs(self:descending()) do row.truth = math.floor(100*rank/(#self.rows)) end 
+function DATA:ytruth()
+  for rank,row in pairs(self:ydescending()) do row.truth = math.floor(100*rank/(#self.rows)) end 
   return self:clone(self.rows) end 
 
-function DATA:guess(t)
-  return sort(t or self.rows, function(r1,r2) return r1:rank(self.cols) > r2:rank(self.cols) end) end
+function DATA:xguess(t)
+  return sort(t or self.rows, function(r1,r2) return r1:xrank(self.cols) > r2:xrank(self.cols) end) end
 
-function DATA:learn(rows) 
+function DATA:ylearn(rows) 
   local n = the.samples
   local some = many(rows or self.rows, the.samples)
+  map(some, function(row) io.write(row._id," ") end)
   for i=1,n do
-    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) ; print(22) end end end
+    for j=i+1,n do  self.cols:reinforce(some[i], some[j]) end end 
+  return some end
 --------------------------------------------------------------------------------------------------
 -- library functions
 fmt=string.format
@@ -636,42 +641,57 @@ end}
 
 eg.learn={"learn from 1 example",function() 
   local data= DATA(auto93())
-  data:learn() 
+  data:ylearn() 
+  for _,col in pairs(data.cols.x) do
+    if col.is.num then
+      for i=1,the.bins do print(col.name,(col._good[i].hi+col._good[i].lo)/2, fmt("%.1f\t%.1f", col._good[i].v, col._bad[i].v)) end
+    else
+      for i,_ in pairs(col._good) do
+         print(col.name, i,fmt("%.1f\t%.1f",col._good[i].v, col._bad[i].v)) end end end
 end}
 
-function display(prompt, data,n,t)
+function display(prompt ,n,t)
   print""
-  for i=1,the.samples,2 do 
+  --for i=1,the.samples,2 do 
+  for i=1,n do  if t[i] then 
     print(i,fmt("%s\ttruth=[%3s] %s",
                  prompt, 
                  t[i].truth, 
-                 o(t[i].cells))) end end
+                 o(t[i].cells))) end end end
 
 eg["learns"] = {"learn from different in a few examples", function() 
   local data= DATA(map(auto93(),same))
-
   -- just look at the differences between a few examples
-  data = data:truth()
+  data = data:ytruth()
   data.rows=shuffle(data.rows)
-  data:learn()
-  for _,col in pairs(data.cols.x) do
-    local pos,neg = percents(col.pos), percents(col.neg)
-    for _,k in pairs(sort(keys(neg))) do 
-      local b=pos[k] or 0
-      local r=neg[k] or 0
-     print(col.name,fmt("%8.3f",k), neg[k],("*"):rep(neg[k])) end end
+  data:ylearn()
+  -- for _,col in pairs(data.cols.x) do
+  --    print("")
+  --    if col.is.num then
+  --     for i=1,the.bins do print(col.name,(col._good[i].hi+col._good[i].lo)/2, 
+  --                                 fmt("%.1f\t%.1f", col._good[i].v, col._bad[i].v)) end
+  --   else
+  --     for i,_ in pairs(col._good) do
+  --        print(col.name, i,fmt("%.1f\t%.1f",col._good[i].v, col._bad[i].v)) end end end
   local tmp={}
-  for i,row in pairs(data:guess()) do if i <= the.samples then tmp[1+#tmp] = row end end 
-  display("guess       ",data,32,data:descending(tmp))
-  -- use all the information
-  --data.rows=shuffle(data.rows)
-  --display("ground truth",data,the.samples,data:truth(data.rows))
-
-  -- baseline against just trying a few examples random
+  for i,row in pairs(data:xguess()) do 
+     if i <= the.samples then tmp[1+#tmp] = row end end 
+  display("guess       ",the.samples,data:ydescending(tmp)) --data:descending(tmp))
+  print(math.random())
+  -- -- use all the information
+  ---data.rows=shuffle(data.rows)
+  -- --display("ground truth",data,the.samples,data:truth(data.rows))
+  --
+  -- -- baseline against just trying a few examples random
   data.rows=shuffle(data.rows)
-  display("random      ",data,the.samples, sort(many(data.rows,the.samples),lt"truth"))
+  for k,row in pairs(sort(many(data.rows,the.samples*2),lt"truth")) do 
+       print(k,fmt("%s\ttruth=[%3s] %s",
+                 "random    ", 
+                 row.truth, 
+                 o(row.cells))) end 
 
 end}
+
 
 if arg[2] then the.seed=tonumber(arg[2]) end
 
