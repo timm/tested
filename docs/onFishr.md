@@ -18,20 +18,27 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 # To Begin
 
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
-Once astronomers  learn how to grind lens, then on they go
-to explore the universe.
-So, now that SE can match brackets, what is our next role?
+first, astronomers  learn how to grind lens.  Next, they use those
+lenes to explore the universe.
 
-Well, our
-software is now a tool everyone uses to touch and change the world around them. 
-Can we use it better to touch _less_ while changing _more_?
+So, now that SE people know how to match their brackets, it it time
+to table our next challenge. How can we help
+people use our software tools to better
+explore (and change) the world around us?
 
+Our answer is based on a refactoring approach. 
+We look for commonalities and simplifications of the "exploration" process.
+When SE developers explore software, it is called "testing". When
+non-developers explore software it is called many things such as
+"acceptance testing", "auditing", etc.  By refactoring those two
+approaches, and adding in some AI, we can implement a kind of
+incremental agile acceptance process where developers, and the
+others, can use lessons from past tests to improve subsequent
+versions.
 
-Just to give this some focus, lets tr More precisely how we better support incremental agile acceptance testing
-where software is understandable to a wider  audience.
-(Aside: Q: is this an AI subject, or an SE subject?  A: yes. 
-AI is software[^me]  and as such it needs engineers who have
-the experience needed to revise and refactor and improve it[^mart].)
+(Aside: Q: but wait, is this an AI subject or a CS subject? A: yes.
+AI is software[^me]  and as such it needs engineers who have the
+experience needed to revise and refactor and improve it[^mart].)
 
 [^me]: T. Menzies, 
        ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
@@ -42,10 +49,7 @@ the experience needed to revise and refactor and improve it[^mart].)
         [Software Engineering for AI-Based Systems: A Survey](https://dl.acm.org/doi/pdf/10.1145/3487043)
         ACM Trans. Softw. Eng. Methodol. 31, 2, Article 37e (April 2022), 59 pages. https://doi.org/10.1145/3487043
 
-Many ways to approach, here we seek a refactoring of AI tools such that many things can be implemented by just a few things.
-Principles 
 
-increamtan agile acceptance testing where what is learned from  testing helps is improve the next  version
 ## Lets Go Fishing
 The world is a big place, too much to see and learn.
 What kind of software helps humans to explore the world, and control it better?
