@@ -40,19 +40,6 @@ Your software is being assessed by a focus group (a set of stakeholders).
   Your software is complex and this group has limited time to understand
   it and certify that the software is behaving reasonably[^green].
 
-[^green]: Ben Green warns that many recent policies require 
-          humans-in-the-loop to review or audit decisions from
-          software model. People
-          (including experts) are susceptible to “automation bias” (involving
-          omission errors) failing to take action because the automated
-          system did not provide an alert—and commission error. These
-          omissions
-          means that oversight policies can lead to the reverse of their
-          desired effect by “legitimizing the use of faulty and controversial 
-          algorithms without addressing (their fundamental issues)" 
-          B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
-          Computer Law & Security Review, vol. 45, p. 105681, 2022.
-
 <a href="https://github.com/timm/tested/blob/main/etc/img/fairness.pdf"><img 
 width=400 align=right src="https://github.com/timm/tested/blob/main/etc/img/fairness.pdf"></a>
 
@@ -103,4 +90,18 @@ There can be many goals $Y$ and some are  contradictory (e.g. security and avail
           his Nobel Prize in Economics speech that "decision makers can satisfice either by finding optimum solutions for a 
           simplified world, or by finding satisfactory solutions for a more realistic world. Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
+
+[^green]: Ben Green warns that many recent policies require 
+          humans-in-the-loop to review or audit decisions from
+          software model. People
+          (including experts) are susceptible to “automation bias” (involving
+          omission errors) failing to take action because the automated
+          system did not provide an alert—and commission error. These
+          omissions
+          means that oversight policies can lead to the reverse of their
+          desired effect by “legitimizing the use of faulty and controversial 
+          algorithms without addressing (their fundamental issues)" 
+          B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
+          Computer Law & Security Review, vol. 45, p. 105681, 2022.
+
 
