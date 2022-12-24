@@ -17,8 +17,12 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # To Begin
 
+XXXX assignemnt spec  
+XXXX lessons learned from x applied to y...
+XXX wat tohnad in
+
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
-first, astronomers  learn how to grind lens.  Next, they use those
+First, astronomers  learn how to grind lens.  Next, they use those
 lenes to explore the universe.
 
 So, now that SE people know how to match their brackets, it it time
@@ -36,7 +40,7 @@ incremental agile acceptance process where developers, and the
 others, can use lessons from past tests to improve subsequent
 versions.
 
-Q1) But wait, is this an AI subject or a CS subject?   
+Q1) But wait, is this an AI subject or a SE subject?   
 A1) Yes.
 AI is software[^me]  and as such it needs engineers who have the
 experience needed to revise and refactor and improve it[^mart].
