@@ -29,7 +29,7 @@ Just to give this some focus, lets tr More precisely how we better support incre
 where software is understandable to a wider  audience.
 (Aside: Q: is this an AI subject, or an SE subject?  A: yes. 
 AI is software[^me]  and as such it needs engineers who have
-the experience needed to revise and refactor and improve it[^me].)
+the experience needed to revise and refactor and improve it[^mart].)
 
 [^me]: T. Menzies, 
        ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
