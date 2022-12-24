@@ -26,7 +26,7 @@ XXX wat tohnad in
 
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
 First, astronomers  learn how to grind lens.  Next, they use those
-lenes to explore the universe.
+lens to explore the universe.
 
 So, now that SE people know how to match their brackets, it it time
 to table our next challenge. How can we help
