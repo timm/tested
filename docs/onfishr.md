@@ -20,7 +20,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 AI helps humans to control their world. How can it help in the following cases?
 
 Your fishing boat has a crew of six.  Each day, before you catch
-  anything, you spend hours burning fuel traveling between promising
+  anything, you waste hours burning expensive fuel traveling between promising
   fishing spots.
 
 You've need a car for Monday but you aren't really sure what kind
@@ -53,16 +53,16 @@ Your software is being assessed by a focus group (a set of stakeholders).
           B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
+<a href="/etc/img/fairness.pdf"><img width=400 align=right src="/etc/img/fairness.pdf"></a>
 A software engineer can't try   options
-  but after a few experiments, they ship a product. For example:
-  - MySQL's Makefile has billions of configurations options, each of
-    which means your SQL queries take different times to run and use
-    different energy. 
-  - <a href="/etc/img/fairness.pdf"><img width=400 align=right src="/etc/img/fairness.pdf"></a>
-    Data miners are controlled by billions of hyper-parameter options that control (e.g.)
+but after a few experiments, they ship a product. For example:
+- Data miners are controlled by billions of hyper-parameter options that control (e.g.)
     the shape of a neural net or how many neighbors your use for classification.
     These parameters let you trade off (e.g.) how many mistakes you tolerate
     versus how many results you return; or accuracy versus fairness[^cruz21].
+- MySQL's Makefile has billions of configurations options, each of
+    which means your SQL queries take different times to run and use
+    different energy. 
 
 [^cruz21]: A. F.Cruz, P. Saleiro, C. Belém, C. Soares and P. Bizarro, 
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
