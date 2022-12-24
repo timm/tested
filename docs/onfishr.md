@@ -17,23 +17,43 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # On Fishing
 
-AI helps humans to control their world. How can it help in the following cases:
+AI helps humans to control their world. How can it help in the following cases?
 
-- Your fishing boat has a crew of six.  Each day, before you catch
+Your fishing boat has a crew of six.  Each day, before you catch
   anything, you spend hours burning fuel traveling between promising
   fishing spots.
-- You've need a car for Monday but you aren't really sure what kind
+
+You've need a car for Monday but you aren't really sure what kind
   you like. After a day of going to car yards, and doing a few test
   drives, you buy a car.
-- <a href="/etc/img/SimBuildoptimiz.ping"><img width=400 align=right src="/etc/img/SimBuildoptimiz.png"></a>
+
+<a href="/etc/img/build.ping"><img width=400 align=right src="/etc/img/build.png"></a>
   You are an architect trying to design houses with
   a house with lots of light but no glare. You client is a busy (and fussy) person and before
   you show them all the possible designs, you first prune them back to an interesting subset.
-- The manager of a software project knows many tricks for running a project.
+
+The manager of a software project knows many tricks for running a project.
   Any one project uses just a few of those tricks, but which one to apply?
   The only way to learn is to try a few and remember the best ones.
-- Your software is being assessed by a focus group fro
-- A software engineer can't try   options
+
+Your software is being assessed by a focus group (a set of stakeholders).
+  Your software is complex and this group has limited time to understand
+  it and certify that the software is behaving reasonably[^green].
+
+[^green]: Ben Green warns that many recent policies require 
+          humans-in-the-loop to review or audit decisions from
+          software model. People
+          (including experts) are susceptible to “automation bias” (involving
+          omission errors) failing to take action because the automated
+          system did not provide an alert—and commission error. These
+          omissions
+          means that oversight policies can lead to the reverse of their
+          desired effect by “legitimizing the use of faulty and controversial 
+          algorithms without addressing (their fundamental issues)" 
+          B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
+          Computer Law & Security Review, vol. 45, p. 105681, 2022.
+
+A software engineer can't try   options
   but after a few experiments, they ship a product. For example:
   - MySQL's Makefile has billions of configurations options, each of
     which means your SQL queries take different times to run and use
@@ -48,23 +68,29 @@ AI helps humans to control their world. How can it help in the following cases:
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
       2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
 
+
+## Let's say that another way.
+
 <img width=400 align=right src="/etc/img/2Space.png">
 
-Let's say that another way.
-- We seek  a mapping $F$ such that $Y=F(X)$ where $X$ and $Y$ are sets of decisions and goals.
-  - It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
-    - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
-    - e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
-  - Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
+We seek  a mapping $F$ such that $Y=F(X)$ where $X$ and $Y$ are sets of decisions and goals.
+
+It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
+- e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
+- e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
+
+Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
+
     the task at hand).
-  - Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
-    - single, multi, many goal-optimization have one, three, or more goals
-    - Numeric and symbolic goals are also know as _regression_ and _classification_ tasks.
-  - There can be many goals $Y$ and some are  contradictory (e.g. security and availability
+Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
+- single, multi, many goal-optimization have one, three, or more goals
+- Numeric and symbolic goals are also know as _regression_ and _classification_ tasks.
+
+There can be many goals $Y$ and some are  contradictory (e.g. security and availability
     can be mutually exclusive).
-    - If we cannot satisfy all goals, we explore trade-offs between them (known as satisficing[^simon]).
-      - And in those cases, sometimes the exploration can be just (or more) insightful than actually getting find an answer.
-        - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
+- If we cannot satisfy all goals, we explore trade-offs between them (known as satisficing[^simon]).
+ - And in those cases, sometimes the exploration can be just (or more) insightful than actually getting find an answer.
+ - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
           bursting with its own corrections. You can keep your sterile truth for yourself.</em>
 
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
