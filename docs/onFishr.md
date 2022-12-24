@@ -49,13 +49,13 @@ experience needed to revise and refactor and improve it[^mart].)
         [Software Engineering for AI-Based Systems: A Survey](https://dl.acm.org/doi/pdf/10.1145/3487043)
         ACM Trans. Softw. Eng. Methodol. 31, 2, Article 37e (April 2022), 59 pages. https://doi.org/10.1145/3487043
 
+Is all that too complex for you, lets make it simple. Lets go "fishing"., 
 
-## Lets Go Fishing
-The world is a big place, too much to see and learn.
-What kind of software helps humans to explore the world, and control it better?
+## Lets Go "Fishing"
+Consider the following examples. What is the same across all of them?
 
-
-For example, your fishing boat has a crew of six. Each day, before you catch
+You are the captain of a fishing boat.
+Your boat has a crew of six. Each day, before you catch
   anything, you waste hours burning expensive fuel traveling between promising
   fishing spots. What  software help you look at the ocean and find the fish faster?
 
@@ -68,7 +68,7 @@ You are an architect trying to design houses with
   a house with lots of light but no glare. You client is a busy (and fussy) person and before
   you show them all the possible designs, can software help you prune them back to an interesting subset?
 
-The manager of a software project knows many tricks for running a project.
+You are the manager of a software project, with many tricks for running a project.
   Any one project uses just a few of those tricks, but which one to apply?
   Can software  help you learn which tricks are best (and wish to avoid)?
 
