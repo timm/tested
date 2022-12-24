@@ -54,6 +54,7 @@ Your software is being assessed by a focus group (a set of stakeholders).
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
 <a href="/etc/img/fairness.pdf"><img width=400 align=right src="/etc/img/fairness.pdf"></a>
+
 A software engineer can't try   options
 but after a few experiments, they ship a product. For example:
 - Data miners are controlled by billions of hyper-parameter options that control (e.g.)
