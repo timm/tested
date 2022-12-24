@@ -36,9 +36,13 @@ incremental agile acceptance process where developers, and the
 others, can use lessons from past tests to improve subsequent
 versions.
 
-(Aside: Q: but wait, is this an AI subject or a CS subject? A: yes.
+(ASIDE: Q) but wait, is this an AI subject or a CS subject? A) yes.
 AI is software[^me]  and as such it needs engineers who have the
 experience needed to revise and refactor and improve it[^mart].)
+
+(ASIDE, again: Q) Is this an AI subject or a requirements engineering subject?
+A) yes. Requirements and testing are both iterative processes where we
+try to learn the most, using the least samples).
 
 [^me]: T. Menzies, 
        ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
