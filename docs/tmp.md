@@ -27,7 +27,7 @@ You've need a car for Monday but you aren't really sure what kind
   you like. After a day of going to car yards, and doing a few test
   drives, you buy a car.
 
-<a href="/etc/img/build.ping"><img width=400 align=right src="/etc/img/build.png"></a>
+<a href="/etc/img/build.png"><img width=400 align=right src="/etc/img/build.png"></a>
   You are an architect trying to design houses with
   a house with lots of light but no glare. You client is a busy (and fussy) person and before
   you show them all the possible designs, you first prune them back to an interesting subset.
@@ -39,10 +39,9 @@ The manager of a software project knows many tricks for running a project.
 Your software is being assessed by a focus group (a set of stakeholders).
   Your software is complex and this group has limited time to understand
   it and certify that the software is behaving reasonably[^green].
+<br clear=all>
 
-<a href="https://github.com/timm/tested/blob/main/etc/img/fairness.pdf"><img 
-width=400 align=right src="https://github.com/timm/tested/blob/main/etc/img/fairness.pdf"></a>
-
+<a href="/etc/img/fairness.png"><img width=400 align=right src="/etc/img/fairness.png"></a>
 A software engineer can't try   options
 but after a few experiments, they ship a product. For example:
 - Data miners are controlled by billions of hyper-parameter options that control (e.g.)
