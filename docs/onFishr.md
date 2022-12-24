@@ -43,7 +43,7 @@ experience needed to revise and refactor and improve it[^mart].
 
 Q2) Is this an AI subject or a requirements engineering subject?    
 A2) Yes. Requirements and testing are both iterative processes where we
-try to learn the most, using the least samples).
+try to learn the most, using the least samples.
 
 [^me]: T. Menzies, 
        ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
