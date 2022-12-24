@@ -20,10 +20,12 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
 Once astronomers  learn how to grind lens, then on they go
 to explore the universe.
-So, now that software engineers know how  to match brackets, it is time
-for a different, bigger, and better role for SE. Our
-software is tool everyone uses to touch and change the world around them. How
-can we support that exploration process.
+So, now that SE can match brackets, what is our next role?
+
+Well, our
+software is now a tool everyone uses to touch and change the world around them. 
+Can we use it better to touch _less_ while changing _more_?
+
 
 Just to give this some focus, lets tr More precisely how we better support incremental agile acceptance testing
 where software is understandable to a wider  audience.
