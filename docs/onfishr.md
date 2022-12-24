@@ -58,7 +58,7 @@ A software engineer can't try   options
   - MySQL's Makefile has billions of configurations options, each of
     which means your SQL queries take different times to run and use
     different energy. 
-  - <a href="/etc/img/fairness.ping"><img width=400 align=right src="/etc/img/fairness.png"></a>
+  - <a href="/etc/img/fairness.pdf"><img width=400 align=right src="/etc/img/fairness.pdf"></a>
     Data miners are controlled by billions of hyper-parameter options that control (e.g.)
     the shape of a neural net or how many neighbors your use for classification.
     These parameters let you trade off (e.g.) how many mistakes you tolerate
@@ -71,7 +71,7 @@ A software engineer can't try   options
 
 ## Let's say that another way.
 
-<img width=400 align=right src="/etc/img/2Space.png">
+<img width=400 align=right src="/etc/img/2space.png">
 
 We seek  a mapping $F$ such that $Y=F(X)$ where $X$ and $Y$ are sets of decisions and goals.
 
@@ -80,8 +80,8 @@ It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
 - e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
 
 Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
-
     the task at hand).
+
 Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
 - single, multi, many goal-optimization have one, three, or more goals
 - Numeric and symbolic goals are also know as _regression_ and _classification_ tasks.
