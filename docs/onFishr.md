@@ -36,12 +36,13 @@ incremental agile acceptance process where developers, and the
 others, can use lessons from past tests to improve subsequent
 versions.
 
-(ASIDE: Q) but wait, is this an AI subject or a CS subject? A) yes.
+Q1) But wait, is this an AI subject or a CS subject?   
+A1) Yes.
 AI is software[^me]  and as such it needs engineers who have the
-experience needed to revise and refactor and improve it[^mart].)
+experience needed to revise and refactor and improve it[^mart].
 
-(ASIDE, again: Q) Is this an AI subject or a requirements engineering subject?
-A) yes. Requirements and testing are both iterative processes where we
+Q2) Is this an AI subject or a requirements engineering subject?    
+A2) Yes. Requirements and testing are both iterative processes where we
 try to learn the most, using the least samples).
 
 [^me]: T. Menzies, 
