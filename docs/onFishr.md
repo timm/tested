@@ -17,10 +17,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # To Begin
 
-<p align=right><em>
-'It is our choices, Harry, that show what we<br>
-truly are, far more than our abilities.'<br></em>
--- Albus Percival Wulfric Brian Dumbledore </p> 
+_'It is our choices, Harry, that show what<br> we truly are, far more than our abilities.'_     
+-- Albus Percival Wulfric Brian Dumbledore  
 
 XXXX assignemnt spec  
 XXXX lessons learned from x applied to y...
