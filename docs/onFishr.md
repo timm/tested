@@ -234,7 +234,7 @@ https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_op
 
 Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/etc/data)
 write a 
-multi-objective 
+multi-objective  
 semi-supervised explanation system:
 - Multi-objective; i.e. $|Y|>1$
 - Semi-supervised; i.e. given $N$ examples, you only have a limited budget
@@ -244,7 +244,7 @@ semi-supervised explanation system:
    $m \ll N$ good examples
     will be selected (and "good" means "has good $Y$ values).
 
-
+Note: avoid many-goal problems at this point. That will be bonus marks, below.
 
 Expected Sections:
 
@@ -302,6 +302,7 @@ Expected Sections:
 ### Bonus marks
 As part of the results section:
 
+- Repeat the above for many-goal problems.
 - Perform a _REQUIREMENTS STUDY_
   - For 5 humans, run 5 repertory grids studies. 
   - Compare the results:
@@ -319,14 +320,15 @@ As part of the results section:
 - Perform an _ABLATION STUDY_:
   - Given a preferred method $M$ containing two to four main ideas
     - Disable (or change) each one  thing. If anything get worse, declare that thing important.
-- Perform an HPO XXX
+- Perform an _HPO study_:
+  - Apply these minimal sampling methods to learning good $Z$ values for a learner
+  - Your goal should be to compare your minimal sampling methods with some established optimization method.
 
 ### Word limit
 
 The following limits exclude references.
 
-- No less that five pages 
-  - no more than eight 
+- No less that five pages,no more than eight 
 - HARD LIMITS:
   - we will not grade after eight pages.
   - we will not read if less than five.
