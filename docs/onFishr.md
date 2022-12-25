@@ -151,8 +151,8 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
   use to guide our analysis.
 
 |What | Notes|
-|-----|------|:
-|Theorem provers | xplore a set constraints defined in $B$|
+|-----|------|
+|Theorem provers | explores  a set constraints defined in $B$|
 | Data miners |   tools for dividing up $X$ and/or $Y$|
 | Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
 | Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
