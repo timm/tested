@@ -150,13 +150,6 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
 - Finally, there may or may not be some background knowledge $B$ which we can
   use to guide our analysis.
 
-|What | Notes|
-|----:|:------|
-|Theorem provers | explores  a set constraints defined in $B$|
-| Data miners |   tools for dividing up $X$ and/or $Y$|
-| Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
-| Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
-
 In all the examples above,
 it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
@@ -193,6 +186,15 @@ which _optimization_ is just a matter of finding the difference between good and
 [^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
            Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
            https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
+
+## Some Terms 
+
+|What | Notes|
+|----:|:------|
+|Theorem provers | explores  a set constraints defined in $B$|
+| Data miners |   tools for dividing up $X$ and/or $Y$|
+| Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
+| Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
 
 The above covers a wide range of tasks:
 
