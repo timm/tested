@@ -154,7 +154,8 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
 - Finally, there may or may not be some background knowledge $B$ which we can
   use to guide our analysis.
 
-Often it is cheap to sample $X$ and very, very, very expensive to sample $Y$,
+In all the examples above,
+it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
 - e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
 
