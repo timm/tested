@@ -35,7 +35,8 @@ In the function arguments, the following conventions usally apply:
 - Two spaces denote start of optional args
 - Four spaces denote start of local args.
 --]]
-
+-------------------------------------------------------------------------------
+function ROW(t) return {cells=t, yseen=true} end
 -------------------------------------------------------------------------------
 function COL(n,s,      i)
   i = {n=n or 0, txt=s or ""}
@@ -55,8 +56,6 @@ function update(col,x)
     then col.lo = math.min(col.lo,x)
          col.hi = math.max(col.hi,x)
     else col.has[x] = 1 + col.has[x] end end end
--------------------------------------------------------------------------------
-function ROW(t) return {cells=t, yseen=true} end
 -------------------------------------------------------------------------------
 function COLS(t,     col,cols)
   cols = {names=t, all={}, x={}, y={}}
