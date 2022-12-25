@@ -34,10 +34,9 @@ function COLS(t,     col,cols)
       push(s:find"[!+-]$" and cols.y or cols.x, col) end end 
   return cols end
     
-function adds(cols,row)
-  for _,cols in pairs{cols.x, cols.y} do
-    for _,col in pairs(cols) do
-      add(col, row.cells[col.at]) end end
+function adds(cols, row)
+  for _,col in pairs(cols.x) do add(col, row.cells[col.at]) end 
+  for _,col in pairs(cols.y) do add(col, row.cells[col.at]) end 
   return t end
 
 function DATA(src,     data)
