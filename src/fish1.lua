@@ -11,7 +11,7 @@ local cli,coerce,csv,eg,fmt,kap,map,o,oo,obj,push,sort,the
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
 - Global settings are stores in "the" table: --]]
-the = {best=.5, file="../etc/data/auto93.csv", go="help", p=2, seed=10019}
+the = {best=.5, Budget = 32,file="../etc/data/auto93.csv", go="help", p=2,seed=10019}
 --[[
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
 - At startup, we run `go[the.go]`
@@ -84,8 +84,7 @@ function COLS.new(i,t,     col,cols)
 function COLS.add(i,row)
   for _,t in pairs{i.x, i.y} do
     for _,col in pairs(t) do
-      col:add(row.cells[col.at]) end end
-  return row end
+      col:add(row.cells[col.at]) end end end
 -------------------------------------------------------------------------------
 function DATA.new(i,src,     data,fun)
   i.rows, i.cols = {}, nil
@@ -101,11 +100,12 @@ function DATA.dist(i,row1,row2,cols,       d,n)
 
 function DATA.add(i,t)
   if   i.cols 
-  then push(i.rows, i.cols:add(t.cells and t or ROW(t))) 
+  then t = push(i.rows, t.cells and t or ROW(t))
+       i.cols:add(t)
   else i.cols=COLS(t) end end
 
 function DATA.sort(i,row1,row2)
-  local s1,s2,ys = 0,0,self.cols.y
+  local s1,s2,ys = 0,0,i.cols.y
   for _,col in pairs(ys) do
     local x = col:norm( row1.cells[col.at] )
     local y = col:norm( row2.cells[col.at]  )
@@ -115,10 +115,20 @@ function DATA.sort(i,row1,row2)
 
 function DATA.sorts(i)
   return sort(i.rows, function(a,b) return i:sort(a,b) end) end
+
+function DATA.learn(i,      some)
+  some = many(i.rows, the.samples)
+  for j=1,#some do
+    for k=j+1,#some do
+      row1,row2 = some[j], some[k]
+      print(o(row1.cells), o(row2.cells), i:dist(row1,row2,i.cols.y)) end end end 
 -------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
+
+function any(t) return t[math.random(#t)] end
+function many(t,n,    u) u={}; for _=1,n do u[1+#u]= any(t) end; return u end
 
 function push(t,x) t[1+#t]=x; return x end
 
@@ -131,8 +141,7 @@ function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
-function oo(t) print(o(t)); return t end
-function o(t,      fun)
+
   fun = function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
   return type(t)~="table" and tostring(t) or (
          "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}") end
@@ -176,7 +185,11 @@ egs.all= function()
 egs.num= function() oo(NUM()) end
 egs.sym= function() oo(SYM()) end
 egs.data=function() oo(DATA(the.file).cols.y) end
-egs.sort=function(    data)  data=DATA(the.file) end
+egs.sort=function(      data,rows)  
+  data=DATA(the.file)
+  rows = data:sorts()
+  oo(data.cols.names)
+  for i=1,#data.rows,32 do oo(rows[i].cells)  end end
 -------------------------------------------------------------------------------
 the=cli(the)
 eg(the.go, egs) 
