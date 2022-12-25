@@ -150,10 +150,12 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
 - Finally, there may or may not be some background knowledge $B$ which we can
   use to guide our analysis.
 
-Note that:
-- Theorem provers explore a set constraints defined in $B$.
-- Data miners are tools for dividing up $X$ and/or $Y$.
-- Optimizers are methods for jumping between better and worse $X$ and/or $Y$ 
+|What | Notes|
+|-----|------|:
+|Theorem provers | xplore a set constraints defined in $B$|
+| Data miners |   tools for dividing up $X$ and/or $Y$|
+| Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
+| Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
 
 In all the examples above,
 it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
@@ -319,6 +321,7 @@ As part of the results section:
 - Perform an _ABLATION STUDY_:
   - Given a preferred method $M$ containing two to four main ideas
     - Disable (or change) each one  thing. If anything get worse, declare that thing important.
+- Perform an HPO XXX
 
 ### Word limit
 
