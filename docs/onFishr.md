@@ -187,7 +187,7 @@ which _optimization_ is just a matter of finding the difference between good and
            Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
            https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
 
-## Some Terms 
+### Some Terms 
 
 |What | Notes|
 |----:|:------|
@@ -196,29 +196,25 @@ which _optimization_ is just a matter of finding the difference between good and
 | Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
 | Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
 
-The above covers a wide range of tasks:
+### Other Terms
 
-- If $|Y|>0$ then this is a _supervised problem_:
-  - _Regression_ and _classification_ is usually single goal problems for
-     numeric and symbolic goals (respectively).
-- _Semi-supervised learning_ is when  we have many examples but only
-    a small subset have $Y$ values... in which case we can do things like
-    spreading out the available $Y$ values over clusters within the $X$ values.
-- _Unsupervised learning_ is when we have no $Y$ values... in which case
-    we can do things like _cluster_ the $X$ variables then ask humans 
-    people to offer comments on each cluster.
-    - To reduce labeling do a recursive binary clustering
-      of the data down to leaf clusters of size $\sqrt{N}$. Then just label
-      the median point of these $\sqrt{N}$ clusters.
-- _Contrast learning_ means finding a minimal difference between clusters.
-- _Optimization_ is when we do trade-offs between competing goals.
-  - Single, multi (1,2,3), many goals (4 or more) -optimization[^many] have one, three, 
-      four, or more goals
-  - One way to build optimizers is to:
-    - cluster on $X$ 
-    - sort each cluster of their average $Y$ values
-    - generate clusters between clusters with worse and better $Y$ values.
-  - By the why hyper-parameter optimization is optimization through $Z,Y$ space.
+|What | Terms|
+|----:|:------|
+|supervised inference|  $|Y|>0$  |
+| regression | usually, for single numeric goals|
+|classification | single symbolic goal|
+|Semi-supervised learning|  When  we have many examples but only a small subset have $Y$ values... in which case we can do things like spreading out the available $Y$ values over clusters within the $X$ values.|
+| Unsupervised learning |  When we have no $Y$ values... in which case we can do things like _cluster_ the $X$ variables then ask humans people to offer comments on each cluster.  To reduce labeling do a recursive binary clustering of the data down to leaf clusters of size $\sqrt{N}$. Then just label the median point of these $\sqrt{N}$ clusters.|
+|Contrast learning | Finding a minimal difference between clusters.
+|  Single goal optimization| single goal|
+| Multi goal optimization | up to 3 goals|
+| Many goal optimization | 4 or more|
+|Hyper-parameter optimization| Optimization through $Z,Y$ space|
+
+One way to build optimizers is to: 
+- cluster on $X$
+- sort each cluster of their average $Y$ values
+- generate clusters between clusters with worse and better $Y$ values|
 
 [^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
 A survey of many-objective optimisation in search-based software engineering,
