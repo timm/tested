@@ -3,13 +3,13 @@ local the={seed=1, best=.5, go="help"}
 -----------------------------------------------------
 local COL,COLS
 local adds,add
-local cli,coerce,csv,eg, fmt,map,o,push,sort
+local cli,coerce,csv,eg,fmt,map,o,push,sort
 -----------------------------------------------------
-function COL(n,s)
+function COL(n,s,      i)
   i = {n=n or 0, txt=s or ""}
   i.w = i.txt:find"-$" and -1 or 1
   if i.txt:find"[A-Z]+" then
-    i.isNum=true
+    i.isNum = true
     i.lo =  math.huge
     i.hi = -math.huge 
   else 
@@ -57,8 +57,8 @@ function push(t,x) t[1+#t]=x; return x end
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 
-function map(t, fun) --> t; map function `fun`(k,v) over list (skip nil results) 
-  local u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
+function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
 function o(t,      funkv,funv,ok,u)
   if type(t)~="table" then return tostring(t) end
