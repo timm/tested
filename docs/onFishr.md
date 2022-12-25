@@ -187,7 +187,7 @@ which _optimization_ is just a matter of finding the difference between good and
            Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
            https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
 
-### Some Terms 
+### Some High-Level Terms 
 
 |What | Notes|
 |----:|:------|
@@ -196,7 +196,7 @@ which _optimization_ is just a matter of finding the difference between good and
 | Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
 | Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
 
-### Other Terms
+### Other Lower-Level Terms
 
 |What | Terms|
 |----:|:------|
