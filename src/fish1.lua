@@ -1,9 +1,41 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end
-local the={seed=1, best=.5, go="help"}
 -------------------------------------------------------------------------------
-local COL,COLS
-local adds,add
-local cli,coerce,csv,eg,fmt,map,o,push,sort
+--[[
+In this code:
+- vars are global by default unless marked with "local" or 
+  defined in function argument lists.
+- functions are names before they are used. Hence, these line: --]]
+local COL,ROW,COLS,DATA
+local update,updates, grow
+local cli,coerce,csv,eg,fmt,kap,map,o,push,sort,the
+--[[
+- There is only one data structure: a table.
+- Tables can have numeric or symbolic keys.
+- Tables start and end with {}
+- Global settings are stores in "the" table: --]]
+the={seed=1, best=.5, go="help"}
+--[[
+- For all `key=value` in `the`, a command line flag `-k X` means `value`=X
+- At startup, we run  `go[the.go]`
+- #t is length of the table t (and empty tables have #t==0)
+- Tables can have numeric or symbolic fields.
+- `for pos,x in pairs(t) do` is the same as python's 
+  `for pos,x in enumerate(t) do`
+
+In the function arguments, the following conventions usally apply:
+- n == number
+- s == string
+- t == table
+- is == boolean
+- x == anything
+- fun == function
+- UPPER = class
+- lower = instance; e.g. rx is an instance of RX
+- xs == a table of "x"; e.g. "ns" is a list of numbers
+- Two spaces denote start of optional args
+- Four spaces denote start of local args.
+--]]
+
 -------------------------------------------------------------------------------
 function COL(n,s,      i)
   i = {n=n or 0, txt=s or ""}
@@ -16,7 +48,7 @@ function COL(n,s,      i)
     i.has={} end
   return i end
 
-function add(col,x)
+function update(col,x)
   if x ~="?" then
     col.n = col.n + 1
     if   col.isNum 
@@ -27,31 +59,31 @@ function add(col,x)
 function ROW(t) return {cells=t, yseen=true} end
 -------------------------------------------------------------------------------
 function COLS(t,     col,cols)
-  cols = {names=t, all={}, x={},y={}}
+  cols = {names=t, all={}, x={}, y={}}
   for n,s in pairs(t) do 
     col = push(cols.all, COL(n,s))
     if not s:find"X$" then
       push(s:find"[!+-]$" and cols.y or cols.x, col) end end 
   return cols end
     
-function adds(cols, row)
+function updates(cols, row)
   for _,t in pairs{cols.x, cols.y} do
     for _,col in pairs(t) do
-      add(col, row.cells[col.at]) end end
+      update(col, row.cells[col.at]) end end
   return row end
 -------------------------------------------------------------------------------
-function DATA(src,     data)
+function DATA(src,     data,fun)
   data = {rows={}, cols=nil}
-  if   type(src) == "string" 
-  then csv(src,       function(x) update(data,x) end)
-  else map(src or {}, function(x) update(data,x) end) end
+  fun  = function(x) add(data,x) end
+  if type(src) == "string" then csv(src,fun) else map(src or {}, fun) end
   return data end 
   
-function update(data,t)
+function add(data,t)
   if   data.cols 
-  then push(data.rows, adds(data.cols, t.cells and t or ROW(t))) 
+  then push(data.rows, updates(data.cols, t.cells and t or ROW(t))) 
   else data.cols = COLS(t) end end
 -------------------------------------------------------------------------------
+-- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
 
@@ -67,14 +99,13 @@ function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
 function o(t,      fun)
-  if type(t)~="table" then return tostring(t) end
-  fun=function(k,v) if k:find"^_" then return fmt(":%s %s",k,o(v)) end end
-  return "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}" end
+  fun = function(k,v) if tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
+  return type(t)~="table" and tostring(t) or
+         "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}" end
 
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
-    if s1=="true"  then return true  end
-    if s1=="false" then return false end
+    if s1=="true" then return true elseif s1=="false" then return false end
     return s1 end
   return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
 
