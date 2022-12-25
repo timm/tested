@@ -234,10 +234,10 @@ Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/e
 write a 
 multi-objective 
 semi-supervised explanation system:
-- multi-objective; i.e. $|Y|>1$
-- semi-supervised; i.e. given $N$ examples, you only have a limited budget
-  $B_0\in$ (10,20,50,100,200,500,...) of times you can access the $Y$ values of any one example.
-- explanation: extract some _useful_ succinct summary from the data
+- Multi-objective; i.e. $|Y|>1$
+- Semi-supervised; i.e. given $N$ examples, you only have a limited budget
+  $B_0 \ll N$ of times you can access the $Y$ values of any one example.
+- Explanation (bonus marks): extract some _useful_ succinct summary from the data
   - here, _useful_ means if that summary is applied  to the data, then some 
    $m \ll N$ good examples
     will be selected (and "good" means "has good $Y$ values).
@@ -298,13 +298,21 @@ Expected Sections:
 - References
 
 Bonus marks: as part of the results section
-- Perform a "February" study:
+- Perform a _REQUIREMENTS STUDY_
+  - For 5 humans, run 5 repertory grids studies. 
+  - Compare the results:
+    - against a recursive bi-clustering  of the data plus
+      some hierarchical feature selection
+    - against results from other humans
+    - Is there anyway way the intra-human views (or the view between human an data)
+      can be aligned? 
+- Perform a _FEBRUARY STUDY_ (requires an explanation facility, as described above)
   - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
      such that this kind of future analysis gets simpler.
   - So pretend its February and we have come back to a some similar problem (like what was
         studied in January). Using what was learned in January, can the same task be solved
         with less budget $B_1 < B_0$?
-- Perform an "ablation" study
+- Perform an _ABLATION STUDY_:
   - Given a preferred method $M$ containing two to four main ideas
     - Disable (or change) each one  thing. If anything get worse, declare that thing important.
 
