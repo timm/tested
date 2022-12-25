@@ -13,7 +13,7 @@ local cli,coerce,csv,eg,fmt,kap,map,o,push,sort,the
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
 - Global settings are stores in "the" table: --]]
-the={seed=1, best=.5, go="help"}
+the={p=2, seed=10019, best=.5, go="help"}
 --[[
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
 - At startup, we run  `go[the.go]`
@@ -83,7 +83,7 @@ function updates(cols, row)
 function dists(cols,row1,row2,       d,n)
   d,n = 0,1E-32
   for _,col in pairs(cols) do
-    d = d + dist(col,row1.cells[col.at], row2.cells[col.at])^the.p
+    d = d + dist(col, row1.cells[col.at], row2.cells[col.at])^the.p
     n = n + 1 end
   return (d/n)^(1/the.p) end
 
