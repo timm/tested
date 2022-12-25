@@ -286,12 +286,6 @@ Expected Sections:
         - Non-parametric effect size and significance tests
   - Perform a "prudence" study 
     - as sampling size increases, your proposed methods should get better
-  - Perform a "February" study:
-      - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
-        such that this kind of future analysis gets simpler.
-      - So pretend its February and we have come back to a some similar problem (like what was
-        studied in January). Using what was learned in January, can the same task be solved
-        with less budget $B_1 < B_0$?
   - Discussion of your results divided into your research questions.
     - a clear commentary on what worked best
     - if any unusual results, then acknowledge them and comment on them
@@ -302,6 +296,17 @@ Expected Sections:
   - Future work: what you did not have time to do, what you suggest to do next
 - Conclusion
 - References
+
+Bonus marks: as part of the results section
+- Perform a "February" study:
+  - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
+     such that this kind of future analysis gets simpler.
+  - So pretend its February and we have come back to a some similar problem (like what was
+        studied in January). Using what was learned in January, can the same task be solved
+        with less budget $B_1 < B_0$?
+- Perform an "ablation" study
+  - Given a preferred method $M$ containing two to four main ideas
+    - Disable (or change) each one  thing. If anything get worse, declare that thing important.
 
 ### Word limit
 
