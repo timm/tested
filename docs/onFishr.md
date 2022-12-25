@@ -129,7 +129,7 @@ but after a few experiments, they ship a product. For example:
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
       2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
 
-[^nn]: ![](/etc/img/knnhpo.png)
+[^nn]: <a href="/etc/img/knnhpo.png">All the params inside nearest neighbor</a>
 
 XXXX leanr from audit1 abple o 1=1
 
