@@ -5,24 +5,22 @@ In this code:
 - vars are global by default unless marked with "local" or 
   defined in function argument lists.
 - functions are names before they are used. Hence, these line: --]]
-local COL,ROW,COLS,DATA
-local update,updates, grow
-local cli,coerce,csv,eg,fmt,kap,map,o,push,sort,the
+local cli,coerce,csv,eg,fmt,kap,map,o,oo,obj,push,sort,the
 --[[
 - There is only one data structure: a table.
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
 - Global settings are stores in "the" table: --]]
-the={p=2, seed=10019, best=.5, go="help"}
+the = {best=.5, file="../etc/data/auto93.csv", go="help", p=2, seed=10019}
 --[[
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
-- At startup, we run  `go[the.go]`
+- At startup, we run `go[the.go]`
 - #t is length of the table t (and empty tables have #t==0)
 - Tables can have numeric or symbolic fields.
 - `for pos,x in pairs(t) do` is the same as python's 
   `for pos,x in enumerate(t) do`
 
-In the function arguments, the following conventions usally apply:
+In the function arguments, the following conventions apply (usually):
 - n == number
 - s == string
 - t == table
@@ -33,71 +31,90 @@ In the function arguments, the following conventions usally apply:
 - lower = instance; e.g. rx is an instance of RX
 - xs == a table of "x"; e.g. "ns" is a list of numbers
 - Two spaces denote start of optional args
-- Four spaces denote start of local args.
---]]
+- Four spaces denote start of local args.  --]]
 -------------------------------------------------------------------------------
-function ROW(t) return {cells=t, yseen=true} end
--------------------------------------------------------------------------------
-function COL(n,s,      i)
-  i = {n=n or 0, txt=s or ""}
-  i.w = i.txt:find"-$" and -1 or 1
-  if i.txt:find"[A-Z]+" then
-    i.isNum = true
-    i.lo =  math.huge
-    i.hi = -math.huge 
-  else 
-    i.has={} end
-  return i end
+function obj(s,    t,new) --> t; create a klass and a constructor + print method
+  function new(_,...) local i=setmetatable({a=s}, t); t.new(i,...); return i end
+  t={}; t.__index = t;return setmetatable(t, {__call=new}) end
 
-function update(col,x)
-  if x ~="?" then
-    col.n = col.n + 1
-    if   col.isNum 
-    then col.lo = math.min(col.lo,x)
-         col.hi = math.max(col.hi,x)
-    else col.has[x] = 1 + col.has[x] end end end
-
-function dist(col,x,y)
-  if x=="?" and y=="?" then return 1 end
-  if col.isNum 
-  then x,y = norm(col,x), norm(col,y)
-       if x=="?" then x = y<.5 and 1 or 0 end
-       if y=="?" then y = x<.5 and 1 or 0 end
-       return math.abs(x - y) 
-  else return x==y and 0 or 1 end end
+local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
 -------------------------------------------------------------------------------
-function COLS(t,     col,cols)
-  cols = {names=t, all={}, x={}, y={}}
+function ROW.new(i,t) i.cells=t; i.yseen=true end
+-------------------------------------------------------------------------------
+function NUM.new(i,n,s)
+  i.at, i.txt, i.n = n or 0, s or "", 0
+  i.w  = i.txt:find"-$" and -1 or 1
+  i.lo =  math.huge
+  i.hi = -math.huge end
+
+function NUM.add(i,x)
+  if x ~="?" then 
+    i.n  = i.n + 1
+    i.lo = math.min(i.lo,x)
+    i.hi = math.max(i.hi,x) end end
+
+function NUM.dist(i,n1,n2)
+  if n1=="?" and n2=="?" then return 1 end
+  n1,n2 = i:norm(n1), i:norm(n2)
+  if n1=="?" then n1 = n2<.5 and 1 or 0 end
+  if n2=="?" then n2 = n1<.5 and 1 or 0 end
+  return math.abs(n1 - n2) end 
+
+function NUM.norm(i,n)
+  return n == "?" and n  or (n - i.lo)/(i.hi - i.lo + 1E-32) end
+-------------------------------------------------------------------------------
+function SYM.new(i,n,s)
+  i.at, i.txt, i.n, i.has = n or 0,  s or "", 0, {} end
+
+function SYM.add(i,s)
+  if x ~="?" then 
+    i.n = i.n + 1
+    i.has[s] = 1 + (i.has[s] or 0) end end 
+
+function SYM.dist(i,s1,s2)
+  return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
+-------------------------------------------------------------------------------
+function COLS.new(i,t,     col,cols)
+  i.names, i.all, i.x, i.y = t, {}, {}, {}
   for n,s in pairs(t) do 
-    col = push(cols.all, COL(n,s))
+    col = push(i.all, s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s))
     if not s:find"X$" then
-      push(s:find"[!+-]$" and cols.y or cols.x, col) end end 
-  return cols end
+      push(s:find"[!+-]$" and i.y or i.x, col) end end end
     
-function updates(cols, row)
-  for _,t in pairs{cols.x, cols.y} do
+function COLS.add(i,row)
+  for _,t in pairs{i.x, i.y} do
     for _,col in pairs(t) do
-      update(col, row.cells[col.at]) end end
+      col:add(row.cells[col.at]) end end
   return row end
-
-function dists(cols,row1,row2,       d,n)
+-------------------------------------------------------------------------------
+function DATA.new(i,src,     data,fun)
+  i.rows, i.cols = {}, nil
+  fun = function(x) i:add(x) end
+  if type(src) == "string" then csv(src,fun) else map(src or {}, fun) end end
+  
+function DATA.dist(i,row1,row2,cols,       d,n)
   d,n = 0,1E-32
-  for _,col in pairs(cols) do
-    d = d + dist(col, row1.cells[col.at], row2.cells[col.at])^the.p
+  for _,col in pairs(cols or i.cols.x) do
+    d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p
     n = n + 1 end
   return (d/n)^(1/the.p) end
 
--------------------------------------------------------------------------------
-function DATA(src,     data,fun)
-  data = {rows={}, cols=nil}
-  fun  = function(x) add(data,x) end
-  if type(src) == "string" then csv(src,fun) else map(src or {}, fun) end
-  return data end 
-  
-function add(data,t)
-  if   data.cols 
-  then push(data.rows, updates(data.cols, t.cells and t or ROW(t))) 
-  else data.cols = COLS(t) end end
+function DATA.add(i,t)
+  if   i.cols 
+  then push(i.rows, i.cols:add(t.cells and t or ROW(t))) 
+  else i.cols=COLS(t) end end
+
+function DATA.sort(i,row1,row2)
+  local s1,s2,ys = 0,0,self.cols.y
+  for _,col in pairs(ys) do
+    local x = col:norm( row1.cells[col.at] )
+    local y = col:norm( row2.cells[col.at]  )
+    s1      = s1 - math.exp(col.w * (x-y)/#ys)
+    s2      = s2 - math.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
+
+function DATA.sorts(i)
+  return sort(i.rows, function(a,b) return i:sort(a,b) end) end
 -------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
@@ -114,10 +131,11 @@ function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
+function oo(t) print(o(t)); return t end
 function o(t,      fun)
-  fun = function(k,v) if tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
-  return type(t)~="table" and tostring(t) or
-         "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}" end
+  fun = function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
+  return type(t)~="table" and tostring(t) or (
+         "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}") end
 
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
@@ -139,7 +157,7 @@ function cli(options) --> t; update key,vals in `t` from command-line flags
     for n,x in ipairs(arg) do
       if x=="-"..(k:sub(1,1)) or x=="--"..k then
          v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = coerce(v) end
+    options[k] = coerce(v)  end
   return options end
 
 function eg(k,egs,    b4)
@@ -152,8 +170,13 @@ function eg(k,egs,    b4)
 local egs={}
 
 egs.all= function() 
-  for _,k in sort(map(egs,function(k,_) return k end)) do
-    if k ~= "all" and k:sub(1,1) ~= "_" then eg(l) end end end 
+  for _,k in sort(kap(egs,function(k,_) return k end)) do
+    if k ~= "all" then eg(l) end end end 
+
+egs.num= function() oo(NUM()) end
+egs.sym= function() oo(SYM()) end
+egs.data=function() oo(DATA(the.file).cols.y) end
+egs.sort=function(    data)  data=DATA(the.file) end
 -------------------------------------------------------------------------------
 the=cli(the)
 eg(the.go, egs) 
