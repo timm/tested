@@ -20,10 +20,6 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 _"It is our choices, Harry, that show what<br> we truly are, far more than our abilities."_     
 -- Albus Percival Wulfric Brian Dumbledore  
 
-XXXX assignemnt spec  
-XXXX lessons learned from x applied to y...
-XXX wat tohnad in
-
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
 First, astronomers  learn how to grind lens.  Next, they use those
 lens to explore the universe.
@@ -137,8 +133,6 @@ but after a few experiments, they ship a product. For example:
 [^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*,<br> 
 weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
 metric_params=None,<br> n_jobs=None)¶</em>
-
-XXXX leanr from audit1 abple o 1=1
 
 ## Let's say that another way.
 
