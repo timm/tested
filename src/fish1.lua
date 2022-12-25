@@ -1,10 +1,10 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end
 local the={seed=1, best=.5, go="help"}
------------------------------------------------------
+-------------------------------------------------------------------------------
 local COL,COLS
 local adds,add
 local cli,coerce,csv,eg,fmt,map,o,push,sort
------------------------------------------------------
+-------------------------------------------------------------------------------
 function COL(n,s,      i)
   i = {n=n or 0, txt=s or ""}
   i.w = i.txt:find"-$" and -1 or 1
@@ -19,12 +19,13 @@ function COL(n,s,      i)
 function add(col,x)
   if x ~="?" then
     col.n = col.n + 1
-    if col.isNum then 
-      col.lo = math.min(col.lo,x)
-      col.hi = math.max(col.hi,x)
-    else
-      col.has[x] = 1 + col.has[x] end end end
-
+    if   col.isNum 
+    then col.lo = math.min(col.lo,x)
+         col.hi = math.max(col.hi,x)
+    else col.has[x] = 1 + col.has[x] end end end
+-------------------------------------------------------------------------------
+function ROW(t) return {cells=t, yseen=true} end
+-------------------------------------------------------------------------------
 function COLS(t,     col,cols)
   cols = {names=t, all={}, x={},y={}}
   for n,s in pairs(t) do 
@@ -33,22 +34,24 @@ function COLS(t,     col,cols)
       push(s:find"[!+-]$" and cols.y or cols.x, col) end end 
   return cols end
     
-function adds(i,t)
-  for _,cols in pairs({i.x, i.y}) do
+function adds(cols,row)
+  for _,cols in pairs{cols.x, cols.y} do
     for _,col in pairs(cols) do
-      add(col, t[col.at]) end end
+      add(col, row.cells[col.at]) end end
   return t end
 
-function DATA(src,     fun,data)
-  data={rows={},cols=nil}
-  fun=function(x) row(data,x) end
-  if type(src)=="string" then csv(src,fun) else map(src or {}, fun) end
+function DATA(src,     data)
+  data = {rows={}, cols=nil}
+  if   type(src) == "string" 
+  then csv(src,       function(x) update(data,x) end)
+  else map(src or {}, function(x) update(data,x) end) end
   return data end 
   
-function row(data,t)
-  if data.cols then push(data.rows, adds(data.cols,t)) 
-               else data.cols = COLS(t) end end
------------------------------------------------------
+function update(data,t)
+  if   data.cols 
+  then push(data.rows, adds(data.cols, t.cells and t or ROW(t))) 
+  else data.cols = COLS(t) end end
+-------------------------------------------------------------------------------
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
 
@@ -58,14 +61,15 @@ function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 
 function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do u[#u+1]=fun(v); end; return u end
+
+function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
-function o(t,      funkv,funv,ok,u)
+function o(t,      fun)
   if type(t)~="table" then return tostring(t) end
-  ok    = function(k)   return tostring(k):sub(1,1) ~= "_" end
-  funkv = function(k,v) if ok(k) then return fmt(":%s %s",k,o(v)) end end
-  funv  = function(_,v) return o(v) end
-  return "{"..table.concat(#t>0 and map(t,funv) or sort(map(t,funkv))," ") .."}" end
+  fun=function(k,v) if k:find"^_" then return fmt(":%s %s",k,o(v)) end end
+  return "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}" end
 
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
@@ -97,13 +101,13 @@ function eg(k,egs,    b4)
     math.randomseed(the.seed)
     egs[k]() 
     for k,v in pairs(b4) do the[k]=v end end end
----------------------------------------------------
+-------------------------------------------------------------------------------
 local egs={}
 
 egs.all= function() 
   for _,k in sort(map(egs,function(k,_) return k end)) do
     if k ~= "all" and k:sub(1,1) ~= "_" then eg(l) end end end 
-      
+-------------------------------------------------------------------------------
 the=cli(the)
-eg(the.go,egs) 
+eg(the.go, egs) 
 for k,v in pairs(_ENV) do if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
