@@ -151,7 +151,7 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
   use to guide our analysis.
 
 |What | Notes|
-|-----|------|
+|----:|:------|
 |Theorem provers | explores  a set constraints defined in $B$|
 | Data miners |   tools for dividing up $X$ and/or $Y$|
 | Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
