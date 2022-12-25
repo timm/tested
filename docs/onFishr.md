@@ -140,6 +140,14 @@ metric_params=None,<br> n_jobs=None)¶</em>
 
 <img width=400 align=right src="/etc/img/2space.png">
 
+|What|Notes}
+|----:|:------|
+| X   | inputs|
+|Y    | goals|
+|F    | maps X to Y|
+|W    | weights on the goals|
+|Z    | parameters controlling the learners that generates F|
+
 We seek  a mapping $F$ such that $Y=F(X)$ where:
 - $X$ and $Y$ are sets of decisions and goals
 - Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
