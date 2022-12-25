@@ -5,7 +5,7 @@ In this code:
 - vars are global by default unless marked with "local" or 
   defined in function argument lists.
 - functions are names before they are used. Hence, these line: --]]
-local cli,coerce,csv,eg,fmt,kap,map,o,oo,obj,push,sort,the
+local any,cli,coerce,csv,eg,fmt,kap,many,map,o,oo,obj,push,sort,the
 --[[
 - There is only one data structure: a table.
 - Tables can have numeric or symbolic keys.
@@ -121,7 +121,7 @@ function DATA.learn(i,      some)
   for j=1,#some do
     for k=j+1,#some do
       row1,row2 = some[j], some[k]
-      print(o(row1.cells), o(row2.cells), i:dist(row1,row2,i.cols.y)) end end end 
+      print(o(row1.cells), o(row2.cells),2, i:dist(row1,row2,i.cols.y)) end end end 
 -------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
@@ -141,7 +141,8 @@ function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
-
+function oo(t) print(o(t)); return t end
+function o(t,     fun)
   fun = function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
   return type(t)~="table" and tostring(t) or (
          "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ") .."}") end
