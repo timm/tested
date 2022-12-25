@@ -33,15 +33,24 @@ to table our next challenge. How can we help
 people use our software tools to better
 explore (and change) the world around us?
 
-Our answer is based on a refactoring approach. 
-We look for commonalities and simplifications of the "exploration" process.
-When SE developers explore software, it is called "testing". When
+
+Our answer is based on an idea from the 1990s[^me96]: 
+to test "it", you have to run "it". To say that another way,
+a properly
+implemented "test" engine is also an "inference" engine.
+And if we do it that way, then we have a unified framework
+for both testing  and execution.
+For example, 
+when SE developers explore software, it is called "testing". When
 non-developers explore software it is called many things such as
 "acceptance testing", "auditing", etc.  By refactoring those two
 approaches, and adding in some AI, we can implement a kind of
 incremental agile acceptance process where developers, and the
 others, can use lessons from past tests to improve subsequent
 versions.
+
+[^me96]: [On the Practicality of Abductive Validation](https://d1wqtxts1xzle7.cloudfront.net/1189844/57jb73rfr4wygz2.pdf?1425075060=&response-content-disposition=inline%3B+filename%3DOn_the_Practicality_of_Abductive_Validat.pdf&Expires=1671930452&Signature=BApU0XRhl8BjEdE0UaGjG2xWjopeKj9MaNb~UYbfJIe5gLEfpynx08Usk-5ga~cGh9kRwk6vRPdZ1iRVJeVZO3KJ5oxsFXgcsex~iay0uNQBk-H43EKm5TNKRU5SfXWFs~re9erwkOUT7XvIwWGjdwHPCtZo3AvsAbhdkOcu~GekEPA1Kh9mpra0W4EzSisMmRj1iWld8O3iYrXq16etQ1NVaPsfdCQ-46ck6grkpjdttvE04W2HSowijrAdJAaKssBBHJ5w1AAESVAzpnvMvSDq732Gyre7vDJocjRtgF-DWDJSpFVzx3DXrbSdcxj1Z3rbCEsJQNgY8Fp0Qbffsg__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+         Menzies, Tim. ECAI. Vol. 96,  1996.
 
 Q1) But wait, is this an AI subject or a SE subject?   
 A1) Yes.
@@ -90,13 +99,26 @@ Your software is being assessed by a focus group (a set of stakeholders).
 
 Software analytics learn models from data. Data labels are often incorrect[^tu] and
 so they need to be checked before they are used. But data sets can be huge, and relabelling
-everything can be so expensive.  S
+everything can be so expensive. So can our software tells us what is the least number  of
+examples to label?
+
+[^tu]: H. Tu, Z. Yu and T. Menzies, "Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction)," in IEEE Transactions on Software Engineering, vol. 48, no. 1, pp. 278-294, 1 Jan. 2022, doi: 10.1109/TSE.2020.2986415.
+https://arxiv.org/pdf/1905.01719.pdf
+"We
+compare the time required to label commits from 50
+projects via EMBLEM of manual means. Assuming we
+were paying Mechanical Turk workers to perform that
+labelling, then manual labelling would cost $320K and
+39,000 hours (assuming pairs of workers per commit,
+and a 50% cull rate for quality control). Using EMBLEM,
+that same task would cost $40K and 4,940 hours; i.e.
+it would be 8 times cheaper."
 
 <a href="/etc/img/fairness.png"><img width=400 align=right src="/etc/img/fairness.png"></a>
 A software engineer can't try   options
 but after a few experiments, they ship a product. For example:
 - Data miners are controlled by billions of hyper-parameter options that control (e.g.)
-    the shape of a neural net or how many neighbors your use for classification.
+    the shape of a neural net or how many neighbors your use for classification[^nn].
     These parameters let you trade off (e.g.) how many mistakes you tolerate
     versus how many results you return; or accuracy versus fairness[^cruz21].
 - MySQL's Makefile has billions of configurations options, each of
@@ -107,13 +129,21 @@ but after a few experiments, they ship a product. For example:
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
       2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
 
+[^nn]: ![](/etc/img/knnhpo.png)
+
 XXXX leanr from audit1 abple o 1=1
 
 ## Let's say that another way.
 
 <img width=400 align=right src="/etc/img/2space.png">
 
-We seek  a mapping $F$ such that $Y=F(X)$ where $X$ and $Y$ are sets of decisions and goals.
+We seek  a mapping $F$ such that $Y=F(X)$ where:
+- $X$ and $Y$ are sets of decisions and goals
+- Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
+- We might have access to a set of weights $W$ for each $Y$ value;
+  e.g. if $W_i<0$ then we might seek solutions that  minimize $Y_i$.
+- Under the hood, we might also have $Z$, a set of hyper-parameters
+  that control the algorithms that find $F$.
 
 It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
@@ -122,9 +152,17 @@ It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
 Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
     the task at hand).
 
-Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
-- single, multi, many goal-optimization have one, three, or more goals
+If $|Y|>0$ then this is a supervised problem:
+  - Semi-supervised learning is when  we have many examples but only
+    a small subset have $Y$ values... in which case we can do things like
+    spreading out the available $Y$ values over local clusters in the 
+    $X$ values.
+  - Unsupervised learning is when we have no $Y$ values... in which case
+    we can do things like cluster the $X$ variables then ask humans 
+    people to offer comments on each cluster.
 - Numeric and symbolic goals are also know as _regression_ and _classification_ tasks.
+- Single, multi, many goal-optimization have one, three, or more goals
+
 
 There can be many goals $Y$ and some are  contradictory (e.g. security and availability
     can be mutually exclusive).
