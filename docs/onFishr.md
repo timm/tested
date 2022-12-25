@@ -72,10 +72,12 @@ Is all that too complex for you, lets make it simple. Lets go "fishing".,
 ## Lets Go "Fishing"
 Consider the following tasks:
 - What is the same across all of them? 
-- And, assuming we have to repeat these tasks (say) once every month, what
-    what can be learn in March,June,October that might make all these
-    easier in June, October, December.
+- What is learned for "February"; i.e.  if we run did an audit in January, then in February,
+    what have we learned from January that makes February easier?
 
+
+    And, assuming we have to repeat these tasks (say) once every month, what
+If analysts used budget $B_0$ in January to reach some conclusions, 
 You are the captain of a fishing boat.
 Your boat has a crew of six. Each day, before you catch
   anything, you waste hours burning expensive fuel traveling between promising
