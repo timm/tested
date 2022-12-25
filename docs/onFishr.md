@@ -40,6 +40,7 @@ a properly
 implemented "test" engine is also an "inference" engine.
 And if we do it that way, then we have a unified framework
 for both testing  and execution.
+
 For example, 
 when SE developers explore software, it is called "testing". When
 non-developers explore software it is called many things such as
@@ -73,7 +74,11 @@ try to learn the most, using the least samples.
 Is all that too complex for you, lets make it simple. Lets go "fishing"., 
 
 ## Lets Go "Fishing"
-Consider the following examples. What is the same across all of them?
+Consider the following tasks:
+- What is the same across all of them? 
+- And, assuming we have to repeat these tasks (say) once every month, what
+    what can be learn in March,June,October that might make all these
+    easier in June, October, December.
 
 You are the captain of a fishing boat.
 Your boat has a crew of six. Each day, before you catch
@@ -146,25 +151,15 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
   e.g. if $W_i<0$ then we might seek solutions that  minimize $Y_i$.
 - Under the hood, we might also have $Z$, a set of hyper-parameters
   that control the algorithms that find $F$.
+- Finally, there may or may not be some background knowledge $B$ which we can
+  use to guide our analysis.
 
-It is cheap to sample $X$ and very, very, very expensive to sample $Y$,
+Often it is cheap to sample $X$ and very, very, very expensive to sample $Y$,
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
 - e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
 
 Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
     the task at hand).
-
-If $|Y|>0$ then this is a supervised problem:
-  - Semi-supervised learning is when  we have many examples but only
-    a small subset have $Y$ values... in which case we can do things like
-    spreading out the available $Y$ values over local clusters in the 
-    $X$ values.
-  - Unsupervised learning is when we have no $Y$ values... in which case
-    we can do things like cluster the $X$ variables then ask humans 
-    people to offer comments on each cluster.
-- Numeric and symbolic goals are also know as _regression_ and _classification_ tasks.
-- Single, multi, many goal-optimization have one, three, or more goals
-
 
 There can be many goals $Y$ and some are  contradictory (e.g. security and availability
     can be mutually exclusive).
@@ -172,6 +167,32 @@ There can be many goals $Y$ and some are  contradictory (e.g. security and avail
  - And in those cases, sometimes the exploration can be just (or more) insightful than actually getting find an answer.
  - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
           bursting with its own corrections. You can keep your sterile truth for yourself.</em>
+
+The above covers a wide range of tasks:
+
+- If $|Y|>0$ then this is a _supervised problem_:
+  - _Regression_ and _classification_ is usually single goal problems for
+     numeric and symbolic goals (respectively).
+- _Semi-supervised learning_ is when  we have many examples but only
+    a small subset have $Y$ values... in which case we can do things like
+    spreading out the available $Y$ values over clusters within the $X$ values.
+- _Unsupervised learning_ is when we have no $Y$ values... in which case
+    we can do things like _cluster_ the $X$ variables then ask humans 
+    people to offer comments on each cluster.
+    - To reduce labeling do a recursive binary clustering
+      of the data down to leaf clusters of size $\sqrt{N}$. Then just label
+      the median point of these $\sqrt{N}$ clusters.
+- _Contrast learning_ means finding a minimal difference between clusters.
+- _Optimization_ is when we do trade-offs between competing goals.
+  - Single, multi, many goal-optimization have one, three, or more goals
+  - One way to build optimizers is to:
+    - cluster on $X$ 
+    - sort each cluster of their average $Y$ values
+    - generate clusters between clusters with worse and better $Y$ values.
+
+## Project
+
+Given data sets with multiple $Y$ columns
 
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
           Search through available alternatives till an acceptability threshold is met.i
