@@ -138,7 +138,6 @@ metric_params=None,<br> n_jobs=None)¶</em>
 
 ## Let's say that another way.
 
-<img width=400 align=right src="/etc/img/2space.png">
 
 |What|Notes}
 |----:|:------|
@@ -147,6 +146,8 @@ metric_params=None,<br> n_jobs=None)¶</em>
 |F    | maps X to Y|
 |W    | weights on the goals|
 |Z    | parameters controlling the learners that generates F|
+
+<img width=400 align=right src="/etc/img/2space.png">
 
 We seek  a mapping $F$ such that $Y=F(X)$ where:
 - $X$ and $Y$ are sets of decisions and goals
