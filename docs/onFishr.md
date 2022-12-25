@@ -170,6 +170,26 @@ There can be many goals $Y$ and some are  contradictory (e.g. security and avail
 - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
   bursting with its own corrections. You can keep your sterile truth for yourself.</em>
 
+Historically, in the SE community this is known as _search-based software engineering_
+[^search]:
+- Which explores issues like:
+  - What is the smallest set of test cases that covers all branches in this program?
+  - What is the best way to structure the architecture of this system to enhance its maintainability?
+  - What is the set of requirements that balances software development cost and customer satisfaction?
+  - What is the best allocation of resources to this software development project?
+  - What is the best sequence of refactoring steps to apply to this system?
+- Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
+  and   hill climbing.
+
+Having tried many of those, I now prefer
+something called "landscape analysis" where  data mining divides up a problem (after
+which _optimization_ is just a matter of finding the difference between good and bad divisions).
+
+
+[^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
+           Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
+           https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
+
 The above covers a wide range of tasks:
 
 - If $|Y|>0$ then this is a _supervised problem_:
@@ -186,18 +206,122 @@ The above covers a wide range of tasks:
       the median point of these $\sqrt{N}$ clusters.
 - _Contrast learning_ means finding a minimal difference between clusters.
 - _Optimization_ is when we do trade-offs between competing goals.
-  - Single, multi, many goal-optimization have one, three, or more goals
+  - Single, multi (1,2,3), many goals (4 or more) -optimization[^many] have one, three, 
+      four, or more goals
   - One way to build optimizers is to:
     - cluster on $X$ 
     - sort each cluster of their average $Y$ values
     - generate clusters between clusters with worse and better $Y$ values.
   - By the why hyper-parameter optimization is optimization through $Z,Y$ space.
 
-## Project
+[^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
+A survey of many-objective optimisation in search-based software engineering,
+Journal of Systems and Software,
+Volume 149,
+2019,
+Pages 382-395,
+ISSN 0164-1212,
+https://doi.org/10.1016/j.jss.2018.12.015.
+https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_optimisation_in_search-based_software_engineering
 
-Note: you may not understand some parts of the following... yet. Patience, 
 
-Find function $F$ that selects 
+## Project 
+
+(Note: you may not understand some parts of the following... yet;  patience, dear reader.)
+
+
+Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/etc/data)
+write a 
+multi-objective semi-supervised explanation.
+
+Find function $F$ that selects for good $Y$, but learned using mininal $Y$ samples.
+
+Describe your method. Describe the process that lead you to that method.
+Baseline your method against some human-level sampling process (see  Table1 of
+Baltes et al.[^ralph])
+
+Expected Sections:
+
+- Introduction 
+  - First 4 paras:
+    1. Everyone does X
+    2. There is a problem with X
+    3. We have a novel insight that means that problem might be solvable
+    4.  So here's what we did. 
+  - Section 1.1 : Structure of this paper
+    - List of research questions and a very brief summary of your answers
+    - List of overall contributions (the elevator speech, why is this paper is good).
+    - Caveats (for this study, we did not explore Z because of Y)
+- Related work
+  - What every else did in the past
+  - Why that is not good enough, for our purposes (i.e. why are we not doing it some old way)
+  - What system from past work is state of the art (and will be used in your comparisons)
+  - Note: your related work section must demonstrate your understand the 
+    multi-objective semi-supervised explanation problem.
+- Methods
+  - Algorithms
+  - Data
+  - Performance measures
+  - Summarization methods
+    - statistical methods, what you selected and why
+      - please demonstrate that you understand effect size and significance testing
+    - explaining any novel visualizations you will use in your results section (if there are any)
+  - Note: please demonstrate that you actually have a clear understanding of all these methods.
+- Results
+   - Run with different y-sampling budgets ($B_0 \in (10,25,50,100,200,500...)$)
+     - For different methods (including comparisons to at least one prior state-of-the-art method):
+        - Repeated 20 times (with different random number seeds)
+        - Some presentation of median and spread of results over 20 runs 
+        - Non-parametric effect size and significance tests
+  - Perform a "prudence" study 
+    - as sampling size increases, your proposed methods should get better
+  - Perform a "February" study:
+      - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
+        such that this kind of future analysis gets simpler.
+      - So pretend its February and we have come back to a some similar problem (like what was
+        studied in January). Using what was learned in January, can the same task be solved
+        with less budget $B_1 < B_)$?
+  - Discussion of your results divided into your research questions.
+    - a clear commentary on what worked best
+    - if any unusual results, then acknowledge them and comment on them
+  - Tables, figures, with best results distinguished from the non-best
+- Discussion
+  - Threats to Validity
+  - Discussion: any bigger picture insights not present in the rest of the text?
+  - Future work: what you did not have time to do, what you suggest to do next
+- Conclusion
+- References
+
+### Word limit
+
+The following limits exclude references.
+
+- No less that five pages 
+  - no more than eight 
+- HARD LIMITS:
+  - we will not grade after eight pages.
+  - we will not read if less than five.
+  - we will not read if it is the wrong format (see below)
+
+### How to write
+
+Create an overleaf.com account
+
+- Go to https://www.overleaf.com/gallery/tagged/ieee-official
+- Select :IEEE Bare Demo Template for conferences"
+  -  https://www.overleaf.com/latex/templates/ieee-bare-demo-template-for-conferences/ypypvwjmvtdf
+- Hit "open as template"
+- Add your name and email to list of authors.
+-  Add these lines before `\begin{document}`
+
+         \usepackage[switch]{lineno}
+         \linenumbers
+
+
+[^ralph]: Baltes, S., Ralph, P. Sampling in software engineering research: 
+          a critical review and guidelines. Empir Software Eng 27, 94 (2022).
+          https://doi.org/10.1007/s10664-021-10072-8
+          https://arxiv.org/pdf/2002.07764.pdf
 
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
           Search through available alternatives till an acceptability threshold is met.i
