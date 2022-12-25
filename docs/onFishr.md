@@ -310,9 +310,11 @@ Expected Sections:
 ### Bonus marks
 As part of the results section:
 
-Repeat the above for many-goal problems.
+#### Repeat the above for many-goal problems.
 
-Perform a _REQUIREMENTS STUDY_
+Defined above
+
+#### Perform a _REQUIREMENTS STUDY_
 - For 5 humans, run 5 repertory grids studies. 
 - Compare the results:
   - against a recursive bi-clustering  of the data plus
@@ -322,18 +324,19 @@ Perform a _REQUIREMENTS STUDY_
     can be aligned? (HINT: maybe not)
 - Include a commentary on your experience with rep grids (any surprises?) 
 
-Perform a _FEBRUARY STUDY_ (requires an explanation facility, as described above)
+#### Perform a _FEBRUARY STUDY_ 
+Requires an explanation facility, as described above.
 - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
    such that this kind of future analysis gets simpler.
 - So pretend its February and we have come back to a some similar problem (like what was
       studied in January). Using what was learned in January, can the same task be solved
       with less budget $B_1 < B_0$?
 
-Perform an _ABLATION STUDY_:
+#### Perform an _ABLATION STUDY_
 - Given a preferred method $M$ containing two to four main ideas
   - Disable (or change) each one  thing. If anything get worse, declare that thing important.
 
-Perform an _HPO study_:
+#### Perform an _HPO study_
 - Apply these minimal sampling methods to learning good $Z$ values for a learner
 - Your goal should be to compare your minimal sampling methods with some established optimization method.
 
