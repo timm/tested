@@ -154,6 +154,11 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
 - Finally, there may or may not be some background knowledge $B$ which we can
   use to guide our analysis.
 
+Note that:
+- Theorem provers explore a set constraints defined in $B$.
+- Data miners are tools for dividing up $X$ and/or $Y$.
+- Optimizers are methods for jumping between better and worse $X$ and/or $Y$ 
+
 In all the examples above,
 it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
