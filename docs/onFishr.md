@@ -15,10 +15,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 
-# To Begin
+# Description of the "Fishing" Project
 
-_"It is our choices, Harry, that show what<br> we truly are, far more than our abilities."_     
--- Albus Percival Wulfric Brian Dumbledore  
+> By the end of this lecture, you will know 6 week end-of-term project as well as five
+possible tasks.
+
+
+## Background
 
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
 First, astronomers  learn how to grind lens.  Next, they use those
@@ -289,8 +292,7 @@ Expected Sections:
         - Compare your preferred method
             - to at least one prior state-of-the-art method;
             - to just selection $B_0$ items at random
-            - to one of more  human-level sampling process.
-              (see  Table1 of Baltes et al.[^ralph])
+            - to one of more  human-level sampling process  (see  Table1 of Baltes et al.[^ralph])
         - Repeated 20 times (with different random number seeds)
         - Some presentation of median and spread of results over 20 runs 
         - Non-parametric effect size and significance tests
@@ -308,13 +310,12 @@ Expected Sections:
 - References
 
 ### Bonus marks
-As part of the results section:
 
-#### Repeat the above for many-goal problems.
+#### B1: Repeat the above for many-goal problems.
 
 Defined above
 
-#### Perform a _REQUIREMENTS STUDY_
+#### B2: Perform a _REQUIREMENTS STUDY_
 - For 5 humans, run 5 repertory grids studies. 
 - Compare the results:
   - against a recursive bi-clustering  of the data plus
@@ -324,7 +325,7 @@ Defined above
     can be aligned? (HINT: maybe not)
 - Include a commentary on your experience with rep grids (any surprises?) 
 
-#### Perform a _FEBRUARY STUDY_ 
+#### B3: Perform a _FEBRUARY STUDY_ 
 Requires an explanation facility, as described above.
 - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
    such that this kind of future analysis gets simpler.
@@ -332,11 +333,11 @@ Requires an explanation facility, as described above.
       studied in January). Using what was learned in January, can the same task be solved
       with less budget $B_1 < B_0$?
 
-#### Perform an _ABLATION STUDY_
+#### B4: Perform an _ABLATION STUDY_
 - Given a preferred method $M$ containing two to four main ideas
   - Disable (or change) each one  thing. If anything get worse, declare that thing important.
 
-#### Perform an _HPO study_
+#### B5: Perform an _HPO study_
 - Apply these minimal sampling methods to learning good $Z$ values for a learner
 - Your goal should be to compare your minimal sampling methods with some established optimization method.
 
