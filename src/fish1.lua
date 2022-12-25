@@ -5,7 +5,7 @@ In this code:
 - vars are global by default unless marked with "local" or 
   defined in function argument lists.
 - functions are names before they are used. Hence, these line: --]]
-local any,cli,coerce,csv,eg,fmt,kap,many,map,o,oo,obj,push,sort,the
+local any,cli,coerce,copy,csv,eg,fmt,kap,many,map,o,oo,obj,push,sort,the
 --[[
 - There is only one data structure: a table.
 - Tables can have numeric or symbolic keys.
@@ -73,6 +73,8 @@ function SYM.add(i,s)
 
 function SYM.dist(i,s1,s2)
   return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
+
+function SYM.norm(i,x) return x end
 -------------------------------------------------------------------------------
 function COLS.new(i,t,     col,cols)
   i.names, i.all, i.x, i.y = t, {}, {}, {}
@@ -104,13 +106,17 @@ function DATA.add(i,t)
        i.cols:add(t)
   else i.cols=COLS(t) end end
 
-function DATA.sort(i,row1,row2)
-  local s1,s2,ys = 0,0,i.cols.y
+function DATA.sort(i,row1,row2,    s1,s2,ys,x,y)
+  s1,s2,ys,x,y = 0,0,i.cols.y
   for _,col in pairs(ys) do
-    local x = col:norm( row1.cells[col.at] )
-    local y = col:norm( row2.cells[col.at]  )
-    s1      = s1 - math.exp(col.w * (x-y)/#ys)
-    s2      = s2 - math.exp(col.w * (y-x)/#ys) end
+    x  = row1.cells[col.at] 
+    y  = row2.cells[col.at]  
+    print("::",x,y.." ")
+    x  = col:norm(x)
+    y  = col:norm(y)
+    s1 = s1 - math.exp(col.w * (x-y)/#ys)
+    s2 = s2 - math.exp(col.w * (y-x)/#ys) end
+  print(s1,s2,x,y)
   return s1/#ys < s2/#ys end
 
 function DATA.sorts(i)
@@ -141,6 +147,9 @@ function map(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do u[#u+1]=fun(k,v); end; return u end
 
+ function copy(t) --> t; return a deep copy of `t.
+  return {table.unpack(t)} end
+
 function oo(t) print(o(t)); return t end
 function o(t,     fun)
   fun = function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",k,o(v)) end end
@@ -170,12 +179,9 @@ function cli(options) --> t; update key,vals in `t` from command-line flags
     options[k] = coerce(v)  end
   return options end
 
-function eg(k,egs,    b4)
-  if egs[k] then
-    b4={}; for k,v in pairs(the) do b4[k]=v end 
-    math.randomseed(the.seed)
-    egs[k]() 
-    for k,v in pairs(b4) do the[k]=v end end end
+function eg(k,funs,    b4)
+  if funs[k] then 
+    b4=copy(the); math.randomseed(the.seed); funs[k](); the=copy(b4) end end 
 -------------------------------------------------------------------------------
 local egs={}
 
@@ -185,7 +191,15 @@ egs.all= function()
 
 egs.num= function() oo(NUM()) end
 egs.sym= function() oo(SYM()) end
-egs.data=function() oo(DATA(the.file).cols.y) end
+egs.data=function() map(DATA(the.file).cols.x,oo) end
+egs.norm=function(      data,rows)
+  data=DATA(the.file)
+  for i=1,10 do 
+    row = any(data.rows)
+    for _,col in pairs(data.cols.x) do
+      x = row.cells[col.at]
+      print(x, col:norm(x))  end end end 
+
 egs.sort=function(      data,rows)  
   data=DATA(the.file)
   rows = data:sorts()
