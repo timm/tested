@@ -297,7 +297,9 @@ Expected Sections:
 - Conclusion
 - References
 
-Bonus marks: as part of the results section
+### Bonus marks
+As part of the results section:
+
 - Perform a _REQUIREMENTS STUDY_
   - For 5 humans, run 5 repertory grids studies. 
   - Compare the results:
