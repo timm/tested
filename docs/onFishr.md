@@ -232,9 +232,16 @@ https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_op
 
 Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/etc/data)
 write a 
-multi-objective semi-supervised explanation.
+multi-objective 
+semi-supervised explanation system:
+- multi-objective; i.e. $|Y|>1$
+- semi-supervised; i.e. given $N$ examples, you only have a limited budget
+  $B_0\in$ (10,20,50,100,200,500,...) of times you can access the $Y$ values of any one example.
+- explanation: extract some _useful_ succinct summary from the data
+  - here, _useful_ means if that summary is applied  to the data, then some 
+   $m \ll N$ good examples
+    will be selected (and "good" means "has good $Y$ values).
 
-Find function $F$ that selects for good $Y$, but learned using mininal $Y$ samples.
 
 Describe your method. Describe the process that lead you to that method.
 Baseline your method against some human-level sampling process (see  Table1 of
@@ -256,8 +263,9 @@ Expected Sections:
   - What every else did in the past
   - Why that is not good enough, for our purposes (i.e. why are we not doing it some old way)
   - What system from past work is state of the art (and will be used in your comparisons)
-  - Note: your related work section must demonstrate your understand the 
-    multi-objective semi-supervised explanation problem.
+  - Note: your related work section must:
+    - demonstrate your understand the multi-objective semi-supervised explanation problem.
+    - show that thinking that lead to this new method.
 - Methods
   - Algorithms
   - Data
