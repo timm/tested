@@ -163,10 +163,12 @@ Only some  subset of $X$ are observable and/or controllable (or, indeed, relevan
 
 There can be many goals $Y$ and some are  contradictory (e.g. security and availability
     can be mutually exclusive).
-- If we cannot satisfy all goals, we explore trade-offs between them (known as satisficing[^simon]).
- - And in those cases, sometimes the exploration can be just (or more) insightful than actually getting find an answer.
- - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
-          bursting with its own corrections. You can keep your sterile truth for yourself.</em>
+- If we cannot satisfy all goals, we explore trade-offs between them 
+  (known as satisficing[^simon]).
+- And in those cases, sometimes the exploration can be just (or more) 
+  insightful than actually getting find an answer.
+- Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
+  bursting with its own corrections. You can keep your sterile truth for yourself.</em>
 
 The above covers a wide range of tasks:
 
@@ -189,10 +191,13 @@ The above covers a wide range of tasks:
     - cluster on $X$ 
     - sort each cluster of their average $Y$ values
     - generate clusters between clusters with worse and better $Y$ values.
+  - By the why hyper-parameter optimization is optimization through $Z,Y$ space.
 
 ## Project
 
-Given data sets with multiple $Y$ columns
+Note: you may not understand some parts of the following... yet. Patience, 
+
+Find function $F$ that selects 
 
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
           Search through available alternatives till an acceptability threshold is met.i
