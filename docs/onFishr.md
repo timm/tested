@@ -200,7 +200,7 @@ which _optimization_ is just a matter of finding the difference between good and
 
 |What | Terms|
 |----:|:------|
-|supervised inference|  _|Y|&gt;0_  |
+|supervised inference|  At least one _Y_ value |
 | regression | usually, for single numeric goals|
 |classification | single symbolic goal|
 |Semi-supervised learning|  When  we have many examples but only a small subset have $Y$ values... in which case we can do things like spreading out the available $Y$ values over clusters within the $X$ values.|
