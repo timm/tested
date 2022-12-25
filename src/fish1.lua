@@ -35,10 +35,11 @@ function COLS(t,     col,cols)
   return cols end
     
 function adds(cols, row)
-  for _,col in pairs(cols.x) do add(col, row.cells[col.at]) end 
-  for _,col in pairs(cols.y) do add(col, row.cells[col.at]) end 
-  return t end
-
+  for _,t in pairs{cols.x, cols.y} do
+    for _,col in pairs(t) do
+      add(col, row.cells[col.at]) end end
+  return row end
+-------------------------------------------------------------------------------
 function DATA(src,     data)
   data = {rows={}, cols=nil}
   if   type(src) == "string" 
