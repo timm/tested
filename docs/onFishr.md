@@ -129,9 +129,9 @@ but after a few experiments, they ship a product. For example:
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
       2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
 
-[^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*, 
-weights='uniform', algorithm='auto', leaf_size=30, p=2, metric='minkowski', 
-metric_params=None, n_jobs=None)\[source\]¶</em>
+[^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*,<br> 
+weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
+metric_params=None,<br> n_jobs=None)¶</em>
 
 XXXX leanr from audit1 abple o 1=1
 
