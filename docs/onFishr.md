@@ -268,7 +268,7 @@ Expected Sections:
     - explaining any novel visualizations you will use in your results section (if there are any)
   - Note: please demonstrate that you actually have a clear understanding of all these methods.
 - Results
-   - Run with different y-sampling budgets ($B_0 \in (10,25,50,100,200,500...)$)
+   - Run with different y-sampling budgets $B_0\in$ (10,25,50,100,200,500...):
      - For different methods (including comparisons to at least one prior state-of-the-art method):
         - Repeated 20 times (with different random number seeds)
         - Some presentation of median and spread of results over 20 runs 
