@@ -243,9 +243,6 @@ semi-supervised explanation system:
     will be selected (and "good" means "has good $Y$ values).
 
 
-Describe your method. Describe the process that lead you to that method.
-Baseline your method against some human-level sampling process (see  Table1 of
-Baltes et al.[^ralph])
 
 Expected Sections:
 
@@ -264,6 +261,7 @@ Expected Sections:
   - Why that is not good enough, for our purposes (i.e. why are we not doing it some old way)
   - What system from past work is state of the art (and will be used in your comparisons)
   - Note: your related work section must:
+    - show that you've read around regarding related work
     - demonstrate your understand the multi-objective semi-supervised explanation problem.
     - show that thinking that lead to this new method.
 - Methods
@@ -277,7 +275,12 @@ Expected Sections:
   - Note: please demonstrate that you actually have a clear understanding of all these methods.
 - Results
    - Run with different y-sampling budgets $B_0\in$ (10,25,50,100,200,500...):
-     - For different methods (including comparisons to at least one prior state-of-the-art method):
+     - For different methods 
+        - Compare your preferred method
+            - to at least one prior state-of-the-art method;
+            - to just selection $B_0$ items at random
+            - to one of more  human-level sampling process.
+              (see  Table1 of Baltes et al.[^ralph])
         - Repeated 20 times (with different random number seeds)
         - Some presentation of median and spread of results over 20 runs 
         - Non-parametric effect size and significance tests
@@ -288,7 +291,7 @@ Expected Sections:
         such that this kind of future analysis gets simpler.
       - So pretend its February and we have come back to a some similar problem (like what was
         studied in January). Using what was learned in January, can the same task be solved
-        with less budget $B_1 < B_)$?
+        with less budget $B_1 < B_0$?
   - Discussion of your results divided into your research questions.
     - a clear commentary on what worked best
     - if any unusual results, then acknowledge them and comment on them
