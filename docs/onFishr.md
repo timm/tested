@@ -29,7 +29,6 @@ to table our next challenge. How can we help
 people use our software tools to better
 explore (and change) the world around us?
 
-
 Our answer is based on an idea from the 1990s[^me96]: 
 to test "it", you have to run "it". To say that another way,
 a properly
@@ -311,27 +310,32 @@ Expected Sections:
 ### Bonus marks
 As part of the results section:
 
-- Repeat the above for many-goal problems.
-- Perform a _REQUIREMENTS STUDY_
-  - For 5 humans, run 5 repertory grids studies. 
-  - Compare the results:
-    - against a recursive bi-clustering  of the data plus
-      some hierarchical feature selection
-    - against results from other humans
-    - Is there anyway way the intra-human views (or the view between human an data)
-      can be aligned? 
-- Perform a _FEBRUARY STUDY_ (requires an explanation facility, as described above)
-  - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
-     such that this kind of future analysis gets simpler.
-  - So pretend its February and we have come back to a some similar problem (like what was
-        studied in January). Using what was learned in January, can the same task be solved
-        with less budget $B_1 < B_0$?
-- Perform an _ABLATION STUDY_:
-  - Given a preferred method $M$ containing two to four main ideas
-    - Disable (or change) each one  thing. If anything get worse, declare that thing important.
-- Perform an _HPO study_:
-  - Apply these minimal sampling methods to learning good $Z$ values for a learner
-  - Your goal should be to compare your minimal sampling methods with some established optimization method.
+Repeat the above for many-goal problems.
+
+Perform a _REQUIREMENTS STUDY_
+- For 5 humans, run 5 repertory grids studies. 
+- Compare the results:
+  - against a recursive bi-clustering  of the data plus
+    some hierarchical feature selection
+  - against results from other humans
+  - Is there anyway way the intra-human views (or the view between human an data)
+    can be aligned? (HINT: maybe not)
+- Include a commentary on your experience with rep grids (any surprises?) 
+
+Perform a _FEBRUARY STUDY_ (requires an explanation facility, as described above)
+- If analysts used budget $B_0$ in January to reach some conclusions, what is learned
+   such that this kind of future analysis gets simpler.
+- So pretend its February and we have come back to a some similar problem (like what was
+      studied in January). Using what was learned in January, can the same task be solved
+      with less budget $B_1 < B_0$?
+
+Perform an _ABLATION STUDY_:
+- Given a preferred method $M$ containing two to four main ideas
+  - Disable (or change) each one  thing. If anything get worse, declare that thing important.
+
+Perform an _HPO study_:
+- Apply these minimal sampling methods to learning good $Z$ values for a learner
+- Your goal should be to compare your minimal sampling methods with some established optimization method.
 
 ### Word limit
 
