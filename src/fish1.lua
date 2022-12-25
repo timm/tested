@@ -56,6 +56,15 @@ function update(col,x)
     then col.lo = math.min(col.lo,x)
          col.hi = math.max(col.hi,x)
     else col.has[x] = 1 + col.has[x] end end end
+
+function dist(col,x,y)
+  if x=="?" and y=="?" then return 1 end
+  if col.isNum 
+  then x,y = norm(col,x), norm(col,y)
+       if x=="?" then x = y<.5 and 1 or 0 end
+       if y=="?" then y = x<.5 and 1 or 0 end
+       return math.abs(x - y) 
+  else return x==y and 0 or 1 end end
 -------------------------------------------------------------------------------
 function COLS(t,     col,cols)
   cols = {names=t, all={}, x={}, y={}}
@@ -70,6 +79,14 @@ function updates(cols, row)
     for _,col in pairs(t) do
       update(col, row.cells[col.at]) end end
   return row end
+
+function dists(cols,row1,row2,       d,n)
+  d,n = 0,1E-32
+  for _,col in pairs(cols) do
+    d = d + dist(col,row1.cells[col.at], row2.cells[col.at])^the.p
+    n = n + 1 end
+  return (d/n)^(1/the.p) end
+
 -------------------------------------------------------------------------------
 function DATA(src,     data,fun)
   data = {rows={}, cols=nil}
