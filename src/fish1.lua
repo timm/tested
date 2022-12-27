@@ -49,7 +49,7 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
   t={}; t.__index = t;return setmetatable(t, {__call=new}) end
 
 local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
--------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
 -------------------------------------------------------------------------------
 function NUM.new(i,n,s)
@@ -176,7 +176,7 @@ function DATA.guess(i,  rows,x)
       if x~="?" then
         row.guess = row.guess + (col.score[x] or 0) end end end 
   return slice(sort(rows, gt"guess"),1,the.Budget) end
--------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
@@ -308,7 +308,6 @@ egs.learn=function(      data,rows)
   oo(data.cols.names)
   oo{seed=the.seed, budget=the.Budget}
 end 
-  --for k,row in pairs(data:learn()) do print(row.truth)  end end 
 -------------------------------------------------------------------------------
 the=cli(the)
 main(the,help,egs) 
