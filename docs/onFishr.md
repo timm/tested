@@ -17,6 +17,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Description of the "Fishing" Project
 
+XXXX statbility tests
+
 > By the end of this lecture, you will know 6 week end-of-term project as well as five
 possible tasks.
 
