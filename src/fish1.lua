@@ -1,7 +1,20 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end
 local help=[[  
 fish1,lua : sort many <X,Y> things on Y, after peeking at just a few Y things
-(c)2022 Tim Menzies <timm@ieee.org> BSD-2]]
+(c)2022 Tim Menzies <timm@ieee.org> BSD-2
+
+USAGE: lua fish1.lua [OPTIONS] [-g [ACTIONS
+
+OPTIONS:
+  -b  POSINT    number of evaluations = 16
+  -f  FILE      csv data file         = ../etc/data/auto93.csv
+  -h            show help
+  -g  ACTION    start up action       = ls
+  -p  POSINT    distance coefficient  = 3
+  -s  POSINT    random number seed    = 10019
+
+ACTIONS:
+]] 
 -------------------------------------------------------------------------------
 --[[
 In this code:
@@ -15,11 +28,10 @@ local main,many,map,o,oo,obj,percent,push,shuffle,slice,sort,the
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
 - Global settings are stores in "the" table: --]]
-the = {best   = .5, 
-       Budget = 16,
+the = {budget = 16,
        file   = "../etc/data/auto93.csv", 
        help   = false,
-       go     =  "help", 
+       go     =  "ls", 
        p      = 2,
        seed   = 10019}
 --[[
@@ -41,7 +53,10 @@ In the function arguments, the following conventions apply (usually):
 - lower = instance; e.g. rx is an instance of RX
 - xs == a table of "x"; e.g. "ns" is a list of numbers
 - Two spaces denote start of optional args
-- Four spaces denote start of local args.  --]]
+- Four spaces denote start of local args.  
+
+In my object system, instances are named `i` (since that is shorter than `self`)--]]
+
 -------------------------------------------------------------------------------
 local id=0
 function obj(s,    t,new) --> t; create a klass and a constructor + print method
@@ -49,7 +64,7 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
   t={}; t.__index = t;return setmetatable(t, {__call=new}) end
 
 local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
 -------------------------------------------------------------------------------
 function NUM.new(i,n,s)
@@ -143,7 +158,7 @@ function DATA.learn(i,  rows,     now,after)
   rows = rows or i.rows
   now, after ={},{}
   for j,row in pairs(shuffle(rows)) do
-    push(j<=the.Budget and now or after,row) end
+    push(j<=the.budget and now or after,row) end
   print("some",#now)
   i:reinforce(now) 
   return i:guess(after) end
@@ -151,7 +166,6 @@ function DATA.learn(i,  rows,     now,after)
 function DATA.reinforce(i,  rows,gap)
   local row1,row2,tmp,x,y 
   rows = rows or i.rows
-  print("len",#rows)
   for j=1,#rows do
     for k=j+1,#rows do
       row1,row2 = rows[j],rows[k]
@@ -175,7 +189,7 @@ function DATA.guess(i,  rows,x)
       x = row.cells[col.at]
       if x~="?" then
         row.guess = row.guess + (col.score[x] or 0) end end end 
-  return slice(sort(rows, gt"guess"),1,the.Budget) end
+  return slice(sort(rows, gt"guess"),1,the.budget) end
 -------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
@@ -247,32 +261,39 @@ function cli(options) --> t; update key,vals in `t` from command-line flags
     for n,x in ipairs(arg) do
       if x=="-"..(k:sub(1,1)) or x=="--"..k then
          v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = coerce(v)  end
-  return options end
+    options[k] = coerce(v) end end
 
-function main(the,help,funs,     k,b4) 
-  if   the.help 
-  then print(help.."\n\nACTIONS:")
-       for _,k in pairs(sort(keys(funs))) do print(fmt("  -g %s",k)) end 
-  else k=the.go
-      for k,fun in pairs(funs) do
-        if the.go=="all" or k==the.go then
-           b4=copy(the)
-           math.randomseed(the.seed)
-           funs[k]()
-           the=copy(b4) end end end end
+function main(the,help,funs,     k,old,fails) 
+  fails=0
+  cli(the)
+  if the.help then print(help) else 
+    k=the.go
+    for k,fun in pairs(funs) do
+      if the.go=="all" or k==the.go then
+         old=copy(the)
+         math.randomseed(the.seed)
+         if funs[k]()=="false" then fails=fails+1
+                                    print("❌ fail:",k) end
+         the=copy(old) end end end 
+  for k,v in pairs(_ENV) do 
+    if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
+  os.exit(fails) end 
 -------------------------------------------------------------------------------
 local egs={}
+local function eg(key,str, fun)
+  egs[key]=fun
+  help=help..fmt("  -g  %s\t%s\n",key,str) end
 
-egs.all= function() 
-  for _,k in sort(kap(egs,function(k,_) return k end)) do
-    if k ~= "all" then eg(l) end end end 
+eg("all","run all",function() 
+   for _,k in sort(kap(egs,function(k,_) return k end)) do
+     if k ~= "all" then eg(l) end end end )
 
-egs.the= function() oo(the) end
-egs.num= function() oo(NUM()) end
-egs.sym= function() oo(SYM()) end
-egs.data=function() map(DATA(the.file).cols.x,oo) end
-egs.clone=function() 
+eg("ls","list all", function() print(help) end)
+eg("the", "show settings",      function() oo(the) end)
+eg("num", "can NUMs be built?", function() oo(NUM()) end)
+eg("sym", "can SYMs be built?", function() oo(SYM()) end)
+eg("data","can we load data from disk?", function() map(DATA(the.file).cols.x,oo) end)
+eg("clone","can we cline data?",function() 
   local data1,data2
   data1 = DATA(the.file)
   data2 = data1:clone(data1.rows)
@@ -282,23 +303,23 @@ egs.clone=function()
   print""
   oo(data1.rows[1])
   oo(data2.rows[1])
-end
+end)
 
-egs.norm=function(      data,rows,row,x)
+eg("norm", "does data normalization work?",function(      data,rows,row,x)
   data=DATA(the.file)
   for i=1,10 do 
     row = any(data.rows)
     for _,col in pairs(data.cols.x) do
       x = row.cells[col.at]
-      print(x, col:norm(x))  end end end 
+      print(x, col:norm(x))  end end end )
 
-egs.sort=function(      data,rows)  
+eg("eg","can i sort examples?", function(      data,rows)  
   data=DATA(the.file)
   rows = data:truth()
   oo(data.cols. names)
-  for i=1,#data.rows,32 do oo(rows[i].cells)  end end
+  for i=1,#data.rows,32 do oo(rows[i].cells)  end end)
 
-egs.learn=function(      data,rows)  
+eg("learn", "can i sort with minimal data?",function(      data,rows)  
   data=DATA("../etc/data/nasa93demd.csv")
   data:truth()
   for k,row in pairs(sort(data:learn(),lt"truth")) do
@@ -306,9 +327,7 @@ egs.learn=function(      data,rows)
   print("+","=====","=====","=====")
   print("#","truth","guess","cells")
   oo(data.cols.names)
-  oo{seed=the.seed, budget=the.Budget}
-end 
+  oo{seed=the.seed, budget=the.budget}
+end )
 -------------------------------------------------------------------------------
-the=cli(the)
 main(the,help,egs) 
-for k,v in pairs(_ENV) do if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
