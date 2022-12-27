@@ -9,8 +9,8 @@ In this code:
   defined in function argument lists.
 - functions are names before they are used. Hence, these line: --]]
 local any,cli,coerce,copy,csv,fmt,gt,kap,keys,lt
-local main,many,map,o,oo,obj,percent,push,shuffle,slice,sort,the
-  --[[
+local main,many,map,o,oo,obj,push,shuffle,slice,sort,the
+--[[
 - There is only one data structure: a table.
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
@@ -127,8 +127,12 @@ function DATA.sort(i,row1,row2,    s1,s2,ys,x,y)
   row2.yseen = true
   s1,s2,ys,x,y = 0,0,i.cols.y
   for _,col in pairs(ys) do
-    x  = row1.cells[col.at]; col:includes(x); x = col:norm(x)
-    y  = row2.cells[col.at]; col:includes(y); y = col:norm(y)
+    x  = row1.cells[col.at] 
+    y  = row2.cells[col.at] 
+    col:includes(x)
+    col:includes(y)
+    x  = col:norm(x)
+    y  = col:norm(y)
     s1 = s1 - math.exp(col.w * (x-y)/#ys)
     s2 = s2 - math.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
@@ -139,40 +143,40 @@ function DATA.truth(i,  rows,t)
     row.truth = math.floor(100*truth/#i.rows) end 
   return t end
 
-function DATA.learn(i,  rows,     some)
-  rows = rows or i.rows
-  some = many(rows, the.Budget)
-  print("some",#some)
-  i:reinforce(some) 
+function DATA.learn(i,  rows)
+  local now, after, rows = {}, {}, rows or i.rows
+  for j,row in pairs(rows) do 
+    push(j<=the.Budget and now or after, row) end
+  i:reinforce(now) 
   return i:guess(rows) end
 
 function DATA.reinforce(i,  rows)
-  local row1,row2,tmp,x,y 
+  local row1,row2,gap,tmp,x,y 
   rows = rows or i.rows
-  print("len",#rows)
   for j=1,#rows do
     for k=j+1,#rows do
+      row1,row2 = rows[j], rows[k]
+      gap       = i:dist(row1, row2, i.cols.y)
       row1,row2 = rows[j],rows[k]
       if i:sort(row2,row1) then row1,row2 = row2,row1 end
       for _,col in pairs(i.cols.x) do
         x,y = row1.cells[col.at], row2.cells[col.at]
         if x ~= y and x ~= "?" and y ~= "?" then
-          col.bad[y]   = (col.bad[y]  or 0) + 1 
-          col.good[x]  = (col.good[x] or 0) + 1
+          col.bad[y]   = (col.bad[y]  or 0) + gap 
+          col.good[x]  = (col.good[x] or 0) + gap
           end end end end 
   for _,col in pairs(i.cols.x) do
     for k,g in pairs(col.good) do
-       col.score[k] = g / (col.bad[k] or 1e-31) end 
-    col.score = percent(col.score) 
-    print(col.txt, o(col.score,true)) end end 
+       col.score[k] = g/(col.bad[k] or 1e-31)
+    col.score = percent(col.score) end end end
 
-function DATA.guess(i,  rows,x)
+function DATA.guess(i,  rows)
   for _,row in pairs(rows or i.rows) do
     for _,col in pairs(i.cols.x) do
       x = row.cells[col.at]
       if x~="?" then
         row.guess = row.guess + (col.score[x] or 0) end end end 
-  return slice(sort(rows, gt"guess"),1,the.Budget) end
+  return sort(rows, lt"guess") end
 -------------------------------------------------------------------------------
 -- Misc support functions
 function fmt(sControl,...) --> str; emulate printf
@@ -184,7 +188,7 @@ function percent(t,     tmp)
   return t end
 
 function any(t) return t[math.random(#t)] end 
-function many(t,n,    u) print("n",n) u={}; for i=1,n do u[1+#u]=any(t) end; return u end
+function many(t) return t[math.random(#t)] end 
 
 function shuffle(t,   j) --> t;  Randomly shuffle, in place, the list `t`.
   for i=#t,2,-1 do j=math.random(i); t[i],t[j]=t[j],t[i] end; return t end
@@ -219,10 +223,10 @@ function copy(t) --> t; return a shallow copy of `t.
   return {table.unpack(t)} end
 
 function oo(t) print(o(t)); return t end
-function o(t,flag,     fun)
+function o(t,     fun)
   if type(t)~="table" then return tostring(t) end
   fun= function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",o(k),o(v)) end end
-  return "{"..table.concat(#t>0 and not flag and map(t,o) or sort(kap(t,fun))," ").."}" end
+  return "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
@@ -257,6 +261,7 @@ function main(the,help,funs,     k,b4)
            b4=copy(the)
            math.randomseed(the.seed)
            funs[k]()
+           print(the.seed, math.random())
            the=copy(b4) end end end end
 -------------------------------------------------------------------------------
 local egs={}
@@ -298,12 +303,12 @@ egs.sort=function(      data,rows)
 egs.learn=function(      data,rows)  
   data=DATA("../etc/data/nasa93demd.csv")
   data:truth()
-  for k,row in pairs(sort(data:learn(),lt"truth")) do
-    print(k,row.truth, row.guess,o(row.cells)) end 
-  print("+","=====","=====","=====")
-  print("#","truth","guess","cells")
   oo(data.cols.names)
-  oo{seed=the.seed, budget=the.Budget}
+  for k,row in pairs((data:learn())) do
+    if k <= the.Budget then print(row.truth, row.guess,o(row.cells)) end end
+  for _,col in pairs(data.cols.x) do
+    for k,v in pairs(col.score) do print(col.name.k,v) end end
+  print(math.random(100))
 end 
   --for k,row in pairs(data:learn()) do print(row.truth)  end end 
 -------------------------------------------------------------------------------
