@@ -29,6 +29,90 @@ end-of-term project.
 has to submit something, even if it is broken. Homeworks can get submitted multiple times
 so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
 
+## Install
+
+Install Lua:
+
+    brew install lua       # on max os/x
+    lua -v                 # TESTED needs at least LUA version 5.3
+
+Check-out this repo
+
+    git clone https://github.com/timm/tested
+
+Check your installation
+
+    cd tested/src
+    lua 101.lua -g all # should show one crash and several passes
+
+## Concepts
+
+TESTED has four layers:
+
+|Layer|Notes|
+|----|------|
+|Underlying language (Lua) | Includes [library](/docs/lib.lua) routines
+|Scripting  | Includes support for test-driven development (see the `eg` object in, for example, [about.lua](/src/about.lua);<br> Includes support for config (see the `the` variable in, for example, [about.lua](/src/about.lua));<br> Includes support for documentation (see [alfold.lua](/src/alfold.lua) which generates, say, [alfold.md](/docs/alfold.md)).|
+|Data |  See the classes NUM, SYM, ROW, DATA) in [about.lua](/docs/about.md) that read csv files and stores data. |
+| Application | Lots of examples of different data mining tools. |
+
+### Why TESTED?
+
+<img align=right width=400 src="/etc/img/cars.png">
+
+[The Road to AI](https://arxiv.org/pdf/2212.11279.pdf) 
+paints a picture of modern AI, dominated by deep learning,
+where those current techniques are the inevitable, inexorable result of
+centuries are prior thought. 
+It is a great paper, well worth your time. But what is missing?
+
+If you are a software engineer, you know that AI software is still
+software and software needs to be tested.
+So how do you and your stakeholders[^stake] test a complex AI system? 
+
+[^stake]:  ("Stakeholders"  are individuals or organizations having
+a right, share, claim, or interest in a system or in its possession
+of characteristics that meet their needs and expectations 
+[(ISO/IEC/IEEE
+2015)](https://www.iso.org/standard/63711.html)
+
+But before answering that, lets make sure we understand testing.
+My own Ph.D. started out as a generic
+testing mechanism. It took a while to realize
+the obvious: testing "it" means being
+able to exercise "it" so, properly designed, a generic test engine
+is actually  a generic execution engine that can do many things[^abkl]
+(and not just testing).
+
+[^abkl]: Tim Menzies,
+[Applications of abduction: knowledge-level modelling](https://menzies.us/pdf/96abkl.pdf),
+International Journal of Human-Computer Studies,
+Volume 45, Issue 3,
+1996,
+Pages 305-335,
+ISSN 1071-5819,
+https://doi.org/10.1006/ijhc.1996.0054.
+(https://www.sciencedirect.com/science/article/pii/S1071581996900543)
+Abstract: A single inference procedure (abduction) can operationalise a wide variety of knowledge-level modelling problem solving methods; i.e. prediction, classification, explanation, tutoring, qualitative reasoning, planning, monitoring, set-covering diagnosis, consistency-based diagnosis, validation, and verification. This abductive approach offers a uniform view of different problem solving methods in the style proposed by Clancey and Breuker. Also, this adbuctive approach is easily extensible to validation; i.e. using this technique we can implement both inference tools and testing tools. Further, abduction can execute in vague and conflicting domains (which we believe occur very frequently). We therefore propose abduction as a framework for knowledge-level modelling.
+
+
+Anyone familiar with the rapid feedback cycles seen in modern software
+development knows that "testing" is also about "exploring" ideas and
+making them better.If w is not true, then we can get stuck...
+
+- "Imagine if (the ancient greeks)  had developed robots... 
+automating tasks at that time, 3,000
+years ago, .... such as pottery and
+weaving...  human labor would no longer be needed,
+people would live lives of leisure...
+stuck with the artifacts and production of the time.
+To raise the quality of life substantially,
+we can't build machines that merely substitute for human labor and
+imitate it; <b>we must expand our capabilities and do new things</b>."    
+-- [Erik Brynjolfsson](https://www.zdnet.com/article/ai-debate-3-everything-you-need-to-know-about-artificial-general-intelligence/)
+
+XXXX oracle problem. metamorphic. large system, sample the least.
+
 TESTED assumes that the best way to test something is to give it
 to someone else, and watch them break it.  
 - This is actually a core
@@ -63,33 +147,6 @@ make conclusions based on a small sample of the total data space
 [^Niu07]: Nan Niu, Steve M. Easterbrook: [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
 	
 
-
-## Install
-
-Install Lua:
-
-    brew install lua       # on max os/x
-    lua -v                 # TESTED needs at least LUA version 5.3
-
-Check-out this repo
-
-    git clone https://github.com/timm/tested
-
-Check your installation
-
-    cd tested/src
-    lua 101.lua -g all # should show one crash and several passes
-
-## Concepts
-
-TESTED has four layers:
-
-|Layer|Notes|
-|----|------|
-|Underlying language (Lua) | Includes [library](/docs/lib.lua) routines
-|Scripting  | Includes support for test-driven development (see the `eg` object in, for example, [about.lua](/src/about.lua);<br> Includes support for config (see the `the` variable in, for example, [about.lua](/src/about.lua));<br> Includes support for documentation (see [alfold.lua](/src/alfold.lua) which generates, say, [alfold.md](/docs/alfold.md)).|
-|Data |  See the classes NUM, SYM, ROW, DATA) in [about.lua](/docs/about.md) that read csv files and stores data. |
-| Application | Lots of examples of different data mining tools. |
 
 ## Homeworks
 
