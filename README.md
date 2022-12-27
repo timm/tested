@@ -64,11 +64,17 @@ TESTED has four layers:
 paints a picture of modern AI, dominated by deep learning,
 where those current techniques are the inevitable, inexorable result of
 centuries are prior thought. 
-It is a great paper, well worth your time. But what is missing?
 
+It is a great paper, well worth your time. But missing
+in all that writing is one important concept:
+how do you test such systems?
 If you are a software engineer, you know that AI software is still
-software and software needs to be tested.
-So how do you and your stakeholders[^stake] test a complex AI system? 
+software. Software has bugs, always
+(see, for example, the
+depressing litany of mistakes documented in Peter
+Neumann’s [Computer-Related Risks](https://catless.ncl.ac.uk/risks/)).
+Anything with bugs needs to be tested.
+How do you and your stakeholders[^stake] test a complex AI system? 
 
 [^stake]:  ("Stakeholders"  are individuals or organizations having
 a right, share, claim, or interest in a system or in its possession
@@ -77,25 +83,27 @@ of characteristics that meet their needs and expectations
 2015)](https://www.iso.org/standard/63711.html)
 
 But before answering that, lets make sure we understand testing.
+Firstly, Software has stakeholders so we need systems that can explain themselves
+to anyone with a right, share, claim, or interest in that system. 
+So we need someway that stakeholders can "drop in", from time to time,
+and comment on the software that effects in. That process needs to support:
+- _high-level explanations_ where the stakeholders may not understand much 
+  of the low-level detail of the system; 
+- _rapid testing_ since the stakeholders are typically busy to get back to their day job
+- _periodic testing_ (where the stakeholder tests are interment, and separated by
+    weeks or months. Ideally, something is learned from stakeholder testing in
+    (say) January that can be applied automatically until the stakeholders
+    return in (say) March.
+- _incremental testing_ where, each time we return to retest,
+    something learned from the past simplifies this next round of testing.
+
+Secondly, testing is not just some process of adding check marks to a system.
 My own Ph.D. started out as a generic
 testing mechanism. It took a while to realize
 the obvious: testing "it" means being
 able to exercise "it" so, properly designed, a generic test engine
 is actually  a generic execution engine that can do many things[^abkl]
 (and not just testing).
-
-[^abkl]: Tim Menzies,
-[Applications of abduction: knowledge-level modelling](https://menzies.us/pdf/96abkl.pdf),
-International Journal of Human-Computer Studies,
-Volume 45, Issue 3,
-1996,
-Pages 305-335,
-ISSN 1071-5819,
-https://doi.org/10.1006/ijhc.1996.0054.
-(https://www.sciencedirect.com/science/article/pii/S1071581996900543)
-Abstract: A single inference procedure (abduction) can operationalise a wide variety of knowledge-level modelling problem solving methods; i.e. prediction, classification, explanation, tutoring, qualitative reasoning, planning, monitoring, set-covering diagnosis, consistency-based diagnosis, validation, and verification. This abductive approach offers a uniform view of different problem solving methods in the style proposed by Clancey and Breuker. Also, this adbuctive approach is easily extensible to validation; i.e. using this technique we can implement both inference tools and testing tools. Further, abduction can execute in vague and conflicting domains (which we believe occur very frequently). We therefore propose abduction as a framework for knowledge-level modelling.
-
-
 Anyone familiar with the rapid feedback cycles seen in modern software
 development knows that "testing" is also about "exploring" ideas and
 making them better.If w is not true, then we can get stuck...
@@ -110,6 +118,21 @@ To raise the quality of life substantially,
 we can't build machines that merely substitute for human labor and
 imitate it; <b>we must expand our capabilities and do new things</b>."    
 -- [Erik Brynjolfsson](https://www.zdnet.com/article/ai-debate-3-everything-you-need-to-know-about-artificial-general-intelligence/)
+
+[^abkl]: Tim Menzies,
+[Applications of abduction: knowledge-level modelling](https://menzies.us/pdf/96abkl.pdf),
+International Journal of Human-Computer Studies,
+Volume 45, Issue 3,
+1996,
+Pages 305-335,
+ISSN 1071-5819,
+https://doi.org/10.1006/ijhc.1996.0054.
+(https://www.sciencedirect.com/science/article/pii/S1071581996900543)
+Abstract: A single inference procedure (abduction) can operationalise a wide variety of knowledge-level modelling problem solving methods; i.e. prediction, classification, explanation, tutoring, qualitative reasoning, planning, monitoring, set-covering diagnosis, consistency-based diagnosis, validation, and verification. This abductive approach offers a uniform view of different problem solving methods in the style proposed by Clancey and Breuker. Also, this adbuctive approach is easily extensible to validation; i.e. using this technique we can implement both inference tools and testing tools. Further, abduction can execute in vague and conflicting domains (which we believe occur very frequently). We therefore propose abduction as a framework for knowledge-level modelling.
+
+The third thing we need to understand about testing is that while we can automate
+billions of system inputs per second, all that is useless unless some oracle can tell us
+how to assess those outputs.
 
 XXXX oracle problem. metamorphic. large system, sample the least.
 
