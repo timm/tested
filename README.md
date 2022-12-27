@@ -98,6 +98,8 @@ and comment on the software that effects in. That process needs to support:
     something learned from the past simplifies this next round of testing.
 
 Secondly, testing is not just some process of adding check marks to a system.
+Testing needs to verify that the system us built right
+but it also needs to look further and validate that the right system is being built.
 My own Ph.D. started out as a generic
 testing mechanism. It took a while to realize
 the obvious: testing "it" means being
@@ -118,6 +120,7 @@ To raise the quality of life substantially,
 we can't build machines that merely substitute for human labor and
 imitate it; <b>we must expand our capabilities and do new things</b>."    
 -- [Erik Brynjolfsson](https://www.zdnet.com/article/ai-debate-3-everything-you-need-to-know-about-artificial-general-intelligence/)
+
 
 [^abkl]: Tim Menzies,
 [Applications of abduction: knowledge-level modelling](https://menzies.us/pdf/96abkl.pdf),
