@@ -139,14 +139,16 @@ function DATA.truth(i,  rows,t)
     row.truth = math.floor(100*truth/#i.rows) end 
   return t end
 
-function DATA.learn(i,  rows,     some)
+function DATA.learn(i,  rows,     now,after)
   rows = rows or i.rows
-  some = many(rows, the.Budget)
-  print("some",#some)
-  i:reinforce(some) 
-  return i:guess(rows) end
+  now, after ={},{}
+  for j,row in pairs(shuffle(rows)) do
+    push(j<=the.Budget and now or after,row) end
+  print("some",#now)
+  i:reinforce(now) 
+  return i:guess(after) end
 
-function DATA.reinforce(i,  rows)
+function DATA.reinforce(i,  rows,gap)
   local row1,row2,tmp,x,y 
   rows = rows or i.rows
   print("len",#rows)
@@ -154,11 +156,12 @@ function DATA.reinforce(i,  rows)
     for k=j+1,#rows do
       row1,row2 = rows[j],rows[k]
       if i:sort(row2,row1) then row1,row2 = row2,row1 end
+      gap = i:dist(row1,row2,i.cols.y)
       for _,col in pairs(i.cols.x) do
         x,y = row1.cells[col.at], row2.cells[col.at]
         if x ~= y and x ~= "?" and y ~= "?" then
-          col.bad[y]   = (col.bad[y]  or 0) + 1 
-          col.good[x]  = (col.good[x] or 0) + 1
+          col.bad[y]   = (col.bad[y]  or 0) + 1 --gap 
+          col.good[x]  = (col.good[x] or 0) + 1 --gap
           end end end end 
   for _,col in pairs(i.cols.x) do
     for k,g in pairs(col.good) do
