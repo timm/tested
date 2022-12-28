@@ -138,14 +138,14 @@ function DATA.dist(i,row1,row2,cols,       d,n)
   return d^(1/the.p)/n^(1/the.p) end
 
 function DATA.sort(i,row1,row2,    s1,s2,ys,x,y)
-  row1.yseen = true
-  row2.yseen = true
   s1,s2,ys,x,y = 0,0,i.cols.y
   for _,col in pairs(ys) do
-    x  = row1.cells[col.at]; col:includes(x); x = col:norm(x)
-    y  = row2.cells[col.at]; col:includes(y); y = col:norm(y)
+    x  = row1.cells[col.at]; if not row1.yseen then col:includes(x) end; x = col:norm(x)
+    y  = row2.cells[col.at]; if not row2.yseen then col:includes(y) end; y = col:norm(y)
     s1 = s1 - math.exp(col.w * (x-y)/#ys)
     s2 = s2 - math.exp(col.w * (y-x)/#ys) end
+  row1.yseen = true
+  row2.yseen = true
   return s1/#ys < s2/#ys end
 
 function DATA.truth(i,  rows,t)

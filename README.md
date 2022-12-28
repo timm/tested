@@ -16,7 +16,16 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Hello!
 
-TESTED is a set of data science coding assignments, written in Lua (which is a
+TESTED lets developers and stakeholders  sort examples on
+their personnel preferences, without having to know everything about all examples.
+
+TESTED is a semi-supervised multi-objective explanation system:
+- _semi-supervised_: TESTED only needs labels for a small  percent of its examples
+- _multi-objective_: TESTED sorts according to handle multiple domain objectives, as specified by stakeholders;
+- _explanation_: TESTED's stakeholders may not understand all the details of a system. So  TESTED lets stakeholders
+    browse succinct summaries of a system's state space.
+
+TESTED is written in Lua (which is a
 small and simple Python-like language, but with far less overhead).
 - Students use these samples as an executable specification which
 they must reproduce in any other language they like (except Lua).
@@ -61,12 +70,12 @@ TESTED has four layers:
 <img align=right width=400 src="/etc/img/cars.png">
 
 [The Road to AI](https://arxiv.org/pdf/2212.11279.pdf) 
-paints a picture of modern AI, dominated by deep learning,
+paints an exciting picture of modern AI, dominated by deep learning,
 where those current techniques are the inevitable, inexorable result of
 centuries are prior thought. 
 
-It is a great paper, well worth your time. But missing
-in all that writing is one important concept:
+It is a great paper, well worth your time. But it has its limitations.
+In all that writing is one important concept:
 how do you test such systems?
 If you are a software engineer, you know that AI software is still
 software. Software has bugs, always
@@ -167,11 +176,13 @@ make conclusions based on a small sample of the total data space
   "Increasing Accountability Through User-Interface Design Artifacts." 
   MIS quarterly 39.2 (2015): 345-366.
 
-
-[^Baltes22]: Baltes, S., Ralph, P. [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf);  Empir Software Eng 27, 94 (2022);  https://doi.org/10.1007/s10664-021-10072-8.
+[^Baltes22]: Baltes, S., Ralph, P. 
+  [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf);
+  Empir Software Eng 27, 94 (2022);  https://doi.org/10.1007/s10664-021-10072-8.
 	
-[^Niu07]: Nan Niu, Steve M. Easterbrook: [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
-	
+[^Niu07]: Nan Niu, Steve M. Easterbrook: 
+  [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); 
+  IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
 
 
 ## Homeworks
