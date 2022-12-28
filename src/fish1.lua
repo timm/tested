@@ -8,10 +8,10 @@ USAGE: lua fish1.lua [OPTIONS] [-g [ACTIONS
 OPTIONS:
   -b  POSINT    number of evaluations = 16
   -f  FILE      csv data file         = ../etc/data/auto93.csv
-  -h            show help
   -g  ACTION    start up action       = ls
-  -p  POSINT    distance coefficient  = 3
+  -p  POSINT    distance coefficient  = 2
   -s  POSINT    random number seed    = 10019
+  -h            show help
 
 ACTIONS:
 ]] 
@@ -154,16 +154,15 @@ function DATA.truth(i,  rows,t)
     row.truth = math.floor(100*truth/#i.rows) end 
   return t end
 
-function DATA.learn(i,  rows,     now,after)
+function DATA.learn(i,  quiet,rows,     now,after)
   rows = rows or i.rows
   now, after ={},{}
   for j,row in pairs(shuffle(rows)) do
     push(j<=the.budget and now or after,row) end
-  print("some",#now)
-  i:reinforce(now) 
+  i:reinforce(quiet,now) 
   return i:guess(after) end
 
-function DATA.reinforce(i,  rows,gap)
+function DATA.reinforce(i,quiet,  rows,gap)
   local row1,row2,tmp,x,y 
   rows = rows or i.rows
   for j=1,#rows do
@@ -181,7 +180,7 @@ function DATA.reinforce(i,  rows,gap)
     for k,g in pairs(col.good) do
        col.score[k] = g / (col.bad[k] or 1e-31) end 
     col.score = percent(col.score) 
-    print(col.txt, o(col.score,true)) end end 
+    if not quiet then print(col.txt, o(col.score,true)) end end  end
 
 function DATA.guess(i,  rows,x)
   for _,row in pairs(rows or i.rows) do
@@ -319,15 +318,32 @@ eg("eg","can i sort examples?", function(      data,rows)
   oo(data.cols. names)
   for i=1,#data.rows,32 do oo(rows[i].cells)  end end)
 
-eg("learn", "can i sort with minimal data?",function(      data,rows)  
-  data=DATA("../etc/data/nasa93demd.csv")
+eg("learn", "can i sort with minimal data?",function(      data0,data,rows)  
+  data0=DATA("../etc/data/nasa93demd.csv")
+  data=data0:clone(data0.rows)
   data:truth()
-  for k,row in pairs(sort(data:learn(),lt"truth")) do
+  for k,row in pairs(sort(data:learn(false),lt"truth")) do
     print(k,row.truth, row.guess,o(row.cells)) end 
   print("+","=====","=====","=====")
   print("#","truth","guess","cells")
   oo(data.cols.names)
   oo{seed=the.seed, budget=the.budget}
-end )
+  end )
+
+eg("learnssum", "can i sort with minimal data?",function(      data0,data,rows)  
+  data0=DATA("../etc/data/nasa93demd.csv")
+  local out={}
+  for j=1,20 do
+    data=data0:clone(data0.rows)
+    data:truth()
+    out[j]=map(sort(data:learn(true),lt"truth") ,
+               function(r) return r.truth end)
+  end 
+  for _,b in pairs{1,5,10} do 
+    local tmp={}
+    for j=1,20 do push(tmp,out[j][b]) end 
+    sort(tmp)
+    print("|",the.budget,"|",b,"|",tmp[5],"|",tmp[10],"|", tmp[15],"|") end 
+  end)
 -------------------------------------------------------------------------------
 main(the,help,egs) 
