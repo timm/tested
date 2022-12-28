@@ -241,7 +241,7 @@ high dimensions is that data embedded in high-dimensional format actually
 can be converted into a more compressed space without major information loss.
 This means we can do things like cluster the data
 then only label one example per cluster:
--  Kamvar et al. [^kamvar93] report studies where,
+-  Kamvar et al. [^kamvar03] report studies where,
 after clustering,  
 they achieved high accuracy on the categorization of thousands of documents given only
 a few dozen labeled training documents (from 20
@@ -270,11 +270,11 @@ Newsgroups data set).
   Technical Report. Stanford InfoLab. (Publication Note: International Joint Conference of Artificial Intelligence)
 
 
-[^lev05] Levina, E., Bickel, P.J.
+[^lev05]" Levina, E., Bickel, P.J.
   [Maximum likelihood estimation of intrinsic dimension](https://www.stat.berkeley.edu/~bickel/mldim.pdf) In:
 Advances in neural information processing systems, pp. 777–784 (2005)
 
-[^papa13] Papakroni, Vasil, 
+[^papa13]: Papakroni, Vasil, 
   ["Data Carving: Identifying and Removing Irrelevancies in the Data"](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd)
   (2013). Graduate Theses, Dissertations, and Problem Reports. 3399.  https://researchrepository.wvu.edu/etd/3399 
 
