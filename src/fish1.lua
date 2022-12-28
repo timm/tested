@@ -65,9 +65,9 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
 
 local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
 ------------------------------------------------------------------------------
-function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
+ROW.new=function(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
 -------------------------------------------------------------------------------
-function NUM.new(i,n,s)
+NUM.new= function(i,n,s)
   i.at, i.txt = n or 0, s or ""
   i.w  = i.txt:find"-$" and -1 or 1
   i.lo =  math.huge
@@ -162,24 +162,33 @@ function DATA.learn(i,  quiet,rows,     now,after)
   i:reinforce(quiet,now) 
   return i:guess(after) end
 
-function DATA.reinforce(i,quiet,  rows,gap)
+function DATA.reinforce(i,quiet,  rows,x,xgap,ygap,n,b,G,B)
   local row1,row2,tmp,x,y 
   rows = rows or i.rows
+  n=0
+  -- count good and bad for each column attribute
   for j=1,#rows do
     for k=j+1,#rows do
+      n=n+1 -- number of comparisons
       row1,row2 = rows[j],rows[k]
+      ygap = i:dist(row1,row2,i.cols.y)
+      xgap = i:dist(row1,row2,i.cols.x)
       if i:sort(row2,row1) then row1,row2 = row2,row1 end
-      gap = i:dist(row1,row2,i.cols.y)
       for _,col in pairs(i.cols.x) do
         x,y = row1.cells[col.at], row2.cells[col.at]
         if x ~= y and x ~= "?" and y ~= "?" then
-          col.bad[y]   = (col.bad[y]  or 0) + 1 --gap 
-          col.good[x]  = (col.good[x] or 0) + 1 --gap
+          col.bad[y]   = (col.bad[y]  or 0) + (ygap/xgap) --gap 
+          col.good[x]  = (col.good[x] or 0) + (ygap/xgap)--gap
           end end end end 
+  -- combine goods and bads into "score"
   for _,col in pairs(i.cols.x) do
+    col.good = percent(col.good,n)  -- normalize
+    col.bad = percent(col.bad,n)  -- normalize 
     for k,g in pairs(col.good) do
-       col.score[k] = g / (col.bad[k] or 1e-31) end 
-    col.score = percent(col.score) 
+       b= col.bad[k]  or 1e-31
+       G = g/(g+b)
+       B = b/(g+b)
+       col.score[k] = G/(G+B) end -- "Tarantula. see table1 of https://arxiv.org/pdf/1607.04347.pdf
     if not quiet then print(col.txt, o(col.score,true)) end end  end
 
 function DATA.guess(i,  rows,x)
@@ -194,9 +203,11 @@ function DATA.guess(i,  rows,x)
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
 
-function percent(t,     tmp)
+function percent(t,n,     tmp)
+  n=n or 1
+  for k,v in pairs(t) do t[k]=t[k]*n end
   tmp=0; for _,v in pairs(t) do tmp=tmp+v end
-  for k,v in pairs(t) do t[k] = math.floor(100* v/tmp) end 
+  for k,v in pairs(t) do t[k] = v/tmp end 
   return t end
 
 function any(t) return t[math.random(#t)] end 
