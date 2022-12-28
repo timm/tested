@@ -16,16 +16,25 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Hello!
 
-TESTED lets developers and stakeholders  sort examples on
-their personnel preferences, without having to know everything about all examples.
+Software contains bugs, always
+(see, for example, the
+depressing litany of mistakes documented in Peter
+Neumann’s [Computer-Related Risks](https://catless.ncl.ac.uk/risks/)).
+Things with bugs need to be tested. Testing is such an important
+task and frequent task that it is worth considering how to design systems
+that can be explored effectively and cheaply.
+TESTED lets developers and stakeholders  sort examples (according to
+personnel preferences)  without having to know everything about all examples.
 
-TESTED is a semi-supervised multi-objective explanation system:
+Formally, TESTED is a semi-supervised multi-objective explanation system:
 - _semi-supervised_: TESTED only needs labels for a small  percent of its examples
 - _multi-objective_: TESTED sorts according to handle multiple domain objectives, as specified by stakeholders;
 - _explanation_: TESTED's stakeholders may not understand all the details of a system. So  TESTED lets stakeholders
     browse succinct summaries of a system's state space.
 
-TESTED is written in Lua (which is a
+If this all seems a little complicated to you, then relax. TESTED is the result of much refactoring and
+simplification of dozens of research prototypes. 
+It  is written in Lua (which is a
 small and simple Python-like language, but with far less overhead).
 - Students use these samples as an executable specification which
 they must reproduce in any other language they like (except Lua).
@@ -78,10 +87,7 @@ It is a great paper, well worth your time. But it has its limitations.
 In all that writing is one important concept:
 how do you test such systems?
 If you are a software engineer, you know that AI software is still
-software. Software has bugs, always
-(see, for example, the
-depressing litany of mistakes documented in Peter
-Neumann’s [Computer-Related Risks](https://catless.ncl.ac.uk/risks/)).
+software. Software has bugs and
 Anything with bugs needs to be tested.
 How do you and your stakeholders[^stake] test a complex AI system? 
 
