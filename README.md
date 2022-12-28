@@ -222,7 +222,7 @@ paper need humans to label 22,500+ commits
 as "buggy" or "not buggy". This work
 required 175 personhours, include cross-checking, to read via standard manual
 methods (and 175 hours ≈ nine weeks of work). Worse yet, labels can be wrong
-and/or contained biased opinions which leads to faults in the reasoning.
+and/or contained biased opinions which leads to faults in the reasoning[^joy21].
 
 [^tu22]: H. Tu, Z. Yu and T. Menzies, 
   ["Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction),"](https://arxiv.org/pdf/1905.01719.pdf)
