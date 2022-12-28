@@ -270,7 +270,7 @@ Newsgroups data set).
   Technical Report. Stanford InfoLab. (Publication Note: International Joint Conference of Artificial Intelligence)
 
 
-[^lev05]" Levina, E., Bickel, P.J.
+[^lev05]: Levina, E., Bickel, P.J.
   [Maximum likelihood estimation of intrinsic dimension](https://www.stat.berkeley.edu/~bickel/mldim.pdf) In:
 Advances in neural information processing systems, pp. 777–784 (2005)
 
