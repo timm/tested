@@ -14,23 +14,46 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-# Hello!
+Hopelly, the
+software is built by people like me (a developer) is
+used by other people 
+(the stakeholders[^stake]). How can those stakeholders check if it right,
+or even if I built the right system?
+
+Stakeholder testing is different to developer testing since
+stakeholders typically understand less about what goes on inside the code.
+Hence they need:
+- _semi-supervised_ reasoning: which only needs opionions on very small, most
+  informative, parts of the whole system.
+only needs labels for a small  percent of its examples
+- _explanation_ tools: So  TESTED lets stakeholders
+    browse succinct summaries of a system's state space.
+- _multi-objective_: Stakeholders have differenet goals (and some of them might even be
+contradictory). So TESTED lets  according to handle multiple domain objectives, as specified by stakeholders;
+
 
 Software contains bugs, always
 (see, for example, the
 depressing litany of mistakes documented in Peter
 Neumann’s [Computer-Related Risks](https://catless.ncl.ac.uk/risks/)).
-Things with bugs need to be tested. Testing is such an important
+and things with bugs need to be tested before we use them. Testing is such an important
 task and frequent task that it is worth considering how to design systems
 that can be explored effectively and cheaply.
-TESTED lets developers and stakeholders  sort examples (according to
-personnel preferences)  without having to know everything about all examples.
 
-Formally, TESTED is a semi-supervised multi-objective explanation system:
-- _semi-supervised_: TESTED only needs labels for a small  percent of its examples
-- _multi-objective_: TESTED sorts according to handle multiple domain objectives, as specified by stakeholders;
-- _explanation_: TESTED's stakeholders may not understand all the details of a system. So  TESTED lets stakeholders
-    browse succinct summaries of a system's state space.
+[^stake]:  ("Stakeholders"  are individuals or organizations having
+a right, share, claim, or interest in a system or in its possession
+of characteristics that meet their needs and expectations 
+[(ISO/IEC/IEEE
+2015)](https://www.iso.org/standard/63711.html)
+
+
+TESTED assumes that the best way to test "it" is to watch someone else 
+(specifically, stakehodlers [^stake])
+try to break "it".  is all about exploring more, using fewer samples to the system.
+
+More specifically, TESTED lets stakeholders  sort examples (according to
+personnel preferences)  without having to know everything about all examples.
+Formally, this is semi-supervised multi-objective explanation:
 
 If this all seems a little complicated to you, then relax. TESTED is the result of much refactoring and
 simplification of dozens of research prototypes. 
@@ -90,12 +113,6 @@ If you are a software engineer, you know that AI software is still
 software. Software has bugs and
 Anything with bugs needs to be tested.
 How do you and your stakeholders[^stake] test a complex AI system? 
-
-[^stake]:  ("Stakeholders"  are individuals or organizations having
-a right, share, claim, or interest in a system or in its possession
-of characteristics that meet their needs and expectations 
-[(ISO/IEC/IEEE
-2015)](https://www.iso.org/standard/63711.html)
 
 But before answering that, lets make sure we understand testing.
 Firstly, Software has stakeholders so we need systems that can explain themselves
@@ -190,6 +207,80 @@ make conclusions based on a small sample of the total data space
   [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); 
   IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
 
+## Background
+
+### Supervised vs Semi-Supervised Learning
+
+TESTED in a _semi-supervised_ learner. 
+Just to understand that term, 
+_supervised learners_ assume all examples are labelled. Such labels are expensive to collect
+and often error prone.
+It can be
+very expensive to acquire these labels via human labor.
+For example, four out of the nine projects studied in one paper [^tu22]
+paper need humans to label 22,500+ commits 
+as "buggy" or "not buggy". This work
+required 175 personhours, include cross-checking, to read via standard manual
+methods (and 175 hours ≈ nine weeks of work). Worse yet, labels can be wrong
+and/or contained biased opinions which leads to faults in the reasoning.
+
+[^tu22]: H. Tu, Z. Yu and T. Menzies, 
+  ["Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction),"](https://arxiv.org/pdf/1905.01719.pdf)
+   in IEEE Transactions on Software Engineering, 
+   vol. 48, no. 1, pp. 278-294, 1 Jan. 2022, doi: 10.1109/TSE.2020.2986415.
+
+[^joy21]: Joymallya Chakraborty, Suvodeep Majumder, and Tim Menzies. 2021. 
+  [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
+  In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
+
+_Semi-supervised learners_ assume that data has some shape with trends
+in that shape. If so, then  we do not need
+to poke around every part of that shape. 
+Levina et al. [^lev05] comment that the reason any data mining method works for
+high dimensions is that data embedded in high-dimensional format actually
+can be converted into a more compressed space without major information loss.
+This means we can do things like cluster the data
+then only label one example per cluster:
+-  Kamvar et al. [^kamvar93] report studies where,
+after clustering,  
+they achieved high accuracy on the categorization of thousands of documents given only
+a few dozen labeled training documents (from 20
+Newsgroups data set).
+- In studies with static code warning recognizer and issue closed time predictor,
+  Tu et al. [^tu21]* outperformed the prior state-of-the-art in
+  static code warning recognizer and issue closed time predictor, 
+  while only needed to label 2.5% of the examples.
+- In studies with defect prediction, Papakroni et al.  [^papa13] found that for defect prediction
+  and effort estiamtion, after recursively bi-clustering down to $\sqrt{N}$ of the data,
+  they could reason about 442 examples using less than 25 examples (and 25/400=6% of the data)
+  For example,
+  can you see how Papakroni finds bugs are in the following?
+  - red/blue denotes a class with some/no bugs
+  - the x-axis was a line drawn between
+    two most distant examples
+  - the y-axis is  another line at right angles to x
+  - the LHS is a recursive division at median x-y.
+  - the RHS is one example per leaf cluster:
+
+![](/etc/img/papa.png)
+
+[^kamvar03]: Kamvar, Kamvar and Sepandar, Sepandar and Klein, Klein and Dan, Dan and Manning, 
+  Manning and Christopher, Christopher (2003) 
+  [Spectral Learning](https://people.eecs.berkeley.edu/~klein/papers/spectral-learning.pdf)
+  Technical Report. Stanford InfoLab. (Publication Note: International Joint Conference of Artificial Intelligence)
+
+
+[^lev05] Levina, E., Bickel, P.J.
+  [Maximum likelihood estimation of intrinsic dimension](https://www.stat.berkeley.edu/~bickel/mldim.pdf) In:
+Advances in neural information processing systems, pp. 777–784 (2005)
+
+[^papa13] Papakroni, Vasil, 
+  ["Data Carving: Identifying and Removing Irrelevancies in the Data"](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd)
+  (2013). Graduate Theses, Dissertations, and Problem Reports. 3399.  https://researchrepository.wvu.edu/etd/3399 
+
+[^tu21]:  H. Tu and T. Menzies, i
+  ["FRUGAL: Unlocking Semi-Supervised Learning for Software Analytics,"](https://arxiv.org/pdf/2108.09847.pdf)
+   2021 36th IEEE/ACM International Conference on Automated Software Engineering (ASE), 2021, pp. 394-406, doi: 10.1109/ASE51524.2021.9678617.
 
 ## Homeworks
 
