@@ -177,18 +177,18 @@ function DATA.reinforce(i,quiet,  rows,x,xgap,ygap,n,b,G,B)
       for _,col in pairs(i.cols.x) do
         x,y = row1.cells[col.at], row2.cells[col.at]
         if x ~= y and x ~= "?" and y ~= "?" then
-          col.bad[y]   = (col.bad[y]  or 0) + (ygap/xgap) --gap 
+          col.bad[y]   = (col.bad[y]  or 0) + (ygap/xgap) -- suggested by RELIEF https://en.wikipedia.org/wiki/Relief_(feature_selection) 
           col.good[x]  = (col.good[x] or 0) + (ygap/xgap)--gap
           end end end end 
   -- combine goods and bads into "score"
   for _,col in pairs(i.cols.x) do
-    col.good = percent(col.good,n)  -- normalize
-    col.bad = percent(col.bad,n)  -- normalize 
+    col.good = percent(col.good,1/n)  -- normalize
+    col.bad = percent(col.bad,1/n)  -- normalize 
     for k,g in pairs(col.good) do
        b= col.bad[k]  or 1e-31
        G = g/(g+b)
        B = b/(g+b)
-       col.score[k] = G/(G+B) end -- "Tarantula. see table1 of https://arxiv.org/pdf/1607.04347.pdf
+       col.score[k] = G/(G+B) end -- suggested by Tarantula. see table1 of http://shorturl.at/prAP1
     if not quiet then print(col.txt, o(col.score,true)) end end  end
 
 function DATA.guess(i,  rows,x)
