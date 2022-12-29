@@ -32,7 +32,7 @@ logging, watched, presence<br>
 domination, Pareto frontier, Zitzler predicate<br>
 </td></tr><tr><td>misc </td><td>
 stakeholder,
-manifold, labelling cost, curse of dimensionality explanation
+manifold, labelling cost, curse of dimensionality, explanation
 </td></tr>
 </table>
 
