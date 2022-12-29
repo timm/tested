@@ -16,7 +16,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Introduction to TESTED
 
-**TL;DR:**
+## What is TESTED?
 
 > TESTED is a demonstration that semi-supervised multi-objective
 explanation algorithms are surprisingly easy to build. Such
@@ -25,8 +25,32 @@ to sort and discover the best and worst things, without
 having to offer too much information on each thing. Once discovered,
 TESTED can also offer advice on how to make bad things better.
 
+## No, really, what is TESTED?
 
-**DETAILS:**
+So what is TESTED really about?
+- is it about how to reconfigure broken things to make them better? 
+- is it about requirements engineering?
+- is it about software engineering?
+- is it about testing?
+- is it about AI?
+
+To which the answer is "yes". All these things share the same underlying
+methods and challenges. Which means tools built for one of these tasks
+can help the other [^abduction]. 
+
+[^abduction]: For more on the mysterious machine that runs deep
+  within testing, SE, requirements engineering, configuration, etc,
+  see [my Ph.D. thesis](https://menzies.us/pdf/96abkl.pdf). In summary,
+  by the time you can test "it" then you can also exercise "it";
+  i.e. properly designed, a good test engine is also a good
+  execution engine. For years I tried coding all this up in a logical
+  framework. Then I found ways to use data mining for very faster,
+  scalable, approximate reasoning. So now I offer my private
+  theory-of-everything in a procedural framework, embedded with some
+  data mining tools.
+
+
+## Some Details
 
 Hopefully,
 software  built by people like me (i.e. a developer) is
@@ -38,17 +62,15 @@ The problem with
 stakeholder testing is that, typically,
 they do not understand everything  about what goes on inside the code.
 Hence they need:
-- [_semi-supervised_learning](#semi-supervised-learning): 
+- [semi-supervised_learning](#semi-supervised-learning): 
     which only needs opinions on very small,
     most
   informative, parts of a whole system.
 only needs labels for a small  percent of its examples
-- _explanation_ tools: TESTED lets stakeholders
+- _explanation algorithms_: TESTED lets stakeholders
     browse succinct summaries of a system's state space.
 - _multi-objective_: Stakeholders have different goals (and some of them might even be
 contradictory). So TESTED lets  according to handle multiple domain objectives, as specified by stakeholders;
-
-RE config  optimization. Ai 
 
 Stakeholder-based testing is a human-in-the-loop exercise. Unless we are careful,
 these people can be overwhelmed by having to look at too much information.
