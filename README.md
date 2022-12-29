@@ -245,10 +245,12 @@ to poke around every part of that shape.
 Levina et al. [^lev05] comment that the reason any data mining method works for
 high dimensions is that data embedded in high-dimensional format actually
 can be converted into a more compressed space without major information loss.
+
 It is easy to see why we can reduce a data set's features are rows:
 - Many rows must be similar to the point of redundancy  since, when we build a model, 
   each part of that model should have support from multiple
-  data points. This means that all the rows can be shrunk back to just a few examples.
+  data points. This means that all the rows can be shrunk back to just a few examples
+  $\blacksquare$. 
 - Most columns must redundant or noisey since otherwise,
   data mining would not work:
   - A linear increase in feature count means an exponential increase
@@ -258,7 +260,8 @@ It is easy to see why we can reduce a data set's features are rows:
        gaps of size (at most) 0.01. 
      - in twenty dimensions, to cover that hypercube to same degree, required $10^{20}$ points.  
    - But data mining works on data sets with 20 columns _without_ needing sextillion rows.
-     Hence, it must be possible to ignore most of those columns $\blacksquare$. 
+     Hence, it must be possible to ignore most of those columns 
+     $\blacksquare$. 
 
 For example, here is some data where each row describes one class:
 - The
@@ -276,7 +279,9 @@ are closest to the center of each cluster.
 - Papakroni[^papa13] found that simplest nearest neighbor  algorithm that just
     the data in the corner worked as well as anything else.
 
- <img width=400 src="/etc/img/peters1.png"><img width=400 src="/etc/img/peters2.png">
+ <img width=800 src="/etc/img/peters1.png">
+
+ <img width=800 src="/etc/img/peters2.png">
 
 This means we can do things like cluster the data
 then only label one example per cluster. For example:
