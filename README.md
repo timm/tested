@@ -15,25 +15,28 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 <table>
-<tr><td>Study guide: terms to watch </td><td> 
-stakeholder
-<br>
+<tr><td>Study guide: terms to watch </td><td>
+</td></tr><tr><td>misc </td><td>
+stakeholder,
+manifold, labelling cost, curse of dimensionality explanation
+</td></tr><tr><td>data </td><td>
 data: row (a.k.a. example, instance);
-column (a.k.a. attribute, feature)<br>
-learning types: <br>
-unsupervised or semi-supervised or supervised;
+column (a.k.a. attribute, feature)
+</td></tr><tr><td>learning type </td><td>
+unsupervised or semi-supervised or supervised;<br>
 instance or model-based<br>
-algorithms: 
+</td></tr><tr><td>algorothm </td><td>
 decision tree learning;
 clustering;
 FASTMAP (and cosine rule)<br>
-accountability<br>
-explanation<br>
-accountability: logging, watched, presence<br>
-multi-objective reasoning; domination, Pareto frontier, Zitzler predicate<br>
-misc: manifold, labelling cost, curse of dimensionality
-<br>
-</td></tr></table>
+</td></tr><tr><td>accountability </td><td>
+logging, watched, presence<br>
+</td></tr><tr><td>multi-objective reasoning </td><td>
+domination, Pareto frontier, Zitzler predicate<br>
+</td></tr>
+</table>
+
+XXX fair if someone else leans in and says fair
 
 # Introduction 
 
