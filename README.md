@@ -14,21 +14,22 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-Hopelly, the
-software is built by people like me (a developer) is
+Homely, the
+software  built by people like me (i.e. a developer) is
 used by other people 
-(the stakeholders[^stake]). How can those stakeholders check if it right,
-or even if I built the right system?
+(i.e. the stakeholders[^stake]). How can those stakeholders verify if the built software is right,
+or validate that the right software is being built?
 
-Stakeholder testing is different to developer testing since
-stakeholders typically understand less about what goes on inside the code.
+Stakeholder testing is different to developer testing. 
+Stakeholders typically understand less about what goes on inside the code.
 Hence they need:
-- _semi-supervised_ reasoning: which only needs opionions on very small, most
-  informative, parts of the whole system.
+- [_semi-supervised_learning](#semisupervised): which only needs opinions on very small,
+    most
+  informative, parts of a whole system.
 only needs labels for a small  percent of its examples
-- _explanation_ tools: So  TESTED lets stakeholders
+- _explanation_ tools: TESTED lets stakeholders
     browse succinct summaries of a system's state space.
-- _multi-objective_: Stakeholders have differenet goals (and some of them might even be
+- _multi-objective_: Stakeholders have different goals (and some of them might even be
 contradictory). So TESTED lets  according to handle multiple domain objectives, as specified by stakeholders;
 
 
@@ -48,7 +49,7 @@ of characteristics that meet their needs and expectations
 
 
 TESTED assumes that the best way to test "it" is to watch someone else 
-(specifically, stakehodlers [^stake])
+(specifically, stakeholders [^stake])
 try to break "it".  is all about exploring more, using fewer samples to the system.
 
 More specifically, TESTED lets stakeholders  sort examples (according to
@@ -209,12 +210,11 @@ make conclusions based on a small sample of the total data space
 
 ## Background
 
-### Supervised vs Semi-Supervised Learning
+### Semi-Supervised Learning
 
 TESTED in a _semi-supervised_ learner. 
 Just to understand that term, 
-_supervised learners_ assume all examples are labelled. Such labels are expensive to collect
-and often error prone.
+_supervised learners_ assume all examples are labelled. 
 It can be
 very expensive to acquire these labels via human labor.
 For example, four out of the nine projects studied in one paper [^tu22]
@@ -240,7 +240,7 @@ Levina et al. [^lev05] comment that the reason any data mining method works for
 high dimensions is that data embedded in high-dimensional format actually
 can be converted into a more compressed space without major information loss.
 This means we can do things like cluster the data
-then only label one example per cluster:
+then only label one example per cluster. For example:
 -  Kamvar et al. [^kamvar03] report studies where,
 after clustering,  
 they achieved high accuracy on the categorization of thousands of documents given only
@@ -264,6 +264,16 @@ Newsgroups data set).
 
 ![](/etc/img/papa.png)
 
+The practical up-shot of semi-supervised learning is
+that data tables with $R,C$ rows and columns can be reduced to just
+a
+few exemplar rows
+(found via selection[^olv]), described using just  a few most informative columns
+(found via feature selection [^li17]).
+
+> The best thing to do with data is throw most of it away.
+
+
 [^kamvar03]: Kamvar, Kamvar and Sepandar, Sepandar and Klein, Klein and Dan, Dan and Manning, 
   Manning and Christopher, Christopher (2003) 
   [Spectral Learning](https://people.eecs.berkeley.edu/~klein/papers/spectral-learning.pdf)
@@ -273,6 +283,14 @@ Newsgroups data set).
 [^lev05]: Levina, E., Bickel, P.J.
   [Maximum likelihood estimation of intrinsic dimension](https://www.stat.berkeley.edu/~bickel/mldim.pdf) In:
 Advances in neural information processing systems, pp. 777–784 (2005)
+
+[^li17]: Li, J., Cheng, K., Wang, S., Morstatter, F., Trevino, R. P., Tang, J., & Liu, H. 
+        (2017). 
+        [Feature selection: A data perspective](https://dl.acm.org/doi/pdf/10.1145/3136625).
+        ACM computing surveys (CSUR), 50(6), 1-45.
+
+[^olv]: [A review of instance selection methods](https://inaoe.repositorioinstitucional.mx/jspui/bitstream/1009/1389/1/165.-CC.pdf)
+JA Olvera-López, JA Carrasco-Ochoa… - Artificial Intelligence Review, 2010
 
 [^papa13]: Papakroni, Vasil, 
   ["Data Carving: Identifying and Removing Irrelevancies in the Data"](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd)
