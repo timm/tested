@@ -269,9 +269,9 @@ TL:DR:
 
 <img align=right width=600 src="/etc/img/weather.png">
 
-TESTED in a _semi-supervised_ learner. 
+TESTED in a **semi-supervised** learner. 
 Just to understand that term, 
-_supervised learners_ assume all examples are labelled. 
+**supervised learners** assume all examples are labeled. 
 For example, lets build a decision tree:
 
 
@@ -280,7 +280,7 @@ very expensive to acquire these labels via human labor.
 For example, four out of the nine projects studied in one paper [^tu22]
 paper need humans to label 22,500+ commits 
 as "buggy" or "not buggy". This work
-required 175 personhours, include cross-checking, to read via standard manual
+required 175 person hours, include cross-checking, to read via standard manual
 methods (and 175 hours ≈ nine weeks of work). Worse yet, labels can be wrong
 and/or contained biased opinions which leads to faults in the reasoning[^joy21].
 
@@ -296,7 +296,7 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
 <img  align=right src="/etc/img/rmap.png" width=500>
 
 
-_Unsupervised learning_
+**Unsupervised learning**
 reasons over unlabelled data. In this case, you've got columns of inputs,
 but no outputs. In this case, we can group together related rows but we may not know what those
 groupings mean (since no oracle has commented on each group). For example,
@@ -307,9 +307,9 @@ in recursive Fastmap [^men13][^fal95] we group data around two distant points, t
 Just to fill in those details:
 - Find two distant points $A,B$ separated by distance $c$.
 - <img align=right width=200 src="/etc/img/abc.png">
-  Other point have distance $a,b$ to $A,B$
+  Any other point $C$ has distance $a,b$ to $A,B$
 - By the cosine rule (derived below), fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
-- Divide other points on median $x$ value.
+- Divide points on median $x$ value.
 - Recurse on each half
 - Stop at (say) $\sqrt{N}$
 
@@ -331,7 +331,7 @@ Just to fill in those details:
   . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
 
 
-_Semi-supervised learners_ assume that data has some shape with trends
+**Semi-supervised learners** assume that data has some shape with trends
 in that shape. If so, then  we do not need
 to poke around every part of that shape. 
 Levina et al. [^lev05] comment that the reason any data mining method works for
