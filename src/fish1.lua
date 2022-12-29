@@ -3,6 +3,11 @@ local help=[[
 fish1,lua : sort many <X,Y> things on Y, after peeking at just a few Y things
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2
 
+Note: fish1 is just a demonststraing of this kind of processing.
+It is designed to be incomplete, to have flaws. If you look at this
+case say say "a better way to do this wuld be XYZ", then fish1 has
+been successful.
+
 USAGE: lua fish1.lua [OPTIONS] [-g [ACTIONS
 
 OPTIONS:
@@ -155,9 +160,9 @@ function DATA.truth(i,  rows,t)
   return t end
 
 function DATA.learn(i,  quiet,rows,     now,after)
-  rows = rows or i.rows
+  rows = shuffle(rows or i.rows)
   now, after ={},{}
-  for j,row in pairs(shuffle(rows)) do
+  for j,row in pairs(rows) do
     push(j<=the.budget and now or after,row) end
   i:reinforce(quiet,now) 
   return i:guess(after) end

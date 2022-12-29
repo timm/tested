@@ -261,6 +261,10 @@ make conclusions based on a small sample of the total data space
 
 ## Background
 
+### The Data Pattern
+
+Data Num Sym COLS, ROW
+
 ### Explanation
 
 
