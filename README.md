@@ -307,7 +307,8 @@ in recursive Fastmap [^men13][^fal95] we group data around two distant points, t
 Just to fill in those details:
 - Find two distant points $A,B$ separated by distance $c$.
 - <img align=right width=200 src="/etc/img/abc.png">
-  Other point have distance $a,b$ to $A,B$ and by the cosine rule (derived below), fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
+  Other point have distance $a,b$ to $A,B$
+- By the cosine rule (derived below), fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
 - Divide other points on median $x$ value.
 - Recurse on each half
 - Stop at (say) $\sqrt{N}$
