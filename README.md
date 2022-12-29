@@ -338,7 +338,28 @@ Levina et al. [^lev05] comment that the reason any data mining method works for
 high dimensions is that data embedded in high-dimensional format actually
 can be converted into a more compressed space without major information loss.
 
-It is easy to see why we can reduce a data set's features are rows:
+For example, here is one study that reduces colums,rows from 30,60 to 6. In the following, each row describes
+one class, and its bugs:
+- The
+columns are static code features (e.g. lines of code, number of methods,
+depth of inheritance tree) and the right-hand-side column lists the number of
+defects per class.
+  - the color at top-of-column shows how strongly
+    the column is associated with the right-hand-side target column (number of
+    defects).
+  - The green on the left-hand-side shows the results of some clustering: green rows
+    are closest to the center of each cluster.
+- The data has been sorted such that all the green rows are together and all the things
+    most associated with the defects are together.
+- Note that a small "corner" of the data has the best columns and the best.
+- Papakroni[^papa13] found that simplest nearest neighbor  algorithm that just
+    the data in the corner worked as well as anything else.
+
+ <img width=800 src="/etc/img/peters1.png">
+
+ <img width=800 src="/etc/img/peters2.png">
+
+It is easy to see why such reductions are possible:
 - Many rows must be similar to the point of redundancy  since, when we build a model, 
   each part of that model should have support from multiple
   data points. This means that all the rows can be shrunk back to just a few examples.
@@ -367,28 +388,11 @@ It is easy to see why we can reduce a data set's features are rows:
   BMC Public Health 14, 593 (2014). https://doi.org/10.1186/1471-2458-14-593
 
 
-For example, here is some data where each row describes one class:
-- The
-columns are static code features (e.g. lines of code, number of methods,
-depth of inheritance tree) and the right-hand-side column lists the number of
-defects per class.
-  - the color at top-of-column shows how strongly
-    the column is associated with the right-hand-side target column (number of
-    defects).
-  - The green on the left-hand-side shows the results of some clustering: green rows
-    are closest to the center of each cluster.
-- The data has been sorted such that all the green rows are together and all the things
-    most associated with the defects are together.
-- Note that a small "corner" of the data has the best columns and the best.
-- Papakroni[^papa13] found that simplest nearest neighbor  algorithm that just
-    the data in the corner worked as well as anything else.
+When we can approximate all the data with a small set this lets us do things like:
+- cluster the data
+- only label one example per cluster.
 
- <img width=800 src="/etc/img/peters1.png">
-
- <img width=800 src="/etc/img/peters2.png">
-
-This means we can do things like cluster the data
-then only label one example per cluster. For example:
+For example:
 -  Kamvar et al. [^kamvar03] report studies where,
 after clustering,
 they achieved high accuracy on the categorization of thousands of documents given only
