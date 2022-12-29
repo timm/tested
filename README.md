@@ -268,11 +268,11 @@ For example, here is some data where each row describes one class:
 columns are static code features (e.g. lines of code, number of methods,
 depth of inheritance tree) and the right-hand-side column lists the number of
 defects per class.
-- the color at top-of-column shows how strongly
-the column is associated with the right-hand-side target column (number of
-defects).
-- The green on the left-hand-side shows the results of some clustering: green rows
-are closest to the center of each cluster.
+  - the color at top-of-column shows how strongly
+    the column is associated with the right-hand-side target column (number of
+    defects).
+  - The green on the left-hand-side shows the results of some clustering: green rows
+    are closest to the center of each cluster.
 - The data has been sorted such that all the green rows are together and all the things
     most associated with the defects are together.
 - Note that a small "corner" of the data has the best columns and the best.
