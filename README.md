@@ -261,12 +261,13 @@ TL:DR:
 
 > **The best thing we can do with data is throw most of it away.** :astonished:
 
+<img align=right width=600 src="/etc/img/weather.png">
+
 TESTED in a _semi-supervised_ learner. 
 Just to understand that term, 
 _supervised learners_ assume all examples are labelled. 
 For example, lets build a decision tree:
 
-<img width=500 src="/etc/img/weather.png">
 
 It can be
 very expensive to acquire these labels via human labor.
