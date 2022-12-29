@@ -309,7 +309,7 @@ in recursive Fastmap [^men13][^fal95]
   Forrest Shull; Burak Turhan; Thomas Zimmermann IEEE Transactions
   on Software Engineering Year: 2013 | Volume: 39, Issue: 6
 
-[^fal]: Christos Faloutsos and King-Ip Lin. 1995. 
+[^fal95]: Christos Faloutsos and King-Ip Lin. 1995. 
    [FastMap: a fast algorithm for indexing, data-mining and visualization of traditional and multimedia datasets](https://infolab.usc.edu/csci599/Fall2002/paper/DM1_faloutsos95fastmap.pdf)
   . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
 
