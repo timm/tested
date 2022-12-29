@@ -308,10 +308,19 @@ It is easy to see why we can reduce a data set's features are rows:
      - but in  two,tree  dimensions, you'd need 25 to 125
      - and in 20 dimensions you'd need quadrillion examples ($10^{14}$) dimensions, 
          to cover that hypercube
-   - But data mining works on data sets with 20 columns _without_ needing quadrillions rows.
-     Hence, it must be possible to ignore most of those columns.
+     - This is described as the curse of dimensionality:
+          the explosive nature of increasing data dimensions and its resulting exponential 
+          increase in computational efforts required for its processing and/or analysis.
+   - But data mining works on data sets with hundreds columns _without_ needing quadrillions rows.
+     Hence, it must be possible to ignore most of those columns. For example,
+     once I reduced 351 features down to 9, with no loss of efficacy in prediction [^part14].
 
-    <img width=650 src="/etc/img/curse.png">
+<img width=650 src="/etc/img/curse.png">
+
+[^part14]: Partington, S.N., Papakroni, V. & Menzies, T. 
+  [Optimizing data collection for public health decisions: a data mining approach.](https://link.springer.com/article/10.1186/1471-2458-14-593)
+  BMC Public Health 14, 593 (2014). https://doi.org/10.1186/1471-2458-14-593
+
 
 For example, here is some data where each row describes one class:
 - The
