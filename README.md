@@ -261,6 +261,62 @@ make conclusions based on a small sample of the total data space
 
 ## Background
 
+### Explanation
+
+
+isnance-based, model-based
+
+TESTED assumes that better
+data mining algorithms are better at explaining their models to
+humans. But is that always the case?
+
+The obvious counter-argument is that if no human ever needs
+to understand a model, then it does not need to be comprehensible. For example, a neural net could control the carburetor
+of an internal combustion engine since that carburetor will never
+dispute the model or ask for clarification of any of its reasoning.
+
+On the other hand, if a model is to be used to persuade software
+engineers to change what they are doing, it needs to be comprehensible so humans can debate the merits of its conclusions. Several
+researchers demand that software analytics models needs to be
+expressed in a simple way that is easy for software practitioners
+to interpret. According to Kim et al. [^kim16], software analytics aim to obtain actionable insights from software artifacts
+that help practitioners accomplish tasks related to software development, systems, and users. Other researchers argue that
+for software vendors, managers, developers and users, such comprehensible insights are the core deliverable of software analytics.
+Sawyer et al. comments that actionable insight is the key driver for
+businesses to invest in data analytics initiatives [^saw13]. Accordingly,
+much research focuses on the generation of simple models, or make
+blackbox models more explainable, so that human engineers can
+understand and appropriately trust the decisions made by software
+analytics models.
+
+Some researchers go further and warn that, for mission critical applications, we should never use opaque back-box models.
+In 
+
+XXX
+
+LIME
+
+
+[^kim16]: Miryung Kim, Thomas Zimmermann, Robert DeLine, and Andrew Begel. 2016.
+  The Emerging Role of Data Scientists on Software Development Teams. 
+  In Proceedings of the 38th International Conference on Software Engineering (ICSE ’16). ACM,
+  New York, NY, USA, 96–107. DOI:http://dx.doi.org/10.1145/2884781.2884783
+
+[^saw13]: Robert Sawyer. 2013. Bias Impact on Analyses and Decision Making Depends
+  on the Development of Less Complex Applications. In Principles and Applications
+  of Business Intelligence Research. IGI Global, 83–95
+
+
+If a model is not comprehensible, there are some explanation
+algorithms that might mitigate that problem. For example:
+• In secondary learning, the examples given to a neural network
+are used to train a rule-based learner and those learners could
+be said to “explain” the neural net [13].
+• In contrast set learning for instance-based reasoning, data is
+clustered and users are shown the difference between a few
+exemplars selected from each cluster [35].
+Such explanation facilities are post-processors to the original learning method. An alternative simpler approach would be to use learners that generate comprehensible models in the first place.
+
 ### Semi-Supervised Learning
 
 TL:DR:
@@ -429,14 +485,13 @@ few exemplar rows
   Phenomenon in Classification". Journal of Classification. 37 (2): 421–434. 
   doi:10.1007/s00357-019-09327-3.)
 - For an argument that, somethings, adding more rows is a good idea, see
-  the deep learning research.)
-
+  the deep learning research.  For my comments and criticism of deep learning, see slides 6 to 11 
+  of [http://tiny.cc/22issre](http://tiny.cc/22issre).)
 
 [^kamvar03]: Kamvar, Kamvar and Sepandar, Sepandar and Klein, Klein and Dan, Dan and Manning, 
   Manning and Christopher, Christopher (2003) 
   [Spectral Learning](https://people.eecs.berkeley.edu/~klein/papers/spectral-learning.pdf)
   Technical Report. Stanford InfoLab. (Publication Note: International Joint Conference of Artificial Intelligence)
-
 
 [^lev05]: Levina, E., Bickel, P.J.
   [Maximum likelihood estimation of intrinsic dimension](https://www.stat.berkeley.edu/~bickel/mldim.pdf) In:
