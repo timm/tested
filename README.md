@@ -23,7 +23,8 @@ or validate that the right software is being built?
 Stakeholder testing is different to developer testing. 
 Stakeholders typically understand less about what goes on inside the code.
 Hence they need:
-- [_semi-supervised_learning](#semisupervised): which only needs opinions on very small,
+- [_semi-supervised_learning](#semi-supervised-learning): 
+    which only needs opinions on very small,
     most
   informative, parts of a whole system.
 only needs labels for a small  percent of its examples
@@ -212,6 +213,11 @@ make conclusions based on a small sample of the total data space
 
 ### Semi-Supervised Learning
 
+TL:DR:
+
+> The best thing we can do with data is throw most of it away.
+
+
 TESTED in a _semi-supervised_ learner. 
 Just to understand that term, 
 _supervised learners_ assume all examples are labelled. 
@@ -254,22 +260,36 @@ It is easy to see why we can reduce a data set's features are rows:
    - But data mining works on data sets with 20 columns _without_ needing sextillion rows.
      Hence, it must be possible to ignore most of those columns $\blacksquare$. 
 
-Long story short:
+For example, here is some data where each row describes one class:
+- The
+columns are static code features (e.g. lines of code, number of methods,
+depth of inheritance tree) and the right-hand-side column lists the number of
+defects per class.
+- the color at top-of-column shows how strongly
+the column is associated with the right-hand-side target column (number of
+defects).
+- The green on the left-hand-side shows the results of some clustering: green rows
+are closest to the center of each cluster.
+- The data has been sorted such that all the green rows are together and all the things
+    most associated with the defects are together.
+- Note that a small "corner" of the data has the best columns and the best.
+- Papakroni[^papa13] found that simplest nearest neighbor  algorithm that just
+    the data in the corner worked as well as anything else.
 
-> The best thing we can do with data is throw most of it away.
+ <img width=400 src="/etc/img/peters1.png"><img width=400 src="/etc/img/peters2.png">
 
 This means we can do things like cluster the data
 then only label one example per cluster. For example:
 -  Kamvar et al. [^kamvar03] report studies where,
-after clustering,  
+after clustering,
 they achieved high accuracy on the categorization of thousands of documents given only
 a few dozen labeled training documents (from 20
 Newsgroups data set).
 - In studies with static code warning recognizer and issue closed time predictor,
-  Tu et al. [^tu21]* outperformed the prior state-of-the-art in
+  Tu et al. [^tu21] outperformed the prior state-of-the-art in
   static code warning recognizer and issue closed time predictor, 
   while only needed to label 2.5% of the examples.
-- In studies with defect prediction, Papakroni et al.  [^papa13] found that for defect prediction
+- In studies with defect prediction, Papakroni   [^papa13] found that for defect prediction
   and effort estiamtion, after recursively bi-clustering down to $\sqrt{N}$ of the data,
   they could reason about 442 examples using less than 25 examples (and 25/400=6% of the data)
   For example,
@@ -287,7 +307,7 @@ The practical up-shot of semi-supervised learning is
 that data tables with $R,C$ rows and columns can be reduced to just
 a
 few exemplar rows
-(found via selection[^olv]), described using just  a few most informative columns
+(found via instance selection[^olv]), described using just  a few most informative columns
 (found via feature selection [^li17]).
 
 
