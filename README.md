@@ -308,10 +308,10 @@ in recursive Fastmap [^men13][^fal95]
 
 |Derivation|||
 |---:|-----|--|
-| EQ1 | $x^2 + y^2 = a^2 | \Longrightarrow y^2 = a^2 - x^2$     |
-| EQ2 | $(c-x)^2 + y^2=b^2 |\Longrightarrow (c-x)^2 + a^2 - x^2 = b^2$  |
-|Expanding EQ2, subsisting EQ1 for $y^2$ |  $c^2-2cx +x^2 +a^2 - x^2 = b^2$   | |
-|Isolate $x$ terms on LHS | $-2xc +x^2-x^2 =  b^2 - c^2 - a^2$  | \Longrightarrow  $x=(a^2 + c^2 -b^2)/(2c)$  |
+| EQ1 | $x^2 + y^2 = a^2 | $\Longrightarrow y^2 = a^2 - x^2$     |
+| EQ2 | $(c-x)^2 + y^2=b^2 |$\Longrightarrow (c-x)^2 + a^2 - x^2 = b^2$  |
+|Expanding EQ2,<br>substituting EQ1 for $y^2$ |  $c^2-2cx +x^2 +a^2 - x^2 = b^2$   | |
+|Isolate $x$ terms on LHS | $-2xc +x^2-x^2 =  b^2 - c^2 - a^2$  | $\Longrightarrow  x=(a^2 + c^2 -b^2)/(2c)$  |
 
 
 [^men13]: [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
