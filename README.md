@@ -298,15 +298,17 @@ It is easy to see why we can reduce a data set's features are rows:
 - Many rows must be similar to the point of redundancy  since, when we build a model, 
   each part of that model should have support from multiple
   data points. This means that all the rows can be shrunk back to just a few examples.
-- Most columns must redundant or noisey since otherwise,
+- Most columns must redundant or noisy since otherwise,
   data mining would not work:
   - A linear increase in feature count means an exponential increase
-    in the volume of the box containg the features.
+    in the volume of the box contains the features.
      E.g.
-     - in two dimensions (each running 0..1), 100 evenly spaced points would leave 
-       gaps of size (at most) 0.01. 
-     - in twenty dimensions, to cover that hypercube to same degree, required $10^{20}$ points.  
-   - But data mining works on data sets with 20 columns _without_ needing sextillion rows.
+     - in one dimension (running 0..1), 5  evenly spaced points of size 0.2 would cover
+         the space.
+     - but in  two,tree  dimensions, you'd need 25 to 125
+     - and in 20 dimensions you'd need quadrillion examples ($10^{14}$) dimensions, 
+         to cover that hypercube
+   - But data mining works on data sets with 20 columns _without_ needing quadrillions rows.
      Hence, it must be possible to ignore most of those columns.
 
     <img width=650 src="/etc/img/curse.png">
