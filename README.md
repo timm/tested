@@ -215,7 +215,7 @@ make conclusions based on a small sample of the total data space
 
 TL:DR:
 
-> The best thing we can do with data is throw most of it away.
+> **The best thing we can do with data is throw most of it away.**
 
 
 TESTED in a _semi-supervised_ learner. 
