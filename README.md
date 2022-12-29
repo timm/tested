@@ -302,7 +302,7 @@ groupings mean (since no oracle has commented on each group). For example,
 in recursive Fastmap [^men13][^fal95]
 - Divide data according to 2 distant points
 - Reburies on each half
-- Stop at (say) $\srqt{N}$
+- Stop at (say) $\sqrt{N}$
 
 [^men13]: [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
   Tim Menzies; Andrew Butcher; David Cok; Andrian Marcus; Lucas Layman;
