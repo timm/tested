@@ -36,8 +36,8 @@ So what is TESTED really about?
 - is it about how to reconfigure broken things to make them better? 
 - is it about requirements engineering?
 - is it about software engineering?
+- is it about data mining?
 - is it about testing?
-- is it about AI?
 
 To which the answer is "yes". All these things share the same underlying
 methods and challenges. Which means tools built for one of these tasks
@@ -52,7 +52,8 @@ can help the other [^abduction].
   framework. Then I found ways to use data mining for very faster,
   scalable, approximate reasoning. So now I offer my private
   theory-of-everything in a procedural framework, embedded with some
-  data mining tools.
+  data mining tools. Specifically, data miners divide a space and
+  optimizers tell you how to jump around that space.
 
 
 ## Why TESTED?
@@ -292,26 +293,25 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
   [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
   In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
 
-<img src="/etc/img/rmap.png" width=600>
+<img align=right src="/etc/img/rmap.png" width=500>
 
 _Unsupervised learning_
 reasons over unlabelled data. In this case, you've got columns of inputs,
 but no outputs. In this case, we can group together related rows but we may not know what those
 groupings mean (since no oracle has commented on each group). For example,
-in recursive Fastmap
+in recursive Fastmap [^men13][^fal95]
 - Divide data according to 2 distant points
 - Reburies on each half
 - Stop at (say) $\srqt{N}$
 
-[^men13] [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
+[^men13]: [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
   Tim Menzies; Andrew Butcher; David Cok; Andrian Marcus; Lucas Layman;
   Forrest Shull; Burak Turhan; Thomas Zimmermann IEEE Transactions
   on Software Engineering Year: 2013 | Volume: 39, Issue: 6
 
-[^fal]" Christos Faloutsos and King-Ip Lin. 1995. 
+[^fal]: Christos Faloutsos and King-Ip Lin. 1995. 
    [FastMap: a fast algorithm for indexing, data-mining and visualization of traditional and multimedia datasets](https://infolab.usc.edu/csci599/Fall2002/paper/DM1_faloutsos95fastmap.pdf)
   . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
-
 
 
 _Semi-supervised learners_ assume that data has some shape with trends
@@ -382,7 +382,7 @@ Newsgroups data set).
   static code warning recognizer and issue closed time predictor, 
   while only needed to label 2.5% of the examples.
 - In studies with defect prediction, Papakroni   [^papa13] found that for defect prediction
-  and effort estiamtion, after recursively bi-clustering down to $\sqrt{N}$ of the data,
+  and effort estimation, after recursively bi-clustering down to $\sqrt{N}$ of the data,
   they could reason about 442 examples using less than 25 examples (and 25/400=6% of the data)
   For example,
   can you see how Papakroni finds bugs are in the following?
