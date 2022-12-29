@@ -239,6 +239,25 @@ to poke around every part of that shape.
 Levina et al. [^lev05] comment that the reason any data mining method works for
 high dimensions is that data embedded in high-dimensional format actually
 can be converted into a more compressed space without major information loss.
+It is easy to see why we can reduce a data set's features are rows:
+- Many rows must be similar to the point of redundancy  since, when we build a model, 
+  each part of that model should have support from multiple
+  data points. This means that all the rows can be shrunk back to just a few examples.
+- Most columns must redundant or noisey since otherwise,
+  data mining would not work:
+  - A linear increase in feature count means an exponential increase
+    in the volume of the box containg the features.
+     E.g.
+     - in two dimensions (each running 0..1), 100 evenly spaced points would leave 
+       gaps of size (at most) 0.01. 
+     - in twenty dimensions, to cover that hypercube to same degree, required $10^{20}$ points.  
+   - But data mining works on data sets with 20 columns _without_ needing sextillion rows.
+     Hence, it must be possible to ignore most of those columns $\blacksquare$. 
+
+Long story short:
+
+> The best thing we can do with data is throw most of it away.
+
 This means we can do things like cluster the data
 then only label one example per cluster. For example:
 -  Kamvar et al. [^kamvar03] report studies where,
@@ -270,8 +289,6 @@ a
 few exemplar rows
 (found via selection[^olv]), described using just  a few most informative columns
 (found via feature selection [^li17]).
-
-> The best thing to do with data is throw most of it away.
 
 
 [^kamvar03]: Kamvar, Kamvar and Sepandar, Sepandar and Klein, Klein and Dan, Dan and Manning, 
