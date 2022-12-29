@@ -14,14 +14,28 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-Homely, the
+# Introduction to TESTED
+
+TL;DR
+
+> TESTED is a demonstration that semi-supervised multi-objective
+explanation algorithms are surprisingly easy to build. Such
+algorithms support "stakeholder testing" where humans want
+to sort and discover the best and worst things, without
+having to offer too much information on each thing. Once discovered,
+TESTED can also offer advice on how to make bad things better.
+
+
+
+Hopefully,
 software  built by people like me (i.e. a developer) is
 used by other people 
 (i.e. the stakeholders[^stake]). How can those stakeholders verify if the built software is right,
 or validate that the right software is being built?
 
-Stakeholder testing is different to developer testing. 
-Stakeholders typically understand less about what goes on inside the code.
+The problem with 
+stakeholder testing is that, typically,
+they do not understand everything  about what goes on inside the code.
 Hence they need:
 - [_semi-supervised_learning](#semi-supervised-learning): 
     which only needs opinions on very small,
@@ -32,6 +46,13 @@ only needs labels for a small  percent of its examples
     browse succinct summaries of a system's state space.
 - _multi-objective_: Stakeholders have different goals (and some of them might even be
 contradictory). So TESTED lets  according to handle multiple domain objectives, as specified by stakeholders;
+
+RE config  optimization. Ai 
+
+Stakeholder-based testing is a human-in-the-loop exercise. Unless we are careful,
+these people can be overwhelmed by having to look at too much information.
+This is a really big problem.
+
 
 
 Software contains bugs, always
@@ -216,7 +237,6 @@ make conclusions based on a small sample of the total data space
 TL:DR:
 
 > **The best thing we can do with data is throw most of it away.** :astonished:
-
 
 TESTED in a _semi-supervised_ learner. 
 Just to understand that term, 
