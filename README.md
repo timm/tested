@@ -293,7 +293,7 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
   [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
   In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
 
-<img  src="/etc/img/rmap.png" width=500><img src="/etc/img/abc.ong">
+<img  src="/etc/img/rmap.png" width=500><img src="/etc/img/abc.png">
 
 _Unsupervised learning_
 reasons over unlabelled data. In this case, you've got columns of inputs,
