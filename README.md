@@ -306,7 +306,7 @@ It is easy to see why we can reduce a data set's features are rows:
      - in one dimension (running 0..1), 5  evenly spaced points of size 0.2 would cover
          the space.
      - but in  two,tree  dimensions, you'd need 25 to 125
-     - and in 20 dimensions you'd need quadrillion examples ($10^{14}$) dimensions, 
+     - and in 20 dimensions you'd need quadrillion examples $10^{14}$ dimensions, 
          to cover that hypercube
      - This is described as the curse of dimensionality:
           the explosive nature of increasing data dimensions and its resulting exponential 
