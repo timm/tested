@@ -293,15 +293,20 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
   [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
   In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
 
-<img  src="/etc/img/rmap.png" width=500><img src="/etc/img/abc.png">
+<img  align=right src="/etc/img/rmap.png" width=500>
+
 
 _Unsupervised learning_
 reasons over unlabelled data. In this case, you've got columns of inputs,
 but no outputs. In this case, we can group together related rows but we may not know what those
 groupings mean (since no oracle has commented on each group). For example,
-in recursive Fastmap [^men13][^fal95]
+in recursive Fastmap [^men13][^fal95] we group data around two distant points, then recurse on each group.
+
+<img align=right width=200 src="/etc/img/abc.png">
+
+Just to fill in those details:
 - Find two distant points $A,B$ separated by distance $c$.
-- Other point have distance $a,b$ to $A,B$ and by the cosine rule[^cos], fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
+- Other point have distance $a,b$ to $A,B$ and by the cosine rule (derived below), fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
 - Divide other points on median $x$ value.
 - Recurse on each half
 - Stop at (say) $\sqrt{N}$
