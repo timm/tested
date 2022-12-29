@@ -302,7 +302,7 @@ but no outputs. In this case, we can group together related rows but we may not 
 groupings mean (since no oracle has commented on each group). For example,
 in recursive Fastmap [^men13][^fal95] we group data around two distant points, then recurse on each group.
 
-<img align=right width=200 src="/etc/img/abc.png">
+<br clear=all><img align=right width=200 src="/etc/img/abc.png">
 
 Just to fill in those details:
 - Find two distant points $A,B$ separated by distance $c$.
