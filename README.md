@@ -306,15 +306,13 @@ in recursive Fastmap [^men13][^fal95]
 - Recurse on each half
 - Stop at (say) $\sqrt{N}$
 
-(Derviation:   
-|asdas|asdas|
+|Derivation||
 |----|-----|
 | EQ1 | $x^2 + y^2 = a^2 \rightarrow y^2 = a^2 - x^2$     |
-
- EQ2: $(c-x)^2 + y^2=b^2 \rightarrow (c-x)^2 + a^2 - x^2 = b^2$  
- Expanding EQ2, subsisting EQ1 for $y^2$:  $c^2-2cx +x^2 +a^2 - x^2 = b^2$      
- Isolate $x$ terms on LHS: $-2xc +x^2-x^2 =  b^2 - c^2 - a^2$  
-  Isolating $x$ : $x=(a^2 + c^2 -b^2)/(2c)$  
+| EQ2 | $(c-x)^2 + y^2=b^2 \rightarrow (c-x)^2 + a^2 - x^2 = b^2$  |
+|Expanding EQ2, subsisting EQ1 for $y^2$ |  $c^2-2cx +x^2 +a^2 - x^2 = b^2$   | 
+|Isolate $x$ terms on LHS | $-2xc +x^2-x^2 =  b^2 - c^2 - a^2$  |
+ | Tidy : $x=(a^2 + c^2 -b^2)/(2c)$  |
 
 
 [^men13]: [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
