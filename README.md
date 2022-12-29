@@ -264,6 +264,10 @@ TL:DR:
 TESTED in a _semi-supervised_ learner. 
 Just to understand that term, 
 _supervised learners_ assume all examples are labelled. 
+For example, lets build a decision tree:
+
+<img width=500 src="/etc/img/weather.png">
+
 It can be
 very expensive to acquire these labels via human labor.
 For example, four out of the nine projects studied in one paper [^tu22]
