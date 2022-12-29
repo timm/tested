@@ -14,7 +14,12 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
+| Study guide: terms to watch | 
+unsupervised learning, semi-supervised learning, supervised learning,
+clustering, 
+decision tree learning
 # Introduction 
+
 
 ## What is TESTED?
 
@@ -287,6 +292,28 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
   [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
   In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
 
+<img src="/etc/img/rmap.png" width=600>
+
+_Unsupervised learning_
+reasons over unlabelled data. In this case, you've got columns of inputs,
+but no outputs. In this case, we can group together related rows but we may not know what those
+groupings mean (since no oracle has commented on each group). For example,
+in recursive Fastmap
+- Divide data according to 2 distant points
+- Reburies on each half
+- Stop at (say) $\srqt{N}$
+
+[^men13] [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
+  Tim Menzies; Andrew Butcher; David Cok; Andrian Marcus; Lucas Layman;
+  Forrest Shull; Burak Turhan; Thomas Zimmermann IEEE Transactions
+  on Software Engineering Year: 2013 | Volume: 39, Issue: 6
+
+[^fal]" Christos Faloutsos and King-Ip Lin. 1995. 
+   [FastMap: a fast algorithm for indexing, data-mining and visualization of traditional and multimedia datasets](https://infolab.usc.edu/csci599/Fall2002/paper/DM1_faloutsos95fastmap.pdf)
+  . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
+
+
+
 _Semi-supervised learners_ assume that data has some shape with trends
 in that shape. If so, then  we do not need
 to poke around every part of that shape. 
@@ -306,7 +333,7 @@ It is easy to see why we can reduce a data set's features are rows:
      - in one dimension (running 0..1), 5  evenly spaced points of size 0.2 would cover
          the space.
      - but in  two,tree  dimensions, you'd need 25 to 125
-     - and in 20 dimensions you'd need quadrillion examples $5^{20} \approx 10^{14}$ dimensions, 
+     - and in 20 dimensions you'd need quadrillion examples $5^{20} \approx 10^{14}$ examples, 
          to cover that hypercube
      - This is described as the curse of dimensionality:
           the explosive nature of increasing data dimensions and its resulting exponential 
@@ -314,6 +341,7 @@ It is easy to see why we can reduce a data set's features are rows:
    - But data mining works on data sets with hundreds columns _without_ needing quadrillions rows.
      Hence, it must be possible to ignore most of those columns. For example,
      once I reduced 351 features down to 9, with no loss of efficacy in prediction [^part14].
+     
 
 <img width=650 src="/etc/img/curse.png">
 
