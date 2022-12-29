@@ -293,15 +293,17 @@ and/or contained biased opinions which leads to faults in the reasoning[^joy21].
   [Bias in machine learning software: why? how? what to do?](https://arxiv.org/pdf/2105.12195.pdf)
   In Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021). Association for Computing Machinery, New York, NY, USA, 429–440. https://doi.org/10.1145/3468264.3468537
 
-<img align=right src="/etc/img/rmap.png" width=500>
+<img  src="/etc/img/rmap.png" width=500><img src="/etc/img/abc.ong">
 
 _Unsupervised learning_
 reasons over unlabelled data. In this case, you've got columns of inputs,
 but no outputs. In this case, we can group together related rows but we may not know what those
 groupings mean (since no oracle has commented on each group). For example,
 in recursive Fastmap [^men13][^fal95]
-- Divide data according to 2 distant points
-- Reburies on each half
+- Find two distant points $A,B$ separated by distance $c$.
+- Other point have distance $a,b$ to $A,B$ and by the cosine rule[^cos], fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2ac}$
+- Divide other points on median $x$ value.
+- Recurse on each half
 - Stop at (say) $\sqrt{N}$
 
 [^men13]: [Local versus Global Lessons for Defect Prediction and Effort Estimation](https://menzies.us/pdf/12localb.pdf)
@@ -312,6 +314,13 @@ in recursive Fastmap [^men13][^fal95]
 [^fal95]: Christos Faloutsos and King-Ip Lin. 1995. 
    [FastMap: a fast algorithm for indexing, data-mining and visualization of traditional and multimedia datasets](https://infolab.usc.edu/csci599/Fall2002/paper/DM1_faloutsos95fastmap.pdf)
   . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
+
+[^cos] $x^2 + y^2 = a^2 \rightarrow y^2 = a^2 - x^2$    : EQ1  
+$(c-x)^2 + y^2=b^2 \rightarrow (c-x)^2 + a^2 - x^2 = b^2$ : EQ2  
+$c^2-2cx +x^2 +a^2 - x^2 = b^2$ : expanding and subsisting EQ2 for $y^2$)  
+$-2xc +x^2-x^2 =  b^2 - c^2 - a^2$ : isolating $x$ terms on the right  
+$x= (b^2-c^2-a^2)/(-2c)$ : isolating single $x$ term.   
+$x=(a^2 + c^2 -b^2)/(2c)$ : done.
 
 
 _Semi-supervised learners_ assume that data has some shape with trends
