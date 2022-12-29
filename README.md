@@ -301,7 +301,7 @@ but no outputs. In this case, we can group together related rows but we may not 
 groupings mean (since no oracle has commented on each group). For example,
 in recursive Fastmap [^men13][^fal95]
 - Find two distant points $A,B$ separated by distance $c$.
-- Other point have distance $a,b$ to $A,B$ and by the cosine rule[^cos], fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2ac}$
+- Other point have distance $a,b$ to $A,B$ and by the cosine rule[^cos], fall on a line from $A$ to $B$, fall at $x=\frac{a^2+c^2-b^2}{2c}$
 - Divide other points on median $x$ value.
 - Recurse on each half
 - Stop at (say) $\sqrt{N}$
@@ -315,12 +315,13 @@ in recursive Fastmap [^men13][^fal95]
    [FastMap: a fast algorithm for indexing, data-mining and visualization of traditional and multimedia datasets](https://infolab.usc.edu/csci599/Fall2002/paper/DM1_faloutsos95fastmap.pdf)
   . SIGMOD Rec. 24, 2 (May 1995), 163–174. https://doi.org/10.1145/568271.223812
 
-[^cos]:  $x^2 + y^2 = a^2 \rightarrow y^2 = a^2 - x^2$    : EQ1  
-$(c-x)^2 + y^2=b^2 \rightarrow (c-x)^2 + a^2 - x^2 = b^2$ : EQ2  
-$c^2-2cx +x^2 +a^2 - x^2 = b^2$ : expanding and subsisting EQ2 for $y^2$)  
-$-2xc +x^2-x^2 =  b^2 - c^2 - a^2$ : isolating $x$ terms on the right  
-$x= (b^2-c^2-a^2)/(-2c)$ : isolating single $x$ term.   
-$x=(a^2 + c^2 -b^2)/(2c)$ : done.
+[^cos]:  
+$x^2 + y^2 = a^2 \rightarrow y^2 = a^2 - x^2$     EQ1  
+$(c-x)^2 + y^2=b^2 \rightarrow (c-x)^2 + a^2 - x^2 = b^2$  EQ2  
+$c^2-2cx +x^2 +a^2 - x^2 = b^2$  expanding and subsisting EQ2 for $y^2$)  
+$-2xc +x^2-x^2 =  b^2 - c^2 - a^2$  isolating $x$ terms on the right  
+$x= (b^2-c^2-a^2)/(-2c)$  isolating single $x$ term.   
+$x=(a^2 + c^2 -b^2)/(2c)$  done.
 
 
 _Semi-supervised learners_ assume that data has some shape with trends
