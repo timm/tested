@@ -65,9 +65,9 @@ function obj(s,    t,new) --> t; create a klass and a constructor + print method
 
 local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
 ------------------------------------------------------------------------------
-ROW.new=function(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
+function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
 -------------------------------------------------------------------------------
-NUM.new= function(i,n,s)
+function NUM.new(i,n,s)
   i.at, i.txt = n or 0, s or ""
   i.w  = i.txt:find"-$" and -1 or 1
   i.lo =  math.huge
