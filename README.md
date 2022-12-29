@@ -16,7 +16,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Introduction to TESTED
 
-TL;DR
+**TL;DR:**
 
 > TESTED is a demonstration that semi-supervised multi-objective
 explanation algorithms are surprisingly easy to build. Such
@@ -26,6 +26,7 @@ having to offer too much information on each thing. Once discovered,
 TESTED can also offer advice on how to make bad things better.
 
 
+**DETAILS:**
 
 Hopefully,
 software  built by people like me (i.e. a developer) is
