@@ -14,11 +14,11 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-# Introduction to TESTED
+# Introduction 
 
 ## What is TESTED?
 
-> TESTED is a demonstration that semi-supervised multi-objective
+TESTED is a demonstration that semi-supervised multi-objective
 explanation algorithms are surprisingly easy to build. Such
 algorithms support "stakeholder testing" where humans want
 to sort and discover the best and worst things, without
@@ -50,7 +50,7 @@ can help the other [^abduction].
   data mining tools.
 
 
-## Some Details
+## Why TESTED?
 
 Hopefully,
 software  built by people like me (i.e. a developer) is
