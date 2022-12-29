@@ -14,10 +14,27 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-| Study guide: terms to watch | 
-unsupervised learning, semi-supervised learning, supervised learning,
-clustering, 
-decision tree learning
+<table>
+<tr><td>Study guide: terms to watch </td><td> 
+stakeholder
+<br>
+data: row (a.k.a. example, instance);
+column (a.k.a. attribute, feature)<br>
+learning types: <br>
+unsupervised or semi-supervised or supervised;
+instance or model-based<br>
+algorithms: 
+decision tree learning;
+clustering;
+FASTMAP (and cosine rule)<br>
+accountability<br>
+explanation<br>
+accountability: logging, watched, presence<br>
+multi-objective reasoning; domination, Pareto frontier, Zitzler predicate<br>
+misc: manifold, labelling cost, curse of dimensionality
+<br>
+</td></tr></table>
+
 # Introduction 
 
 
@@ -229,7 +246,7 @@ to someone else, and watch them break it.
 principle of ethical programming.  
 - Vance et al. [^Vance2015] argue that a
 pre-condition for the accountability is the knowledge of an 
-**external audience**, who could approve or disapprove of a system. 
+**external audience**, who could approve or disapprove of a system.  XXX other components as well
 
 TESTED has many tools for such external audiences:
 
@@ -327,6 +344,12 @@ TL:DR:
 
 > **The best thing we can do with data is throw most of it away.** :astonished:
 
+
+"In most applications examples are not spread uniformly throughout the instance space, 
+  but are concentrated on or near a lower-dimensional manifold. Learners can implicitly take advantage of this lower effective dimension."    
+-- Pedro Domingoes
+
+
 <img align=right width=600 src="/etc/img/weather.png">
 
 TESTED in a **semi-supervised** learner. 
@@ -396,8 +419,18 @@ in that shape. If so, then  we do not need
 to poke around every part of that shape. 
 Levina et al. [^lev05] comment that the reason any data mining method works for
 high dimensions is that data embedded in high-dimensional format actually
-can be converted into a more compressed space without major information loss.
+can be converted into a more compressed space without major information loss. For example,
+see the "shadow" of the mountains on the "roof"? That 2D plot would be enough for most purposes.
 
+<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png">
+
+For another example, see how neither of these two dimensions models that data as well as a line drawn
+between two distant points in the data (see the back arrow in the middle of all the dots).
+
+<img width=500 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
+
+The lesson here is that hiding within all those dimensions is a lower dimensional
+space that is just as informative, and easier to use.
 For example, here is one study that reduces colums,rows from 30,60 to 6. In the following, each row describes
 one class, and its bugs:
 - The
