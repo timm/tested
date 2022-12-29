@@ -269,7 +269,7 @@ _supervised learners_ assume all examples are labelled.
 For example, lets build a decision tree:
 
 
-It can be
+In practice, it can be
 very expensive to acquire these labels via human labor.
 For example, four out of the nine projects studied in one paper [^tu22]
 paper need humans to label 22,500+ commits 
@@ -297,8 +297,7 @@ can be converted into a more compressed space without major information loss.
 It is easy to see why we can reduce a data set's features are rows:
 - Many rows must be similar to the point of redundancy  since, when we build a model, 
   each part of that model should have support from multiple
-  data points. This means that all the rows can be shrunk back to just a few examples
-  $\blacksquare$. 
+  data points. This means that all the rows can be shrunk back to just a few examples.
 - Most columns must redundant or noisey since otherwise,
   data mining would not work:
   - A linear increase in feature count means an exponential increase
@@ -308,8 +307,9 @@ It is easy to see why we can reduce a data set's features are rows:
        gaps of size (at most) 0.01. 
      - in twenty dimensions, to cover that hypercube to same degree, required $10^{20}$ points.  
    - But data mining works on data sets with 20 columns _without_ needing sextillion rows.
-     Hence, it must be possible to ignore most of those columns 
-     $\blacksquare$. 
+     Hence, it must be possible to ignore most of those columns.
+
+    <img width=650 src="/etc/img/curse.png">
 
 For example, here is some data where each row describes one class:
 - The
@@ -362,6 +362,14 @@ a
 few exemplar rows
 (found via instance selection[^olv]), described using just  a few most informative columns
 (found via feature selection [^li17]).
+
+(Aside: counter position to the above:
+- For an argument that, sometimes, adding more columns is a good idea, see
+  A. Zollanvari; A. P. James; R. Sameni (2020). "A Theoretical Analysis of the Peaking 
+  Phenomenon in Classification". Journal of Classification. 37 (2): 421–434. 
+  doi:10.1007/s00357-019-09327-3.)
+- For an argument that, somethings, adding more rows is a good idea, see
+  the deep learning research.)
 
 
 [^kamvar03]: Kamvar, Kamvar and Sepandar, Sepandar and Klein, Klein and Dan, Dan and Manning, 
