@@ -299,10 +299,6 @@ local function eg(key,str, fun)
   egs[key]=fun
   help=help..fmt("  -g  %s\t%s\n",key,str) end
 
-eg("all","run all",function() 
-   for _,k in sort(kap(egs,function(k,_) return k end)) do
-     if k ~= "all" then eg(l) end end end )
-
 eg("ls",    "list all",           function() print(help) end)
 eg("the",   "show settings",      function() oo(the) end)
 eg("num",   "can NUMs be built?", function() oo(NUM()) end)
