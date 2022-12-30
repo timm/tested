@@ -21,9 +21,10 @@ Three kinds of attributes:
 
 |operation| NUMeric | SYMbolic | ordinal|
 |---------|---------|----------|--------|
+|e.g.     | age=23     | car=ford | day=tuesday|
 | equal, not equal| &check; | &check; | &check;|
 | less, greater|  &check;  | 	&#10060; | &check;|
-| maths: add,sub, mul, div, exp etc | &check; | &check; |&check;
+| maths: add,sub, mul, div, exp etc | &check; | &#10060; | &#10060; |
 
 Each have their measure of _middle_ and _diversity_
 
@@ -145,7 +146,7 @@ To understand the last one, recall that in a normal curve:
 - 99% of values are in 2.58 standard deviations of mean (-2.58s <= X <= 2.58s)
 - 95% of values are in  1.96 standard deviations of mean (-1.96s <= X <= 1.96s)
 - 90% of values are in 1.28 standard deviations of mean (-1.28s <= X <= 1.28s)
-  - so 2*1.28*sd = 90th - 10th percentile
+  - so 2\*1.28*sd = 90th - 10th percentile
   - i.e. sd = (90th - 10th)/(2*1.28)
 
 ## Psuedo-random numbers
