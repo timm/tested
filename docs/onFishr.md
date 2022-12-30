@@ -364,8 +364,6 @@ end
 ----------------------------------------------------
 
 
---[[ I'm commenting out this section so the rest of
---   this script remains runnable.
 -- Suppose the file mod.lua looks like this:
 local M = {}
 
@@ -414,8 +412,6 @@ f = loadfile('mod2.lua')  -- Call f() to run it.
 -- loadstring is loadfile for strings.
 g = loadstring('print(343)')  -- Returns a function.
 g()  -- Prints out 343; nothing printed before now.
-
---]]
 ```
 
 ## Background
