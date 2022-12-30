@@ -53,6 +53,8 @@ class settings(o):
       i.__dict__[k] = atom(v)
     if i.help: print(__doc__); sys.exit()
 
+# Stores settings in a variable "the". Note that once 
+# created, we can access settings via (e.g.) the.p.
 the=settings.create()
 if __name__ == "__main__":
     the.update()
