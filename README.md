@@ -142,6 +142,57 @@ end-of-term project.
 has to submit something, even if it is broken. Homeworks can get submitted multiple times
 so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
 
+## asdas
+
+<a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
+First, astronomers  learn how to grind lens.  Next, they use those
+lens to explore the universe.
+
+So, now that SE people know how to match their brackets, it it time
+to table our next challenge. How can we help
+people use our software tools to better
+explore (and change) the world around us?
+
+Our answer is based on an idea from the 1990s[^me96]: 
+to test "it", you have to run "it". To say that another way,
+a properly
+implemented "test" engine is also an "inference" engine.
+And if we do it that way, then we have a unified framework
+for both testing  and execution.
+
+For example, 
+when SE developers explore software, it is called "testing". When
+non-developers explore software it is called many things such as
+"acceptance testing", "auditing", etc.  By refactoring those two
+approaches, and adding in some AI, we can implement a kind of
+incremental agile acceptance process where developers, and the
+others, can use lessons from past tests to improve subsequent
+versions.
+
+[^me96]: [On the Practicality of Abductive Validation](https://d1wqtxts1xzle7.cloudfront.net/1189844/57jb73rfr4wygz2.pdf?1425075060=&response-content-disposition=inline%3B+filename%3DOn_the_Practicality_of_Abductive_Validat.pdf&Expires=1671930452&Signature=BApU0XRhl8BjEdE0UaGjG2xWjopeKj9MaNb~UYbfJIe5gLEfpynx08Usk-5ga~cGh9kRwk6vRPdZ1iRVJeVZO3KJ5oxsFXgcsex~iay0uNQBk-H43EKm5TNKRU5SfXWFs~re9erwkOUT7XvIwWGjdwHPCtZo3AvsAbhdkOcu~GekEPA1Kh9mpra0W4EzSisMmRj1iWld8O3iYrXq16etQ1NVaPsfdCQ-46ck6grkpjdttvE04W2HSowijrAdJAaKssBBHJ5w1AAESVAzpnvMvSDq732Gyre7vDJocjRtgF-DWDJSpFVzx3DXrbSdcxj1Z3rbCEsJQNgY8Fp0Qbffsg__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
+         Menzies, Tim. ECAI. Vol. 96,  1996.
+
+Q1) But wait, is this an AI subject or a SE subject?   
+A1) Yes.
+AI is software[^me]  and as such it needs engineers who have the
+experience needed to revise and refactor and improve it[^mart].
+
+Q2) Is this an AI subject or a requirements engineering subject?    
+A2) Yes. Requirements and testing are both iterative processes where we
+try to learn the most, using the least samples.
+
+[^me]: T. Menzies, 
+       ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
+       in IEEE Software, 
+       vol. 37, no. 1, pp. 81-85, Jan.-Feb. 2020, doi: 10.1109/MS.2019.2954841.<br>
+
+[^mart]:  Silverio Martínez-Fernández, Justus Bogner, Xavier Franch, Marc Oriol, Julien Siebert, Adam Trendowicz, Anna Maria Vollmer, and Stefan Wagner. 2022. 
+        [Software Engineering for AI-Based Systems: A Survey](https://dl.acm.org/doi/pdf/10.1145/3487043)
+        ACM Trans. Softw. Eng. Methodol. 31, 2, Article 37e (April 2022), 59 pages. https://doi.org/10.1145/3487043
+
+Is all that too complex for you, lets make it simple. Lets go "fishing"., 
+
+
 ## Install
 
 Install Lua:
