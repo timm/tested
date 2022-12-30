@@ -30,7 +30,7 @@ Each have their measure of _middle_ and _diversity_
 |measure| NUMeric | SYMbolic | ordinal|
 |---------|---------|----------|--------|
 | mid | mean<br>$\mu=\frac{\sum_i}{n}$  | | mode (most frequent value) | mode |
-| div |  standard deviation (delta to the mean)<br>$\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$ | entropy (effort to recreate signal) <br>$\sum_i=p_i\times log_2(p_i)$ | ? |
+| div |  standard deviation (delta to the mean)<br>$\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$ | entropy (effort to recreate signal) <br>$e=\sum_i(p_i\times log_2(p_i))$ | ? |
 
 
 ## Theory 
