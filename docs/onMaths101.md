@@ -175,9 +175,45 @@ function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
 return {randi=randi, srand=srand, rand=rand}
 ```
 
-### Sampling  XXX
+## Domination
+
+Is 2 better than 3? Depends if we want to minimimize of maximize.
+
+Lets change  `NUM`  and `SYM` so its accepts a name string
+- and if the name starts in uppercase, we have a number
+- and if the name ends with "-" or "+" then its a goal we want to minimize or maximize:
+
+We'll need a factor that can take a list of names name produce a list of NUMs or SYMs: e.g.
+
+```
+{"Clndrs",       "Volume","HpX",  "Lbs-", "Acc+","Model","origin","Mpg+"}
 
 
+
+     ==> NUM(1,"Clndrs"), NUM(2,"Volume"), NUM(4,"Libs-"), ... SYM(7,"origin") .... }
+goal ==> no               no               yes             ... no              ....
+w    ==> 1                1                -1              ... 1               ....
+x or y==> x               x                 y                  x               ....
+
+
+```
+{
+<table>
+<tr><td>Name     <<td>call<td> goal? <td>w <td> x or y ?</tr></table>
+<tr><td>{"Cynds  <td>call<td> goal? <td>w <td> x or y ?</tr></table>
+<tr><td>Name <td>call<td> goal? <td>w <td> x or y ?</tr></table>
+
+```
+```lua
+COLS=obj"COLS"
+function COLS.new(i,t,     col,cols)
+  i.names, i.all, i.x, i.y = t, {}, {}, {}
+  for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
+    col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
+    col = push(i.all, col)
+    if not s:find"X$" then
+      push(s:find"[!+-]$" and i.y or i.x, col) end end end
+```
 BEfore all
 
 
