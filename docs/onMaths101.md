@@ -78,13 +78,13 @@ function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
 
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
 By the way, to understand entropy, think of it as
-- the effort required by binary chop to find clumps of  of "X" hiding in a long stream of "Y". 
+- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
 
 e.g. in a vector of size 4,
-  - nazies have a "1" near one end
+  - nazis have a "1" near one end
   - and England are all the other bits
-- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{lion}}=.25$)
-- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{tigers}}$=.85)
+- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
+- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.85)
 - Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
   - By convention, we  add a minus sign at the front (else all entropies will be negative).
 
