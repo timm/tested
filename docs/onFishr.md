@@ -59,6 +59,52 @@ you do not need to run my LUA-- you only need to read it.
 - For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
 - For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
 
+If you sqint and 
+```lua
+local SYM = lib.obj"SYM"
+function SYM:new() --> SYM; constructor
+  self.n   = 0
+  self.has = {}
+  self.most, self.mode = 0,nil end
+
+function SYM:add(x) --> nil;  update counts of things seen so far
+  if x ~= "?" then
+   self.n = self.n + 1
+   self.has[x] = 1 + (self.has[x] or 0) -- if "x" not seen before, init counter to 0
+   if self.has[x] > self.most then
+     self.most,self.mode = self.has[x], x end end end
+
+function SYM:mid(x) --> n; return the mode
+  return self.mode end
+
+function SYM:div(x) --> n; return the entropy
+  local function fun(p) return p*math.log(p,2) end
+  local e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end
+  return e end
+```
+
+```lua
+-- ## NUM
+-- Summarizes a stream of numbers.
+local NUM = lib.obj"NUM"
+function NUM:new() --> NUM;  constructor;
+  self.n, self.mu, self.m2 = 0, 0, 0
+  self.lo, self.hi = math.huge, -math.huge end
+
+function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
+  if n ~= "?" then
+    self.n  = self.n + 1
+    local d = n - self.mu
+    self.mu = self.mu + d/self.n
+    self.m2 = self.m2 + d*(n - self.mu)
+    self.sd = (self.m2 <0 or self.n < 2) and 0 or (self.m2/(self.n-1))^0.5
+    self.lo = math.min(n, self.lo)
+    self.hi = math.max(n, self.hi) end end
+
+function NUM:mid(x) return self.mu end --> n; return mean
+function NUM:div(x) return self.sd end --> n; return standard deviation
+```
+
 ## Layer2: Scripting
 
 All my code has some common features:

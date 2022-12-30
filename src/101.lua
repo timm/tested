@@ -27,24 +27,22 @@ local fmt,oo,per,rnd,sort,rand,norm=lib.fmt,lib.oo,lib.per,lib.rnd,lib.sort,lib.
 -- ## SYM
 -- Summarize a stream of symbols.
 local SYM = lib.obj"SYM"
-function SYM:new() --> SYM; constructor
-  self.n   = 0
-  self.has = {}
-  self.most, self.mode = 0,nil end
+function SYM.new(i) --> SYM; constructor
+  i.n   = 0
+  i.has = {}
+  i.most, i.mode = 0,nil end
 
-function SYM:add(x) --> nil;  update counts of things seen so far
+function SYM.add(i,x) --> nil;  update counts of things seen so far
   if x ~= "?" then 
-   self.n = self.n + 1 
-   self.has[x] = 1 + (self.has[x] or 0)
-   if self.has[x] > self.most then
-     self.most,self.mode = self.has[x], x end end end 
+   i.n = i.n + 1 
+   i.has[x] = 1 + (i.has[x] or 0)
+   if i.has[x] > i.most then
+     i.most,i.mode = i.has[x], x end end end 
 
-function SYM:mid(x) --> n; return the mode
-  return self.mode end 
-
-function SYM:div(x) --> n; return the entropy
+function SYM.mid(i,x) return i.mode end --> n; return the mode
+function SYM.div(i,x) --> n; return the entropy
   local function fun(p) return p*math.log(p,2) end
-  local e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
+  local e=0; for _,n in pairs(i.has) do e = e - fun(n/self.n) end 
   return e end
 --------------------------------------------------------------------------------
 -- ## NUM
