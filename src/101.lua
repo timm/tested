@@ -42,55 +42,56 @@ function SYM.add(i,x) --> nil;  update counts of things seen so far
 function SYM.mid(i,x) return i.mode end --> n; return the mode
 function SYM.div(i,x) --> n; return the entropy
   local function fun(p) return p*math.log(p,2) end
-  local e=0; for _,n in pairs(i.has) do e = e - fun(n/self.n) end 
-  return e end
+  local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
+  return -e end
 --------------------------------------------------------------------------------
 -- ## NUM
 -- Summarizes a stream of numbers.
 local NUM = lib.obj"NUM"
-function NUM:new() --> NUM;  constructor; 
-  self.n, self.mu, self.m2 = 0, 0, 0
-  self.lo, self.hi = math.huge, -math.huge end
+function NUM.new(i) --> NUM;  constructor; 
+  i.n, i.mu, i.m2 = 0, 0, 0
+  i.lo, i.hi = math.huge, -math.huge end
 
-function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
+function NUM.add(i,n) --> NUM; add `n`, update lo,hi and stuff needed for standard deviation
   if n ~= "?" then
-    self.n  = self.n + 1
-    local d = n - self.mu
-    self.mu = self.mu + d/self.n
-    self.m2 = self.m2 + d*(n - self.mu)
-    self.sd = (self.m2 <0 or self.n < 2) and 0 or (self.m2/(self.n-1))^0.5 
-    self.lo = math.min(n, self.lo)
-    self.hi = math.max(n, self.hi) end end
+    i.n  = i.n + 1
+    local d = n - i.mu
+    i.mu = i.mu + d/i.n
+    i.m2 = i.m2 + d*(n - i.mu)
+    i.lo = math.min(n, i.lo)
+    i.hi = math.max(n, i.hi) end end
 
-function NUM:mid(x) return self.mu end --> n; return mean
-function NUM:div(x) return self.sd end --> n; return standard deviation
+function NUM.mid(i,x) return i.mu end --> n; return mean
+function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
+    return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 -----------------------------------------------------------------------------------------
 -- ## SOME
 -- Hold a small sample of an infinite stream.
 local SOME = lib.obj"SOME"
-function SOME:new(max)
-  self._has, self.ok, self.max, self.n = {}, true, max or the.Some, 0  end
+function SOME.new(i,max)
+  i.ok, i.max, i.n = true, max or the.Some or 256, 0  
+  i._has = {} end -- marked private with "_" so we do not print large lists
 
-function SOME:add(x) --> nil. If full, add at odds i.max/i.n (replacing old items at random)
+function SOME.add(i,x) --> nil. If full, add at odds i.max/i.n (replacing old items at random)
   if x ~= "?" then
     local pos
-    self.n = self.n + 1
-    if     #self._has < self.max     then pos= 1+#self._has
-    elseif lib.rand() < self.max/self.n then pos= lib.rint(#self._has) end
+    i.n = i.n + 1
+    if     #i._has < i.max     then pos= 1+#i._has
+    elseif lib.rand() < i.max/i.n then pos= lib.rint(#i._has) end
     if pos then
-       self._has[pos]=x
-       self.ok=false end end end
+       i._has[pos]=x
+       i.ok=false end end end
 
-function SOME:has(i) --> t; return kept contents, sorted
-  if not self.ok then self._has = sort(self._has) end
-  self.ok = true
-  return self._has end
+function SOME.has(i) --> t; return kept contents, sorted
+  if not i.ok then i._has = sort(i._has) end -- only resort if needed
+  i.ok = true
+  return i._has end
 
-function SOME:mid(x) --> n; return the number in middle of sort
-  return per(self:has(),.5) end
+function SOME.mid(x) --> n; return the number in middle of sort
+  return per(i:has(),.5) end
 
-function SOME:div(x) --> n; return the entropy
-  return (per(self:has(), .9) - per(self:has(), .1))/2.58 end
+function SOME.div(x) --> n; return the entropy
+  return (per(i:has(), .9) - per(i:has(), .1))/2.58 end
 --------------------------------------------------------------------------------------------
 --- ## Start-up
 local eg={}
@@ -125,7 +126,7 @@ function eg.num()
 
 function eg.some()
   local some=SOME(32)
-  for n=1,1000 do some:add(n) end
+  for n=1,10^4 do some:add(n) end
   oo(some)
   oo(some:has()) end
 

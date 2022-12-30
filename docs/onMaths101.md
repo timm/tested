@@ -29,15 +29,149 @@ Each have their measure of _middle_ and _diversity_
 
 |measure| NUMeric | SYMbolic | ordinal|
 |---------|---------|----------|--------|
-| mid | mean<br>$\mu=\frac{\sum_i}{n}$  |  mode (most frequent value) | mode |
-| div |  standard deviation (delta to the mean)<br>$\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$ | entropy (effort to recreate signal) <br>$e=\sum_i(p_i\times log_2(p_i))$ | ? |
+| mid | mean<br>$\mu=\frac{\sum_i x_i}{n}$  |  mode (most frequent value) | mode |
+| div |  standard deviation (delta to the mean)<br>$\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$ | entropy (effort to recreate signal) <br>$e=-\sum_i(p_i\times log_2(p_i))$ | ? |
 
+Good to update these  incrementally:
 
-## Theory 
+```lua
+NUM = obj"NUM"
+function NUM.new(i) --> NUM;  constructor; 
+  i.n, i.mu, i.m2 = 0, 0, 0
+  i.lo, i.hi = math.huge, -math.huge end
 
+function NUM.add(i,n) --> NUM; add `n`, update lo,hi and stuff needed for standard deviation
+  if n ~= "?" then
+    i.n  = i.n + 1
+    local d = n - i.mu
+    i.mu = i.mu + d/i.n
+    i.m2 = i.m2 + d*(n - i.mu)
+    i.lo = math.min(n, i.lo)
+    i.hi = math.max(n, i.hi) end end
 
-101.md code uses the following theory.
+function NUM.mid(i,x) return i.mu end --> n; return mean
+function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
+    return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
+```
+Here's something similar for SYMbols:
+```lua
+SYM = obj"SYM"
+function SYM.new(i) --> SYM; constructor
+  i.n   = 0
+  i.has = {}
+  i.most, i.mode = 0,nil end
 
+function SYM.add(i,x) --> nil;  update counts of things seen so far
+  if x ~= "?" then 
+   i.n = i.n + 1 
+   i.has[x] = 1 + (i.has[x] or 0)
+   if i.has[x] > i.most then
+     i.most,i.mode = i.has[x], x end end end 
+
+function SYM.mid(i,x) return i.mode end --> n; return the mode
+function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
+  local function fun(p) return p*math.log(p,2) end
+  local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
+  return -e end
+```
+
+By the way, to understand entropy, think of it as
+- the effort required by binary chop to find clumps of  of "1" hiding in a long stream of "0". 
+
+e.g. in a vector of size 100,
+  - lions are 20 "1"s near one end
+  - and tigers are 10 "1"s near the other end.
+- This means that 20% of the time we need to do binary chops to find lions (i.e. $p_{\mathit{lion}}=.2$)
+- and 10% if the time we need to binary chops to find tigers (i.e. $p_{\mathit{tigers}}$=.1)
+- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
+  - By convention, we  add a minus sign at the front (else all entropies will be negative).
+
+## Aside: Reservoir Sampling
+
+To sample an infinite stream, only keep some of the data
+- and as time goes on, keep less and less.
+
+E.g. if run on 10,000 numbers, this code would keep
+
+```
+{  18  687 
+ 1545 
+ 2022 2324 2693 2758 2883 
+ 3247 3533 
+ 4067  4168 4469 4570 
+ 5863 5907 5957 
+ 6147 6440 6727 
+ 7228 7517 7574 7598 7765 7955 
+ 8311 8379 8538 
+ 9052 9189 9323}
+```
+
+```lua
+SOME = obj"SOME"
+function SOME.new(i,max)
+  i.ok, i.max, i.n = true, max or the.Some or 256, 0  
+  i._has = {} end -- marked private with "_" so we do not print large lists
+
+function SOME.add(i,x) --> nil. If full, add at odds i.max/i.n (replacing old items at random)
+  if x ~= "?" then
+    local pos
+    i.n = i.n + 1
+    if     #i._has < i.max     
+    then   pos= 1+#i._has -- easy case. if cache not full, then just add
+    elseif lib.rand() < i.max/i.n then pos= lib.rint(#i._has) end -- otherwise, replace at random
+    if pos then
+       i._has[pos]=x
+       i.ok=false end end end -- "ok=false" means we may need to resort
+
+function SOME.has(i) --> t; return kept contents, sorted
+  if not i.ok then i._has = sort(i._has) end -- only resort if needed
+  i.ok = true
+  return i._has end
+
+function  per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
+  p = math.floor(((p or .5)*#t)+.5)
+  return t[math.max(1,math.min(#t,p))] end
+
+function SOME.mid(x) --> n; return the number in middle of sort
+  return per(i:has(),.5) end
+
+function SOME.div(x) --> n; return the standard deviation as (.9 - .1)/2.58
+  return (per(i:has(), .9) - per(i:has(), .1))/2.56 end
+```
+<img src="https://financetrain.sgp1.cdn.digitaloceanspaces.com/ci1.gif" align=right width=400>
+
+To understand the last one, recall that in a normal curve:
+
+- 99% of values are in 2.58 standard deviations of mean (-2.58s <= X <= 2.58s)
+- 95% of values are in  1.96 standard deviations of mean (-1.96s <= X <= 1.96s)
+- 90% of values are in 1.28 standard deviations of mean (-1.28s <= X <= 1.28s)
+  - so 2*1.28*sd = 90th - 10th percentile
+  - i.e. sd = (90th - 10th)/(2*1.28)
+
+## Psuedo-random numbers
+Comptuers can't really do random numbers
+- and often you wan't want to
+  - when debugging you want to reproduce a prior sequence.
+
+Psuedo-random numbers: 
+- Comptue a new number from a seed. Update the seed. Return the number.
+- To rerun old sequence, reset the seed
+
+Empirical notes: 
+- keep track of your seeds (reproducability)
+- always reset your seed in the right place (war story: 2 years of work lost)
+
+```lua
+Seed=937162211
+function rand(lo,hi)
+  lo, hi = lo or 0, hi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return lo + (hi-lo) * Seed / 2147483647 end
+
+function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
+
+return {randi=randi, srand=srand, rand=rand}
+```
 
 ### Sampling  XXX
 
