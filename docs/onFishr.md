@@ -17,24 +17,62 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated Software Engineering and "Fishing"
 
+"Science is what we understand well enough to explain     
+to a computer. Art is everything else we do"    
+- Donald Knuth
 
-> By the end of this lecture, you will know 6 week end-of-term project as well as five
-possible tasks.
+With automated software engineering, are you an artist or a scientist?
+Do you understand how to implement multi-objective semi-supervised explanations?
+Probably not, yet.  
 
-This page describes the code [fish1.lua](/src/fish1.lua). 
-From a user-perspective, `FISH1` it is a tool for stakeholder testing; i.e.
-it lets
-humans prioritize $N$ examples,
-without knowing everything about every example. 
-To understand the code, we need to look at it a multiple levels:
-- level1:  written in LUA
-- level2: command-line script
-- level3: that supports  a generic data model which, in turn supports:
-- level4: multi-objective semi-supervised explanation
+So lets lay it out, slowly. What might surprise you is,
+as seen in the
+[fish1.lua](/src/fish1.lua) 
+system,
+all this can be coded in a few hundred lines of code.
 
-The rest of this document explains these four layers.
+To understand this code, think in layers:
+- Layer1:  written in LUA
+- Layer2: command-line script
+- Layer3: that supports  a generic data model which, in turn supports:
+- Layer4: multi-objective semi-supervised explanation
+
+The thing to note in the following is that across all the scripts used here, there is much common
+structure-- which is kind of deep point; i.e. under-the-hood there is much commonality in 
+the algorithms people call "optimization", "data mining", "explanation", etc.
 
 ## Layer1: LUA
+
+LUA is an ultra lightweight scripting language comprising
+less than two dozen keywords:
+**and, break, do, else, elseif, end, false, for, function, if, in, local, nil, not, or, repeat, return, then, true, until, while**.
+LUA has a considerably
+smaller footprint than other programming languages, with its complete
+source code and documentation taking a mere 1.3 MB.
+
+I use LUA as an executable specification language. Students rewrite
+my code in whatever language they like (that is not LUA). 
+So to understand 
+[fish1.lua](/src/fish1.lua) 
+you do not need to run my LUA-- you only need to read it.
+
+- For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
+- For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
+
+## Layer2: Scripting
+
+All my code has some common features:
+
+Initial help text. 
+
+
+LUA is a language that is said to "not be provided with batteries".
+This means that its libraries are kept to the minimum necessary to
+do some stuff. Some people like PYTHON better since it comes with
+a very large set of standard libraries. Some people like LUA cause
+it doesn't (
+
+
 
 ```lua
 -- Two dashes start a one-line comment.
