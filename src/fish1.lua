@@ -1,5 +1,5 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end
-local help=[[  
+local the,help={},[[  
 fish1,lua : sort many <X,Y> things on Y, after peeking at just a few Y things
 (c)2022 Tim Menzies <timm@ieee.org> BSD-2
 
@@ -11,12 +11,12 @@ been successful.
 USAGE: lua fish1.lua [OPTIONS] [-g [ACTIONS
 
 OPTIONS:
-  -b  POSINT    number of evaluations = 16
-  -f  FILE      csv data file         = ../etc/data/auto93.csv
-  -g  ACTION    start up action       = ls
-  -p  POSINT    distance coefficient  = 2
-  -s  POSINT    random number seed    = 10019
-  -h            show help
+  -b  --budget  number of evaluations = 16
+  -f  --file    csv data file         = ../etc/data/auto93.csv
+  -g  --go      start up action       = ls
+  -h  --help    show help             = false
+  -p  --p       distance coefficient  = 2
+  -s  --seed    random number seed    = 10019
 
 ACTIONS:
 ]] 
@@ -27,19 +27,13 @@ In this code:
   defined in function argument lists.
 - functions are names before they are used. Hence, these line: --]]
 local any,cli,coerce,copy,csv,fmt,gt,kap,keys,lt
-local main,many,map,o,oo,obj,percent,push,shuffle,slice,sort,the
+local main,many,map,o,oo,obj,percent,push,settings,shuffle,slice,sort
   --[[
 - There is only one data structure: a table.
 - Tables can have numeric or symbolic keys.
 - Tables start and end with {}
-- Global settings are stores in "the" table: --]]
-the = {budget = 16,
-       file   = "../etc/data/auto93.csv", 
-       help   = false,
-       go     =  "ls", 
-       p      = 2,
-       seed   = 10019}
---[[
+- Global settings are stores in "the" table which is generated from
+  "help". E.g. from the above the.budget =16
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
 - At startup, we run `go[the.go]`
 - #t is length of the table t (and empty tables have #t==0)
@@ -270,26 +264,32 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
     then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t]=coerce(s1) end; fun(t)
     else return io.close(src) end end end
 
+function settings(s,    t) --> t;  parse help string to extract a table of options
+  t={};s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
+  oo(t)
+  return t end
+
 function cli(options) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(options) do
     v=tostring(v)
     for n,x in ipairs(arg) do
       if x=="-"..(k:sub(1,1)) or x=="--"..k then
          v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = coerce(v) end end
+    options[k] = coerce(v) end 
+  return options end
 
-function main(the,help,funs,     k,old,fails) 
-  fails=0
-  cli(the)
-  if the.help then print(help) else 
-    k=the.go
+function main(options,help,funs,     k,old,fails) 
+  old,fails={},0
+  for k,v in pairs(cli(settings(help))) do options[k] = v end 
+  if options.help then print(help) else 
+    for k,v in pairs(options) do old[k]=v end
+    k=options.go
     for k,fun in pairs(funs) do
-      if the.go=="all" or k==the.go then
-         old=copy(the)
-         math.randomseed(the.seed)
+      if options.go=="all" or k==options.go then
+         for k,v in pairs(old) do options[k]=v end
+         math.randomseed(options.seed)
          if funs[k]()=="false" then fails=fails+1
-                                    print("❌ fail:",k) end
-         the=copy(old) end end end 
+                                    print("❌ fail:",k) end end end end
   for k,v in pairs(_ENV) do 
     if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end 
@@ -303,12 +303,12 @@ eg("all","run all",function()
    for _,k in sort(kap(egs,function(k,_) return k end)) do
      if k ~= "all" then eg(l) end end end )
 
-eg("ls","list all", function() print(help) end)
-eg("the", "show settings",      function() oo(the) end)
-eg("num", "can NUMs be built?", function() oo(NUM()) end)
-eg("sym", "can SYMs be built?", function() oo(SYM()) end)
-eg("data","can we load data from disk?", function() map(DATA(the.file).cols.x,oo) end)
-eg("clone","can we cline data?",function() 
+eg("ls",    "list all",           function() print(help) end)
+eg("the",   "show settings",      function() oo(the) end)
+eg("num",   "can NUMs be built?", function() oo(NUM()) end)
+eg("sym",   "can SYMs be built?", function() oo(SYM()) end)
+eg("data",  "can we load data from disk?", function() map(DATA(the.file).cols.x,oo) end)
+eg("clone", "can we cline data?",function() 
   local data1,data2
   data1 = DATA(the.file)
   data2 = data1:clone(data1.rows)
