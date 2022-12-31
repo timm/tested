@@ -32,6 +32,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |diversity<br>(div)  | entropy<br> (effort to recreate signal)<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (distances from the  mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR: inter-quartile range<br>(75th-25th) percentile | standard deviation|
 
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
+
 By the way, to understand entropy, think of it as
 - the effort required by binary chop to find clumps of a signal hiding in a stream of noise
 
