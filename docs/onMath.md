@@ -55,6 +55,63 @@ function NUM.mid(i,x) return i.mu end --> n; return mean
 function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 ```
+The French mathematician Abraham de Moivre [^deMo1718]
+  notes that probabilities associated with discretely 
+  generated random variables (such as are obtained by flipping a coin or rolling a die) can 
+  be approximated by the area under the graph of an exponential function.
+This function was generalized by  Laplace[^Lap1812] 
+  into the first central limit theorem, which proved that probabilities for almost 
+  all independent and identically distributed random variables converge rapidly 
+  (with sample size) to the area under an exponential function—that is, to a normal 
+  distribution.
+This function was extended, extensively by Gaussian. Now its a curve with an area under the curve of one.
+  As standard deviation shrinks, the curve spikes upwards.
+
+
+<p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
+
+
+_Example:_ See [101.lua#NUM](/src/101.lua)
+- Also, to quickly sample from a Gaussian with mean `mu` and diversity `sd`
+
+
+      mu + sd * sqrt(-2*log(random)) * cos(2*pi*random)
+
+
+- ALso, to quickly withdraw a number `x` from a Gaussian (using the same code as 101.lua) use
+  the following (but this gets unstable for `n` under 10 and crashes for `n&lt;2`):
+
+
+      self. n  = self.n - 1
+      d = x - self.mu
+      self.mu = self.mu - d / self.n
+      self.m2 = self.m2 - d * (x - self.mu)
+      self.sd = (self.m2/(self.n-1))^.5 
+
+
+_Beware:_
+Not all things are normal Gaussians. 
+<img src="/etc/img/weibull.png" align=right width=300 > If you want to get fancy, you can use Weibull functions
+to make a variety of shapes (just by adjusting $\lambda,k$):
+
+
+<p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
+
+
+Or you could forget all about parametric assumptions.
+Many things get improved by going beyond the Gaussian guess [^dou95]:
+Not everything is best represented by a smooth curve with one peek that is symmetrical around that peek:
+
+
+<img width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+
+
+To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
+
+
+All that said, Gaussians take up far less space and are very easy to update. So all engineers should know their gaussians.
+
+
 Here's something similar for SYMbols:
 ```lua
 SYM = obj"SYM"
