@@ -30,7 +30,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |add or subtract | &#10060; | &#10060; |&#9989; | &#9989;|
 |multiply or divide | &#10060; | &#10060; |&#10060; | &#9989;|
 |central tendency<br>(mid) | mode <br>(most common symbol)| mode | (1) mean  $(\sum_i x_i)/n$<br>(2) median (50th percentile) | mean,median|
-|diversity<br>(div)  | entropy<br> (effort to recreate signal)<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (distances from the  mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR (75th-25th) percentile | standard deviation|
+|diversity<br>(div)  | entropy<br> (effort to recreate signal)<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (distances from the  mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR: inter-quartile range (75th-25th) percentile | standard deviation|
 
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
 By the way, to understand entropy, think of it as
