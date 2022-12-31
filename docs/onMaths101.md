@@ -51,6 +51,7 @@ function NUM.add(i,n) --> NUM; add `n`, update lo,hi and stuff needed for standa
     i.hi = math.max(n, i.hi) end end
 
 function NUM.mid(i,x) return i.mu end --> n; return mean
+
 function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 ```
@@ -70,6 +71,7 @@ function SYM.add(i,x) --> nil;  update counts of things seen so far
      i.most,i.mode = i.has[x], x end end end 
 
 function SYM.mid(i,x) return i.mode end --> n; return the mode
+
 function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
   local function fun(p) return p*math.log(p,2) end
   local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
@@ -93,7 +95,7 @@ e.g. in a vector of size 4,
 To sample an infinite stream, only keep some of the data
 - and as time goes on, keep less and less.
 
-E.g. if run on 10,000 numbers, this code would keep
+E.g. if run on 10,000 numbers, this code would keep a sample across the whose space of numbers:
 
 ```
 {  18  687 
