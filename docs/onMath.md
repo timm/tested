@@ -31,24 +31,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |central tendency<br>(mid) | mode <br>(most common symbol)| mode | (1) mean  $(\sum_i x_i)/n$<br>(2) median (50th percentile) | mean,median|
 |diversity<br>(div)  | entropy<br> (effort to recreate signal)<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (distances from the  mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR: inter-quartile range<br>(75th-25th) percentile | standard deviation|
 
-<img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
-
-By the way, to understand entropy, think of it as
-- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
-
-e.g. in a vector of size 4,
-  - nazis have a "1" near one end
-  - and England are all the other bits
-- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
-- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
-- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
-  - By convention, we  add a minus sign at the front (else all entropies will be negative).
-
-(Actually, formally entropy has other definition: 
-- The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable).
-- Also, entropy of continuous distributions is defined, but we don't use that in this subject.)
-
-Good to update these  incrementally:
+### Class SYM
+Here are some classes to compute the important parts of the above:
 
 ```lua
 SYM = obj"SYM"
@@ -71,6 +55,24 @@ function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
   local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
   return -e end
 ```
+<img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
+
+By the way, to understand SYM.div (entropy), think of it as
+- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
+
+e.g. in a vector of size 4,
+  - nazis have a "1" near one end
+  - and England are all the other bits
+- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
+- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
+- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
+  - By convention, we  add a minus sign at the front (else all entropies will be negative).
+
+(Actually, formally entropy has other definition: 
+- The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable).
+- Also, entropy of continuous distributions is defined, but we don't use that in this subject.)
+
+### Class NUM
 
 ```lua
 NUM = obj"NUM"
@@ -92,38 +94,32 @@ function NUM.mid(i,x) return i.mu end --> n; return mean
 function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 ```
+
+### So-called "Normal" Curves
+If we are talking standard deviation, then we'd better talk about normal curves.
+
 The French mathematician Abraham de Moivre [^deMo1718]
   notes that probabilities associated with discretely 
   generated random variables (such as are obtained by flipping a coin or rolling a die) can 
   be approximated by the area under the graph of an exponential function.
+
 This function was generalized by  Laplace[^Lap1812] 
   into the first central limit theorem, which proved that probabilities for almost 
   all independent and identically distributed random variables converge rapidly 
   (with sample size) to the area under an exponential function—that is, to a normal 
   distribution.
-This function was extended, extensively by Gaussian. Now its a curve with an area under the curve of one.
+
+This function was extended, extensively by Gauss. Now its a curve with an area under the curve of one.
   As standard deviation shrinks, the curve spikes upwards.
 
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
 
-_Example:_ See [101.lua#NUM](/src/101.lua)
-- Also, to quickly sample from a Gaussian with mean `mu` and diversity `sd`
-
+To sample from a normal curve
+from a Gaussian with mean `mu` and diversity `sd`
 
       mu + sd * sqrt(-2*log(random)) * cos(2*pi*random)
-
-
-- ALso, to quickly withdraw a number `x` from a Gaussian (using the same code as 101.lua) use
-  the following (but this gets unstable for `n` under 10 and crashes for `n&lt;2`):
-
-
-      self. n  = self.n - 1
-      d = x - self.mu
-      self.mu = self.mu - d / self.n
-      self.m2 = self.m2 - d * (x - self.mu)
-      self.sd = (self.m2/(self.n-1))^.5 
 
 
 _Beware:_
@@ -148,21 +144,25 @@ To go fully non-parametric, use reservoir sampling (below). Then to sample, grab
 
 All that said, Gaussians take up far less space and are very easy to update. So all engineers should know their gaussians.
 
+And I find Gaussians better for small samples (under 20) than the following Reservoir Sampler
 
-Here's something similar for SYMbols:
-## Aside: Reservoir Sampling
 
-To sample an infinite stream, only keep some of the data
+## SOME class (Reservoir Sampling_
+
+To sample an infinite stream, only keep some of the data (and keep it in the "reservoir"):
 - and as time goes on, keep less and less.
+- and if the reservoir fills up, just let new things replace on things (at random)
+  - and don't fret about losing important information.
+  - if something is common, deleting it once won't matter since either it exists elsewhere in the reservoir, or it will soon reappear on inout.
 
-E.g. if run on 10,000 numbers, this code would keep a sample across the whose space of numbers:
+E.g. if run on 10,000 numbers, with a reservoir of size 32, this code would keep a sample across the whose space of numbers. 
 
 ```
 {  18  687 
  1545 
- 2022 2324 2693 2758 2883 
- 3247 3533 
- 4067  4168 4469 4570 
+ 2022  2324 2693 2758 2883 
+ 3247  3533 
+ 4067 4168 4469 4570 
  5863 5907 5957 
  6147 6440 6727 
  7228 7517 7574 7598 7765 7955 
@@ -181,8 +181,8 @@ function SOME.add(i,x) --> nil. If full, add at odds i.max/i.n (replacing old it
     local pos
     i.n = i.n + 1
     if     #i._has < i.max   --- note that "#i._has" means "length of the list i._has"
-    then   pos= 1+#i._has    -- easy case. if cache not full, then just add
-    elseif rand() < i.max/i.n then pos= lib.rint(#i._has) end -- lese, replace any at random
+    then   pos= 1+#i._has    -- easy case. if cache not full, then add to end
+    elseif rand() < i.max/i.n then pos= lib.rint(#i._has) end -- else, replace any at random
     if pos then
        i._has[pos]=x
        i.ok=false end end end -- "ok=false" means we may need to resort
