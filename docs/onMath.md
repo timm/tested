@@ -17,23 +17,57 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated SE and Maths (just a little)
 
-Three kinds of attributes:
+## Kinds of of Attributes
 
-|operation| NUMeric | SYMbolic | ordinal|
-|---------|---------|----------|--------|
-|e.g.     | age=23     | car=ford | day=tuesday|
-| equal, not equal| &check; | &check; | &check;|
-| less, greater|  &check;  | 	&#10060; | &check;|
-| maths: add,sub, mul, div, exp etc | &check; | &#10060; | &#10060; |
+| | Nominal | Ordinal | Interval | Ratio |
+|used in this class | y | n | n | y|
+|aka| SYMbolic | | | NUMeric|
+|e.g.| eye color, genotype | | | weight,length|
+|frequency distribution| y | y | y |y|
+|median and percentiles | n | y | y| y |
+|add or subtract | n | n |y | y|
+|central tendency (mid) | mode <br>most common symbol| mode | mean <br> $(\sum_i x_i)/n$ | mean|
+|diversity (div)  | entropy<br> effort to recreate signal<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | standard deviation<br> (delta to the mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$  | standard deviation|
 
-Each have their measure of _middle_ and _diversity_
+<img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
+By the way, to understand entropy, think of it as
+- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
 
-|measure| NUMeric | SYMbolic | ordinal|
-|---------|---------|----------|--------|
-| mid | mean<br>$\mu=\frac{\sum_i x_i}{n}$  |  mode (most frequent value) | mode |
-| div |  standard deviation (delta to the mean)<br>$\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$ | entropy (effort to recreate signal) <br>$e=-\sum_i(p_i\times log_2(p_i))$ | ? |
+e.g. in a vector of size 4,
+  - nazis have a "1" near one end
+  - and England are all the other bits
+- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
+- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
+- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
+  - By convention, we  add a minus sign at the front (else all entropies will be negative).
+
+(Actually, formally entropy has other definition: 
+- The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable).
+- Also, entropy of continuous distributions is defined, but we don't use that in this subject.)
 
 Good to update these  incrementally:
+
+```lua
+SYM = obj"SYM"
+function SYM.new(i) --> SYM; constructor
+  i.n   = 0
+  i.has = {}
+  i.most, i.mode = 0,nil end
+
+function SYM.add(i,x) --> nil;  update counts of things seen so far
+  if x ~= "?" then 
+   i.n = i.n + 1 
+   i.has[x] = 1 + (i.has[x] or 0)
+   if i.has[x] > i.most then
+     i.most,i.mode = i.has[x], x end end end 
+
+function SYM.mid(i,x) return i.mode end --> n; return the mode
+
+function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
+  local function fun(p) return p*math.log(p,2) end
+  local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
+  return -e end
+```
 
 ```lua
 NUM = obj"NUM"
@@ -113,40 +147,6 @@ All that said, Gaussians take up far less space and are very easy to update. So 
 
 
 Here's something similar for SYMbols:
-```lua
-SYM = obj"SYM"
-function SYM.new(i) --> SYM; constructor
-  i.n   = 0
-  i.has = {}
-  i.most, i.mode = 0,nil end
-
-function SYM.add(i,x) --> nil;  update counts of things seen so far
-  if x ~= "?" then 
-   i.n = i.n + 1 
-   i.has[x] = 1 + (i.has[x] or 0)
-   if i.has[x] > i.most then
-     i.most,i.mode = i.has[x], x end end end 
-
-function SYM.mid(i,x) return i.mode end --> n; return the mode
-
-function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
-  local function fun(p) return p*math.log(p,2) end
-  local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
-  return -e end
-```
-
-<img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
-By the way, to understand entropy, think of it as
-- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
-
-e.g. in a vector of size 4,
-  - nazis have a "1" near one end
-  - and England are all the other bits
-- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
-- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
-- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
-  - By convention, we  add a minus sign at the front (else all entropies will be negative).
-
 ## Aside: Reservoir Sampling
 
 To sample an infinite stream, only keep some of the data
