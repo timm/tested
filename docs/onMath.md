@@ -24,10 +24,10 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |used in this class|y|n|        n |  y    | 
 |aka| SYMbolic | | | NUMeric|
 |e.g.| eye color, genotype | | | weight,length|
+| compare ${\neq},=$, | &#9989; |&#9989; |&#9989; |&#9989; |
+| order, sort $\lt, \gt$ | &#10060; | &#9989; | &#9989; | &#9989; |
 |frequency distribution| &#9989; | &#9989; | &#9989; |&#9989;|
 |median and percentiles | &#10060; | &#9989; | &#9989;| &#9989; |
-| compare ${\neq},=$, | &#9989; |&#9989; |&#9989; |&#9989; |
-| sort $\lt, \gt$ | &#9989; | &#9989; | &#9989; | &#9989; |
 |add or subtract | &#10060; | &#10060; |&#9989; | &#9989;|
 |central tendency (mid) | mode <br(>most common symbol)| mode | (1) mean <br> $(\sum_i x_i)/n$<br>(2) median (50th percentile) | mean|
 |diversity (div)  | entropy<br> (effort to recreate signal)<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (distances from the  mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR (75th-25th) percentile | standard deviation|
