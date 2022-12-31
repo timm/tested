@@ -19,9 +19,9 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 ## Kinds of of Attributes
 
-| | Nominal | Ordinal | Interval | Ratio |
-|--|--|--|--|
-|used in this class | y | n | n | y|
+|  | Nominal | Ordinal | Interval | Ratio |
+|--|--------|----------|----------|-------|
+|used in this class|y|n|        n | y     |
 |aka| SYMbolic | | | NUMeric|
 |e.g.| eye color, genotype | | | weight,length|
 |frequency distribution| y | y | y |y|
