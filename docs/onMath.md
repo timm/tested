@@ -30,6 +30,10 @@ Empirical notes:
 - keep track of your seeds (reproducability)
 - always reset your seed in the right place (war story: 2 years of work lost)
 
+Here's a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
+Lets just say that more complex generators
+are much more complex:
+
 ```lua
 Seed=937162211
 function rand(lo,hi)
