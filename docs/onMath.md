@@ -23,7 +23,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |:--:|:--------:|:----------:|:----------:|:-------:|
 |used in this class|y|n|        n |  y    | 
 |aka| SYMbolic | | | NUMeric|
-|e.g.| eye color, genotype | |temperature  | weight,length|
+|e.g.| eye color, genotype |small,medium |temperature  | weight,length|
 | compare ${\neq},=$, | &#9989; |&#9989; |&#9989; |&#9989; |
 |frequency distribution| &#9989; | &#9989; | &#9989; |&#9989;|
 | order, sort $\lt, \gt$ | &#10060; | &#9989; | &#9989; | &#9989; |
