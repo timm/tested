@@ -21,7 +21,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 |  | Nominal | Ordinal | Interval | Ratio |
 |:--:|:--------:|:----------:|:----------:|:-------:|
-|used in this class|y|n|        n |  y    | 
+|used a lot in this class|y|n|        n |  y    | 
 |aka| SYMbolic | | | NUMeric|
 |e.g.| eye color, genotype |small,medium |temperature  | weight,length|
 | compare ${\neq},=$, | &#9989; |&#9989; |&#9989; |&#9989; |
