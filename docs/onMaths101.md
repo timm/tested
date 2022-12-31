@@ -118,27 +118,30 @@ function SOME.add(i,x) --> nil. If full, add at odds i.max/i.n (replacing old it
   if x ~= "?" then
     local pos
     i.n = i.n + 1
-    if     #i._has < i.max     
-    then   pos= 1+#i._has -- easy case. if cache not full, then just add
-    elseif lib.rand() < i.max/i.n then pos= lib.rint(#i._has) end -- otherwise, replace at random
+    if     #i._has < i.max   --- note that "#i._has" means "length of the list i._has"
+    then   pos= 1+#i._has    -- easy case. if cache not full, then just add
+    elseif rand() < i.max/i.n then pos= lib.rint(#i._has) end -- lese, replace any at random
     if pos then
        i._has[pos]=x
        i.ok=false end end end -- "ok=false" means we may need to resort
-
+```
+There's more SOME below but before that I note that the above can handle numbers or symbolics
+inside the SOME. But what happens next is all about SOMEs of nums.
+```lua
 function SOME.has(i) --> t; return kept contents, sorted
   if not i.ok then i._has = sort(i._has) end -- only resort if needed
   i.ok = true
   return i._has end
-
-function  per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
-  p = math.floor(((p or .5)*#t)+.5)
-  return t[math.max(1,math.min(#t,p))] end
 
 function SOME.mid(x) --> n; return the number in middle of sort
   return per(i:has(),.5) end
 
 function SOME.div(x) --> n; return the standard deviation as (.9 - .1)/2.58
   return (per(i:has(), .9) - per(i:has(), .1))/2.56 end
+
+function  per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
+  p = math.floor(((p or .5)*#t)+.5) --
+  return t[math.max(1,math.min(#t,p))] end
 ```
 <img src="https://financetrain.sgp1.cdn.digitaloceanspaces.com/ci1.gif" align=right width=400>
 
@@ -147,7 +150,7 @@ To understand the last one, recall that in a normal curve:
 - 99% of values are in 2.58 standard deviations of mean (-2.58s <= X <= 2.58s)
 - 95% of values are in  1.96 standard deviations of mean (-1.96s <= X <= 1.96s)
 - 90% of values are in 1.28 standard deviations of mean (-1.28s <= X <= 1.28s)
-  - so 2\*1.28*sd = 90th - 10th percentile
+  - so 2\*1.28\*sd = 90th - 10th percentile
   - i.e. sd = (90th - 10th)/(2*1.28)
 
 ## Psuedo-random numbers
@@ -171,8 +174,6 @@ function rand(lo,hi)
   return lo + (hi-lo) * Seed / 2147483647 end
 
 function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
-
-return {randi=randi, srand=srand, rand=rand}
 ```
 
 ## Domination
@@ -181,29 +182,25 @@ Is 2 better than 3? Depends if we want to minimimize of maximize.
 
 Lets change  `NUM`  and `SYM` so its accepts a name string
 - and if the name starts in uppercase, we have a number
-- and if the name ends with "-" or "+" then its a goal we want to minimize or maximize:
+- and if the name ends with "-" or "+" then its a goal we want to minimize or maximize
+  - and for such items, we'll set "w" to 1.
 
-We'll need a factor that can take a list of names name produce a list of NUMs or SYMs: e.g.
-
-```
-{"Clndrs",       "Volume","HpX",  "Lbs-", "Acc+","Model","origin","Mpg+"}
-
-
-
-     ==> NUM(1,"Clndrs"), NUM(2,"Volume"), NUM(4,"Libs-"), ... SYM(7,"origin") .... }
-goal ==> no               no               yes             ... no              ....
-w    ==> 1                1                -1              ... 1               ....
-x or y==> x               x                 y                  x               ....
-
+We'll need a factor that can take a list of names name produce a list of NUMs or SYMs. E.g.
 
 ```
-{
-<table>
-<tr><td>Name     <<td>call<td> goal? <td>w <td> x or y ?</tr></table>
-<tr><td>{"Cynds  <td>call<td> goal? <td>w <td> x or y ?</tr></table>
-<tr><td>Name <td>call<td> goal? <td>w <td> x or y ?</tr></table>
+list of names      call                 weight    goal?
+--------------     ----------------     ------    -----
 
+{ "Clndrs",        NUM(1, "Clndrs")     1         n
+  "Volume",        NUM(2, "Volume")     1         n
+  "HpX",           NUM(3, "HpX")        1         n
+  "Lbs-",          NUM(4, "Lbs-")      -1         y
+  "Acc+",          NUM(5, "Acc+")       1         y
+  "Model",         NUM(6, "Model")      1         n
+  "origin",        SYM(7, "origin")               n
+  "Mpg+"}          NUM(8, "Mgp+")       1         y
 ```
+
 ```lua
 COLS=obj"COLS"
 function COLS.new(i,t,     col,cols)
@@ -214,15 +211,83 @@ function COLS.new(i,t,     col,cols)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
-BEfore all
+And we'll adjust NUM and SYM to accept more information (like the column name):
 
+```lua
+function SYM.new(i,n,s) --> SYM; constructor
+  i.at, i.txt = n or 0, s or "" -- <== NEW
+  i.n   = 0
+  i.has = {}
+  i.most, i.mode = 0,nil end
 
-links to cog psych 
+function NUM.new(i,n,s) --> NUM;  constructor; 
+  i.at, i.txt = n or 0, s or ""           -- <== NEW
+  i.w         = i.s:find"-$" and -1 or 1  -- <== NEW
+  i.n, i.mu, i.m2 = 0, 0, 0
+  i.lo, i.hi = math.huge, -math.huge end
 
+function NUM.norm(i,n)
+  return n == "?" and n  or (n - i.lo)/(i.hi - i.lo + 1E-32) end
+```
+Now we can look at the goal columns to sort examples.
+For example, here we sort
+first for
+- the  lighter  light cars that run faster with more miles per gallon
 
-show them the diabtest discretization results
+```
+            {Clndrs Volume Hpx  Lbs-  Acc+   Model   origin  Mpg+}
+            ------- ------ ---  ----  -----  ------  ------  ------
+t1= {cells= {4      97     52   2130  24.6   82      2       40}}
+t2= {cells= {4      97     54   2254  23.5   72      2       20}}
+t3= {cells= {4      97     78   2188  15.8   80      2       30}}
+t4= {cells= {4      151    90   2950  17.3   82      1       30}}
+t5= {cells= {6      200    ?    2875  17     74      1       20}}
+t6= {cells= {6      146    97   2815  14.5   77      3       20}}
+t7= {cells= {8      267    125  3605  15     79      1       20}}
+t9= {cells= {8      307    130  4098  14     72      1       10}}
+```
+This is Zitzler's multi-objective domination predicate [^zizt]. This
+runs a little what-if analysis that asks "if we go here to there,
+or there to here", what losses most?
+= e.g. in one dimension, 
+  - suppose we have 10 pounds and 2 pounds
+  = here to there is 10-2 = 8
+  - there to here is 2-10 = -8
+  - leaving here losss worst
+  - so here is better than there
+- and the point of Zitzler is that it woks for comparing on _N_ dimensions.
 
+```lua
+function DATA:sort(t1,t2,  cols)
+  local s1,s2,cols = 0,0, cols or self.cols.y
+  for _,col in pairs(cols) do
+    local x = col:norm( t1.cells[col.at] ) -- we normalize first
+    local y = col:norm( t2.cells[col.at] )
+    s1      = s1 - math.exp(col.w * (x-y)/#cols) -- note use of col.x
+    s2      = s2 - math.exp(col.w * (y-x)/#cols) end
+  return s1/#ys < s2/#cols end
+```
+(An alternatve scheme to Zitzler is an _objective function_
+that  adds a little weights to each dimension and
+add all the goals up; e.g.
+- mph times four plus  acceleration times two
+- Everyone who has every studied this reports that such objective functions
+  get stuck in local maxima and that other schemes (e.g. Zitzler) are better.
+  - worse, you have to start re-running your analysis, jiggling the magic wieghts in the objective function.)
+ 
+[^zizt]: Zitzler, E., Künzli, S. (2004). 
+  [Indicator-Based Selection in Multiobjective Search](https://www.simonkuenzli.ch/docs/ZK04.pdf),
+  In: , et al. Parallel Problem Solving from Nature - 
+  PPSN VIII. PPSN 2004. Lecture Notes in Computer Science, 
+  vol 3242. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-540-30217-9_84
 
+[^chen22]: Tao Chen and Miqing Li. 2022. 
+  [The Weights can be Harmful: Pareto Search versus Weighted Search in Multi-Objective Search-Based Software i Engineering.](https://arxiv.org/pdf/2202.03728.pdf
+  ACM Trans. Softw. Eng. Methodol. Just Accepted (April 2022). https://doi.org/10.1145/3514233
+
+## Distance Functions
+
+xxx distance des not have better worse. not just x by y
 ### Normal (Gaussian) Distribution
 _Problem:_ summarize a wide range of numeric samples.
 

@@ -21,7 +21,7 @@ INFERENCE OPTIONS:
 
 OTHER OPTIONS:
   -d  --dump   on crash, print stack dump = fals
-  -f  --file   csv file                   = ../data/auto93.csv
+  -f  --file   csv file                   = ../etc/data/auto93.csv
   -g  --go     start-up action            = data
   -h  --help   show help                  = false
 ]]
