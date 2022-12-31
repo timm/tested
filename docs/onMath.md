@@ -25,7 +25,6 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |aka| SYMbolic | | | NUMeric|
 |e.g.| eye color, genotype |small,medium |temperature  | weight,length|
 | compare ${\neq},=$, | &#9989; |&#9989; |&#9989; |&#9989; |
-|frequency distribution| &#9989; | &#9989; | &#9989; |&#9989;|
 | order, sort $\lt, \gt$ | &#10060; | &#9989; | &#9989; | &#9989; |
 |add or subtract | &#10060; | &#10060; |&#9989; | &#9989;|
 |multiply or divide | &#10060; | &#10060; |&#10060; | &#9989;|
