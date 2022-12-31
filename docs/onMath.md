@@ -17,6 +17,29 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated SE and Maths (just a little)
 
+## Psuedo-random numbers
+Comptuers can't really do random numbers
+- and often you wan't want to
+  - when debugging you want to reproduce a prior sequence.
+
+Psuedo-random numbers: 
+- Comptue a new number from a seed. Update the seed. Return the number.
+- To rerun old sequence, reset the seed
+
+Empirical notes: 
+- keep track of your seeds (reproducability)
+- always reset your seed in the right place (war story: 2 years of work lost)
+
+```lua
+Seed=937162211
+function rand(lo,hi)
+  lo, hi = lo or 0, hi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return lo + (hi-lo) * Seed / 2147483647 end
+
+function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
+```
+
 ## Kinds of of Attributes
 
 |  | Nominal | Ordinal | Interval | Ratio |
@@ -214,29 +237,6 @@ To understand `SOME.div`, recall that in a normal curve:
 - 90% of values are in 1.28 standard deviations of mean (-1.28s <= X <= 1.28s)
   - so 2\*1.28\*sd = 90th - 10th percentile
   - i.e. sd = (90th - 10th)/(2*1.28)
-
-## Psuedo-random numbers
-Comptuers can't really do random numbers
-- and often you wan't want to
-  - when debugging you want to reproduce a prior sequence.
-
-Psuedo-random numbers: 
-- Comptue a new number from a seed. Update the seed. Return the number.
-- To rerun old sequence, reset the seed
-
-Empirical notes: 
-- keep track of your seeds (reproducability)
-- always reset your seed in the right place (war story: 2 years of work lost)
-
-```lua
-Seed=937162211
-function rand(lo,hi)
-  lo, hi = lo or 0, hi or 1
-  Seed = (16807 * Seed) % 2147483647
-  return lo + (hi-lo) * Seed / 2147483647 end
-
-function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
-```
 
 ## Domination
 
