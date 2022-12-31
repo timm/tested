@@ -86,7 +86,7 @@ e.g. in a vector of size 4,
   - nazis have a "1" near one end
   - and England are all the other bits
 - This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
-- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.85)
+- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
 - Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
   - By convention, we  add a minus sign at the front (else all entropies will be negative).
 
@@ -187,7 +187,7 @@ Lets change  `NUM`  and `SYM` so its accepts a name string
 - and if the name ends with "-" or "+" then its a goal we want to minimize or maximize
   - and for such items, we'll set "w" to 1.
 
-We'll need a factor that can take a list of names name produce a list of NUMs or SYMs. E.g.
+We'll need a factory that can take a list of names name produce a list of NUMs or SYMs. E.g.
 
 ```
 list of names      call                 weight    goal?
@@ -196,20 +196,20 @@ list of names      call                 weight    goal?
 { "Clndrs",        NUM(1, "Clndrs")     1         n
   "Volume",        NUM(2, "Volume")     1         n
   "HpX",           NUM(3, "HpX")        1         n
-  "Lbs-",          NUM(4, "Lbs-")      -1         y
-  "Acc+",          NUM(5, "Acc+")       1         y
+  "Lbs-",          NUM(4, "Lbs-")         -1         y
+  "Acc+",          NUM(5, "Acc+")       1            y
   "Model",         NUM(6, "Model")      1         n
   "origin",        SYM(7, "origin")               n
-  "Mpg+"}          NUM(8, "Mgp+")       1         y
+  "Mpg+"}          NUM(8, "Mgp+")       1            y
 ```
-
+Here's the factory. Goals are stored in `i.y` (and others in `i.x`).
 ```lua
 COLS=obj"COLS"
 function COLS.new(i,t,     col,cols)
   i.names, i.all, i.x, i.y = t, {}, {}, {}
   for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
     col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
-    col = push(i.all, col)
+    push(i.all, col)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
