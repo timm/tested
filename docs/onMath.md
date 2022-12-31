@@ -207,7 +207,7 @@ function  per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
 ```
 <img src="https://financetrain.sgp1.cdn.digitaloceanspaces.com/ci1.gif" align=right width=400>
 
-To understand the last one, recall that in a normal curve:
+To understand `SOME.div`, recall that in a normal curve:
 
 - 99% of values are in 2.58 standard deviations of mean (-2.58s <= X <= 2.58s)
 - 95% of values are in  1.96 standard deviations of mean (-1.96s <= X <= 1.96s)
