@@ -27,8 +27,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 |frequency distribution| y | y | y |y|
 |median and percentiles | n | y | y| y |
 |add or subtract | n | n |y | y|
-|central tendency (mid) | mode <br>most common symbol| mode | mean <br> $(\sum_i x_i)/n$ | mean|
-|diversity (div)  | entropy<br> effort to recreate signal<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | standard deviation<br> (delta to the mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$  | standard deviation|
+|central tendency (mid) | mode <br>most common symbol| mode | (1) mean <br> $(\sum_i x_i)/n$<br>(2) median (50th percentile) | mean|
+|diversity (div)  | entropy<br> effort to recreate signal<br> $e=-\sum_i(p_i\times log_2(p_i))$    | entropy | (1) standard deviation<br> (delta to the mean) <br> $\sigma = \sqrt{\frac{\sum_i(x_i-\mu)^2}{n-1}}$<br>(2) IQR (75th-25th) percentile | standard deviation|
 
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
 By the way, to understand entropy, think of it as
