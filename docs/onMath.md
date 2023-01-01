@@ -411,7 +411,7 @@ add all the goals up; e.g.
 - mph times four plus  acceleration times two
 - Everyone who has every studied this reports that such objective functions
   get stuck in local maxima and that other schemes (e.g. Zitzler) are better.
-  - worse, you have to start re-running your analysis, jiggling the magic wieghts in the objective function.)
+  - worse, you have to start re-running your analysis, jiggling the magic weights in the objective function.)
  
 [^zizt]: Zitzler, E., Künzli, S. (2004). 
   [Indicator-Based Selection in Multiobjective Search](https://www.simonkuenzli.ch/docs/ZK04.pdf),
