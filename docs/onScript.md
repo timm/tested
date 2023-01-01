@@ -156,12 +156,12 @@ function COLS.new(i,t,     col,cols)
 ### The DATA Model
 
 ```mermaid
+classDiagram
 COL <|--  NUM
 COL <|--  SYM
 COLS "1" --> "1..*" COL
 DATA "1" --> "1..*" ROW  
 DATA "1" --> "1" COLS 
-classDiagram
 class BankAccount{
     +String owner
     +BigDecimal balance
