@@ -25,7 +25,7 @@ XXX ungood good
 - and more
 
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
-     align=right width=400>
+     align=right width=300>
 
 Consider the polar bear
 - she cannot see through the ice to find the fish
@@ -52,7 +52,7 @@ Technically speaking, this is a kind of acceptance testing, with some
 |Multi-objective reasoning| Stakeholders often have competing goals (e.g. "better" and "faster" and "cheaper").|
 |XAI (explainable AI))| Stakeholders are  often done by non-technicals (e.g. representatives from the broader user community) so they seek a "big picture overview" rather than lots of details.|
 |Semi-supervised learning| These testing often has a limited budget.  Stakeholders want to complete their testing   in a parsimonious manner since they can get back to everything else that needs their attention. Hence we must not demand labels for _everything_, just some of the things.|
-|Model-based: between this audit and the next, we need some way to continue testing the system (so we can check if the system has gone off the rails and needs  an emergency set of new acceptance tests). So there has to be some product from the acceptance testing that can be applied while we wait for the next acceptance test. |
+|Model-based| between this audit and the next, we need some way to continue testing the system (so we can check if the system has gone off the rails and needs  an emergency set of new acceptance tests). So there has to be some product from the acceptance testing that can be applied while we wait for the next acceptance test. |
 
 
 [^stake]:  "Stakeholders"  are individuals or organizations having
