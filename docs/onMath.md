@@ -283,7 +283,11 @@ Are (2 cars plus 4 clowns) better than (1 car and 5) clowns? Depends on how much
 to minimize the number of cars and maximize the number of clowns.
 
 The standard _boolean domination_ (bdom) predicate says one thing dominates another
-if (a) it never worse on any goals and (b) it is better for at least one goal. So if we want to minimize
+if
+- RULE1: it never worse on any goals, and  
+- RULE2: it is better for at least one goal. 
+
+So if we want to minimize
 cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 5clowns is better  (since better on all)
 - 1car + 3clowns is not better  (since worse on one)
@@ -297,16 +301,18 @@ equation has to:
 
 <img src="/etc/img/pendulm.png" width=600>
 
+The few points on the thick black line dominate the rest. Which is cool
+since, to find a better solution, we only need to search around those few.
+
 <img src="/etc/img/2dplot.png" width=600>
 
-
-When the number of goals 
+But when the number of goals 
 grows over three[^wag07][^sayyad], 
 boolean domination can fail to distinguish different things.
 Why?
-- Well, it is that "never worse of any goal" condition. 
+- Well, it is RULE1: "never worse on any goal" condition. 
 - The more goals there are, the more ways you can be a tiny bit worse on at least one goal.
-- So nothing seems to be better than anything else.   
+- So nothing seems to be better than anything else.  
 
 [^wag07]: T. Wagner, N. Beume, and B. Naujoks, 
   ["Pareto-, Aggregation-, and Indicator-Based Methods in Many-Objective Optimization,"](https://link.springer.com/content/pdf/10.1007/978-3-540-70928-2.pdf?pdf=button)
@@ -326,9 +332,7 @@ So we often distinguish
   Journal of Systems and Software, Volume 149, 2019, Pages 382-395,
   ISSN 0164-1212, https://doi.org/10.1016/j.jss.2018.12.015.
 
-Before we get to cdom,
-we need a little trick:
-change  `NUM`  and `SYM` so its accepts a name string
+Before we get to cdom, we need a little trick: change  `NUM`  and `SYM` so its accepts a name string
 - and if the name starts in uppercase, we have a number
 - and if the name ends with "-" or "+" then its a goal we want to minimize or maximize
   - and for such items, we will set "w" to 1.
@@ -398,7 +402,7 @@ t7= {cells= {8      267    125  3605  15     79      1       20}}
 t9= {cells= {8      307    130  4098  14     72      1       10}}
 ```
 
-This is Zitzler's multi-objective domination predicate [^zizt]. This
+This is Zitzler's multi-objective cdom predicate [^zizt]. This
 runs a little what-if analysis that asks "if we go here to there,
 or there to here", what losses most?
 - e.g. in one dimension, 
@@ -411,6 +415,7 @@ or there to here", what losses most?
 - and the point of Zitzler is that it works for comparing on $N \ge 1$ dimensions.
 
 ```lua
+-- cdom, continuous domination:
 function DATA:sort(t1,t2,  cols)
   local s1,s2,cols = 0,0, cols or self.cols.y
   for _,col in pairs(cols) do
