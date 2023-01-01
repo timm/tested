@@ -100,7 +100,59 @@ Stackholder testing:
   Empir Softw Eng, 17 (2012), pp. 18-22
 
 
-Enabling humans to explore all the important potential behaviors of a software model is an open and important  issue.
+## Why Do we need  better Stakeholder Testing?
+Chapter six of Safiya Noble’s book Algorithms of Oppression [^noble]  
+tells the sad tale of  how a design quirk of  Yelp ruined a small business. As one of Noble’s interviewees put it 
+“ Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
+They already feel like they are being hunted;  they aren't going to tell the Man where they are”. Hence, that salon fell in the 
+Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button.  There are many  
+other examples where software engineers fielded AI models, without noticing biases in those models:
+
+- Amazon had to scrap an automated recruiting tool as it 
+  was found to be [biased against women](https://reut.rs/2Od9fPr).
+- A widely used face recognition software was found to be biased against 
+  [dark-skinned women](https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212) and
+  [dark-skinned men](https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html).
+- Google Translate, the most popular translation engine in the world, 
+  [shows gender bias](https://science.sciencemag.org/content/356/6334/183). 
+  “She is an engineer, 
+  He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [5].  
+
+For our purposes, the  important point of the first Noble example
+is this: if software designers had been more intentional about
+soliciting feedback from the Black community, then they could have
+changed how check-ins are weighted in the overall Yelp rating system.
+
+As to the other examples, in each case there was some discriminatory
+effect which was easy to detect and repair [^joy]], but developers
+just failed to test for those biases.
+
+There is a solution to all these problems: if a small group of
+people build software for the larger community, they need to listen
+more to the  concerns of the larger community. For that to work,
+the smaller group of developers have to admit the larger group into
+their design processes– either via
+- changing the reward structures
+  such that there are inducements for the few to listen to the many
+  (e.g. by better government legislation or  professional standards);
+  or 
+- inclusion practices that admits the broader community into
+  the developer community, or by 
+- review practices where the
+  developers can take better and faster feedback from the community.
+
+To say that another way,  from an ethical perspective, it is good
+practice to give software to stakeholders and let them try to break
+it. 
+
+[^noble]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
+[^joy]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
+
+
+Enabling stakeholder testing
+is important.
+
+to explore all the important potential behaviors of a software model is an open and important  issue.
 In
 ``Flaws of policies of requiring human oversight''~\cite{green2022flaws},
 Ben Green notes that many recent policies      require humans-in-the-loop to review or   audit   decisions from software models.
