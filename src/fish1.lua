@@ -266,7 +266,6 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
 
 function settings(s,    t) --> t;  parse help string to extract a table of options
   t={};s:gsub("\n[%s]+[-][%S]+[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(k,v) t[k]=coerce(v) end)
-  oo(t)
   return t end
 
 function cli(options) --> t; update key,vals in `t` from command-line flags
