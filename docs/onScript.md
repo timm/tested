@@ -157,12 +157,12 @@ function COLS.new(i,t,     col,cols)
 
 ```mermaid
 classDiagram
-class COL {
+class~COL~{
   int n=1
 }
-class SYM {
-  list has={};
-  str mode="";
+class~SYM~{
+  list has={}
+  str mode=""
   int most="0"
 }
 class COL {
