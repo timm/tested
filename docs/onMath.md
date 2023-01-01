@@ -16,10 +16,39 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 
 # Automated SE and Maths (just a little)
+Here we want to talk about the data and operations relevant to
+columns and rows of data.
+
+```
+            {Clndrs Volume Hpx  Lbs-  Acc+   Model   origin  Mpg+}
+            ------- ------ ---  ----  -----  ------  ------  ------
+t1= {cells= {4      97     52   2130  24.6   82      2       40}}
+t2= {cells= {4      97     54   2254  23.5   72      2       20}}:v
+t3= {cells= {4      97     78   2188  15.8   80      2       30}}
+t4= {cells= {4      151    90   2950  17.3   82      1       30}}
+t5= {cells= {6      200    ?    2875  17     74      1       20}}
+t6= {cells= {6      146    97   2815  14.5   77      3       20}}
+t7= {cells= {8      267    125  3605  15     79      1       20}}
+t9= {cells= {8      307    130  4098  14     72      1       10}}
+```
+
+Things to watch for are 
+- table, row, column (attribute, feature, goal)
+- nominal, ratio, SYM, NUM, SOME
+- mid, mean, median, mode
+- div, entropy, standard deviation, IQR
+- parametric (normal, Gaussian), non-parametric 
+  (reservoir sampling)
+- multi-goal, many-goal
+  - binary, continuous domination (Littler)
+- distance
+
+## Just to start: example (Pseudo-random numbers)
+Just to show a sample of the code we are going to explore...
 
 ## Psuedo-random numbers
-Computers can't really do random numbers
-- and often you wan't want to
+Computers cannot  really do random numbers
+- and often you do not  want to
   - when debugging you want to reproduce a prior sequence.
 
 Psuedo-random numbers: 
@@ -30,7 +59,7 @@ Empirical notes:
 - keep track of your seeds (reproducability)
 - always reset your seed in the right place (war story: 2 years of work lost)
 
-Here's a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
+Here is a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
 Lets just say that more complex generators
 are much more complex:
 
@@ -82,6 +111,7 @@ function SYM.div(i,x) --> n; return the entropy, calculated via Shannon entropy
   local e=0; for _,n in pairs(i.has) do e = e + fun(n/i.n) end 
   return -e end
 ```
+
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
 
 By the way, to understand SYM.div (entropy), think of it as
@@ -97,7 +127,7 @@ e.g. in a vector of size 4,
 
 (Actually, formally entropy has other definition: 
 - The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable.
-- Also, entropy of continuous distributions is defined, but we don't use that in this subject.)
+- Also, entropy of continuous distributions is defined, but we do not use that in this subject.)
 
 ### Class NUM
 
@@ -123,7 +153,7 @@ function NUM.div(i,x)  --> n; return standard deviation using Welford's algorith
 ```
 
 ### So-called "Normal" Curves
-If we are talking standard deviation, then we'd better talk about normal curves.
+If we are talking standard deviation, then we had better talk about normal curves.
 
 The French mathematician Abraham de Moivre [^deMo1718]
   notes that probabilities associated with discretely 
@@ -138,7 +168,6 @@ This function was generalized by  Laplace[^Lap1812]
 
 This function was extended, extensively by Gauss. Now its a curve with an area under the curve of one.
   As standard deviation shrinks, the curve spikes upwards.
-
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
@@ -179,20 +208,20 @@ And I find Gaussians better for small samples (under 20) than the following Rese
 To sample an infinite stream, only keep some of the data (and keep it in the "reservoir"):
 - and as time goes on, keep less and less.
 - and if the reservoir fills up, just let new things replace on things (at random)
-  - and don't fret about losing important information.
-  - if something is common, deleting it once won't matter since either it exists elsewhere in the reservoir, or it will soon reappear on inout.
+  - and do not fret about losing important information.
+  - if something is common, deleting it once will not matter since either it exists elsewhere in the reservoir, or it will soon reappear on inout.
 
 E.g. if run on 10,000 numbers, with a reservoir of size 32, this code would keep a sample across the whose space of numbers. 
 
 ```
 {  18  687 
  1545 
- 2022  2324 2693 2758 2883 
+ 2022  2324 2693 2758 
  3247  3533 
  4067 4168 4469 4570 
  5863 5907 5957 
  6147 6440 6727 
- 7228 7517 7574 7598 7765 7955 
+ 7228 7517 7574 7598 7765 
  8311 8379 8538 
  9052 9189 9323}
 ```
@@ -214,7 +243,7 @@ function SOME.add(i,x) --> nil. If full, add at odds i.max/i.n (replacing old it
        i._has[pos]=x
        i.ok=false end end end -- "ok=false" means we may need to resort
 ```
-There's more SOME below but before that I note that the above can handle numbers or symbolics
+There is more SOME below but before that I note that the above can handle numbers or symbolics
 inside the SOME. But what happens next is all about SOMEs of nums.
 ```lua
 function SOME.has(i) --> t; return kept contents, sorted
@@ -236,9 +265,9 @@ function  per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
 
 To understand `SOME.div`, recall that in a normal curve:
 
-- 99% of values are in 2.58 standard deviations of mean (-2.58s <= X <= 2.58s)
-- 95% of values are in  1.96 standard deviations of mean (-1.96s <= X <= 1.96s)
-- 90% of values are in 1.28 standard deviations of mean (-1.28s <= X <= 1.28s)
+- 99% of values are in 2.58 standard deviations of mean (-2.58s &lt;= X &lt;= 2.58s)
+- 95% of values are in  1.96 standard deviations of mean (-1.96s &lt;= X &lt;= 1.96s)
+- 90% of values are in 1.28 standard deviations of mean (-1.28s &lt;= X &lt;= 1.28s)
   - so 2\*1.28\*sd = 90th - 10th percentile
   - i.e. sd = (90th - 10th)/(2*1.28)
 
@@ -257,10 +286,20 @@ cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 5clowns is better  (since better on all)
 - 1car + 3clowns is not better  (since worse on one)
 
-Boolean domination can fail to distinguish different things when the number of goals grows over three. 
+Boolean domination can fail to distinguish different things 
+when the number of goals grows over three[^wagner][^sayyad]. 
 Why?
 - Well, it is that "never worse of any goal" condition. 
 - The more goals there are, the more ways you can be a tiny bit worse on at least one goal.
+- So nothing seems to be better than anything else.
+
+[^wagner]: T. Wagner, N. Beume, and B. Naujoks, 
+  ["Pareto-, Aggregation-, and Indicator-Based Methods in Many-Objective Optimization,"](https://link.springer.com/content/pdf/10.1007/978-3-540-70928-2.pdf?pdf=button)
+  in Proc. EMO, LNCS Volume 4403/2007, 2007, pp. 742-756.
+
+[^sayyad]:  Sayyad, Abdel Salam, Tim Menzies, and Hany Ammar. 
+  ["On the value of user preferences in search-based software engineering: A case study in software product lines."](https://fada.birzeit.edu/bitstream/20.500.11889/4528/1/dcb6eddbdac1c26b605ce3dff62e27167848.pdf)
+  2013 35Th international conference on software engineering (ICSE). IEEE, 2013.
 
 So we often distinguish
 - Multi-goal reasoning (up to 3 goals) where boolean domination works ok
@@ -268,24 +307,18 @@ So we often distinguish
   - Not that continuous domination also works for multi-goal.
 
 [^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
-A survey of many-objective optimisation in search-based software engineering,
-Journal of Systems and Software,
-Volume 149,
-2019,
-Pages 382-395,
-ISSN 0164-1212,
-https://doi.org/10.1016/j.jss.2018.12.015.
-https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_optimisation_in_search-based_software_engineering
-
+  [A survey of many-objective optimisation in search-based software engineering](https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_optimisation_in_search-based_software_engineering)
+  Journal of Systems and Software, Volume 149, 2019, Pages 382-395,
+  ISSN 0164-1212, https://doi.org/10.1016/j.jss.2018.12.015.
 
 Before we get to continuous domination,
 we need a little trick:
 change  `NUM`  and `SYM` so its accepts a name string
 - and if the name starts in uppercase, we have a number
 - and if the name ends with "-" or "+" then its a goal we want to minimize or maximize
-  - and for such items, we'll set "w" to 1.
+  - and for such items, we will set "w" to 1.
 
-We'll need a factory that can take a list of names name produce a list of NUMs or SYMs. E.g.
+We will need a factory that can take a list of names name produce a list of NUMs or SYMs. E.g.
 
 ```
 list of names      call                 weight    goal?
@@ -302,7 +335,7 @@ list of names      call                 weight    goal?
 ```
 The important thing in the above is now we have weights that tell us if we are maximizing or minimizing.
 
-Here's the factory. Goals are stored in `i.y` (and others in `i.x`).
+Here is the factory. Goals are stored in `i.y` (and others in `i.x`).
 ```lua
 COLS=obj"COLS"
 function COLS.new(i,t,     col,cols)
@@ -313,7 +346,7 @@ function COLS.new(i,t,     col,cols)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
-And we'll adjust NUM and SYM to accept more information (like the column name):
+And we will adjust NUM and SYM to accept more information (like the column name):
 
 ```lua
 function SYM.new(i,n,s) --> SYM; constructor
