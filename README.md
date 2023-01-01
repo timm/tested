@@ -75,11 +75,10 @@ Check your installation
 
 # Why TESTED? 
 
-Well,
-when people like me
+When people like me
 (i.e. a developer) write software that 
 is used by other people 
-(i.e. the stakeholders), those stakeholders should be able to
+(i.e. the stakeholders), those other people should be able to
 - verify that the built software is right,
 - validate that the right software is being built.
 
@@ -137,6 +136,20 @@ can help the other [^duo][^abduction].
   Amritanshu Agrawal, Tim Menzies, Leandro L. Minku, Markus Wagner, and Zhe Yu. 2020. 
   Empirical Softw. Engg. 25, 3 (May 2020), 2099–2136. https://doi.org/10.1007/s10664-020-09808-9
 
+# Roadmap
 
+To present this work as a syllabus, here is a weekly guide (assumes a 14 week semester)
+
+<table>
+<tr>
+<td>
+
+[hellp](asd)
+
+</td><td>
+
+</td>
+</tr>
+</table>
 
 
