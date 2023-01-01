@@ -112,7 +112,7 @@ and things with bugs need to be tested before we use them. Testing is such an im
 task and frequent task that it is worth considering how to design systems
 that can be explored effectively and cheaply.
 
-[^stake]:  ("Stakeholders"  are individuals or organizations having
+[^stake]:  "Stakeholders"  are individuals or organizations having
 a right, share, claim, or interest in a system or in its possession
 of characteristics that meet their needs and expectations 
 [(ISO/IEC/IEEE

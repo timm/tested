@@ -27,6 +27,12 @@ If you look at my code, there are some common things:
 
 ## About LUA
 
+I use LUA as an executable specification language. Students rewrite
+my code in whatever language they like (that is not LUA).  
+
+- For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
+- For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
+
 LUA is an ultra lightweight scripting language comprising less than
 two dozen keywords: **and, break, do, else, elseif, end, false, for, function, if, in, local, nil, not, or, repeat, return, then, true, until, while**.  
 LUA has a considerably smaller footprint
@@ -34,19 +40,28 @@ than other programming languages
 (with its complete source code and
 documentation taking a mere 1.3 MB).  Despite this it is very powerful language
 For example, here is define generic N-levels deep print function for LUA lists, as well
-as the mapping functions that makes that so simple to implement..
+as the mapping functions that makes that so simple to implement:
 ```lua
-function o(t,flag,     fun)
-  if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",o(k),o(v)) end end
-  return "{"..table.concat(#t>0 and not flag and map(t,o) or sort(kap(t,fun))," ").."}" end
+fmt=string.format
+function sort(t, fun) table.sort(t,fun); return t end
 
 function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do v,k=fun(v); u[k or (1+#u)]=v end;  return u end
 
-fmt=string.format
-function sort(t, fun) table.sort(t,fun); return t end
+  function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
+
+function show (k,v) if not tostring(k):find"^_" then return fmt(":%s %s",o(k),o(v)) end end
+
+function o(t,flag)
+  if type(t)~="table" then return tostring(t) end
+  return "{"..table.concat(#t>0 and not flag and map(t,o) 
+                                or sort(kap(t,show)),
+                           " ").."}" end
 ```
+Note that in the above, functions can be  treated as variables; i,e, LUA
+has first-class functions. LUA also has tail call optimization which means functions
+that call themselves as the last step in their code can recurse indefinitely.
 I actually view LUA as LISP
 (without
   (all
@@ -55,12 +70,6 @@ I actually view LUA as LISP
         (silly
            (parentheses)))))).
 
-
-I use LUA as an executable specification language. Students rewrite
-my code in whatever language they like (that is not LUA).  
-
-- For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
-- For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
 
 ## Test-Drive Development
 
