@@ -122,7 +122,7 @@ Clndrs,Volume, Hpx,  Lbs-,  Acc+,  Model, origin, Mpg+
 8,     267,    125,  3605,  15,    79,    1,      20
 8,     307,    130,  4098,  14,    72,    1,      10
 ```
-I'm these names:
+In these names:
 - we skip columns whose names end in `X`;
 - if the name starts in uppercase, we have a number
 - if the name ends with "-" or "+" then its a goal we want to minimize or maximize
@@ -198,4 +198,41 @@ class SYM {
   mode : str
   most: 0
 }
+```
+
+In the above, DATA is the ringmaster that controls xis special cases:
+
+- DATA is loaded from either 
+  - a disc csv file
+  - rows from some other source 
+- When receiving new data, that data could be
+  - a simple list
+  - a ROW (which is a container for a list)
+- When that data arrives, it is either 
+
+```lua
+function DATA.new(i,src,     data,fun)
+  i.rows, i.cols = {}, nil
+  fun = function(x) i:add(x) end
+  if type(src) == "string" then csv(src,fun)  -- load from a csv file on disk
+                           else map(src or {}, fun)  -- load from a list
+                           end end
+  
+function DATA.add(i,t)
+  if   i.cols 
+  then t =ROW(t.cells and t.cells or t) -- t can be a ROW or a simple list
+       push(i.rows, t) -- add new data to "i.rows"
+       i.cols:adds(t)  -- update the summary information in "ic.ols"
+  else i.cols=COLS(t) end end
+```
+function COLS.includes(i,row)
+  for _,t in pairs{i.x} do
+    for _,col in pairs(t) do
+      col:includes(row.cells[col.at]) end end end
+
+```lua
+function DATA.clone(i,  init,     data)
+  data=DATA({i.cols.names})
+  map(init or {}, function(x) data:add(x) end)
+  return data end
 ```
