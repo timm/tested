@@ -469,8 +469,30 @@ As the what value of $p$ to use:
   London, UK, January 4 - 6, 2001 / Jan Van den Bussche ... (eds.). 
   Berlin: Springer, 2001, pp. 420-434
 
-https://www.researchgate.net/publication/30013021_On_the_Surprising_Behavior_of_Distance_Metric_in_High-Dimensional_Space
+Note that in the following, we can pass in a `cols` list that includes
+all the `x` cols or `y` cols (so we can do distance between just
+the goals or just the other columns):
 
+```lua
+the={p=2}
 
+function DATA.dist(i,row1,row2,cols,       d,n)
+  d,n = 0,1E-32
+  for _,col in pairs(cols or i.cols.x) do
+    d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p
+    n = n + 1 end
+  return d^(1/the.p)/n^(1/the.p) end
 
+function SYM.dist(i,s1,s2)
+  return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
 
+function NUM.norm(i,n)
+  return n == "?" and n  or (n - i.lo)/(i.hi - i.lo + 1E-32) end
+
+function NUM.dist(i,n1,n2)
+  if n1=="?" and n2=="?" then return 1 end
+  n1,n2 = i:norm(n1), i:norm(n2)
+  if n1=="?" then n1 = n2<.5 and 1 or 0 end
+  if n2=="?" then n2 = n1<.5 and 1 or 0 end
+  return math.abs(n1 - n2) end 
+```
