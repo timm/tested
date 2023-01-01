@@ -291,9 +291,9 @@ cars and maximize clowns then compared to 2cars,4clowns
 The great thing about boolean domination is that a single  
 point can wipe out thousands, millions of rivals:
 
-<img src="/etc/img/2dplot" width=600>
+<img src="/etc/img/2dplot.png" width=600>
 
-<img src="pendulm.png" width=600>
+<img src="/etc/img/pendulm.png" width=600>
 
 When the number of goals 
 grows over three[^wag07][^sayyad], 
