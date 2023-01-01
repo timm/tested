@@ -14,7 +14,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
-<table>
+<!-- table>
 <tr><td>Study guide </td><td>Sub-term
 </td></tr><tr><td>data </td><td>
 data: row (a.k.a. example, instance);
@@ -34,7 +34,7 @@ domination, Pareto frontier, Zitzler predicate<br>
 stakeholder,
 manifold, labelling cost, curse of dimensionality, explanation
 </td></tr>
-</table>
+</table -->
 
 
 
@@ -48,7 +48,10 @@ TESTED assumes that the best way to test "it" is to watch someone else
 (specifically, stakeholder])
 try to break "it".  TESTED is all exploring more and fixing
 more via fewer samples to the system.
-Why TESTED? Well,
+
+# Why TESTED? 
+
+Well,
 when people like me
 (i.e. a developer) write software that 
 is used by other people 
