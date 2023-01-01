@@ -15,7 +15,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 
-# Automated Software Engineering and "Fishing"
+# Automated Software Engineering, Stakeholder Testing, and  "Fishing"
 
 XXX ungood good
 - options, clster then do more
@@ -25,6 +25,82 @@ XXX ungood good
 - dont use ygap, but use the detal computed by zitlzer
 - dont use zitzler ever, use ygap  instead
 - and more
+
+Definition: "Stakeholders"  are individuals or organizations having
+  a right, share, claim, or interest in a system or in its possession
+  of characteristics that meet their needs and expectations 
+  [(ISO/IEC/IEEE
+  2015)](https://www.iso.org/standard/63711.html).
+
+
+## What is  Stakeholder Testing?
+To forge an effective partnership, humans and artificial intelligence (AI) need to understand each other's strengths and limitations. 
+- Software can explore a very large space, on pre-determined criteria. 
+- Humans can offer novel insight, but only over a small number of examples. 
+
+We conjecture, that when combined,
+both can find better solutions than if either
+worked
+separately.
+This is important since there are too many examples  of deplorable software models being fielded
+For example, chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
+tells the sad tale of  how a design quirk of  Yelp ruined a small business:
+- As one of Noble’s interviewees put it "Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
+  They already feel like they are being hunted;  they aren't going to tell the Man where they are". 
+- Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
+
+There are too many 
+other examples where software engineers fielded AI models, without noticing biases in those models:
+
+- Amazon had to scrap an automated recruiting tool as it 
+  was found to be [biased against women](https://reut.rs/2Od9fPr).
+- A widely used face recognition software was found to be biased against 
+  [dark-skinned women](https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212) and
+  [dark-skinned men](https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html).
+- Google Translate, the most popular translation engine in the world, 
+  [shows gender bias](https://science.sciencemag.org/content/356/6334/183). 
+  “She is an engineer, 
+  He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [5].  
+
+For our purposes, the  important point of the first Noble example
+is this:
+- if software designers had been more intentional about
+soliciting feedback from the Black community...
+- then they could have
+changed how check-ins are weighted in the overall Yelp rating system.
+
+As to the other examples, in each case there was some discriminatory
+effect which was easy to detect and repair [^joy]], but developers
+just failed to test for those biases.
+
+There is a solution to all these problems
+- if a small group of
+people build software for the larger community
+- they need to listen
+more to the  concerns of the larger community. 
+
+For that to work,
+the smaller group of developers have to admit the larger group into
+their design processes– either via
+- changing the reward structures
+  such that there are inducements for the few to listen to the many
+  (e.g. by better government legislation or  professional standards);
+  or 
+- inclusion practices that admits the broader community into
+  the developer community, or by 
+- review practices where the
+  developers can take better and faster feedback from the community.
+
+To say that another way,  from an ethical perspective, it is good
+practice to give software to stakeholders and let them try to break
+it. 
+
+[^noble]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
+[^joy]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
+
+Lets call that "stakeholder testing".
+
+## What is Special about "Stakeholder Testing"
 
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
      align=right width=300>
@@ -43,7 +119,7 @@ Consider the polar bear
     along the way, trying to to make her next guess (about where
     to bash) better.
 
-More generally, let us say that "fishing" is that process
+More generally, let us say that "fishing" (aka stakeholder testing) is that process
 of prioritizing many things, without knowing too much about every thing.
 
 And this needs some human-scale "stakeholder testing"[^stake]
@@ -63,12 +139,6 @@ added requirements:
 |Model-based| between this audit and the next, we need some way to continue testing the system (so we can check if the system has gone off the rails and needs  an emergency set of new acceptance tests). So there has to be some product from the acceptance testing that can be applied while we wait for the next acceptance test. |
 |Semi-supervised learning| These tests often has a limited budget.| 
 
-
-[^stake]:  "Stakeholders"  are individuals or organizations having
-  a right, share, claim, or interest in a system or in its possession
-  of characteristics that meet their needs and expectations 
-  [(ISO/IEC/IEEE
-  2015)](https://www.iso.org/standard/63711.html).
 
 Further to the last point, why do we say We also know that this kind of testing often goes awry.
 stakeholders want to complete their testing   in a parsimonious manner since they can get back to 
@@ -104,62 +174,14 @@ Stackholder testing:
   Heuristics for systems engineering cost estimation
   IEEE Syst J, 5 (1) (2011), pp. 91-98
 
-[^mur12] B. Murphy
+[^mur12]: B. Murphy
   The difficulties of building generic reliability models for software
   Empir Softw Eng, 17 (2012), pp. 18-22
 
 
-## Why Do we need  better Stakeholder Testing?
-Chapter six of Safiya Noble’s book Algorithms of Oppression [^noble]  
-tells the sad tale of  how a design quirk of  Yelp ruined a small business. As one of Noble’s interviewees put it 
-“ Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
-They already feel like they are being hunted;  they aren't going to tell the Man where they are”. Hence, that salon fell in the 
-Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button.  There are many  
-other examples where software engineers fielded AI models, without noticing biases in those models:
-
-- Amazon had to scrap an automated recruiting tool as it 
-  was found to be [biased against women](https://reut.rs/2Od9fPr).
-- A widely used face recognition software was found to be biased against 
-  [dark-skinned women](https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212) and
-  [dark-skinned men](https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html).
-- Google Translate, the most popular translation engine in the world, 
-  [shows gender bias](https://science.sciencemag.org/content/356/6334/183). 
-  “She is an engineer, 
-  He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [5].  
-
-For our purposes, the  important point of the first Noble example
-is this: if software designers had been more intentional about
-soliciting feedback from the Black community, then they could have
-changed how check-ins are weighted in the overall Yelp rating system.
-
-As to the other examples, in each case there was some discriminatory
-effect which was easy to detect and repair [^joy]], but developers
-just failed to test for those biases.
-
-There is a solution to all these problems: if a small group of
-people build software for the larger community, they need to listen
-more to the  concerns of the larger community. For that to work,
-the smaller group of developers have to admit the larger group into
-their design processes– either via
-- changing the reward structures
-  such that there are inducements for the few to listen to the many
-  (e.g. by better government legislation or  professional standards);
-  or 
-- inclusion practices that admits the broader community into
-  the developer community, or by 
-- review practices where the
-  developers can take better and faster feedback from the community.
-
-To say that another way,  from an ethical perspective, it is good
-practice to give software to stakeholders and let them try to break
-it. 
-
-[^noble]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
-[^joy]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
-
-
 Enabling stakeholder testing
 is important.
+
 
 to explore all the important potential behaviors of a software model is an open and important  issue.
 In
@@ -181,7 +203,6 @@ their busy workloads. That said,  using cues can introduce errors:
 
 
 
-
 %.
 
 %Cognitive theory~\cite{simon1956rational} tells us that humans  use heuristic ``cues'' that lets them find    (hopefully)  most important parts of a modelbefore rushing off to their next task.
@@ -189,40 +210,10 @@ their busy workloads. That said,  using cues can introduce errors:
 
 
   Unfortunately,
-there are substantial examples where human oversight missed important software properties (see Table~\ref{tbl:sigh}). For example,  it took years to realize that
-COMPAS   had an alarming difference in the false alarm rates for black and white defendants~\cite{Chakraborty2020artifact}. That difference is a bug (since it can be fixed-- see PI Menzies' FSE'21 paper~\cite{fse21} that weights training examples to reduce COMPAS's false alarm delta, while  maintaining the same levels of recall on actual recidivism).
-
-%That difference is a bug (and we know that is a  bug since it can be fixed-- see PI Menzies' FSE'21 paper~\cite{fse21} that weights training examples to reduce COMPAS's false alarm delta, while  maintaining the same levels of recall on actual recidivism).
+there are substantial examples where human oversight missed important software properties (see Table~\ref{tbl:sigh}). For example,  
+see the above bias problems.
 
 
-\begin{table}[!b]
-
-\small
-\begin{tabular}{|p{.98\linewidth}|}\hline
-
-\rowcolor{blue!5} The COMPAS recidivism models  labels black defendants as future criminals at twice the rate as whites~\cite{Machine_Bias}.
-\\
-Widely-used face recognition software   predicting    gender \& age, has a much
-higher error rate for dark-skinned women compared to light-skinned men~\cite{Skin_Bias}.
-\\
-\rowcolor{blue!5} Amazon's   software for same-day delivery to prime users  became   biased against black neighborhoods \cite{Amazon_Bias}.
-\\
-  Google Translate  has gender bias. ``She is an engineer, He is a nurse''   translated to  Turkish then
-  back to  English gives ``He is an engineer, She is a nurse'' \cite{Caliskan183}.\\\hline
-\end{tabular}
-\caption{ Example biases seen in   software decisions. For more, see
-Rudin~\cite{rudin2019explaining},
-Nobel~\cite{noble2018algorithms},    Gebru~\cite{gebru21}.
-}\label{tbl:sigh}
-\end{table}
-
-
-To forge an effective partnership, humans and artificial intelligence (AI) need to understand each other's strengths and limitations. The software can explore a very large space,
-on pre-determined criteria. Humans can offer novel insight, but only over
-a small number of examples.  We conjecture, that when combined,
-both can find better solutions than if either
-worked
-separately.
 
 =======================
 So here we explore how much we
