@@ -36,21 +36,50 @@ manifold, labelling cost, curse of dimensionality, explanation
 </td></tr>
 </table>
 
-XXX fair if someone else leans in and says fair
-
-# Introduction 
 
 
-## What is TESTED?
+> Definition: "Stakeholders"  are individuals or organizations having
+  a right, share, claim, or interest in a system or in its possession
+  of characteristics that meet their needs and expectations 
+  [(ISO/IEC/IEEE
+  2015)](https://www.iso.org/standard/63711.html).
 
-TESTED is a demonstration that semi-supervised multi-objective
-explanation algorithms are surprisingly easy to build. Such
-algorithms support "stakeholder testing" where humans want
-to sort and discover the best and worst things, without
-having to offer too much information on each thing. Once discovered,
-TESTED can also offer advice on how to make bad things better.
+TESTED assumes that the best way to test "it" is to watch someone else 
+(specifically, stakeholder])
+try to break "it".  TESTED is all exploring more and fixing
+more via fewer samples to the system.
+Why TESTED? Well,
+when people like me
+(i.e. a developer) write software that 
+is used by other people 
+(i.e. the stakeholders), those stakeholders should be able to
+- verify that the built software is right,
+- validate that the right software is being built.
 
-## No, really, what is TESTED?
+Such "stakeholder testing" is challenging since,
+often, stakeholders may
+not understand everything  about what goes on inside the code.
+Hence stakeholder testing  needs special kinds of tools:
+- one that helps helps
+   humans find the   best things or fix the worst things;
+- without
+  having to offer too much information on each thing. 
+
+Under-the-hood, TESTED's tools implement a semi-supervised, multi-objective, model-based
+explanation system.
+The central claim of TESTED is that these:
+**tools are surprisingly easy to build**. To say that another way:
+- people can (and should) understand AI systems;
+- then use those systems to build a better world.
+
+The TESTED code base represents a  refactoring of decades of work by dozens of Ph.D. students.
+Every tool is less than a few hundred lines of LUA code and all those tools share most of the same internal structure.
+Students can learn this simpler approach to AI as a set of weekly homeworks where they recode the tools
+in any language at all (except LUA).
+Then, for graduate students, they can also do a final four week project
+where they try  to improve on a stakeholder testing tool called "fishing", provided in this kit.
+
+## Frequently Asked Questions
 
 So what is TESTED really about?
 - is it about how to reconfigure broken things to make them better? 
@@ -61,7 +90,7 @@ So what is TESTED really about?
 
 To which the answer is "yes". All these things share the same underlying
 methods and challenges. Which means tools built for one of these tasks
-can help the other [^abduction]. 
+can help the other [^duo][^abduction]. 
 
 [^abduction]: For more on the mysterious machine that runs deep
   within testing, SE, requirements engineering, configuration, etc,
@@ -75,53 +104,11 @@ can help the other [^abduction].
   data mining tools. Specifically, data miners divide a space and
   optimizers tell you how to jump around that space.
 
-
-## Why TESTED?
-
-Hopefully,
-software  built by people like me (i.e. a developer) is
-used by other people 
-(i.e. the stakeholders[^stake]). How can those stakeholders verify if the built software is right,
-or validate that the right software is being built?
-
-The problem with 
-stakeholder testing is that, typically,
-they do not understand everything  about what goes on inside the code.
-Hence they need:
-- [semi-supervised_learning](#semi-supervised-learning): 
-    which only needs opinions on very small,
-    most
-  informative, parts of a whole system.
-only needs labels for a small  percent of its examples
-- _explanation algorithms_: TESTED lets stakeholders
-    browse succinct summaries of a system's state space.
-- _multi-objective_: Stakeholders have different goals (and some of them might even be
-contradictory). So TESTED lets  according to handle multiple domain objectives, as specified by stakeholders;
-
-Stakeholder-based testing is a human-in-the-loop exercise. Unless we are careful,
-these people can be overwhelmed by having to look at too much information.
-This is a really big problem.
+[^duo]: [Better Software Analytics via "DUO": Data Mining Algorithms Using/Used-by Optimizers](https://arxiv.org/pdf/1812.01550.pdf)
+  Amritanshu Agrawal, Tim Menzies, Leandro L. Minku, Markus Wagner, and Zhe Yu. 2020. 
+  Empirical Softw. Engg. 25, 3 (May 2020), 2099–2136. https://doi.org/10.1007/s10664-020-09808-9
 
 
-
-Software contains bugs, always
-(see, for example, the
-depressing litany of mistakes documented in Peter
-Neumann’s [Computer-Related Risks](https://catless.ncl.ac.uk/risks/)).
-and things with bugs need to be tested before we use them. Testing is such an important
-task and frequent task that it is worth considering how to design systems
-that can be explored effectively and cheaply.
-
-[^stake]:  "Stakeholders"  are individuals or organizations having
-a right, share, claim, or interest in a system or in its possession
-of characteristics that meet their needs and expectations 
-[(ISO/IEC/IEEE
-2015)](https://www.iso.org/standard/63711.html)
-
-
-TESTED assumes that the best way to test "it" is to watch someone else 
-(specifically, stakeholders [^stake])
-try to break "it".  is all about exploring more, using fewer samples to the system.
 
 More specifically, TESTED lets stakeholders  sort examples (according to
 personnel preferences)  without having to know everything about all examples.
