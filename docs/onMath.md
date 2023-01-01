@@ -377,16 +377,18 @@ t6= {cells= {6      146    97   2815  14.5   77      3       20}}
 t7= {cells= {8      267    125  3605  15     79      1       20}}
 t9= {cells= {8      307    130  4098  14     72      1       10}}
 ```
+
 This is Zitzler's multi-objective domination predicate [^zizt]. This
 runs a little what-if analysis that asks "if we go here to there,
 or there to here", what losses most?
-= e.g. in one dimension, 
-  - suppose we have 10 pounds and 2 pounds
-  = here to there is 10-2 = 8
-  - there to here is 2-10 = -8
+- e.g. in one dimension, 
+  - suppose we are moving between 10 pounds and 2 pounds
+  - and we want to maximize (`i.w=1`)
+  - here to there is `i.w\*(10-2) = 8`
+  - there to here is `i.e\*(2-10) = -8`
   - leaving here loses worst
   - so here is better than there
-- and the point of Zitzler is that it woks for comparing on _N_ dimensions.
+- and the point of Zitzler is that it woks for comparing on $N \ge 1$ dimensions.
 
 ```lua
 function DATA:sort(t1,t2,  cols)
