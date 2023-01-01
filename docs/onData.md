@@ -121,6 +121,8 @@ In the above, DATA is the ringmaster that controls xis special cases:
   - or it is all other other rows of data. [6]
 
 ```lua
+function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
+
 function DATA.new(i,src,     data,fun)
   i.rows, i.cols = {}, nil
   fun = function(x) i:add(x) end

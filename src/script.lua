@@ -1,14 +1,3 @@
-- table, row, column (attribute, feature, goal)
-- nominal, ratio, SYM, NUM, SOME
-- mid, mean, median, mode
-- div, entropy, standard deviation, IQR
-- parametric (normal, Gaussian), non-parametric 
-  (reservoir sampling)
-- multi-goal, many-goal
-  - binary, continuous domination (cdom, Ziztler)
-- distance: Euclidean, $p$
-
-
 ---       _        __        _     
 ---     /' \     /'__`\    /' \    
 ---    /\_, \   /\ \/\ \  /\_, \   
@@ -33,9 +22,29 @@ OPTIONS:
 ]]
 local fmt,oo,per,rnd,sort,rand,norm
 -----------------------------------------------------------------------------------------
+-- A repeated structure in my code are the following classes:
+-- 
+-- |class | notes |
+-- |------|-------|
+-- |NUM   | summarize stream of numbers|
+-- |SYM   | summarize stream of symbols|
+-- |ROW | container for one record |
+-- |COLS  | factory for createing NUMs and SYms|
+-- |DATA | container for ROWs, summaized into NUMs or SSYMs|
+-- 
+-- Conceptually there is a sixth class that is a super class
+-- of NUM and SYM... but I don't actually implement that (so there is small amount
+-- of repeated structure between NUM and SYM.
+
+local id=0
+function obj(s,    t,new) --> t; create a klass and a constructor 
+  function new(_,...) id=id+1; local i=setmetatable({a=s,id=id}, t); t.new(i,...); return i end
+  t={}; t.__index = t;return setmetatable(t, {__call=new}) end
+
+local COLS,DATA,NUM,ROW,SYM = obj"COLS",obj"DATA",obj"NUM",obj"ROW",obj"SYM"
+-----------------------------------------------------------------------------------------
 -- ## SYM
 -- Summarize a stream of symbols.
-local SYM = lib.obj"SYM"
 function SYM.new(i) --> SYM; constructor
   i.n   = 0
   i.has = {}
@@ -56,7 +65,6 @@ function SYM.div(i,x) --> n; return the entropy
 --------------------------------------------------------------------------------
 -- ## NUM
 -- Summarizes a stream of numbers.
-local NUM = lib.obj"NUM"
 function NUM.new(i) --> NUM;  constructor; 
   i.n, i.mu, i.m2 = 0, 0, 0
   i.lo, i.hi = math.huge, -math.huge end
@@ -75,8 +83,8 @@ function NUM.div(i,x)  --> n; return standard deviation using Welford's algorith
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 -----------------------------------------------------------------------------------------
 -- ## SOME
--- Hold a small sample of an infinite stream.
-local SOME = lib.obj"SOME"
+-- Hold a small sample of an infinite stream. If you doubt the simplistic standard deviation
+-- assumption, then replace NUM for SOME.
 function SOME.new(i,max)
   i.ok, i.max, i.n = true, max or the.Some or 256, 0  
   i._has = {} end -- marked private with "_" so we do not print large lists
@@ -102,6 +110,42 @@ function SOME.mid(x) --> n; return the number in middle of sort
 function SOME.div(x) --> n; return the entropy
   return (per(i:has(), .9) - per(i:has(), .1))/2.58 end
 --------------------------------------------------------------------------------------------
+-- ## COLS
+-- Goals are shared in `i.y`, other columns are shared in `i.x`.
+function COLS.new(i,t,     col,cols) --> COLS; factory for generating NUMs,SYMs from csv line1
+  i.names, i.all, i.x, i.y, i.klass = t, {}, {}, {},{}
+  for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
+    col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
+    push(i.all, col)
+    if not s:find"X$" then
+      if s:find"!$" then i.klass = col end
+      push(s:find"[!+-]$" and i.y or i.x, col) end end end
+
+function COLS.add(i,row)
+  for _,t in pairs({i.x,i.y}) do -- update all the columns we are no skipping
+    for _,col in pairs(t) do
+      col:add(row.cells[col.at]) end end end
+--------------------------------------------------------------------------------------------
+function ROW.new(i,t) --> ROW; Constructor
+  i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
+--------------------------------------------------------------------------------------------
+function DATA.new(i,src,     data,fun)
+  i.rows, i.cols = {}, nil
+  fun = function(x) i:add(x) end
+  if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk
+                           else map(src or {}, fun)  -- [2] load from a list
+                           end end
+  
+function DATA.add(i,t)
+  if   i.cols          -- [6] true if we have already seen the column names
+  then t =ROW(t.cells and t.cells or t) -- [3][4] "t" can be a ROW or a simple list
+       push(i.rows, t) -- add new data to "i.rows"
+       i.cols:adds(t)  -- update the summary information in "ic.ols"
+  else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row
+       end end
+```
+---- ## Misc
+
 --- ## Start-up
 local eg={}
 
