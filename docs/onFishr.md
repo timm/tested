@@ -100,6 +100,70 @@ Stackholder testing:
   Empir Softw Eng, 17 (2012), pp. 18-22
 
 
+Enabling humans to explore all the important potential behaviors of a software model is an open and important  issue.
+In
+``Flaws of policies of requiring human oversight''~\cite{green2022flaws},
+Ben Green notes that many recent policies      require humans-in-the-loop to review or   audit   decisions from software models.
+E.g. the  manual of the
+(in)famous  COMPAS model (see Table~\ref{tbl:sigh}) notes the algorithm can make mistakes and advises that
+``staff should be encouraged to use their professional judgment and override the computed risk as appropriate''~\cite{northe15}.
+
+Cognitive theory~\cite{simon1956rational} tells us that
+  humans  use heuristic ``cues'' that lead them to the most important parts
+of a model before moving on to their next
+task. But when humans review models, they can miss important details. Such cues are essential if humans are to tackle
+their busy workloads. That said,  using cues can introduce errors:
+   {\em
+   ...people (including experts) are susceptible to ``automation bias'' (involving)  omission errors—failing to take action because the automated system did not provide an alert—and commission error}~\cite{green2022flaws}.
+ This means  that   oversight policies   can lead to the reverse of their desired effect  by {\em ``legitimizing the use of   faulty and controversial algorithms without addressing (their fundamental issues''}~\cite{green2022flaws}.
+
+
+
+
+
+%.
+
+%Cognitive theory~\cite{simon1956rational} tells us that humans  use heuristic ``cues'' that lets them find    (hopefully)  most important parts of a modelbefore rushing off to their next task.
+
+
+
+  Unfortunately,
+there are substantial examples where human oversight missed important software properties (see Table~\ref{tbl:sigh}). For example,  it took years to realize that
+COMPAS   had an alarming difference in the false alarm rates for black and white defendants~\cite{Chakraborty2020artifact}. That difference is a bug (since it can be fixed-- see PI Menzies' FSE'21 paper~\cite{fse21} that weights training examples to reduce COMPAS's false alarm delta, while  maintaining the same levels of recall on actual recidivism).
+
+%That difference is a bug (and we know that is a  bug since it can be fixed-- see PI Menzies' FSE'21 paper~\cite{fse21} that weights training examples to reduce COMPAS's false alarm delta, while  maintaining the same levels of recall on actual recidivism).
+
+
+\begin{table}[!b]
+
+\small
+\begin{tabular}{|p{.98\linewidth}|}\hline
+
+\rowcolor{blue!5} The COMPAS recidivism models  labels black defendants as future criminals at twice the rate as whites~\cite{Machine_Bias}.
+\\
+Widely-used face recognition software   predicting    gender \& age, has a much
+higher error rate for dark-skinned women compared to light-skinned men~\cite{Skin_Bias}.
+\\
+\rowcolor{blue!5} Amazon's   software for same-day delivery to prime users  became   biased against black neighborhoods \cite{Amazon_Bias}.
+\\
+  Google Translate  has gender bias. ``She is an engineer, He is a nurse''   translated to  Turkish then
+  back to  English gives ``He is an engineer, She is a nurse'' \cite{Caliskan183}.\\\hline
+\end{tabular}
+\caption{ Example biases seen in   software decisions. For more, see
+Rudin~\cite{rudin2019explaining},
+Nobel~\cite{noble2018algorithms},    Gebru~\cite{gebru21}.
+}\label{tbl:sigh}
+\end{table}
+
+
+To forge an effective partnership, humans and artificial intelligence (AI) need to understand each other's strengths and limitations. The software can explore a very large space,
+on pre-determined criteria. Humans can offer novel insight, but only over
+a small number of examples.  We conjecture, that when combined,
+both can find better solutions than if either
+worked
+separately.
+
+=======================
 So here we explore how much we
 "Science is what we understand well enough to explain     
 to a computer. Art is everything else we do"    
