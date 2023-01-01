@@ -156,7 +156,6 @@ function COLS.new(i,t,     col,cols)
 ### The DATA Model
 
 ```mermaid
-classDiagram
 class~COL~{
   int n=1
 }
