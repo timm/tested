@@ -46,7 +46,7 @@ Things to watch for are
 - parametric (normal, Gaussian), non-parametric 
   (reservoir sampling)
 - multi-goal, many-goal
-  - binary, continuous domination (Littler)
+  - binary, continuous domination (cdom, Ziztler)
 - distance: Euclidean, $p$
 
 
@@ -282,14 +282,22 @@ Is 2 better than 3? Depends if we want to _minimimize_ of _maximize_.
 Are (2 cars plus 4 clowns) better than (1 car and 5) clowns? Depends on how much we want
 to minimize the number of cars and maximize the number of clowns.
 
-The standard _boolean domination_ predicate says one thing dominates another
+The standard _boolean domination_ (bdom) predicate says one thing dominates another
 if (a) it never worse on any goals and (b) it is better for at least one goal. So if we want to minimize
 cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 5clowns is better  (since better on all)
 - 1car + 3clowns is not better  (since worse on one)
 
-Boolean domination can fail to distinguish different things 
-when the number of goals grows over three[^wag07][^sayyad]. 
+The great thing about boolean domination is that a single  
+point can wipe out thousands, millions of rivals:
+
+<img src="/etc/img/2dplot" width=600>
+
+<img src="pendulm.png" width=600>
+
+When the number of goals 
+grows over three[^wag07][^sayyad], 
+boolean domination can fail to distinguish different things.
 Why?
 - Well, it is that "never worse of any goal" condition. 
 - The more goals there are, the more ways you can be a tiny bit worse on at least one goal.
@@ -305,7 +313,7 @@ Why?
 
 So we often distinguish
 - Multi-goal reasoning (up to 3 goals) where boolean domination works ok
-- Many-goal reasoning (4 or more) [^many], which needs something else called continuous domination (see below)
+- Many-goal reasoning (4 or more) [^many], which needs something else called continuous domination (cdom, see below)
   - Not that continuous domination also works for multi-goal.
 
 [^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
@@ -313,7 +321,7 @@ So we often distinguish
   Journal of Systems and Software, Volume 149, 2019, Pages 382-395,
   ISSN 0164-1212, https://doi.org/10.1016/j.jss.2018.12.015.
 
-Before we get to continuous domination,
+Before we get to cdom,
 we need a little trick:
 change  `NUM`  and `SYM` so its accepts a name string
 - and if the name starts in uppercase, we have a number
