@@ -296,4 +296,44 @@ with the same rights as conventional values like numbers and strings.
 - tests in different files
 
 
+### Some High-Level Terms 
+
+|What | Notes|
+|----:|:------|
+|Theorem provers | explores  a set constraints defined in $B$|
+| Data miners |   tools for dividing up $X$ and/or $Y$|
+| Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
+| Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
+
+### Other Lower-Level Terms
+
+|What | Terms|
+|----:|:------|
+|supervised inference|  At least one _Y_ value |
+| regression | usually, for single numeric goals|
+|classification | single symbolic goal|
+|Semi-supervised learning|  When  we have many examples but only a small subset have $Y$ values... in which case we can do things like spreading out the available $Y$ values over clusters within the $X$ values.|
+| Unsupervised learning |  When we have no $Y$ values... in which case we can do things like _cluster_ the $X$ variables then ask humans people to offer comments on each cluster.  To reduce labeling do a recursive binary clustering of the data down to leaf clusters of size $\sqrt{N}$. Then just label the median point of these $\sqrt{N}$ clusters.|
+|Contrast learning | Finding a minimal difference between clusters.
+|  Single goal optimization| single goal|
+| Multi goal optimization | up to 3 goals|
+| Many goal optimization | 4 or more|
+|Hyper-parameter optimization| Optimization through $Z,Y$ space|
+
+One way to build optimizers is to: 
+- cluster on $X$
+- sort each cluster of their average $Y$ values
+- generate clusters between clusters with worse and better $Y$ values|
+
+[^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
+A survey of many-objective optimisation in search-based software engineering,
+Journal of Systems and Software,
+Volume 149,
+2019,
+Pages 382-395,
+ISSN 0164-1212,
+https://doi.org/10.1016/j.jss.2018.12.015.
+https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_optimisation_in_search-based_software_engineering
+
+
 beyond standard testing (other testing) rep rule
