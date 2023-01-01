@@ -161,6 +161,7 @@ COL <--  NUM
 COL <--  SYM
 DATA "1" -- "1..*" ROW  : rows 
 DATA "1" -- "1" COLS  : cols
+COLS "1" -- "1..*" COL  
 class COLS {
    name: strs
    x : ROWs
