@@ -38,10 +38,18 @@ manifold, labelling cost, curse of dimensionality, explanation
 
 <hr>
 
+TESTED is  a semi-supervised, multi-objective, model-based
+explanation system.
+The code is a refactoring of decades of work by dozens of Ph.D. students.
+
 TESTED assumes that the best way to test "it" is to watch someone else 
 (specifically, stakeholders [^stake])
-try to break "it".  TESTED is all exploring more and fixing
+try to break "it".  TESTED tools like people  exploring more and fixing
 more via fewer samples to the system.
+
+TESTED is not a pretty GUI. Rather, it is a programming toolkit that shows that
+these kinds of tools are (very) simple to build.
+
 
 [^stake]: Definition: "Stakeholders"  are individuals or organizations having
   a right, share, claim, or interest in a system or in its possession
@@ -68,14 +76,11 @@ Hence stakeholder testing  needs special kinds of tools:
 - without
   having to offer too much information on each thing. 
 
-Under-the-hood, TESTED's tools implement a semi-supervised, multi-objective, model-based
-explanation system.
 The central claim of TESTED is that these:
 **tools are surprisingly easy to build**. To say that another way:
 - people can (and should) understand AI systems;
 - then use those systems to build a better world.
 
-The TESTED code base represents a  refactoring of decades of work by dozens of Ph.D. students.
 Every tool is less than a few hundred lines of LUA code and all those tools share most of the same internal structure.
 Students can learn this simpler approach to AI as a set of weekly homeworks where they recode the tools
 in any language at all (except LUA).
