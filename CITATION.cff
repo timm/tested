@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TESTED
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Tim
+    family-names: Menzies
+    email: timm@ieee.org
+    name-particle: Tim
+    orcid: 'https://orcid.org/0000-0002-5040-3196'
+    affiliation: 'NC State, Computer Science, USA'
+keywords:
+  - multi-objective
+  - explaination
+  - semi-supervised learning
+  - model-based
+  - LUA
+  - teaching
+  - ethics
+license: BSD-2-Clause
