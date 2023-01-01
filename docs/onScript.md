@@ -157,6 +157,22 @@ function COLS.new(i,t,     col,cols)
 
 ```mermaid
 classDiagram
+class COL {
+  int n=1
+}
+class SYM {
+  list has={}
+  str mode=""
+  int most="0"
+}
+class COL {
+  int n=1
+}
+COL <|--  NUM
+COL <|--  SYM
+COLS "1" --> "1..*" COL
+DATA "1" --> "1..*"   ROW  
+DATA "1" --> "1" COLS 
 Class01 <|-- AveryLongClass : Cool
 <<Interface>> Class01
 Class09 --> C2 : Where am I?
