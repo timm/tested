@@ -82,6 +82,11 @@ in any language at all (except LUA).
 Then, for graduate students, they can also do a final four week project
 where they try  to improve on a stakeholder testing tool called "fishing", provided in this kit.
 
+(Just an aside, the way I do homeworks is that every week, everyone
+has to submit something, even if it is broken. Homeworks can get submitted multiple times
+so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
+
+
 ## Frequently Asked Questions
 
 So what is TESTED really about?
@@ -127,10 +132,6 @@ they must reproduce in any other language they like (except Lua).
 - Hence, it is
 suitable for homeworks or (by combining several modules) a large
 end-of-term project.  
-
-(Just an aside, the way I do weekly homeworks is that every week, everyone
-has to submit something, even if it is broken. Homeworks can get submitted multiple times
-so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
 
 ## asdas
 
