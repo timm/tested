@@ -57,6 +57,22 @@ these kinds of tools are (very) simple to build.
   [(ISO/IEC/IEEE
   2015)](https://www.iso.org/standard/63711.html).
 
+# Install
+
+Install Lua:
+
+    brew install lua       # on max os/x
+    lua -v                 # TESTED needs at least LUA version 5.3
+
+Check-out this repo
+
+    git clone https://github.com/timm/tested
+
+Check your installation
+
+    cd tested/src
+    lua 101.lua -g all # should show one crash and several passes
+
 # Why TESTED? 
 
 Well,
@@ -122,22 +138,5 @@ can help the other [^duo][^abduction].
   Empirical Softw. Engg. 25, 3 (May 2020), 2099–2136. https://doi.org/10.1007/s10664-020-09808-9
 
 
-## Install
-
-Install Lua:
-
-    brew install lua       # on max os/x
-    lua -v                 # TESTED needs at least LUA version 5.3
-
-Check-out this repo
-
-    git clone https://github.com/timm/tested
-
-Check your installation
-
-    cd tested/src
-    lua 101.lua -g all # should show one crash and several passes
-
-## Study Guide
 
 
