@@ -44,8 +44,8 @@ The code is a refactoring of decades of work by dozens of Ph.D. students.
 
 TESTED assumes that the best way to test "it" is to watch someone else 
 (specifically, stakeholders [^stake])
-try to break "it".  TESTED tools like people  exploring more and fixing
-more via fewer samples to the system.
+try to break "it".  TESTED lets  people  explore more and fix
+more (but  sampling less around a system).
 
 TESTED is not a pretty GUI. Rather, it is a programming toolkit that shows that
 these kinds of tools are (very) simple to build.
