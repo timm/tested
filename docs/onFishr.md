@@ -22,6 +22,8 @@ XXX ungood good
 - tarantual optipns
 - entropy pruning of the wights
 - huebrs 16m spalsh let and right
+- dont use ygap, but use the detal computed by zitlzer
+- dont use zitzler ever, use ygap  instead
 - and more
 
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
