@@ -36,7 +36,7 @@ manifold, labelling cost, curse of dimensionality, explanation
 </td></tr>
 </table -->
 
-
+<hr>
 
 TESTED assumes that the best way to test "it" is to watch someone else 
 (specifically, stakeholders [^stake])

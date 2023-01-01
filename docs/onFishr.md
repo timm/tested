@@ -42,6 +42,7 @@ We conjecture, that when combined,
 both can find better solutions than if either
 worked
 separately.
+
 This is important since there are too many examples  of deplorable software models being fielded
 For example, chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
 tells the sad tale of  how a design quirk of  Yelp ruined a small business:
