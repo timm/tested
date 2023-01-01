@@ -465,11 +465,11 @@ With the above, we nearly have everything we need to distance calculations.
 Here's Aha's distance measure that work for combinations of numeric and symbolic
 attributes. 
 
-$$\mathit{Distance}(a, b) = \left( \sum_i^n f(a_i,b_i) \right)^{1/p} $$
+$$\mathit{Distance}(a, b) = \left( \sum_i^n f(a_i,b_i)^p \right)^{1/p} $$
 
 where the instances are described by $n$ attributes. 
 - We define 
-$f(a_i, b_i) = (a_i - b_i)^p$ for
+$f(a_i, b_i) = (a_i - b_i)$ for
 numeric-valued attributes 
 - We define $f(a_i, b_i) = (a_i \neq b_i)$ 
 for boolean and symbolic-valued attributes. 
