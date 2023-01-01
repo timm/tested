@@ -15,7 +15,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 
-# Automated Software Engineering, Stakeholder Testing, and  "Fishing"
+# Automated  SE, Stakeholder Testing, and  "Fishing"
 
 XXX ungood good
 - options, clster then do more
@@ -26,24 +26,17 @@ XXX ungood good
 - dont use zitzler ever, use ygap  instead
 - and more
 
-Definition: "Stakeholders"  are individuals or organizations having
-  a right, share, claim, or interest in a system or in its possession
-  of characteristics that meet their needs and expectations 
-  [(ISO/IEC/IEEE
-  2015)](https://www.iso.org/standard/63711.html).
-
-
 ## What is  Stakeholder Testing?
 To forge an effective partnership, humans and artificial intelligence (AI) need to understand each other's strengths and limitations. 
 - Software can explore a very large space, on pre-determined criteria. 
 - Humans can offer novel insight, but only over a small number of examples. 
 
-We conjecture, that when combined,
-both can find better solutions than if either
+I saw,  that when combined,
+AI software and humans can find better solutions than if either
 worked
 separately.
 
-This is important since there are too many examples  of deplorable software models being fielded
+This search for better solutions is important since there are too many examples  of terrible software solutions.
 For example, chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
 tells the sad tale of  how a design quirk of  Yelp ruined a small business:
 - As one of Noble’s interviewees put it "Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
@@ -51,7 +44,7 @@ tells the sad tale of  how a design quirk of  Yelp ruined a small business:
 - Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
 
 There are too many 
-other examples where software engineers fielded AI models, without noticing biases in those models:
+other examples where terrible software:
 
 - Amazon had to scrap an automated recruiting tool as it 
   was found to be [biased against women](https://reut.rs/2Od9fPr).
@@ -103,10 +96,15 @@ Lets call that "stakeholder testing".
 
 ## What is Special about "Stakeholder Testing"
 
+This section is about "stakeholder testing", which we might also call
+"fishing", which is the
+process
+of prioritizing many things, without knowing too much about each thing.
+
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
      align=right width=300>
 
-Consider the polar bear
+Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
 - above the ice, she can see for miles
   - where the other bears are fishing
   - where the ice is cracking (due to patches of heat)
@@ -115,13 +113,13 @@ Consider the polar bear
   - etc
 - but below the ice
   - she has zero disability below the ice
-- problem: she only has the strength to bash a few holes in the ice per day
+- problem: she only has the strength and the time to bash a few holes in the ice per day
   - so she must bash  a few holes, learning what she can
     along the way, trying to to make her next guess (about where
     to bash) better.
 
-More generally, let us say that "fishing" (aka stakeholder testing) is that process
-of prioritizing many things, without knowing too much about every thing.
+[^bear]: Apologies to all my polar bear readers: I  don't actually know if you  do this. But the metaphor of a vast
+exposed expanse,   floating on top of a hidden space of desired goals, was too much to resist.
 
 And this needs some human-scale "stakeholder testing"[^stake]
 - given columns divided into `i.y` goals and `i.x` other columns
@@ -141,7 +139,6 @@ added requirements:
 |Semi-supervised learning| These tests often has a limited budget.| 
 
 
-Further to the last point, why do we say We also know that this kind of testing often goes awry.
 stakeholders want to complete their testing   in a parsimonious manner since they can get back to 
 everything else that needs their attention. Hence we must not demand outputs for _every_ possible input, just some of the inputs.|
 
@@ -178,6 +175,21 @@ Stackholder testing:
 [^mur12]: B. Murphy
   The difficulties of building generic reliability models for software
   Empir Softw Eng, 17 (2012), pp. 18-22
+
+Further to the last point, why do we say We also know that this kind of testing often goes awry.
+Ben Green[^green] warns that many recent policies require 
+          humans-in-the-loop to review or audit decisions from
+          software model. People
+          (including experts) are susceptible to “automation bias” (involving
+          omission errors) failing to take action because the automated
+          system did not provide an alert—and commission error. These
+          omissions
+          means that oversight policies can lead to the reverse of their
+          desired effect by “legitimizing the use of faulty and controversial 
+          algorithms without addressing (their fundamental issues)" 
+
+[^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
+          Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
 
 Enabling stakeholder testing
@@ -573,11 +585,6 @@ Create an overleaf.com account
          \linenumbers
 
 
-[^ralph]: Baltes, S., Ralph, P. Sampling in software engineering research: 
-          a critical review and guidelines. Empir Software Eng 27, 94 (2022).
-          https://doi.org/10.1007/s10664-021-10072-8
-          https://arxiv.org/pdf/2002.07764.pdf
-
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
           Search through available alternatives till an acceptability threshold is met.i
           Introduced by Herbert A. Simon in 1956 to explain the behavior of decision makers
@@ -591,18 +598,5 @@ Create an overleaf.com account
           simplified world, or by finding satisfactory solutions for a more realistic world.
           Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
-
-[^green]: Ben Green warns that many recent policies require 
-          humans-in-the-loop to review or audit decisions from
-          software model. People
-          (including experts) are susceptible to “automation bias” (involving
-          omission errors) failing to take action because the automated
-          system did not provide an alert—and commission error. These
-          omissions
-          means that oversight policies can lead to the reverse of their
-          desired effect by “legitimizing the use of faulty and controversial 
-          algorithms without addressing (their fundamental issues)" 
-          B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
-          Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
 
