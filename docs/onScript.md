@@ -155,6 +155,19 @@ function COLS.new(i,t,     col,cols)
 ```
 ### The DATA Model
 
+A repeated structure in my code are the following classes:
+
+|class | notes |
+|------|-------|
+|NUM   | summarize stream of numbers|
+|SYM   | summarize stream of symbols|
+|ROW | container for one record |
+|COLS  | factory for createing NUMs and SYms|
+|DATA | container for ROWs, summaized into NUMs or SSYMs|
+
+Conceptually there is a sixth class that is a super class
+of NUM and SYM... but I don't actually implement that.
+
 ```mermaid
 classDiagram
 COL <--  NUM
