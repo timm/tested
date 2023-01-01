@@ -153,7 +153,7 @@ function COLS.new(i,t,     col,cols)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
-### The DATA Model
+## The DATA Model
 
 A repeated structure in my code are the following classes:
 
@@ -203,36 +203,43 @@ class SYM {
 In the above, DATA is the ringmaster that controls xis special cases:
 
 - DATA is loaded from either 
-  - a disc csv file
-  - rows from some other source 
+  - a disc csv file [1]
+  - rows from some other source  [2]
 - When receiving new data, that data could be
-  - a simple list
-  - a ROW (which is a container for a list)
-- When that data arrives, it is either 
+  - a simple list [3]
+  - a ROW (which is a container for a list) [4]
+- When that data arrives, it is either
+  -the first row (with the column names) [5]
+  - or it is all other other rows of data. [6]
 
 ```lua
 function DATA.new(i,src,     data,fun)
   i.rows, i.cols = {}, nil
   fun = function(x) i:add(x) end
-  if type(src) == "string" then csv(src,fun)  -- load from a csv file on disk
-                           else map(src or {}, fun)  -- load from a list
+  if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk
+                           else map(src or {}, fun)  -- [2] load from a list
                            end end
   
 function DATA.add(i,t)
-  if   i.cols 
-  then t =ROW(t.cells and t.cells or t) -- t can be a ROW or a simple list
+  if   i.cols          -- [6] true if we have already seen the column names
+  then t =ROW(t.cells and t.cells or t) -- [3][4] "t" can be a ROW or a simple list
        push(i.rows, t) -- add new data to "i.rows"
        i.cols:adds(t)  -- update the summary information in "ic.ols"
-  else i.cols=COLS(t) end end
+  else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row
+       end end
 ```
-function COLS.includes(i,row)
-  for _,t in pairs{i.x} do
+Note that adding something to DATA means also updating the column summaries:
+```lua
+function COLS.add(i,row)
+  for _,t in pairs({i.x,i.y}) do -- update all the columns we are no skipping
     for _,col in pairs(t) do
-      col:includes(row.cells[col.at]) end end end
-
+      col:add(row.cells[col.at]) end end end
+```
+One thing we can do here is  create a new table with the identical structure. 
 ```lua
 function DATA.clone(i,  init,     data)
   data=DATA({i.cols.names})
   map(init or {}, function(x) data:add(x) end)
   return data end
 ```
+## Test-Drive Development
