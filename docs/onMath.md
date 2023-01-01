@@ -288,12 +288,17 @@ cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 5clowns is better  (since better on all)
 - 1car + 3clowns is not better  (since worse on one)
 
-The great thing about boolean domination is that a single  
-point can wipe out thousands, millions of rivals:
+The great thing about boolean domination is that a single
+point can wipe out thousands, millions of rivals. E.g. suppose
+we are guessing what is the equation of a pendulum. A good
+equation has to:
+- cover the data (be accurate)
+- without being too complex
+
+<img src="/etc/img/pendulm.png" width=600>
 
 <img src="/etc/img/2dplot.png" width=600>
 
-<img src="/etc/img/pendulm.png" width=600>
 
 When the number of goals 
 grows over three[^wag07][^sayyad], 
