@@ -30,31 +30,38 @@ XXX ungood good
      align=right width=300>
 
 Consider the polar bear
-- she cannot see through the ice to find the fish
-- she can only cut a few holes per day
-- so she must cut a few holes, learning what she can
-  along the way, trying to to make her next guess (about where
-  to cut) better.
+- above the ice, she can see for miles
+  - where the other bears are fishing
+  - where the ice is cracking (due to patches of heat)
+  - where there are the islands poking through the ice
+  - where are the holes from yesterday,
+  - etc
+- but below the ice
+  - she has zero disability below the ice
+- problem: she only has the strength to bash a few holes in the ice per day
+  - so she must bash  a few holes, learning what she can
+    along the way, trying to to make her next guess (about where
+    to bash) better.
 
 More generally, let us say that "fishing" is that process
 of prioritizing many things, without knowing too much about every thing.
 
 And this needs some human-scale "stakeholder testing"[^stake]
 - given columns divided into `i.y` goals and `i.x` other columns
-- you can look around all the `i.x`  columns (the polar bear can search all she wants, on top of the ice)
-- but you can only look  at a few `i.y` columns  (the polar bear only has the resources to cut a few holes)
+- you can look around all the `i.x`  columns
+- but you can only look  at a few `i.y` columns 
 
 Technically speaking, this is a kind of acceptance testing, with some
-  added requirements:
+added requirements:
 
 |What | Notes|
 |-----|------|
 |Optimizing| High-level stakeholders do not hunt bugs for fun... they really are seeking ways to avoid those bugs.  So we need to learn the gradients along which the system can slip, and how to nudge the system along those gradients to places of better behavior
 |Multi-objective reasoning| Stakeholders often have competing goals (e.g. "better" and "faster" and "cheaper").|
 |Black-box| Most systems are so complex that it is hard to reason about their interior processing. Hence, we try to learn what we can from the input,output behaviour|
-|Semi-supervised learning| These tests often has a limited budget.  Stakeholders want to complete their testing   in a parsimonious manner since they can get back to everything else that needs their attention. Hence we must not demand outputs for _every_ possible input, just some of the inputs.|
 |XAI (explainable AI))| Stakeholders are  often done by non-technicals (e.g. representatives from the broader user community) so they seek a "big picture overview" rather than lots of details.|
 |Model-based| between this audit and the next, we need some way to continue testing the system (so we can check if the system has gone off the rails and needs  an emergency set of new acceptance tests). So there has to be some product from the acceptance testing that can be applied while we wait for the next acceptance test. |
+|Semi-supervised learning| These tests often has a limited budget.| 
 
 
 [^stake]:  "Stakeholders"  are individuals or organizations having
@@ -63,7 +70,9 @@ Technically speaking, this is a kind of acceptance testing, with some
   [(ISO/IEC/IEEE
   2015)](https://www.iso.org/standard/63711.html).
 
-We also know that this kind of testing often goes awry.
+Further to the last point, why do we say We also know that this kind of testing often goes awry.
+stakeholders want to complete their testing   in a parsimonious manner since they can get back to 
+everything else that needs their attention. Hence we must not demand outputs for _every_ possible input, just some of the inputs.|
 
 Stackholder testing:
 - Knowledge elicitation techniques like
