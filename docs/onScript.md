@@ -162,7 +162,7 @@ COL <--  SYM
 COLS "1" -- "1..*" COL
 DATA "1" -- "1..*" ROW  
 DATA "1" -- "1" COLS 
-class BankAccount{
+class COL{
     +String owner
     +BigDecimal balance
     +deposit(amount)
