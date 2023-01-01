@@ -289,7 +289,7 @@ cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 3clowns is not better  (since worse on one)
 
 Boolean domination can fail to distinguish different things 
-when the number of goals grows over three[^wagner][^sayyad]. 
+when the number of goals grows over three[^wager][^sayyad]. 
 Why?
 - Well, it is that "never worse of any goal" condition. 
 - The more goals there are, the more ways you can be a tiny bit worse on at least one goal.
