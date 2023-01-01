@@ -16,7 +16,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 
 # Automated SE and Maths (just a little)
-Here we want to talk about the data and operations relevant to
+
+Here's the great secret about optimization and data mining
+- under the hood,  they share a lot of the same structures
+- data mining divides up the world
+- optimizers comment where to jump between the divisions.
+
+So here we want to talk about the data and operations relevant to
 columns and rows of data.
 
 ```
@@ -41,7 +47,8 @@ Things to watch for are
   (reservoir sampling)
 - multi-goal, many-goal
   - binary, continuous domination (Littler)
-- distance
+- distance: Euclidean, $p$
+
 
 ## Just to start: example (Pseudo-random numbers)
 Just to show a sample of the code we are going to explore...
