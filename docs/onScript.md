@@ -156,35 +156,16 @@ function COLS.new(i,t,     col,cols)
 ### The DATA Model
 
 ```mermaid
-class~COL~{
-  int n=1
-}
-class~SYM~{
-  list has={}
-  str mode=""
-  int most="0"
-}
-class COL {
-  int n=1
-}
 COL <|--  NUM
 COL <|--  SYM
 COLS "1" --> "1..*" COL
 DATA "1" --> "1..*"   ROW  
 DATA "1" --> "1" COLS 
-Class01 <|-- AveryLongClass : Cool
-<<Interface>> Class01
-Class09 --> C2 : Where am I?
-Class09 --* C3
-Class09 --|> Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-class Class10 {
-  <<service>>
-  int id
-  size()
+classDiagram
+class BankAccount{
+    +String owner
+    +BigDecimal balance
+    +deposit(amount)
+    +withdrawal(amount)
 }
 ```
