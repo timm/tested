@@ -162,8 +162,26 @@ COL <--  SYM
 DATA "1" -- "1..*" ROW  
 DATA "1" -- "1" COLS 
 class COLS {
+   name: strs
    x : ROWs
    y : ROWs
    all: rows
+}
+class ROW {
+  cells : lst
+}
+class COL {
+  n,at: int,int
+  txt: str
+}
+class NUM {
+  w : -1 or 1
+  mu,m2 : 0,0
+  lo,hi: num
+}
+class SYM {
+  has : dict
+  mode : str
+  most: 0
 }
 ```
