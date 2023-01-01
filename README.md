@@ -140,16 +140,10 @@ can help the other [^duo][^abduction].
 
 To present this work as a syllabus, here is a weekly guide (assumes a 14 week semester)
 
-<table>
-<tr>
-<td>
-
-[hellp](asd)
-
-</td><td>
-
-</td>
-</tr>
-</table>
-
+|Week |Task|Lecture|Code (to reproduce)| Terms (to understand)|
+|----|-----|-------|------------------|-----------------------|
+|1   | scripting| [onScript](/docs/onScript.md) | [script](/src/script.md) |version control,test-driven development, red-green-refactor, command-line interfaces, regular expressions,random number seeds|
+|2   | data| [onData](/docs/onData.md) | [data](/src/data.md) |coercion (string to thing), iterators,mean, median, mode, standard deviation, entropy, Welford, Aha, row (example), column (attribute, feature,goal), reservoir| 
+|3   | clustering| [onCluster](/docs/onCluster.md) | [data](/src/cluster.md) | distance, Euclidean, Aha, LSH, Fastmap, cosine rule, k-means, DBscan, kd-tree, multi-goal, many-goal, bdom(binary domination); cdom(continuous domination, Zitzler)|
+|4   | repertory grids| 
 

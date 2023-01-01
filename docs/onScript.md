@@ -15,15 +15,41 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
 
 
-# Automated SE: Scripting Tricks
+# Scripting Tricks
 
 If you look at my code, there are some common things:
 
+- written in  a version control systems (Github)
+- undergoing continuous integration every time  I commit anything (e.g. resteting all scripts) 
 - coded in LUA
 - an initial help string (from which I derive global settings)
   - this is used to drive a really simple way to control the code via command-line flags
+- a random number generator (which is initialized from one the settings in the help string)
 - a reader system that inputs CSV files with named columns
   - this generated a data model of five classes seen in most of my code (DATA, ROW, COLS, NUM, SYM)
+  - which is all in [next lecture](/docs/onData.md)
+
+## Version Contol
+
+A "good" repository has "bling" boasting its competency (see my badges above).
+- To build you own bling, see [https://shields.io/](https://shields.io/).
+- Make sure your bling includes
+  - Something that links to your GH tests: <a href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> 
+  - Something that shows you are running long term backups of your repo: <a href="https://zenodo.org/badge/latestdoi/569981645"> <img src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a>
+
+|Recommended files | Notes |
+|------------------:|:------}
+| /.gitignore | lists of files never to commit (e.g. compiler intermediaries). To find the right ignores for your tools, see the [Github ignore repo](https://github.com/github/gitignore/) |
+| [/.github/workflows/tests.yaml](.github/workflows/tests.yml) | on each commit, runs the /src/lua files with `lua file.lua -g all` and reports a crash if any produce a non-zero error code|
+| /CITATION.cff | for bibliography information<br>To make your own file, use [this generator](https://citation-file-format.github.io/cff-initializer-javascript/#/) |
+| /LICENSE.md  | open source license<br>To browse different licenses, go to [choose a license](https://choosealicense.com/licenses/)| 
+| /Makefile| for any tricky scripting stuff: pretty tricky stuff (not for everyone)<br>For notes on cool Makefile tricks, see [Automation and Make](https://swcarpentry.github.io/make-novice/08-self-doc/index.html)|
+| /README.md| top-level doco file|
+| /docs | for markdown files<br> Anything starting with `on*` is a lecture file. All other files are generated from the comments in the files in `/src/*.lua`.|
+| /etc | for local config files|
+| /etc/img | for images|
+| /etc/out | cache for experimental output logs|
+| /src | for code|
 
 ## About LUA
 
@@ -73,6 +99,36 @@ I actually view LUA as LISP
 
 ## Test-Drive Development
 
+Have lots of unit tests!  
+Run them, a lot!   
+Get them all passing before checking back to main!   
+Do not make test-driven development into a  religion!   
+
+<img src="https://github.com/txt/se20/blob/master/etc/img/tddscreen.png">
+
+Tests suites that run every time you save code
+
+TDD= red, green, refactor
+-  Build tests first
+- Repeat:
+  - Red = fund a broken test
+  - Green= fix the test
+  - Refactor= sometimes, clean things up
+    - Refactoring means functionality _stays the same_ but the resulting _code is simpler_.
+
+[^Karac]:  (2018)
+ [What Do We (Really) Know about Test-Driven Development? ](https://www.researchgate.net/profile/Itir_Karac/publication/326239274_What_Do_We_Really_Know_about_Test-Driven_Development/links/5cee7550299bf1f881494cf6/What-Do-We-Really-Know-about-Test-Driven-Development.pdf)   
+    Itir Karac and Burak Turhan
+   TDD’s perceived superiority over, satm a test-last approach might have been due to the fact that most of the 
+  experiments employed a coarse-grained test-last process closer to the waterfall
+  approach as a control group
+
+TDD perhaps oversold [^Karac].
+- But, at the very least, it is  a great way to "get into the zone" faster, every morning
+- Also, a good way to share code 
+  - "what does your code do? lets look at the tests!"
+  - "Hey, nice trick, lets document it in a trick so everyone can know it from now on"
+ 
 The end of my code ends with a set of `eg` definitions for a test suite.
 I've coded this many ways but some things are constant. 
 - Each test has a short name [1]
@@ -106,13 +162,33 @@ lua code.lua -g all
 If  test returns false, it is called a failure. When called with the `-g all` flag, the
 numbers of failures is return to the operating system.
 
-## Domain-Specific Languages
+## Pseudo-random numbers
+Just to show a sample of the code we are going to explore...
+- Computers cannot  really do random numbers
+  - and often you do not  want to
+    - when debugging you want to reproduce a prior sequence.
+- Psuedo-random numbers: 
+  - Comptue a new number from a seed. Update the seed. Return the number.
+  - To rerun old sequence, reset the seed
+- Empirical notes: 
+  - keep track of your seeds (reproducability)
+  - always reset your seed in the right place (war story: 2 years of work lost)
+- Here is a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
+  Lets just say that more complex generators
+  are much more complex:
+  
+```lua
+Seed=937162211
+function rand(lo,hi)
+  lo, hi = lo or 0, hi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return lo + (hi-lo) * Seed / 2147483647 end
 
-My code uses several shorthand notations.
-- a trick for parsing help strings and generating config params
-- a trick for defining a 
+function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
+```
 
-### Help String to Options
+## Settings
+
 The code using options whose defaults are defined and extracted from
 a help string (offered at start of file):
 
@@ -139,7 +215,11 @@ OPTIONS:
 ACTIONS:
 ]] 
 ```
-The  parser is simple (using some regular expression captures):
+Note the hook from here to the above library
+- at start up, my code runs eg[`the.go`]
+- before running any demo, my code resets the seed to the value of `the.seed`.
+
+The  parser is simple (if you understand  regular expression captures):
 
 ```lua
 function settings(s,    t) 
@@ -174,140 +254,4 @@ Note one short cut in the above:
   - if the default is non-boolean then the flag `-x` must be followed by a value
   - if the default is a boolean, then the flag `-x` has no value
     (and the default is just inverted)
-
-### CSV with Named Columns
-
-My CSV parser learns some details about columns using the column
-headers:
-```
-Clndrs,Volume, Hpx,  Lbs-,  Acc+,  Model, origin, Mpg+
-4,      97,     52,  2130,  24.6,  82,    2,      40
-4,      97,     54,  2254,  23.5,  72,    2,      20
-4,      97,     78,  2188,  15.8,  80,    2,      30
-4,     151,     90,  2950,  17.3,  82,    1,      30
-6,     200,     ?,   2875,  17,    74,    1,      20
-6,     146,     97,  2815,  14.5,  77,    3,      20
-8,     267,    125,  3605,  15,    79,    1,      20
-8,     307,    130,  4098,  14,    72,    1,      10
-```
-In these names:
-- we skip columns whose names end in `X`;
-- if the name starts in uppercase, we have a number
-- if the name ends with "-" or "+" then its a goal we want to minimize or maximize
-  - and for such items, we will set "w" to 1.
-
-```
-list of names      call                 weight    goal?
---------------     ----------------     ------    -----
-
-{ "Clndrs",        NUM(1, "Clndrs")     1         n
-  "Volume",        NUM(2, "Volume")     1         n
-  "HpX",           NUM(3, "HpX")        1         n
-  "Lbs-",          NUM(4, "Lbs-")         -1         y
-  "Acc+",          NUM(5, "Acc+")       1            y
-  "Model",         NUM(6, "Model")      1         n
-  "origin",        SYM(7, "origin")               n
-  "Mpg+"}          NUM(8, "Mgp+")       1            y
-```
-So the these CSV first line gets processed by a factory
-that generates a set of goals `i.y` and other columns `i.x`:
-```lua
-COLS=obj"COLS"
-function COLS.new(i,t,     col,cols)
-  i.names, i.all, i.x, i.y = t, {}, {}, {}
-  for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
-    col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
-    push(i.all, col)
-    if not s:find"X$" then
-      push(s:find"[!+-]$" and i.y or i.x, col) end end end
-```
-### The DATA Model
-
-A repeated structure in my code are the following classes:
-
-|class | notes |
-|------|-------|
-|NUM   | summarize stream of numbers|
-|SYM   | summarize stream of symbols|
-|ROW | container for one record |
-|COLS  | factory for createing NUMs and SYms|
-|DATA | container for ROWs, summaized into NUMs or SSYMs|
-
-Conceptually there is a sixth class that is a super class
-of NUM and SYM... but I don't actually implement that.
-
-```mermaid
-classDiagram
-COL <--  NUM
-COL <--  SYM
-DATA "1" -- "1..*" ROW  : rows 
-DATA "1" -- "1" COLS  : cols
-COLS "1" -- "1..*" COL  
-class COLS {
-   name: strs
-   x : ROWs
-   y : ROWs
-   all: rows
-}
-class ROW {
-  cells : lst
-}
-class COL {
-  n,at: int,int
-  txt: str
-}
-class NUM {
-  w : -1 or 1
-  mu,m2 : 0,0
-  lo,hi: num
-}
-class SYM {
-  has : dict
-  mode : str
-  most: 0
-}
-```
-
-In the above, DATA is the ringmaster that controls xis special cases:
-
-- DATA is loaded from either 
-  - a disc csv file [1]
-  - rows from some other source  [2]
-- When receiving new data, that data could be
-  - a simple list [3]
-  - a ROW (which is a container for a list) [4]
-- When that data arrives, it is either
-  -the first row (with the column names) [5]
-  - or it is all other other rows of data. [6]
-
-```lua
-function DATA.new(i,src,     data,fun)
-  i.rows, i.cols = {}, nil
-  fun = function(x) i:add(x) end
-  if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk
-                           else map(src or {}, fun)  -- [2] load from a list
-                           end end
-  
-function DATA.add(i,t)
-  if   i.cols          -- [6] true if we have already seen the column names
-  then t =ROW(t.cells and t.cells or t) -- [3][4] "t" can be a ROW or a simple list
-       push(i.rows, t) -- add new data to "i.rows"
-       i.cols:adds(t)  -- update the summary information in "ic.ols"
-  else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row
-       end end
-```
-Note that adding something to DATA means also updating the column summaries:
-```lua
-function COLS.add(i,row)
-  for _,t in pairs({i.x,i.y}) do -- update all the columns we are no skipping
-    for _,col in pairs(t) do
-      col:add(row.cells[col.at]) end end end
-```
-One thing we can do here is  create a new table with the identical structure. 
-```lua
-function DATA.clone(i,  init,     data)
-  data=DATA({i.cols.names})
-  map(init or {}, function(x) data:add(x) end)
-  return data end
-```
 

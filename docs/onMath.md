@@ -50,31 +50,6 @@ Things to watch for are
 - distance: Euclidean, $p$
 
 
-## Just to start: example (Pseudo-random numbers)
-Just to show a sample of the code we are going to explore...
-- Computers cannot  really do random numbers
-  - and often you do not  want to
-    - when debugging you want to reproduce a prior sequence.
-- Psuedo-random numbers: 
-  - Comptue a new number from a seed. Update the seed. Return the number.
-  - To rerun old sequence, reset the seed
-- Empirical notes: 
-  - keep track of your seeds (reproducability)
-  - always reset your seed in the right place (war story: 2 years of work lost)
-- Here is a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
-  Lets just say that more complex generators
-  are much more complex:
-  
-```lua
-Seed=937162211
-function rand(lo,hi)
-  lo, hi = lo or 0, hi or 1
-  Seed = (16807 * Seed) % 2147483647
-  return lo + (hi-lo) * Seed / 2147483647 end
-
-function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
-```
-
 ## Kinds of of Attributes (aka Columns, Variables, Features)
 
 |  | Nominal | Ordinal | Interval | Ratio |
