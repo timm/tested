@@ -75,7 +75,7 @@ function rand(lo,hi)
 function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end
 ```
 
-## Kinds of of Attributes
+## Kinds of of Attributes (aka Columns, Variables, Features)
 
 |  | Nominal | Ordinal | Interval | Ratio |
 |:--:|:--------:|:----------:|:----------:|:-------:|
