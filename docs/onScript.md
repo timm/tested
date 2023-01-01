@@ -161,8 +161,8 @@ class COL {
   int n=1
 }
 class SYM {
-  list has={}
-  str mode=""
+  list has={};
+  str mode="";
   int most="0"
 }
 class COL {
