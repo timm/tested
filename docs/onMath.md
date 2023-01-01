@@ -388,7 +388,7 @@ or there to here", what losses most?
   - there to here is `i.e\*(2-10) = -8`
   - leaving here loses worst
   - so here is better than there
-- and the point of Zitzler is that it woks for comparing on $N \ge 1$ dimensions.
+- and the point of Zitzler is that it works for comparing on $N \ge 1$ dimensions.
 
 ```lua
 function DATA:sort(t1,t2,  cols)
@@ -409,7 +409,8 @@ add all the goals up; e.g.
 - mph times four plus  acceleration times two
 - Everyone who has every studied this reports that such objective functions
   get stuck in local maxima and that other schemes (e.g. Zitzler) are better.
-  - worse, you have to start re-running your analysis, jiggling the magic weights in the objective function.)
+  - worse, you have to start re-running your analysis, 
+    jiggling the magic weights in the objective function.
  
 [^zizt]: Zitzler, E., Künzli, S. (2004). 
   [Indicator-Based Selection in Multiobjective Search](https://www.simonkuenzli.ch/docs/ZK04.pdf),
@@ -434,5 +435,42 @@ t6= {cells= {6      146    97   2815  14.5   77      3       20}}
 t7= {cells= {8      267    125  3605  15     79      1       20}}
 t9= {cells= {8      307    130  4098  14     72      1       10}}
 ```
+
+With the above, we nearly have everything we need to distance calculations.
+Here's Aha's distance measure that work for combinations of numeric and symbolic
+attributes. 
+
+$$\mathit{Distance}(a, b) = \left( \sum_i^n f(a_i,b_i) \right)^(1/p) $$
+
+where the instances are described by $n$ attributes. 
+We define 
+$f(a_i, b_i) = (a_i - b_i)^p$ for
+numeric-valued attributes and 
+$f(a_i, b_i) = (a_i \neq b_i)$ 
+for boolean and symbolic-valued attributes. 
+- Missing attribute values are assumed to be maximally 
+different from the value present.
+- If they are both missing, then $f(a_i, b_i)=1$. 
+- Numerics are normalized 0..1 prior to computing distance  (so symbolics
+  are scored on the space width as numerics)
+
+Formally, the above is the Minkowsk distance, which is really a family
+of distance functions.
+As the what value of $p$ to use:
+- $p=1$ is the  Manhattan distance  (taxicab distance);
+- $p=2$ is the standard Euclidean distance.
+- officially [^aggarwal]  in High dimensions (20 for synthetic data, 168 for the Musk Dataset,  
+      32 for the breast cancer, 34 for Ionosphere)
+  - fractional norm distance metrics ($p\lt 1$) work better than large $p$. 
+
+[^aggarwal]: Aggarwal, Charu & Hinneburg, Alexander & Keim, Daniel. (2002). 
+  [On the Surprising Behavior of Distance Metric in High-Dimensional Space](https://www.researchgate.net/publication/30013021_On_the_Surprising_Behavior_of_Distance_Metric_in_High-Dimensional_Space)
+  First publ. in: Database theory, ICDT 200, 8th International Conference, 
+  London, UK, January 4 - 6, 2001 / Jan Van den Bussche ... (eds.). 
+  Berlin: Springer, 2001, pp. 420-434
+
+https://www.researchgate.net/publication/30013021_On_the_Surprising_Behavior_of_Distance_Metric_in_High-Dimensional_Space
+
+
 
 
