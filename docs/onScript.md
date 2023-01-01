@@ -159,15 +159,11 @@ function COLS.new(i,t,     col,cols)
 classDiagram
 COL <--  NUM
 COL <--  SYM
-COLS "1" -- "1..*" COL : x
-COLS "1" -- "1..*" COL : y
-COLS "1" -- "1..*" COL : all
 DATA "1" -- "1..*" ROW  
 DATA "1" -- "1" COLS 
-class COL{
-    +String owner
-    +BigDecimal balance
-    +deposit(amount)
-    +withdrawal(amount)
+class COLS {
+   x : ROWs
+   y : ROWs
+   all: rows
 }
 ```
