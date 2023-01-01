@@ -38,16 +38,16 @@ manifold, labelling cost, curse of dimensionality, explanation
 
 
 
-> Definition: "Stakeholders"  are individuals or organizations having
+TESTED assumes that the best way to test "it" is to watch someone else 
+(specifically, stakeholders [^stake])
+try to break "it".  TESTED is all exploring more and fixing
+more via fewer samples to the system.
+
+[^stake]: Definition: "Stakeholders"  are individuals or organizations having
   a right, share, claim, or interest in a system or in its possession
   of characteristics that meet their needs and expectations 
   [(ISO/IEC/IEEE
   2015)](https://www.iso.org/standard/63711.html).
-
-TESTED assumes that the best way to test "it" is to watch someone else 
-(specifically, stakeholder])
-try to break "it".  TESTED is all exploring more and fixing
-more via fewer samples to the system.
 
 # Why TESTED? 
 
