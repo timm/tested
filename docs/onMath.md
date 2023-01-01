@@ -415,7 +415,7 @@ that  adds a little weights to each dimension and
 add all the goals up; e.g.
 - mph times four plus  acceleration times two
 - Everyone who has every studied this reports that such objective functions
-  get stuck in local maxima and that other schemes (e.g. Zitzler) are better.
+  get stuck in local maxima[^chen22]  and that other schemes (e.g. Zitzler) are better.
   - worse, you have to start re-running your analysis, 
     jiggling the magic weights in the objective function.
  
@@ -466,11 +466,11 @@ of distance functions.
 As the what value of $p$ to use:
 - $p=1$ is the  Manhattan distance  (taxicab distance);
 - $p=2$ is the standard Euclidean distance.
-- officially [^aggarwal]  in High dimensions (20 for synthetic data, 168 for the Musk Dataset,  
+- officially [^agg01]  in High dimensions (20 for synthetic data, 168 for the Musk Dataset,  
       32 for the breast cancer, 34 for Ionosphere)
   - fractional norm distance metrics ($p\lt 1$) work better than large $p$. 
 
-[^aggarwal]: Aggarwal, Charu & Hinneburg, Alexander & Keim, Daniel. (2002). 
+[^agg01]: Aggarwal, Charu & Hinneburg, Alexander & Keim, Daniel. (2002). 
   [On the Surprising Behavior of Distance Metric in High-Dimensional Space](https://www.researchgate.net/publication/30013021_On_the_Surprising_Behavior_of_Distance_Metric_in_High-Dimensional_Space)
   First publ. in: Database theory, ICDT 200, 8th International Conference, 
   London, UK, January 4 - 6, 2001 / Jan Van den Bussche ... (eds.). 
