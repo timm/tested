@@ -443,10 +443,10 @@ attributes.
 $$\mathit{Distance}(a, b) = \left( \sum_i^n f(a_i,b_i) \right)^{1/p} $$
 
 where the instances are described by $n$ attributes. 
-We define 
+- We define 
 $f(a_i, b_i) = (a_i - b_i)^p$ for
-numeric-valued attributes and 
-$f(a_i, b_i) = (a_i \neq b_i)$ 
+numeric-valued attributes 
+- We define $f(a_i, b_i) = (a_i \neq b_i)$ 
 for boolean and symbolic-valued attributes. 
 - Missing attribute values are assumed to be maximally 
 different from the value present.
