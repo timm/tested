@@ -330,7 +330,8 @@ list of names      call                 weight    goal?
 ```
 The important thing in the above is now we have weights that tell us if we are maximizing or minimizing.
 
-Here is the factory. Goals are stored in `i.y` (and others in `i.x`).
+Here is the factory. Goals are stored in `i.y` (and 
+the other columns are found in `i.x`).
 ```lua
 COLS=obj"COLS"
 function COLS.new(i,t,     col,cols)
