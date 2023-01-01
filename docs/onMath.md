@@ -45,24 +45,19 @@ Things to watch for are
 
 ## Just to start: example (Pseudo-random numbers)
 Just to show a sample of the code we are going to explore...
-
-## Psuedo-random numbers
-Computers cannot  really do random numbers
-- and often you do not  want to
-  - when debugging you want to reproduce a prior sequence.
-
-Psuedo-random numbers: 
-- Comptue a new number from a seed. Update the seed. Return the number.
-- To rerun old sequence, reset the seed
-
-Empirical notes: 
-- keep track of your seeds (reproducability)
-- always reset your seed in the right place (war story: 2 years of work lost)
-
-Here is a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
-Lets just say that more complex generators
-are much more complex:
-
+- Computers cannot  really do random numbers
+  - and often you do not  want to
+    - when debugging you want to reproduce a prior sequence.
+- Psuedo-random numbers: 
+  - Comptue a new number from a seed. Update the seed. Return the number.
+  - To rerun old sequence, reset the seed
+- Empirical notes: 
+  - keep track of your seeds (reproducability)
+  - always reset your seed in the right place (war story: 2 years of work lost)
+- Here is a very simpler random generator [(Lehmer, aka Park-Miller)](https://en.wikipedia.org/wiki/Lehmer_random_number_generator). 
+  Lets just say that more complex generators
+  are much more complex:
+  
 ```lua
 Seed=937162211
 function rand(lo,hi)
