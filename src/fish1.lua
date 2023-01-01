@@ -287,8 +287,8 @@ function main(options,help,funs,     k,old,fails)
       if options.go=="all" or k==options.go then
          for k,v in pairs(old) do options[k]=v end
          math.randomseed(options.seed)
-         if funs[k]()=="false" then fails=fails+1
-                                    print("❌ fail:",k) end end end end
+         if funs[k]()==false then fails=fails+1
+                                  print("❌ fail:",k) end end end end
   for k,v in pairs(_ENV) do 
     if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end 

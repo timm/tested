@@ -17,12 +17,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated SE: Scripting Tricks
 
-Here are the parts of my code:
+If you look at my code, there are some common things:
 
-- LUA
-- domain-specific languages
-  - command-line script
-  - test-driven development
+- coded in LUA
+- an initial help string (from which I derive global settings)
+  - this is used to drive a really simple way to control the code via command-line flags
+- a reader system that inputs CSV files with named columns
+  - this generated a data model of five classes seen in most of my code (DATA, ROW, COLS, NUM, SYM)
 
 ## About LUA
 
@@ -31,7 +32,29 @@ two dozen keywords: **and, break, do, else, elseif, end, false, for, function, i
 LUA has a considerably smaller footprint
 than other programming languages
 (with its complete source code and
-documentation taking a mere 1.3 MB). 
+documentation taking a mere 1.3 MB).  Despite this it is very powerful language
+For example, here is define generic N-levels deep print function for LUA lists, as well
+as the mapping functions that makes that so simple to implement..
+```lua
+function o(t,flag,     fun)
+  if type(t)~="table" then return tostring(t) end
+  fun= function(k,v) if not tostring(k):find"^_" then return fmt(":%s %s",o(k),o(v)) end end
+  return "{"..table.concat(#t>0 and not flag and map(t,o) or sort(kap(t,fun))," ").."}" end
+
+function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do v,k=fun(v); u[k or (1+#u)]=v end;  return u end
+
+fmt=string.format
+function sort(t, fun) table.sort(t,fun); return t end
+```
+I actually view LUA as LISP
+(without
+  (all
+    (those
+      (infuriating
+        (silly
+           (parentheses)))))).
+
 
 I use LUA as an executable specification language. Students rewrite
 my code in whatever language they like (that is not LUA).  
@@ -41,8 +64,9 @@ my code in whatever language they like (that is not LUA).
 
 ## Domain-Specific Languages
 
-
 My code uses several shorthand notations.
+- a trick for parsing help strings and generating config params
+- a trick for defining a 
 
 ### Help String to Options
 The code using options whose defaults are defined and extracted from
@@ -153,7 +177,7 @@ function COLS.new(i,t,     col,cols)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
-## The DATA Model
+### The DATA Model
 
 A repeated structure in my code are the following classes:
 
@@ -243,3 +267,38 @@ function DATA.clone(i,  init,     data)
   return data end
 ```
 ## Test-Drive Development
+
+The end of my code ends with a set of `eg` definitions for a test suite.
+I've coded this many ways but some things are constant. 
+- Each test has a short name [1]
+- Each test has a longer help text [2]
+- Each test includes some executable code [3].
+
+E.g. here's a demo that normalizes all row cells:
+
+```lua
+-- [1] short name  [2] longer help text              [3] code function
+eg("norm",         "does data normalization work?",  function()
+  local data,rows,row,x
+  data=DATA(the.file)
+  for i=1,10 do 
+    row = any(data.rows)
+    for _,col in pairs(data.cols.x) do
+      x = row.cells[col.at]
+      print(x, col:norm(x))  end end end )
+```
+On the command line, this example can called with the `-g` flag ("g" for "go").
+For example, to run the above:
+
+```
+lua code.lua -g norm
+```
+There is also a `all` flag which runs all tests:
+
+```
+lua code.lua -g all
+```
+If  test returns false, it is called a failure. When called with the `-g all` flag, the
+numbers of failures is return to the operating system.
+
+
