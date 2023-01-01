@@ -270,7 +270,7 @@ To understand `SOME.div`, recall that in a normal curve:
 
 Is 2 better than 3? Depends if we want to _minimimize_ of _maximize_.
 
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt65J-qM4GQvPeZdvf28zLytx-x1tCXYpkfqTjTjg6jGYx8MxYVMonn8qixREdOr4duVI&usqp=CAU" align=right size=400>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt65J-qM4GQvPeZdvf28zLytx-x1tCXYpkfqTjTjg6jGYx8MxYVMonn8qixREdOr4duVI&usqp=CAU" align=right size=500>
 
 Are (2 cars plus 4 clowns) better than (1 car and 5) clowns? Depends on how much we want
 to minimize the number of cars and maximize the number of clowns.
