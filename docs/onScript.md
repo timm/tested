@@ -159,8 +159,8 @@ function COLS.new(i,t,     col,cols)
 classDiagram
 COL <--  NUM
 COL <--  SYM
-DATA "1" -- "1..*" ROW  
-DATA "1" -- "1" COLS 
+DATA "1" -- "1..*" ROW  : rows 
+DATA "1" -- "1" COLS  : cols
 class COLS {
    name: strs
    x : ROWs
