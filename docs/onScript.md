@@ -62,6 +62,41 @@ my code in whatever language they like (that is not LUA).
 - For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
 - For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
 
+## Test-Drive Development
+
+The end of my code ends with a set of `eg` definitions for a test suite.
+I've coded this many ways but some things are constant. 
+- Each test has a short name [1]
+- Each test has a longer help text [2]
+- Each test includes some executable code [3].
+
+E.g. here's a demo that normalizes all row cells:
+
+```lua
+-- [1] short name  [2] longer help text              [3] code function
+eg("norm",         "does data normalization work?",  function()
+  local data,rows,row,x
+  data=DATA(the.file)
+  for i=1,10 do 
+    row = any(data.rows)
+    for _,col in pairs(data.cols.x) do
+      x = row.cells[col.at]
+      print(x, col:norm(x))  end end end )
+```
+On the command line, this example can called with the `-g` flag ("g" for "go").
+For example, to run the above:
+
+```
+lua code.lua -g norm
+```
+There is also a `all` flag which runs all tests:
+
+```
+lua code.lua -g all
+```
+If  test returns false, it is called a failure. When called with the `-g all` flag, the
+numbers of failures is return to the operating system.
+
 ## Domain-Specific Languages
 
 My code uses several shorthand notations.
@@ -266,39 +301,4 @@ function DATA.clone(i,  init,     data)
   map(init or {}, function(x) data:add(x) end)
   return data end
 ```
-## Test-Drive Development
-
-The end of my code ends with a set of `eg` definitions for a test suite.
-I've coded this many ways but some things are constant. 
-- Each test has a short name [1]
-- Each test has a longer help text [2]
-- Each test includes some executable code [3].
-
-E.g. here's a demo that normalizes all row cells:
-
-```lua
--- [1] short name  [2] longer help text              [3] code function
-eg("norm",         "does data normalization work?",  function()
-  local data,rows,row,x
-  data=DATA(the.file)
-  for i=1,10 do 
-    row = any(data.rows)
-    for _,col in pairs(data.cols.x) do
-      x = row.cells[col.at]
-      print(x, col:norm(x))  end end end )
-```
-On the command line, this example can called with the `-g` flag ("g" for "go").
-For example, to run the above:
-
-```
-lua code.lua -g norm
-```
-There is also a `all` flag which runs all tests:
-
-```
-lua code.lua -g all
-```
-If  test returns false, it is called a failure. When called with the `-g all` flag, the
-numbers of failures is return to the operating system.
-
 
