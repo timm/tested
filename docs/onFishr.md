@@ -17,6 +17,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated Software Engineering and "Fishing"
 
+XXX ungood good
+- options, clster then do more
+- tarantual optipns
+- entropy pruning of the wights
+- huebrs 16m spalsh let and right
+- and more
+
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
      align=right width=400>
 
