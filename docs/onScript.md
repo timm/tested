@@ -157,11 +157,11 @@ function COLS.new(i,t,     col,cols)
 
 ```mermaid
 classDiagram
-COL <|--  NUM
-COL <|--  SYM
-COLS "1" --> "1..*" COL
-DATA "1" --> "1..*" ROW  
-DATA "1" --> "1" COLS 
+COL --  NUM
+COL --  SYM
+COLS "1" -- "1..*" COL
+DATA "1" -- "1..*" ROW  
+DATA "1" -- "1" COLS 
 class BankAccount{
     +String owner
     +BigDecimal balance
