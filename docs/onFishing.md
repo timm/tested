@@ -17,15 +17,6 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated  SE, Stakeholder Testing, and  "Fishing"
 
-XXX ungood good
-- options, clster then do more
-- tarantual optipns
-- entropy pruning of the wights
-- huebrs 16m spalsh let and right
-- dont use ygap, but use the detal computed by zitlzer
-- dont use zitzler ever, use ygap  instead
-- and more
-
 ## What is Special about "Stakeholder Testing"
 
 This section is about "stakeholder testing", which we might also call
@@ -271,4 +262,18 @@ Further to the last point, we know that humans are often asked to work perform w
 The dream of TESTED is that, at least to some extent, we can address some of
 Ben Green's problems with better methods for reducing the effort associated
 with acceptance testing.
+
+
+## A Baseline Fishing Tool
+
+## Better Fishing?
+XXX ungood good
+- options, clster then do more
+- tarantual optipns
+- entropy pruning of the wights
+- huebrs 16m spalsh let and right
+- dont use ygap, but use the detal computed by zitlzer
+- dont use zitzler ever, use ygap  instead
+- and more
+
 
