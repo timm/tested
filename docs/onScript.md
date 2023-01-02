@@ -216,8 +216,8 @@ ACTIONS:
 ]] 
 ```
 Note the hook from here to the above library
-- at start up, my code runs eg[`the.go`]
-- before running any demo, my code resets the seed to the value of `the.seed`.
+- at start up, my code runs eg[`the.go`] which has a default of `ls` and which can be changed on the command line using the `-g` flag;
+- before running any demo, my code resets the seed to the value of `the.seed` which has a default value of `10019` and a which can be changed on the command-line using the `-s` flag.
 
 The  parser is simple (if you understand  regular expression captures):
 
@@ -252,6 +252,5 @@ the = cli(settings(help))
 Note one short cut in the above:
 - when the `cli` function looks for update, 
   - if the default is non-boolean then the flag `-x` must be followed by a value
-  - if the default is a boolean, then the flag `-x` has no value
-    (and the default is just inverted)
+  - if the default is a boolean, then the flag `-x` has no value (and the default is just inverted, so trues become falses and falses become trues)
 
