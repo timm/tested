@@ -264,12 +264,13 @@ examples of this:
 <br clear=all>
 <img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=200>
 
-- Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
+- Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women, from the
+  United States (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
   In her time, "Norma" was something of a cultural icon:
   - A notable physical anthropologist argued that Norma’s physique was “a kind of perfection of bodily form,” 
   - artists proclaimed her beauty an “excellent standard” 
   - physical education instructors used her as a model for how young women should look, suggesting exercise based on a student’s deviation from the ideal.
-  - But in reality, "Norma" did not exist.   
+  - But in reality, "Norma" did not exist.  
     - In   1945, an American newspaper gave its  "Norma" prize to the woman who best matched this statue.
     - Only 40 of the 3,864 contestants were average size on just five of the nine dimensions 
     - No contestant (not even the winner) same close on all nine dimensions. 
@@ -290,7 +291,7 @@ Not everything is best represented by a smooth curve with one peek that is symme
   Toronto Star, Todd Rose
   Sat., Jan. 16, 2016
 
-<img width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+<img align=right width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
 To avoid the trap of the normal assumption, do things like cluster the data and generate different conclusions per cluster.
 To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
