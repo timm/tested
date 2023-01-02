@@ -123,7 +123,7 @@ In the above, DATA is the ringmaster that controls xis special cases:
 ```lua
 function ROW.new(i,t) i.cells=t; i.yseen=false end
 
-function DATA.new(i,src,     data,fun)
+function DATA.new(i,src,     fun)
   i.rows, i.cols = {}, nil
   fun = function(x) i:add(x) end
   if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk

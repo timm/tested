@@ -38,7 +38,7 @@ A "good" repository has "bling" boasting its competency (see my badges above).
   - Something that shows you are running long term backups of your repo: <a href="https://zenodo.org/badge/latestdoi/569981645"> <img src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a>
 
 |Recommended files | Notes |
-|------------------:|:------}
+|------------------:|:------|
 | /.gitignore | lists of files never to commit (e.g. compiler intermediaries). To find the right ignores for your tools, see the [Github ignore repo](https://github.com/github/gitignore/) |
 | [/.github/workflows/tests.yaml](.github/workflows/tests.yml) | on each commit, runs the /src/lua files with `lua file.lua -g all` and reports a crash if any produce a non-zero error code|
 | /CITATION.cff | for bibliography information<br>To make your own file, use [this generator](https://citation-file-format.github.io/cff-initializer-javascript/#/) |
