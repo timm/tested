@@ -58,7 +58,7 @@ exposed expanse,   floating on top of a hidden space of desired goals, was too m
 
 And this needs some human-scale "stakeholder testing"[^stake]
 - given columns divided into `i.y` goals and `i.x` other columns
-- and examples $((x_1,y_1), (x_2,y_2)...) $ where $|x_i|\ge 1$ and $|y_i|\ge 0$
+- and examples $((x_1,y_1),(x_2,y_2)...)$ where $|x_i|\ge 1$ and $|y_i|\ge 0$
   - learn some function $y_i=f(x_i)$ 
   - by maximizing the number of queries to any $x_i$
   - and minimizing number of queries to $y_i$
