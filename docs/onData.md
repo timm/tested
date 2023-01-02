@@ -256,12 +256,14 @@ to make a variety of shapes (just by adjusting $\lambda,k$):
 
 <p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
 
-<br clear=all>
-<img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=200>
 
 Another thing you should know is that even if normality holds, conclusions based on the normal curve (that hold
 across the whole population) may not be appropriate for any individual in that population. Rose[^rose] offers two
 examples of this:
+
+<br clear=all>
+<img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=200>
+
 - Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
   In her time, "Norma" was something of a cultural icon:
   - A notable physical anthropologist argued that Norma’s physique was “a kind of perfection of bodily form,” 
