@@ -37,15 +37,7 @@ worked
 separately.
 
 This search for better solutions is important since there are too many examples  of terrible software solutions.
-For example, chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
-tells the sad tale of  how a design quirk of  Yelp ruined a small business:
-- As one of Noble’s interviewees put it "Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
-  They already feel like they are being hunted;  they aren't going to tell the Man where they are". 
-- Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
-
-There are too many 
-other examples where terrible software:
-
+For example:
 - Amazon had to scrap an automated recruiting tool as it 
   was found to be [biased against women](https://reut.rs/2Od9fPr).
 - A widely used face recognition software was found to be biased against 
@@ -55,6 +47,11 @@ other examples where terrible software:
   [shows gender bias](https://science.sciencemag.org/content/356/6334/183). 
   “She is an engineer, 
   He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [5].  
+- Chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
+  tells the sad tale of  how a design quirk of  Yelp ruined a small business:
+  As one of Noble’s interviewees put it "Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
+  They already feel like they are being hunted;  they aren't going to tell the Man where they are". 
+  Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
 
 For our purposes, the  important point of the first Noble example
 is this:
