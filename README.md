@@ -73,7 +73,8 @@ Check your installation
     cd tested/src
     lua 101.lua -g all # should show one crash and several passes
 
-# Why TESTED? 
+# What is TESTED??
+
 
 When people like me
 (i.e. a developer) write software that 
@@ -105,6 +106,64 @@ where they try  to improve on a stakeholder testing tool called "fishing", provi
 (Just an aside, the way I do homeworks is that every week, everyone
 has to submit something, even if it is broken. Homeworks can get submitted multiple times
 so I grade them "2" (for "good"); "1" (for "invited to resubmit"); "0" (for "bad" or "no submission".)
+
+## What is "STAKEHOLDER TESTING"
+
+Better methods for better searching for better solutions is important.
+There are too many examples  of terrible software solutions.
+For example:
+- Amazon had to scrap an automated recruiting tool as it 
+  was found to be [biased against women](https://reut.rs/2Od9fPr).
+- A widely used face recognition software was found to be biased against 
+  [dark-skinned women](https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212) and
+  [dark-skinned men](https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html).
+- Google Translate, the most popular translation engine in the world, 
+  [shows gender bias](https://science.sciencemag.org/content/356/6334/183). 
+  “She is an engineer, 
+  He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [5].  
+- Chapter six of Safiya Noble’s book Algorithms of Oppression [^noble] 
+  tells the sad tale of  how a design quirk of  Yelp ruined a small business:
+  As one of Noble’s interviewees put it "Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). 
+  They already feel like they are being hunted;  they aren't going to tell the Man where they are". 
+  Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
+
+For our purposes, the  important point of the Noble example
+is this:
+- if software designers had been more intentional about
+soliciting feedback from the Black community...
+- then they could have
+changed how check-ins are weighted in the overall Yelp rating system.
+
+As to the other examples, in each case there was some discriminatory
+effect which was easy to detect and repair [^joy]], but developers
+just failed to test for those biases.
+
+There is a solution to all these problems
+- if a small group of
+people build software for the larger community
+- they need to listen
+more to the  concerns of the larger community. 
+
+For that to work,
+the smaller group of developers have to admit the larger group into
+their design processes– either via
+- changing the reward structures
+  such that there are inducements for the few to listen to the many
+  (e.g. by better government legislation or  professional standards);
+  or 
+- inclusion practices that admits the broader community into
+  the developer community, or by 
+- review practices where the
+  developers can take better and faster feedback from the community.
+
+To say that another way,  from an ethical perspective, it is good
+practice to give software to stakeholders and let them try to break
+it. 
+
+[^noble]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
+[^joy]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
+
+Lets call that "stakeholder testing".
 
 
 ## Frequently Asked Questions
