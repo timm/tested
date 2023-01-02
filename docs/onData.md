@@ -256,15 +256,40 @@ to make a variety of shapes (just by adjusting $\lambda,k$):
 
 <p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
 
+<img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=rigth width=200>
+
+Another thing you should know is that even if normality holds, conclusions based on the normal curve (that hold
+across the whole population) may not be appropriate for any individual in that population. Rose[^rose] offers two
+examples of this:
+- Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women.
+  In her time, "Norma" was something of a cultural icon:
+  - A notable physical anthropologist argued that Norma’s physique was “a kind of perfection of bodily form,” 
+  - artists proclaimed her beauty an “excellent standard” 
+  - physical education instructors used her as a model for how young women should look, suggesting exercise based on a student’s deviation from the ideal.
+  - But in reality, "Norma" did not exist.   
+    - In   1945, an American newspaper gave its  "Norma" prize to the woman who best matched this statue.
+    - Only 40 of the 3,864 contestants were average size on just five of the nine dimensions 
+    - No contestant (not even the winner) same close on all nine dimensions. 
+- In 1950, worried about increasing number of crashes in their new jet fighters, the US Air Force double checked if their cockpits (designed for the average man, as measured by a 1926 study)
+  was the right shape. 
+  - Using measurement for 4,063 crew men, researchers asked how many fell within the mid 30% of values (across ten
+  dimensions judged relevant to cockpit performance).
+  - The answers was: zero , and less than 3.5 per cent of pilots where  average on any three dimensions.
+  - Shocked, the US Air Force changed cockpits to include adjustable seats, pedals, etc. 
+  - And the result?
+    Far fewer accidents, and far more potential pilots available for recruitment.
 
 Or you could forget all about parametric assumptions.
 Many things get improved by going beyond the Gaussian guess [^dou95]:
 Not everything is best represented by a smooth curve with one peek that is symmetrical around that peek:
 
+[^rose]: [When U.S. air force discovered the flaw of averages](https://www.thestar.com/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages.html)
+  Toronto Star, Todd Rose
+  Sat., Jan. 16, 2016
 
 <img width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
-
+To avoid the trap of the normal assumption, do things like cluster the data and generate different conclusions per cluster.
 To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
 
 
