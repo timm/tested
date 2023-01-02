@@ -152,4 +152,123 @@ function DATA.clone(i,  init,     data)
   map(init or {}, function(x) data:add(x) end)
   return data end
 ```
+When a DATA instance stores some rows,
+those rows are summarized in NUM or SYM instances. Note that:
+ NUM and SYM all have:
+ - an `add` method (for updating stuff) and
+ -  a `mid` method for reporting central tendancy (mid=middle)
+- a `div` methods for reporting the diversion around that center (div=diversity)
+
+```lua
+local SYM = lib.obj"SYM"
+function SYM:new() --> SYM; constructor
+  self.n   = 0
+  self.has = {}
+  self.most, self.mode = 0,nil end
+
+function SYM:add(x) --> nil;  update counts of things seen so far
+  if x ~= "?" then
+   self.n = self.n + 1
+   self.has[x] = 1 + (self.has[x] or 0) -- if "x" not seen before, init counter to 0
+   if self.has[x] > self.most then
+     self.most,self.mode = self.has[x], x end end end
+
+function SYM:mid(x) --> n; return the mode
+  return self.mode end
+
+function SYM:div(x) --> n; return the entropy
+  local function fun(p) return p*math.log(p,2) end
+  local e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end
+  return e end
+```
+<img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
+
+By the way, to understand SYM.div (entropy), think of it as
+- the effort required by binary chop to find clumps of a signal hiding in a stream of noise
+- and the more diverse the distribution, the greater that effort.
+
+e.g. in a vector of size 4,
+  - nazis have a "1" near one end
+  - and England are all the other bits
+- This means that 1/4% of the time we need to do binary chops to find nazies (i.e. $p_{\mathit{nazis}}=.25$)
+- and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
+- Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
+  - By convention, we  add a minus sign at the front (else all entropies will be negative).
+
+(Actually, formally entropy has other definition: 
+- The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable.
+- Also, entropy of continuous distributions is defined, but we do not use that in this subject.)
+
+
+```lua
+-- ## NUM
+-- Summarizes a stream of numbers.
+local NUM = lib.obj"NUM"
+function NUM:new() --> NUM;  constructor;
+  self.n, self.mu, self.m2 = 0, 0, 0
+  self.lo, self.hi = math.huge, -math.huge end
+
+function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
+  if n ~= "?" then
+    self.n  = self.n + 1
+    local d = n - self.mu
+    self.mu = self.mu + d/self.n
+    self.m2 = self.m2 + d*(n - self.mu)
+    self.sd = (self.m2 <0 or self.n < 2) and 0 or (self.m2/(self.n-1))^0.5
+    self.lo = math.min(n, self.lo)
+    self.hi = math.max(n, self.hi) end end
+
+function NUM:mid(x) return self.mu end --> n; return mean
+function NUM:div(x) return self.sd end --> n; return standard deviation
+```
+If we are talking standard deviation, then we had better talk about normal curves.
+
+The French mathematician Abraham de Moivre [^deMo1718]
+  notes that probabilities associated with discretely 
+  generated random variables (such as are obtained by flipping a coin or rolling a die) can 
+  be approximated by the area under the graph of an exponential function.
+
+This function was generalized by  Laplace[^Lap1812] 
+  into the first central limit theorem, which proved that probabilities for almost 
+  all independent and identically distributed random variables converge rapidly 
+  (with sample size) to the area under an exponential function—that is, to a normal 
+  distribution.
+
+This function was extended, extensively by Gauss. Now its a curve with an area under the curve of one.
+  As standard deviation shrinks, the curve spikes upwards.
+
+<p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
+
+
+To sample from a normal curve
+from a Gaussian with mean `mu` and diversity `sd`
+
+      mu + sd * sqrt(-2*log(random)) * cos(2*pi*random)
+
+
+_Beware:_
+Not all things are normal Gaussians. 
+<img src="/etc/img/weibull.png" align=right width=300 > If you want to get fancy, you can use Weibull functions
+to make a variety of shapes (just by adjusting $\lambda,k$):
+
+
+<p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
+
+
+Or you could forget all about parametric assumptions.
+Many things get improved by going beyond the Gaussian guess [^dou95]:
+Not everything is best represented by a smooth curve with one peek that is symmetrical around that peek:
+
+
+<img width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+
+
+To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
+
+
+All that said, Gaussians take up far less space and are very easy to update. So all engineers should know their gaussians.
+
+And I find Gaussians better for small samples (under 20) than  using a  [Reservoir Sampler](/docs/onSome.md)
+
+
 

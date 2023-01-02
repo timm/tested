@@ -123,11 +123,28 @@ exposed expanse,   floating on top of a hidden space of desired goals, was too m
 
 And this needs some human-scale "stakeholder testing"[^stake]
 - given columns divided into `i.y` goals and `i.x` other columns
-- you can look around all the `i.x`  columns
-- but you can only look  at a few `i.y` columns 
+- and examples $((x_1,y_1), (x_2,y_2)...) $ where $|x_i|\ge 1$ and $|y_i|\ge 0$
+  - learn some function $y_i=f(x_i)$ 
+  - by maximizing the number of queries to any $x_i$
+  - and minimizing number of queries to $y_i$
 
-Technically speaking, this is a kind of acceptance testing, with some
-added requirements:
+Depending on who you talk to, this process has different names.
+- In the AI literature, stakeholder testing could be  called active learning[^bu09]where access the $y$ labels incurs some cost and we want to
+create a model $f$ at  minimal cost. Classic active learning assumes that the oracle labeling the data is a human (in some human-in-the-loo[
+system) and the labels
+are all accurate. Semi-supervised learning is a special kind of active learning where labels can be inaccurate and can
+come from multiple-sources.  The best active learners my grad students ever achieved with human-in-the-loop methods needed to label
+10-30\% of the data[^zhe21]. But with semi-supervised learning, we are now down to 2.5\%, or less[^tu21].
+- In the SE literature, stakeholder testing could be called acceptance testing, with a few twists:
+
+[^bu09]: Settles, Burr. ["Active learning literature survey."](https://minds.wisconsin.edu/bitstream/handle/1793/60660/TR1648.pdf?sequence=1)
+  (2009).
+[^tu21]:  H. Tu and T. Menzies, i
+  ["FRUGAL: Unlocking Semi-Supervised Learning for Software Analytics,"](https://arxiv.org/pdf/2108.09847.pdf)
+[^zhe21]: Z. Yu, C. Theisen, L. Williams and T. Menzies, 
+  [Improving Vulnerability Inspection Efficiency Using Active Learning,"](https://par.nsf.gov/servlets/purl/10297624),
+  in IEEE Transactions on Software Engineering, vol. 47, no. 11, pp. 2401-2420, 1 Nov. 2021, doi: 10.1109/TSE.2019.2949275.
+
 
 |What | Notes|
 |-----|------|
@@ -136,13 +153,11 @@ added requirements:
 |Black-box| Most systems are so complex that it is hard to reason about their interior processing. Hence, we try to learn what we can from the input,output behaviour|
 |XAI (explainable AI))| Stakeholders are  often done by non-technicals (e.g. representatives from the broader user community) so they seek a "big picture overview" rather than lots of details.|
 |Model-based| between this audit and the next, we need some way to continue testing the system (so we can check if the system has gone off the rails and needs  an emergency set of new acceptance tests). So there has to be some product from the acceptance testing that can be applied while we wait for the next acceptance test. |
-|Semi-supervised learning| These tests often has a limited budget.| 
+|Semi-supervised learning| These tests often has a limited budget.  Stakeholders want to complete their testing   in a parsimonious manner since they can get back to everything else that needs their attention. Hence we must not demand outputs for _every_ possible input, just some of the inputs.|
 
 
-stakeholders want to complete their testing   in a parsimonious manner since they can get back to 
-everything else that needs their attention. Hence we must not demand outputs for _every_ possible input, just some of the inputs.|
-
-Stackholder testing:
+Why limited budgets? Well, if you really want to explore a set of examples, in-depth, with human beings then you may be surprised
+on long it takes to examine even a few examples:
 - Knowledge elicitation techniques like
   repertory grids take a while to complete; e.g.
   up to an hour for two people to discuss, in detail,
@@ -191,77 +206,6 @@ Ben Green[^green] warns that many recent policies require
 [^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
-
-Enabling stakeholder testing
-is important.
-
-
-to explore all the important potential behaviors of a software model is an open and important  issue.
-In
-``Flaws of policies of requiring human oversight''~\cite{green2022flaws},
-Ben Green notes that many recent policies      require humans-in-the-loop to review or   audit   decisions from software models.
-E.g. the  manual of the
-(in)famous  COMPAS model (see Table~\ref{tbl:sigh}) notes the algorithm can make mistakes and advises that
-``staff should be encouraged to use their professional judgment and override the computed risk as appropriate''~\cite{northe15}.
-
-Cognitive theory~\cite{simon1956rational} tells us that
-  humans  use heuristic ``cues'' that lead them to the most important parts
-of a model before moving on to their next
-task. But when humans review models, they can miss important details. Such cues are essential if humans are to tackle
-their busy workloads. That said,  using cues can introduce errors:
-   {\em
-   ...people (including experts) are susceptible to ``automation bias'' (involving)  omission errors—failing to take action because the automated system did not provide an alert—and commission error}~\cite{green2022flaws}.
- This means  that   oversight policies   can lead to the reverse of their desired effect  by {\em ``legitimizing the use of   faulty and controversial algorithms without addressing (their fundamental issues''}~\cite{green2022flaws}.
-
-
-
-
-%.
-
-%Cognitive theory~\cite{simon1956rational} tells us that humans  use heuristic ``cues'' that lets them find    (hopefully)  most important parts of a modelbefore rushing off to their next task.
-
-
-
-  Unfortunately,
-there are substantial examples where human oversight missed important software properties (see Table~\ref{tbl:sigh}). For example,  
-see the above bias problems.
-
-
-
-=======================
-So here we explore how much we
-"Science is what we understand well enough to explain     
-to a computer. Art is everything else we do"    
-- Donald Knuth
-
-With automated software engineering, are you an artist or a scientist?
-Do you understand how to implement multi-objective semi-supervised explanations?
-Probably not, yet.  
-
-So lets lay it out, slowly. What might surprise you is,
-as seen in the
-[fish1.lua](/src/fish1.lua) 
-system,
-all this can be coded in a few hundred lines of code.
-
-To understand this code, think in layers:
-- Layer1:  written in LUA
-- Layer2: command-line script
-- Layer3: that supports  a generic data model which, in turn supports:
-- Layer4: multi-objective semi-supervised explanation
-
-The thing to note in the following is that across all the scripts used here, there is much common
-structure-- which is kind of deep point; i.e. under-the-hood there is much commonality in 
-the algorithms people call "optimization", "data mining", "explanation", etc.
-
-## Layer1: LUA
-
-LUA is an ultra lightweight scripting language comprising
-less than two dozen keywords:
-**and, break, do, else, elseif, end, false, for, function, if, in, local, nil, not, or, repeat, return, then, true, until, while**.
-LUA has a considerably
-smaller footprint than other programming languages, with its complete
-source code and documentation taking a mere 1.3 MB.
 
 I use LUA as an executable specification language. Students rewrite
 my code in whatever language they like (that is not LUA). 
