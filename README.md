@@ -48,8 +48,10 @@ try to break "it".  TESTED lets  people  explore more and fix
 more (but  sampling less around a system).
 
 TESTED is not a pretty GUI. Rather, it is a programming toolkit that shows that
-these kinds of tools are (very) simple to build.
-
+these kinds of tools are (very) simple to build. For example, everything
+here is just a few hundred lines of LUA (or less). And all of that code
+shares the same similar structures (so once you can code on tool, you can
+code much of the others).
 
 [^stake]: Definition: "Stakeholders"  are individuals or organizations having
   a right, share, claim, or interest in a system or in its possession
