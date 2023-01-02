@@ -302,4 +302,26 @@ All that said, Gaussians take up far less space and are very easy to update. So 
 And I find Gaussians better for small samples (under 20) than  using a  [Reservoir Sampler](/docs/onSome.md)
 
 
+[^Cox07]:      [Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...)](https://swtch.com/~rsc/regexp/regexp1.html), 
+  Russ Cox rsc@swtch.com, January 2007
+[^deMo1718]:   Schneider, Ivor (2005), "Abraham De Moivre, The Doctrine of Chances (1718, 1738, 1756)", 
+  in Grattan-Guinness, I. (ed.), Landmark Writings in Western Mathematics 1640–1940, Amsterdam: Elsevier, pp. 105–120, ISBN 0-444-50871-6.
+[^dou95]: James Dougherty, Ron Kohavi, and Mehran Sahami. 1995. 
+  [Supervised and unsupervised discretization of continuous features](https://ai.stanford.edu/~ronnyk/disc.pdf)
+  In Proceedings of the Twelfth International Conference on International Conference 
+  on Machine Learning (ICML'95). Morgan Kaufmann Publishers Inc., San Francisco, 
+  CA, USA, 194–202.
+[^Fisher38]:   Fisher, Ronald A.; Yates, Frank (1948) [1938]. Statistical tables for biological, agricultural and medical research (3rd ed.). 
+  London: Oliver & Boyd. pp. 26–27. OCLC 14222135. 
+[^Lap1812]:    Pierre-Simon Laplace, Théorie analytique des probabilités 1812, “Analytic Theory of Probability"
+[^Lehmer69]:   W. H. Payne; J. R. Rabung; T. P. Bogyo (1969). "Coding the Lehmer pseudo-random number generator" (PDF). 
+  Communications of the ACM. 12 (2): 85–86. doi:10.1145/362848.362860
+[^ResXX]:      Bad me. I can recall where on the web I found this one.
+[^Shannon48]:  Shannon, Claude E. (July 1948). "A Mathematical Theory of Communication". Bell System Technical Journal. 27 (3): 379–423. 
+  doi:10.1002/j.1538-7305.1948.tb01338.x. hdl:10338.dmlcz/101429. 
+  <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">(PDF)</a>
+[^Thom68]:     Ken Thompson, “Regular expression search algorithm,” Communications of the ACM 11(6) (June 1968), pp. 419–422. 
+  http://doi.acm.org/10.1145/363347.363387 <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
+[^Welford62]:  Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
+
 
