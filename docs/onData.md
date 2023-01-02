@@ -262,7 +262,7 @@ Another thing you should know is that even if normality holds, conclusions based
 across the whole population) may not be appropriate for any individual in that population. Rose[^rose] offers two
 examples of this:
 
-<img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=200>
+<img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=300>
 
 - Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women, from the
   United States (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
