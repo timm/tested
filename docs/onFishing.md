@@ -53,7 +53,7 @@ For example:
   They already feel like they are being hunted;  they aren't going to tell the Man where they are". 
   Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button. 
 
-For our purposes, the  important point of the first Noble example
+For our purposes, the  important point of the Noble example
 is this:
 - if software designers had been more intentional about
 soliciting feedback from the Black community...
