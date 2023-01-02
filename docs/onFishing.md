@@ -56,13 +56,6 @@ Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
 [^bear]: Apologies to all my polar bear readers: I  don't actually know if you  do this. But the metaphor of a vast
 exposed expanse,   floating on top of a hidden space of desired goals, was too much to resist.
 
-And this needs some human-scale "stakeholder testing"[^stake]
-- given columns divided into `i.y` goals and `i.x` other columns
-- and examples $((x_1,y_1),(x_2,y_2)...)$ where $|x_i|\ge 1$ and $|y_i|\ge 0$
-  - learn some function $y_i=f(x_i)$ 
-  - by maximizing the number of queries to any $x_i$
-  - and minimizing number of queries to $y_i$
-
 Depending on who you talk to, this process has different names.
 - In the AI literature, stakeholder testing could be  called active learning[^bu09]where access the $y$ labels incurs some cost and we want to
 create a model $f$ at  minimal cost. Classic active learning assumes that the oracle labeling the data is a human (in some human-in-the-loo[
