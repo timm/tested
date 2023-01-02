@@ -108,9 +108,10 @@ metric_params=None,<br> n_jobs=None)¶</em>
 |----:|:------|
 | X   | inputs|
 |Y    | goals|
-|F    | maps X to Y|
+|F    | maps X to Y; i.e. Y=F(X)|
 |W    | weights on the goals|
 |Z    | parameters controlling the learners that generates F|
+|B    | Background knowledge, which we may not have access to|
 
 <img width=400 align=right src="/etc/img/2space.png">
 
