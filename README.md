@@ -80,16 +80,16 @@ When people like me
 (i.e. a developer) write software that 
 is used by other people 
 (i.e. the stakeholders), those other people should be able to
-- verify that the built software is right,
-- validate that the right software is being built.
+verify that the built software is right,
+and validate that the right software is being built.
 
 Such "stakeholder testing" is challenging since,
 often, stakeholders may
 not understand everything  about what goes on inside the code.
-Hence stakeholder testing  needs special kinds of tools:
-- one that helps helps
+Hence stakeholder testing  needs special kinds of tools
+that helps helps
    humans find the   best things or fix the worst things;
-- without
+without
   having to offer too much information on each thing. 
 
 The central claim of TESTED is that these:
