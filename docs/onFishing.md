@@ -31,7 +31,7 @@ To forge an effective partnership, humans and artificial intelligence (AI) need 
 - Software can explore a very large space, on pre-determined criteria. 
 - Humans can offer novel insight, but only over a small number of examples. 
 
-I saw,  that when combined,
+I say  that, when combined,
 AI software and humans can find better solutions than if either
 worked
 separately.
@@ -99,22 +99,25 @@ Lets call that "stakeholder testing".
 This section is about "stakeholder testing", which we might also call
 "fishing", which is the
 process
-of prioritizing many things, without knowing too much about each thing.
+of prioritizing many things, without knowing too much about each thing. 
+
+We can do this for ethical reasons (to address the issues raised above) or we can do improve standard acceptance testing. Whatever the goal, much of the machinery is the same.
 
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
      align=right width=300>
 
 Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
-- above the ice, she can see for miles
-  - where the other bears are fishing
-  - where the ice is cracking (due to patches of heat)
-  - where there are the islands poking through the ice
-  - where are the holes from yesterday,
+- Above the ice, she can see for miles
+  - Where the other bears are fishing
+  - Where the ice is cracking (due to patches of heat)
+  - Where there are the islands poking through the ice
+  - Where are the holes from yesterday,
   - etc
-- but below the ice
-  - she has zero disability below the ice
-- problem: she only has the strength and the time to bash a few holes in the ice per day
-  - so she must bash  a few holes, learning what she can
+- But below the ice
+  - She has zero disability through the ice
+  - She can only check for fish in the tiny areas within her ice holes.
+- Problem: she only has the strength and the time to bash a few holes in the ice per day
+  - So she must bash  a few holes, learning what she can
     along the way, trying to to make her next guess (about where
     to bash) better.
 
@@ -191,13 +194,15 @@ on long it takes to examine even a few examples:
   The difficulties of building generic reliability models for software
   Empir Softw Eng, 17 (2012), pp. 18-22
 
-Further to the last point, why do we say We also know that this kind of testing often goes awry.
-Ben Green[^green] warns that many recent policies require 
+Further to the last point, we know that humans are often asked to work perform way beyond their acceptance test capacity:
+- Ben Green[^green] warns that many recent policies require 
           humans-in-the-loop to review or audit decisions from
-          software model. People
+          software model.
+- But people
           (including experts) are susceptible to “automation bias” (involving
           omission errors) failing to take action because the automated
-          system did not provide an alert—and commission error. These
+          system did not provide an alert—and commission error. 
+- These
           omissions
           means that oversight policies can lead to the reverse of their
           desired effect by “legitimizing the use of faulty and controversial 
@@ -205,76 +210,6 @@ Ben Green[^green] warns that many recent policies require
 
 [^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
-
-
-I use LUA as an executable specification language. Students rewrite
-my code in whatever language they like (that is not LUA). 
-So to understand 
-[fish1.lua](/src/fish1.lua) 
-you do not need to run my LUA-- you only need to read it.
-
-- For quick tutorials on LUA, see  [learnlua](https://learnxinyminutes.com/docs/lua/)
-- For full details on LUA, see the [Programming in LUA](https://www.lua.org/pil/contents.html) book.
-
-If you sqint and 
-```lua
-local SYM = lib.obj"SYM"
-function SYM:new() --> SYM; constructor
-  self.n   = 0
-  self.has = {}
-  self.most, self.mode = 0,nil end
-
-function SYM:add(x) --> nil;  update counts of things seen so far
-  if x ~= "?" then
-   self.n = self.n + 1
-   self.has[x] = 1 + (self.has[x] or 0) -- if "x" not seen before, init counter to 0
-   if self.has[x] > self.most then
-     self.most,self.mode = self.has[x], x end end end
-
-function SYM:mid(x) --> n; return the mode
-  return self.mode end
-
-function SYM:div(x) --> n; return the entropy
-  local function fun(p) return p*math.log(p,2) end
-  local e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end
-  return e end
-```
-
-```lua
--- ## NUM
--- Summarizes a stream of numbers.
-local NUM = lib.obj"NUM"
-function NUM:new() --> NUM;  constructor;
-  self.n, self.mu, self.m2 = 0, 0, 0
-  self.lo, self.hi = math.huge, -math.huge end
-
-function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
-  if n ~= "?" then
-    self.n  = self.n + 1
-    local d = n - self.mu
-    self.mu = self.mu + d/self.n
-    self.m2 = self.m2 + d*(n - self.mu)
-    self.sd = (self.m2 <0 or self.n < 2) and 0 or (self.m2/(self.n-1))^0.5
-    self.lo = math.min(n, self.lo)
-    self.hi = math.max(n, self.hi) end end
-
-function NUM:mid(x) return self.mu end --> n; return mean
-function NUM:div(x) return self.sd end --> n; return standard deviation
-```
-
-## Layer2: Scripting
-
-All my code has some common features:
-
-Initial help text. 
-
-
-LUA is a language that is said to "not be provided with batteries".
-This means that its libraries are kept to the minimum necessary to
-do some stuff. Some people like PYTHON better since it comes with
-a very large set of standard libraries. Some people like LUA cause
-it doesn't (
-## Background
 
 ## Examples of "Fishing"
 Consider the following tasks:
@@ -400,133 +335,6 @@ which _optimization_ is just a matter of finding the difference between good and
 [^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
            Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
            https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
-
-## Project 
-
-(Note: you may not understand some parts of the following... yet;  patience, dear reader.)
-
-
-Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/etc/data)
-write a 
-multi-objective  
-semi-supervised explanation system:
-- Multi-objective; i.e. $|Y|>1$
-- Semi-supervised; i.e. given $N$ examples, you only have a limited budget
-  $B_0 \ll N$ of times you can access the $Y$ values of any one example.
-- Explanation (bonus marks): extract some _useful_ succinct summary from the data
-  - here, _useful_ means if that summary is applied  to the data, then some 
-   $m \ll N$ good examples
-    will be selected (and "good" means "has good $Y$ values).
-
-Note: avoid many-goal problems at this point. That will be bonus marks, below.
-
-Expected Sections:
-
-- Introduction 
-  - First 4 paras:
-    1. Everyone does X
-    2. There is a problem with X
-    3. We have a novel insight that means that problem might be solvable
-    4.  So here's what we did. 
-  - Section 1.1 : Structure of this paper
-    - List of research questions and a very brief summary of your answers
-    - List of overall contributions (the elevator speech, why is this paper is good).
-    - Caveats (for this study, we did not explore Z because of Y)
-- Related work
-  - What every else did in the past
-  - Why that is not good enough, for our purposes (i.e. why are we not doing it some old way)
-  - What system from past work is state of the art (and will be used in your comparisons)
-  - Note: your related work section must:
-    - show that you've read around regarding related work
-    - demonstrate your understand the multi-objective semi-supervised explanation problem.
-    - show that thinking that lead to this new method.
-- Methods
-  - Algorithms
-  - Data
-  - Performance measures
-  - Summarization methods
-    - statistical methods, what you selected and why
-      - please demonstrate that you understand effect size and significance testing
-    - explaining any novel visualizations you will use in your results section (if there are any)
-  - Note: please demonstrate that you actually have a clear understanding of all these methods.
-- Results
-   - Run with different y-sampling budgets $B_0\in$ (10,25,50,100,200,500...):
-     - For different methods 
-        - Compare your preferred method
-            - to at least one prior state-of-the-art method;
-            - to just selection $B_0$ items at random
-            - to one of more  human-level sampling process  (see  Table1 of Baltes et al.[^ralph])
-        - Repeated 20 times (with different random number seeds)
-        - Some presentation of median and spread of results over 20 runs 
-        - Non-parametric effect size and significance tests
-  - Perform a "prudence" study 
-    - as sampling size increases, your proposed methods should get better
-  - Discussion of your results divided into your research questions.
-    - a clear commentary on what worked best
-    - if any unusual results, then acknowledge them and comment on them
-  - Tables, figures, with best results distinguished from the non-best
-- Discussion
-  - Threats to Validity
-  - Discussion: any bigger picture insights not present in the rest of the text?
-  - Future work: what you did not have time to do, what you suggest to do next
-- Conclusion
-- References
-
-### Bonus marks
-
-#### B1: Repeat the above for many-goal problems.
-
-Defined above
-
-#### B2: Perform a _REQUIREMENTS STUDY_
-- For 5 humans, run 5 repertory grids studies. 
-- Compare the results:
-  - against a recursive bi-clustering  of the data plus
-    some hierarchical feature selection
-  - against results from other humans
-  - Is there anyway way the intra-human views (or the view between human an data)
-    can be aligned? (HINT: maybe not)
-- Include a commentary on your experience with rep grids (any surprises?) 
-
-#### B3: Perform a _FEBRUARY STUDY_ 
-Requires an explanation facility, as described above.
-- If analysts used budget $B_0$ in January to reach some conclusions, what is learned
-   such that this kind of future analysis gets simpler.
-- So pretend its February and we have come back to a some similar problem (like what was
-      studied in January). Using what was learned in January, can the same task be solved
-      with less budget $B_1 < B_0$?
-
-#### B4: Perform an _ABLATION STUDY_
-- Given a preferred method $M$ containing two to four main ideas
-  - Disable (or change) each one  thing. If anything get worse, declare that thing important.
-
-#### B5: Perform an _HPO study_
-- Apply these minimal sampling methods to learning good $Z$ values for a learner
-- Your goal should be to compare your minimal sampling methods with some established optimization method.
-
-### Word limit
-
-The following limits exclude references.
-
-- No less that five pages,no more than eight 
-- HARD LIMITS:
-  - we will not grade after eight pages.
-  - we will not read if less than five.
-  - we will not read if it is the wrong format (see below)
-
-### How to write
-
-Create an overleaf.com account
-
-- Go to https://www.overleaf.com/gallery/tagged/ieee-official
-- Select :IEEE Bare Demo Template for conferences"
-  -  https://www.overleaf.com/latex/templates/ieee-bare-demo-template-for-conferences/ypypvwjmvtdf
-- Hit "open as template"
-- Add your name and email to list of authors.
--  Add these lines before `\begin{document}`
-
-         \usepackage[switch]{lineno}
-         \linenumbers
 
 
 [^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
