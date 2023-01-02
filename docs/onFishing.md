@@ -268,5 +268,7 @@ Further to the last point, we know that humans are often asked to work perform w
 [^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
-
+The dream of TESTED is that, at least to some extent, we can address some of
+Ben Green's problems with better methods for reducing the effort associated
+with acceptance testing.
 
