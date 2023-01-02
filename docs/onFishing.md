@@ -17,8 +17,6 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Automated  SE, Stakeholder Testing, and  "Fishing"
 
-## What is Special about "Stakeholder Testing"
-
 This section is about "stakeholder testing", which we might also call
 "fishing", which is the
 process
