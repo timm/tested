@@ -104,7 +104,7 @@ metric_params=None,<br> n_jobs=None)¶</em>
 
 ## Let's say that another way.
 
-|What|Notes}
+|What|Notes|
 |----:|:------|
 | X   | inputs|
 |Y    | goals|
