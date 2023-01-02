@@ -102,6 +102,18 @@ but after a few experiments, they ship a product. For example:
 weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
 metric_params=None,<br> n_jobs=None)¶</em>
 
+BTW, in the above two diagrams,
+there is an outer envelope of
+solutions with an uninterrupted view
+of the "utopia" point (where all goals
+have best values).  That envelope
+is called the "Pareto frontier" and contains
+the solutions (seen so far) that cannot be changed
+without losing on at least
+one objective. For example, in 
+AOF, COMPAS, and Donors Choose,
+that frontier is the blue line.
+
 ## Let's say that another way.
 
 |What|Notes|
