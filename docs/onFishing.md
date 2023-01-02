@@ -118,6 +118,9 @@ metric_params=None,<br> n_jobs=None)¶</em>
 We seek  a mapping $F$ such that $Y=F(X)$ where:
 - $X$ and $Y$ are sets of decisions and goals
 - Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
+- Often, even if $Y$ exists, it may be too expensive to collect
+    (e.g. for a drug trial, it may be required to study the effects of a drug
+    across 1000s of people for many months)
 - We might have access to a set of weights $W$ for each $Y$ value;
   e.g. if $W_i<0$ then we might seek solutions that  minimize $Y_i$.
 - Under the hood, we might also have $Z$, a set of hyper-parameters
