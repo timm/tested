@@ -256,6 +256,7 @@ to make a variety of shapes (just by adjusting $\lambda,k$):
 
 <p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
 
+<br clear=all>
 <img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=200>
 
 Another thing you should know is that even if normality holds, conclusions based on the normal curve (that hold
