@@ -281,7 +281,8 @@ examples of this:
   - The answers was: zero , and less than 3.5 per cent of pilots where  average on any three dimensions.
   - Shocked, the US Air Force changed cockpits to include adjustable seats, pedals, etc. 
   - And the result?
-    Far fewer accidents, and far more potential pilots available for recruitment.
+    - Far fewer plane crashes, and far more potential pilots available for recruitment.
+    - And you got adjustable seats in your car.
 
 Or you could forget all about parametric assumptions.
 Many things get improved by going beyond the Gaussian guess [^dou95]:
