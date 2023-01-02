@@ -156,7 +156,9 @@ their design processes– either via
 - review practices where the
   developers can take better and faster feedback from the community.
 
-To say that another way,  from an ethical perspective, it is good
+The first two of these points requires major organization
+changes. This repository is more about the third point which can we said another way:
+from an ethical perspective, it is good
 practice to give software to stakeholders and let them try to break
 it. 
 
