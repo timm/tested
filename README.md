@@ -148,3 +148,4 @@ To present this work as a syllabus, here is a weekly guide (assumes a 14 week se
 |3   | clustering| [onCluster](/docs/onCluster.md) | [cluster](/src/cluster.md) | distance, Euclidean, Aha, LSH, Fastmap, cosine rule, k-means, DBscan, kd-tree, multi-goal, many-goal, bdom(binary domination); cdom(continuous domination, Zitzler)|
 |4   | repertory grids| 
 
+After all that, students can end with a [four week project](docs/onProject.md).
