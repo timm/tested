@@ -146,7 +146,7 @@ come from multiple-sources.  The best active learners my grad students ever achi
   in IEEE Transactions on Software Engineering, vol. 47, no. 11, pp. 2401-2420, 1 Nov. 2021, doi: 10.1109/TSE.2019.2949275.
 
 
-|What | Notes|
+|Stakeholder testing needs... | Notes|
 |-----|------|
 |Optimizing| High-level stakeholders do not hunt bugs for fun... they really are seeking ways to avoid those bugs.  So we need to learn the gradients along which the system can slip, and how to nudge the system along those gradients to places of better behavior
 |Multi-objective reasoning| Stakeholders often have competing goals (e.g. "better" and "faster" and "cheaper").|
