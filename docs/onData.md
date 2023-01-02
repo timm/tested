@@ -73,7 +73,7 @@ function COLS.new(i,t,     col,cols)
     if not s:find"X$" then
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 ```
-### The DATA Model
+## DATA, ROW, COLS
 
 
 ```mermaid
@@ -121,7 +121,7 @@ In the above, DATA is the ringmaster that controls xis special cases:
   - or it is all other other rows of data. [6]
 
 ```lua
-function ROW.new(i,t) i.cells=t; i.yseen=false; i.rank=0; i.guess=0 end
+function ROW.new(i,t) i.cells=t; i.yseen=false end
 
 function DATA.new(i,src,     data,fun)
   i.rows, i.cols = {}, nil
