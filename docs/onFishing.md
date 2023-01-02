@@ -56,6 +56,138 @@ Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
 [^bear]: Apologies to all my polar bear readers: I  don't actually know if you  do this. But the metaphor of a vast
 exposed expanse,   floating on top of a hidden space of desired goals, was too much to resist.
 
+It turns out that "fishing"  is a very common problem. Consider:
+- You are the captain of a fishing boat.
+  Your boat has a crew of six. Each day, before you catch
+  anything, you waste hours burning expensive fuel traveling between promising
+  fishing spots. What  software help you look at the ocean and find the fish faster?
+- You've need a car for Monday but you aren't really sure what kind
+  you like. After a day of going to car yards, and doing a few test
+  drives, you buy a car. Can software help you narrow down how many cars you need to look at?
+
+<a href="/etc/img/build.png"><img width=400 align=right src="/etc/img/build.png"></a>
+
+- You are an architect trying to design houses with
+  a house with lots of light but no glare. You client is a busy (and fussy) person and before
+  you show them all the possible designs, can software help you prune them back to an interesting subset?
+- You are the manager of a software project, with many tricks for running a project.
+  Any one project uses just a few of those tricks, but which one to apply?
+  Can software  help you learn which tricks are best (and wish to avoid)?
+- Your software is being assessed by a focus group (a set of stakeholders).
+  Your software is complex and this group has limited time to understand
+  it and certify that the software is behaving reasonably[^green].
+- Software analytics learn models from data. Data labels are often incorrect[^tu] and
+so they need to be checked before they are used. But data sets can be huge, and relabelling
+everything can be so expensive. So can our software tells us what is the least number  of
+examples to label?
+
+[^tu]: H. Tu, Z. Yu and T. Menzies, "Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction)," in IEEE Transactions on Software Engineering, vol. 48, no. 1, pp. 278-294, 1 Jan. 2022, doi: 10.1109/TSE.2020.2986415.
+https://arxiv.org/pdf/1905.01719.pdf
+"We
+compare the time required to label commits from 50
+projects via EMBLEM of manual means. Assuming we
+were paying Mechanical Turk workers to perform that
+labelling, then manual labelling would cost $320K and
+39,000 hours (assuming pairs of workers per commit,
+and a 50% cull rate for quality control). Using EMBLEM,
+that same task would cost $40K and 4,940 hours; i.e.
+it would be 8 times cheaper."
+
+<a href="/etc/img/fairness.png"><img width=400 align=right src="/etc/img/fairness.png"></a>
+
+- A software engineer can't try   options
+but after a few experiments, they ship a product. For example:
+- Data miners are controlled by billions of hyper-parameter options that control (e.g.)
+    the shape of a neural net or how many neighbors your use for classification[^nn].
+    These parameters let you trade off (e.g.) how many mistakes you tolerate
+    versus how many results you return; or accuracy versus fairness[^cruz21].
+- MySQL's Makefile has billions of configurations options, each of
+    which means your SQL queries take different times to run and use
+    different energy. 
+
+[^cruz21]: A. F.Cruz, P. Saleiro, C. Belém, C. Soares and P. Bizarro, 
+      ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
+      2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
+
+[^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*,<br> 
+weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
+metric_params=None,<br> n_jobs=None)¶</em>
+
+## Let's say that another way.
+
+|What|Notes}
+|----:|:------|
+| X   | inputs|
+|Y    | goals|
+|F    | maps X to Y|
+|W    | weights on the goals|
+|Z    | parameters controlling the learners that generates F|
+
+<img width=400 align=right src="/etc/img/2space.png">
+
+We seek  a mapping $F$ such that $Y=F(X)$ where:
+- $X$ and $Y$ are sets of decisions and goals
+- Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
+- We might have access to a set of weights $W$ for each $Y$ value;
+  e.g. if $W_i<0$ then we might seek solutions that  minimize $Y_i$.
+- Under the hood, we might also have $Z$, a set of hyper-parameters
+  that control the algorithms that find $F$.
+- Finally, there may or may not be some background knowledge $B$ which we can
+  use to guide our analysis.
+
+In all the examples above,
+it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
+- e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
+- e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
+
+Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
+    the task at hand).
+
+There can be many goals $Y$ and some are  contradictory (e.g. security and availability
+    can be mutually exclusive).
+- If we cannot satisfy all goals, we explore trade-offs between them 
+  (known as satisficing[^simon]).
+- And in those cases, sometimes the exploration can be just (or more) 
+  insightful than actually getting find an answer.
+- Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
+  bursting with its own corrections. You can keep your sterile truth for yourself.</em>
+
+Historically, in the SE community this is known as _search-based software engineering_
+[^search]:
+- Which explores issues like:
+  - What is the smallest set of test cases that covers all branches in this program?
+  - What is the best way to structure the architecture of this system to enhance its maintainability?
+  - What is the set of requirements that balances software development cost and customer satisfaction?
+  - What is the best allocation of resources to this software development project?
+  - What is the best sequence of refactoring steps to apply to this system?
+- Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
+  and   hill climbing.
+  Having tried many of those, I now prefer
+  something called "landscape analysis" where  data mining divides up a problem (after
+  which _optimization_ is just a matter of finding the difference between good and bad divisions).
+
+
+[^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
+           Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
+           https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
+
+
+[^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
+          Search through available alternatives till an acceptability threshold is met.i
+          Introduced by Herbert A. Simon in 1956 to explain the behavior of decision makers
+          under circumstances in which an optimal solution cannot be determined. 
+          He maintained that many natural problems are characterized by
+          computational intractability or a lack of information, 
+          both of which preclude the use of mathematical optimization procedures.
+          He observed in 
+          his Nobel Prize in Economics speech that "decision makers can satisficed
+          either by finding optimum solutions for a 
+          simplified world, or by finding satisfactory solutions for a more realistic world.
+          Neither approach, in general, 
+          dominates the other, and both have continued to co-exist in the world of management science".
+
+## Related Work
+
 Depending on who you talk to, this process has different names.
 - In the AI literature, stakeholder testing could be  called active learning[^bu09]where access the $y$ labels incurs some cost and we want to
 create a model $f$ at  minimal cost. Classic active learning assumes that the oracle labeling the data is a human (in some human-in-the-loo[
@@ -136,143 +268,5 @@ Further to the last point, we know that humans are often asked to work perform w
 [^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
 
-## Examples of "Fishing"
-Consider the following tasks:
-- What is the same across all of them? 
-- What is learned for "February"; i.e.  if we go fishing  January, then in February,
-    what have we learned from January that makes February easier?
-
-
-You are the captain of a fishing boat.
-Your boat has a crew of six. Each day, before you catch
-  anything, you waste hours burning expensive fuel traveling between promising
-  fishing spots. What  software help you look at the ocean and find the fish faster?
-
-You've need a car for Monday but you aren't really sure what kind
-  you like. After a day of going to car yards, and doing a few test
-  drives, you buy a car. Can software help you narrow down how many cars you need to look at?
-
-<a href="/etc/img/build.png"><img width=400 align=right src="/etc/img/build.png"></a>
-You are an architect trying to design houses with
-  a house with lots of light but no glare. You client is a busy (and fussy) person and before
-  you show them all the possible designs, can software help you prune them back to an interesting subset?
-
-You are the manager of a software project, with many tricks for running a project.
-  Any one project uses just a few of those tricks, but which one to apply?
-  Can software  help you learn which tricks are best (and wish to avoid)?
-
-Your software is being assessed by a focus group (a set of stakeholders).
-  Your software is complex and this group has limited time to understand
-  it and certify that the software is behaving reasonably[^green].
-
-Software analytics learn models from data. Data labels are often incorrect[^tu] and
-so they need to be checked before they are used. But data sets can be huge, and relabelling
-everything can be so expensive. So can our software tells us what is the least number  of
-examples to label?
-
-[^tu]: H. Tu, Z. Yu and T. Menzies, "Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction)," in IEEE Transactions on Software Engineering, vol. 48, no. 1, pp. 278-294, 1 Jan. 2022, doi: 10.1109/TSE.2020.2986415.
-https://arxiv.org/pdf/1905.01719.pdf
-"We
-compare the time required to label commits from 50
-projects via EMBLEM of manual means. Assuming we
-were paying Mechanical Turk workers to perform that
-labelling, then manual labelling would cost $320K and
-39,000 hours (assuming pairs of workers per commit,
-and a 50% cull rate for quality control). Using EMBLEM,
-that same task would cost $40K and 4,940 hours; i.e.
-it would be 8 times cheaper."
-
-<a href="/etc/img/fairness.png"><img width=400 align=right src="/etc/img/fairness.png"></a>
-A software engineer can't try   options
-but after a few experiments, they ship a product. For example:
-- Data miners are controlled by billions of hyper-parameter options that control (e.g.)
-    the shape of a neural net or how many neighbors your use for classification[^nn].
-    These parameters let you trade off (e.g.) how many mistakes you tolerate
-    versus how many results you return; or accuracy versus fairness[^cruz21].
-- MySQL's Makefile has billions of configurations options, each of
-    which means your SQL queries take different times to run and use
-    different energy. 
-
-[^cruz21]: A. F.Cruz, P. Saleiro, C. Belém, C. Soares and P. Bizarro, 
-      ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
-      2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
-
-[^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*,<br> 
-weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
-metric_params=None,<br> n_jobs=None)¶</em>
-
-## Let's say that another way.
-
-
-|What|Notes}
-|----:|:------|
-| X   | inputs|
-|Y    | goals|
-|F    | maps X to Y|
-|W    | weights on the goals|
-|Z    | parameters controlling the learners that generates F|
-
-<img width=400 align=right src="/etc/img/2space.png">
-
-We seek  a mapping $F$ such that $Y=F(X)$ where:
-- $X$ and $Y$ are sets of decisions and goals
-- Often $|X| \gg |Y|$, i.e. there are usually more decisions and goals.
-- We might have access to a set of weights $W$ for each $Y$ value;
-  e.g. if $W_i<0$ then we might seek solutions that  minimize $Y_i$.
-- Under the hood, we might also have $Z$, a set of hyper-parameters
-  that control the algorithms that find $F$.
-- Finally, there may or may not be some background knowledge $B$ which we can
-  use to guide our analysis.
-
-In all the examples above,
-it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
-- e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
-- e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
-
-Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
-    the task at hand).
-
-There can be many goals $Y$ and some are  contradictory (e.g. security and availability
-    can be mutually exclusive).
-- If we cannot satisfy all goals, we explore trade-offs between them 
-  (known as satisficing[^simon]).
-- And in those cases, sometimes the exploration can be just (or more) 
-  insightful than actually getting find an answer.
-- Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
-  bursting with its own corrections. You can keep your sterile truth for yourself.</em>
-
-Historically, in the SE community this is known as _search-based software engineering_
-[^search]:
-- Which explores issues like:
-  - What is the smallest set of test cases that covers all branches in this program?
-  - What is the best way to structure the architecture of this system to enhance its maintainability?
-  - What is the set of requirements that balances software development cost and customer satisfaction?
-  - What is the best allocation of resources to this software development project?
-  - What is the best sequence of refactoring steps to apply to this system?
-- Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
-  and   hill climbing.
-  Having tried many of those, I now prefer
-  something called "landscape analysis" where  data mining divides up a problem (after
-  which _optimization_ is just a matter of finding the difference between good and bad divisions).
-
-
-[^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
-           Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
-           https://bura.brunel.ac.uk/bitstream/2438/8811/2/Fulltext.pdf
-
-
-[^simon]: From Wikipeda: Satisficing (satisfy + suffice) =  a decision-making strategy or cognitive heuristic.
-          Search through available alternatives till an acceptability threshold is met.i
-          Introduced by Herbert A. Simon in 1956 to explain the behavior of decision makers
-          under circumstances in which an optimal solution cannot be determined. 
-          He maintained that many natural problems are characterized by
-          computational intractability or a lack of information, 
-          both of which preclude the use of mathematical optimization procedures.
-          He observed in 
-          his Nobel Prize in Economics speech that "decision makers can satisficed
-          either by finding optimum solutions for a 
-          simplified world, or by finding satisfactory solutions for a more realistic world.
-          Neither approach, in general, 
-          dominates the other, and both have continued to co-exist in the world of management science".
 
 
