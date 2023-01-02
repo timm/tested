@@ -326,10 +326,9 @@ Historically, in the SE community this is known as _search-based software engine
   - What is the best sequence of refactoring steps to apply to this system?
 - Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
   and   hill climbing.
-
-Having tried many of those, I now prefer
-something called "landscape analysis" where  data mining divides up a problem (after
-which _optimization_ is just a matter of finding the difference between good and bad divisions).
+  Having tried many of those, I now prefer
+  something called "landscape analysis" where  data mining divides up a problem (after
+  which _optimization_ is just a matter of finding the difference between good and bad divisions).
 
 
 [^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
