@@ -291,7 +291,7 @@ Not everything is best represented by a smooth curve with one peek that is symme
   Toronto Star, Todd Rose
   Sat., Jan. 16, 2016
 
-<img  width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+<img  align=right width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
 To avoid the trap of the normal assumption, do things like cluster the data and generate different conclusions per cluster.
 To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
@@ -301,6 +301,7 @@ All that said, Gaussians take up far less space and are very easy to update. So 
 
 And I find Gaussians better for small samples (under 20) than  using a  [Reservoir Sampler](/docs/onSome.md)
 
+<br clear=all>
 
 [^Cox07]:      [Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...)](https://swtch.com/~rsc/regexp/regexp1.html), 
   Russ Cox rsc@swtch.com, January 2007
