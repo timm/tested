@@ -152,6 +152,9 @@ function DATA.clone(i,  init,     data)
   map(init or {}, function(x) data:add(x) end)
   return data end
 ```
+
+## SYM
+
 When a DATA instance stores some rows,
 those rows are summarized in NUM or SYM instances. Note that:
  NUM and SYM all have:
@@ -200,9 +203,8 @@ e.g. in a vector of size 4,
 - Also, entropy of continuous distributions is defined, but we do not use that in this subject.)
 
 
+## NUM
 ```lua
--- ## NUM
--- Summarizes a stream of numbers.
 local NUM = lib.obj"NUM"
 function NUM:new() --> NUM;  constructor;
   self.n, self.mu, self.m2 = 0, 0, 0
