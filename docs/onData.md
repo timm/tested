@@ -293,8 +293,9 @@ Not everything is best represented by a smooth curve with one peek that is symme
 
 <img  align=right width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
 
-To avoid the trap of the normal assumption, do things like cluster the data and generate different conclusions per cluster.
-To go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
+To avoid the trap of the normal assumption, do things:
+- like cluster the data and generate different conclusions per cluster.
+- go fully non-parametric, use reservoir sampling (below). Then to sample, grab three numbers $a,b,c$ and use $x=a+f\times(b-c)$ for some small $f$ (say $f=0.1$).
 
 
 All that said, Gaussians take up far less space and are very easy to update. So all engineers should know their gaussians.
