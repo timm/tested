@@ -16,26 +16,27 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
-# script.lua
+# data.lua
 
 ```css
    
-script.lua : an example script with help text and a test suite
+data.lua : an example csv reader script
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 
-USAGE:   script.lua  [OPTIONS] [-g ACTION]
+USAGE:   data.lua  [OPTIONS] [-g ACTION]
 
 OPTIONS:
   -d  --dump  on crash, dump stack = false
+  -f  --file  name of file         = ../etc/data/auto93.csv
   -g  --go    start-up action      = data
   -h  --help  show help            = false
   -s  --seed  random number seed   = 937162211
 
 ACTIONS:
   -g  the	show settings
-  -g  rand	generate, reset, regenerate same
   -g  sym	check syms
   -g  num	check nums
+  -g  csv	read from csv
 
 ```
  
@@ -101,6 +102,12 @@ Summarizes a stream of numbers.
 </dd>
 </dl>
 
+### COLS	
+Factory for managing a set of NUMs or SYMs	
+### ROW	
+Store one record.	
+### DATA	
+Store many rows, summarized into columns	
 ## Misc support functions	
 ### Numerics	
 
@@ -167,6 +174,11 @@ Note the following conventions for `map`.
 <dt><b> coerce(s:<tt>str</tt>) &rArr;  any </b></dt><dd>
 
  return int or float or bool or string from `s`
+
+</dd>
+<dt><b> csv(sFilename:<tt>str</tt>, fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>
+
+ call `fun` on rows (after coercing cell text)
 
 </dd>
 </dl>
