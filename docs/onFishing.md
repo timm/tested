@@ -422,11 +422,11 @@ As to how well that scores, here's the results of a budget of
 12, 16,20 (which is really 24,32,40).
 Note that 12 might be too little and 20 might be too much
 
-<img src="/etc/out/nasa93dem_g1_yinc_b12.pdf">
+<img src="/raw/main/etc/out/nasa93dem_g1_yinc_b12.pdf">
 
-<img src="/etc/out/nasa93dem_g1_yinc_b16.pdf">
+<img src="/raw/main/etc/out/nasa93dem_g1_yinc_b16.pdf">
 
-<img src="/etc/out/nasa93dem_g1_yinc_b20.pdf">
+<img src="/raw/main/etc/out/nasa93dem_g1_yinc_b20.pdf">
 
 These charts are a little verbose to print, so here's
 an executive summary. Lets ask how well we are doing 
