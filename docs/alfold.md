@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,8 +13,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
 # alfold.lua
@@ -33,7 +34,7 @@ Options:
 The Little Hungarian Plain or Little Alföld is a plain tectonic	
 basin of approximately 8,000 km² shared by Hunary, Slovakia and	
 Austria.	
-  	
+ 	
 Alfold.lua, on the other hand,  is  a plain little Hungarian notation	
 for documenting LUA code. Lines of comments get rendered using Markdown.	
 Arguments of public functions are typed using  `n`, `s`, `fun`,	
@@ -41,28 +42,28 @@ Arguments of public functions are typed using  `n`, `s`, `fun`,
 (respectively).  Also, `s` as a suffix denotes a table of other	
 types;  words in UPPERCASE are classes; and instances use lower	
 case versions of the classes.	
-       	
+ 	
 For example, this file was generated via	
  	
-     lua alfold.lua alfold.lua > docs/alfold.md	
+lua alfold.lua alfold.lua > docs/alfold.md	
  	
 ## Conventions	
  	
 1. Anything after four dashes (`----`) is not included in the output.	
 2. Any line starting with two dashes and a space(`-- `( **is** included in the output.	
 3. Public functions are denoted with a  trailing "-->", followed by 	
-   return type then some comment text. e.g.<br> 	
-   `function fred(s) --> str; Returns `s`, written as a string`<br>   	
-   Note the semi-colon. Do not skip it (its important).	
+return type then some comment text. e.g.<br> 	
+`function fred(s) --> str; Returns `s`, written as a string`<br>   	
+Note the semi-colon. Do not skip it (its important).	
 4. Alfond only show help on public function.	
 5. In public function argument lists	
-    - 2,4 spaces denotes optional,local arguments.	
-    - In public function arguments, lower case versions of class type 	
-      (e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
-      so `datas` is a list of `DATA` instances).	
-    - Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
-    - User-defined types are any word starting with two upper case 	
-      leading letters is a class; e.g. DATA	
+- 2,4 spaces denotes optional,local arguments.	
+- In public function arguments, lower case versions of class type 	
+(e.g. `data`) are instances of that type (e.g.  `data` are `DATA` 	
+so `datas` is a list of `DATA` instances).	
+- Built in types are num, str, tab, bool, fun denoted with prefixes `n,s,t,is`	
+- User-defined types are any word starting with two upper case 	
+leading letters is a class; e.g. DATA	
 6. Any other local variable, or arguments to other functions, can be anything at all.	
 7. `XXX:new(...)` functions are assumed to be constructors and are reported as `XXX(...)	
  	
@@ -81,12 +82,12 @@ suffix s    | list of thing (so `sfiles` is list of strings)
 suffix fun  | suffix for functions                                            	
  	
 ## Some Design Rationale	
-  	
+ 	
 Alfold has no third party libraries (so installing it is just a matter of downloading one file).	
-   	
+ 	
 A wider range of numbers was considered instead of just `n` (e.g. `p,z,i` for posint, zeroOne, integer 	
 respectfully) but on balance, the overhead of those details seemed more than their benefit.	
-   	
+ 	
 Version 2 of Alfold stopped using two column tables of signatures and documentation 	
 since these did not work so well when browsing Github markdown files on a phone.	
 ## Guessing types	

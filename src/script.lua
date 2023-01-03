@@ -150,14 +150,14 @@ function main(options,help,funs,     k,saved,fails)  --> nil; main program
     if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end 
 -------------------------------------------------------------------------------
--- ## Examples
+--- ## Examples
 local egs={}
 local function eg(key,str, fun) --> nil; register an example.
   egs[key]=fun
   help=help..fmt("  -g  %s\t%s\n",key,str) end
 
--- eg("crash","show crashing behavior", function()
---   return the.some.missing.nested.field end)
+--- eg("crash","show crashing behavior", function()
+---   return the.some.missing.nested.field end)
 
 eg("the","show settings",function() oo(the) end)
 

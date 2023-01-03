@@ -94,7 +94,6 @@ function COL:reinforce(bins, x, nForce)
        r2.v = r2.v + nForce*.1
        return end end
   assert(false,"bad lookup for ".. x) end 
-  end 
 --------------------------------------------------------------------------------------------------
 local COLS =obj"COLS"
 function COLS:new(t)    

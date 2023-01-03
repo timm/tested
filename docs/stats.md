@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,8 +13,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
 # stats.lua
@@ -55,10 +56,10 @@ Scott-Knott is a way to find differences in N
 treatments using at most $O(log2(N))$ comparisons. This is useful since:	
 - Some statistical tests are slow (e.g. bootstrap). 	
 - If we run an all-pairs comparisons between	
-  $N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2)}$ confident in the results.	
-  This is much, much smaller than the $C_2=C_0^{log2(N)}$ confidence found from Scott-Knott;	
-  - e.g for N=10, $C_0=95$%, $C_1$ is less than one percent while $C_2$ is over	
-   75 percent (for Scott-Knott).	
+$N$ tests at confidence $C$, then we only are $C_1=C_0^{(n*(n-1)/2)}$ confident in the results.	
+This is much, much smaller than the $C_2=C_0^{log2(N)}$ confidence found from Scott-Knott;	
+- e.g for N=10, $C_0=95$%, $C_1$ is less than one percent while $C_2$ is over	
+75 percent (for Scott-Knott).	
  	
 Scott-Knott sorts treatments on the their median values, then looks for the split	
 that maximizes the difference in the split before and after the split. If statistical	
@@ -69,6 +70,7 @@ get ranked two, etc.
 As to stats tests, this code checks for difference in the splits using two non-parametric tests:	
 - A MannWhitney U test that checks if the ranks of the two splits are distinguishable;	
 - A CliffsDelta effect size test (which reports if there is enough difference in the splits)	
+ 	
 ## RX objects	
 This code returns "rank: objects which contain	
 - `name` of treatment	
@@ -78,22 +80,23 @@ This code returns "rank: objects which contain
  	
 For example, here's data from five treatmetns:	
  	
-            data= {	
-                 x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},	
-                 x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},	
-                 x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},	
-                 x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},	
-                 x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}	
+data= {	
+x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},	
+x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},	
+x3={0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},	
+x4={0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9},	
+x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}	
  	
 And here's the `show` (where the first two and the last two treatments have the same rank):	
  	
-            for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
-        	
-        		x5	1	-  *  ------   |                 ( 0.10,  0.10,  0.20,  0.30,  0.40)	
-        		x3	1	-   *   ----   |                 ( 0.15,  0.15,  0.25,  0.35,  0.40)	
-        		x1	2	        -     *|----             ( 0.34,  0.34,  0.49,  0.51,  0.60)	
-        		x4	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
-        		x2	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
+for _,rx in pairs(sk(data)) do print(rx.name, rx.rank, rx.show) end	
+ 	
+x5	1	-  *  ------   |                 ( 0.10,  0.10,  0.20,  0.30,  0.40)	
+x3	1	-   *   ----   |                 ( 0.15,  0.15,  0.25,  0.35,  0.40)	
+x1	2	        -     *|----             ( 0.34,  0.34,  0.49,  0.51,  0.60)	
+x4	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
+x2	3	               |   -  *    ----- ( 0.60,  0.60,  0.70,  0.80,  0.90)	
+ 	
 
 <dl>
 <dt><b> RX(t:<tt>tab</tt>, s:<tt>str</tt>) &rArr;  RX </b></dt><dd>
