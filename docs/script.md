@@ -20,7 +20,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 ```css
    
-scriot.lua : an example script with help text and a test suite
+script.lua : an example script with help text and a test suite
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 
 USAGE:   script.lua  [OPTIONS] [-g ACTION]
