@@ -21,7 +21,7 @@ To present this work as a syllabus, here is a weekly guide (assumes a 14 week se
 |Week |Task|Lecture|Code (to reproduce)| Terms (to understand)|
 |----|-----|-------|------------------|-----------------------|
 |0   | fishing| [onFish](/docs/onFishing.md) |  - |  stakeholder, developer, bias, discrimination, decision space, objective space, $(W,X,Y,Z,B)$, fishing, active learning; why limited budgets?; semi-supervised learning; |
-|1   | scripting| [onScript](/docs/onScript.md)<br> do not use CLI or testing library (roll your own) | [script](/src/script.md) |version control,test-driven development, red-green-refactor, command-line interfaces, regular expressions,random number seeds|
+|1   | scripting| [onScript](/docs/onScript.md)| [script](/src/script.lua) <br> [doc](/docs/script.md) <br> do not use CLI or testing library (roll your own) |version control,test-driven development, red-green-refactor, command-line interfaces, regular expressions,random number seeds|
 |2   | data| [onData](/docs/onData.md) | [data](/src/data.md) |coercion (string to thing), normal(Gaussian), Weibull, ,mean, median, mode, standard deviation, entropy, Welford, Aha, row (example), column (attribute, feature,goal)| 
 |3   | clustering| [onCluster](/docs/onCluster.md) | [cluster](/src/cluster.md) | distance, Euclidean, Aha, LSH, Fastmap, cosine rule, k-means, DBscan, kd-tree, multi-goal, many-goal, bdom(binary domination); cdom(continuous domination, Zitzler)|
 |4   | repertory grids|  | | requirements engineering |
