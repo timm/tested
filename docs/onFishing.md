@@ -433,29 +433,29 @@ an executive summary. Lets ask how well we are doing
 
 at x=1	| evaluation B	| median found
 --------|---------------|-------------
-|12|2
-|16|1
-|20|1
-|24|1
-|28|1
-|32|1
-|36|1
+||12|2
+||16|1
+||20|1
+||24|1
+||28|1
+||32|1
+||36|1
 at x=5	evaluation B	median found
-|12|9
-|16|7
-|20|7
-|24|7
-|28|7
-|32|7
-|36|9
+||12|9
+||16|7
+||20|7
+||24|7
+||28|7
+||32|7
+||36|9
 at x=10	evaluation B	median found
-|12|35
-|16|24
-|20|21
-|24|19
-|28|19
-|32|18
-|36|18
+||12|35
+||16|24
+||20|21
+||24|19
+||28|19
+||32|18
+||36|18
 
 ## Better Fishing?
 Now the above is interesting, but we can much better.
