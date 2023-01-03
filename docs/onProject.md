@@ -55,13 +55,21 @@ Expected Sections:
     - show that thinking that lead to this new method.
 - Methods
   - Algorithms
+    - Note: please demonstrate that you actually have a clear understanding of all these methods.
   - Data
+    - You need to have to show some understanding of the data being explored. E.g. what is the point of the data, what are its  column names, how do they group, what do they mean. 
+      If if is informative, you can list column distrituons e.g. Table3 of [https://arxiv.org/pdf/2008.00612.pdf](https://arxiv.org/pdf/2008.00612.pdf).
   - Performance measures
+    - Using all information about $x,y$ variables, rank the data using the Zitzler predicate. Normalize those ranks 1..100
+    - Repeat 20 times
+      - For some limited budget $B$, guess the top $B$ items of the data.
+      - Evaluate all those top $B$ gueses (so the actual number of evaluations is now $2B$).
+        - Collect the distritbution of those final $B$ evaluations.
   - Summarization methods
+    - better methods have a lower sum of the final $B$.
     - statistical methods, what you selected and why
       - please demonstrate that you understand effect size and significance testing
     - explaining any novel visualizations you will use in your results section (if there are any)
-  - Note: please demonstrate that you actually have a clear understanding of all these methods.
 - Results
    - Run with different y-sampling budgets $B_0\in$ (10,25,50,100,200,500...):
      - For different methods 

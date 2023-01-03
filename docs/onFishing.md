@@ -280,6 +280,47 @@ with acceptance testing.
 
 ## A Baseline Fishing Tool
 
+This section offers an example of fishing tool. This example has to important points:
+
+- It is a baseline implementation. You are meant to be critical of it, to want to improve it.
+- The example comes with an evaluation criteria with which we can compare different fishing tools
+
+### The Chen Heuristic
+
+In an unpublished paper from his [Ph.D. thesis Jianfeng Chen](https://arxiv.org/pdf/2101.02817.pdf)
+proposed a way to quickly sample a large space, with just a few queries:
+
+- evaluate $B$ examples
+- explore the ${B \choose 2}=$B(B-1)/2$ differences between them
+- e.g. $N$=20$ evaluations gives us  information of  190 examples
+
+- Input: 
+  - a budget $B$ 
+  - $N$ examples $((X_1,Y_1),(X_2,Y_2)...)$  (i.e. examples with goal and non-goal attributes)
+- 20 times repeat
+  - examples = shuffleOrder(examples)
+  - take the first $B$ items
+  - for all pairs EG1,EG2 in  the first $B$ items in examples
+    - if BETTER(EG2,EG1) then EG1,EG2 = EG2,EG1 end
+    - let the distance between the goal, non-goal columns be $\delta\frac{\Delta{y}}{\Delta{x}}$ and 
+    - for all the non-goal columns COL do
+      - x= COL of EG1
+      - y= COL of EG2
+      - if $x \neq y$ then 
+        - COL.good[x] += $\delta$
+        - COL.bad[x] += $\delta$
+  - for each x in each COL do COL.x.score = good[x]/(good[x]+bad[x]
+
+        for j=i+1,$B$ do
+        - if BETTER(some[j], some[j]) then i,j=j,i end
+        - for just the non-goal columns do
+            - x,y = $\DELTA$ - 
+        - if BETTER(evaluate the first Given $E$ examples, Given some predicate _better_, we can explore ${B \choose 2})  pairs:
+  - for each pair, we sort them using the differences between  {\Delta}y and {\Delta}x (between the goal attributes and non-goal attributes) of 
+
+
+So, e.g., aftner $N=20$ evalautions, we can explores 
+
 ## Better Fishing?
 XXX ungood good
 - options, clster then do more
