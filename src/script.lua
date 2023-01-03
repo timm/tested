@@ -18,6 +18,8 @@ OPTIONS:
   -g  --go    start-up action      = data
   -h  --help  show help            = false
   -s  --seed  random number seed   = 937162211
+
+ACTIONS:
 ]]
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- cache old names (so later, we can find rogues)
 -----------------------------------------------------------------------------------------

@@ -30,6 +30,8 @@ OPTIONS:
   -g  --go    start-up action      = data
   -h  --help  show help            = false
   -s  --seed  random number seed   = 937162211
+
+ACTIONS:
   -g  the	show settings
   -g  rand	generate, reset, regenerate same
   -g  sym	check syms
