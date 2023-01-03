@@ -293,7 +293,7 @@ In an unpublished paper from his [Ph.D. thesis Jianfeng Chen](https://arxiv.org/
 proposed a way to quickly sample a large space, with just a few queries:
 
 - evaluate $B$ examples
-- explore the ${B \choose 2}=$B(B-1)/2$ differences between them
+- explore the ${B \choose 2}=B(B-1)/2$ differences between them
   e.g. $N$=20$ evaluations gives us  information of  190 examples
 - reward changes to the $X$ variables, favoring small changes to $X$ that lead
   to large changes in $Y$
