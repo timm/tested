@@ -117,7 +117,7 @@ class SYM {
 ```
 
 
-In the above, DATA is the ringmaster that controls xis special cases:
+In the above, DATA is the ringmaster that controls eigjt special cases:
 
 
 - DATA is loaded from either 
@@ -129,6 +129,10 @@ In the above, DATA is the ringmaster that controls xis special cases:
 - When that data arrives, it is either
   -the first row (with the column names) [5]
   - or it is all other other rows of data. [6]
+- When we work with data, we can either share the same ROWs [7] (e.g.
+  if we are recursively cluster the same data) 
+  or make new rows each time [8].
+
 
 
 ```lua
@@ -144,7 +148,8 @@ function DATA.new(i,src,     fun)
   
 function DATA.add(i,t)
   if   i.cols          -- [6] true if we have already seen the column names
-  then t =ROW(t.cells and t.cells or t) -- [3][4] "t" can be a ROW or a simple list
+  then t = t.cells and t or ROW(t) -- [3][4][7]
+       -- t =ROW(t.cells and t.cells or t) -- [3][4][8] "t" can be a ROW or a simple list
        push(i.rows, t) -- add new data to "i.rows"
        i.cols:adds(t)  -- update the summary information in "ic.ols"
   else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row

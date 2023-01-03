@@ -1,20 +1,21 @@
----                                           __      
----                           __             /\ \__   
----     ____    ___    _ __  /\_\    _____   \ \ ,_\  
----    /',__\  /'___\ /\`'__\\/\ \  /\ '__`\  \ \ \/  
----   /\__, `\/\ \__/ \ \ \/  \ \ \ \ \ \L\ \  \ \ \_ 
----   \/\____/\ \____\ \ \_\   \ \_\ \ \ ,__/   \ \__\
----    \/___/  \/____/  \/_/    \/_/  \ \ \/     \/__/
----                                    \ \_\          
----                                     \/_/          
+---    __                __                
+---   /\ \              /\ \__             
+---   \_\ \      __     \ \ ,_\     __     
+---   /'_` \   /'__`\    \ \ \/   /'__`\   
+---  /\ \L\ \ /\ \L\.\_   \ \ \_ /\ \L\.\_ 
+---  \ \___,_\\ \__/.\_\   \ \__\\ \__/.\_\
+---   \/__,_ / \/__/\/_/    \/__/ \/__/\/_/
+                                      
+
 local the,help = {},[[   
-script.lua : an example script with help text and a test suite
+data.lua : an example csv reader script
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 
-USAGE:   script.lua  [OPTIONS] [-g ACTION]
+USAGE:   data.lua  [OPTIONS] [-g ACTION]
 
 OPTIONS:
   -d  --dump  on crash, dump stack = false
+  -f  --file  name of file         = ../etc/data/auto93.csv
   -g  --go    start-up action      = data
   -h  --help  show help            = false
   -s  --seed  random number seed   = 937162211
@@ -29,9 +30,9 @@ function obj(s,    t,new) --> t; create a klass and a constructor
   function new(_,...) id=id+1; local i=setmetatable({a=s,id=id}, t); t.new(i,...); return i end
   t={}; t.__index = t;return setmetatable(t, {__call=new}) end
 
+local NUM,SYM,ROW,COLS,DATA = obj"NUM",obj"SYM",obj"ROW",obj"COLS",obj"DATA"
 -- ### SYM
 -- Summarize a stream of symbols.
-local NUM,SYM = obj"NUM",obj"SYM"
 function SYM.new(i) --> SYM; constructor
   i.n   = 0
   i.has = {}
@@ -68,6 +69,54 @@ function NUM.add(i,n) --> NUM; add `n`, update lo,hi and stuff needed for standa
 function NUM.mid(i,x) return i.mu end --> n; return mean
 function NUM.div(i,x)  --> n; return standard deviation using Welford's algorithm http://t.ly/nn_W
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
+
+-- ### COLS
+-- Factory for managing a set of NUMs or SYMs
+local COLS=obj"COLS"
+function COLS.new(i,t,     col,cols)
+  i.names, i.all, i.x, i.y = t, {}, {}, {}
+  for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
+    col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
+    push(i.all, col)
+    if not s:find"X$" then
+      push(s:find"[!+-]$" and i.y or i.x, col) end end end
+
+function COLS.add(i,row)
+  for _,t in pairs({i.x,i.y}) do -- update all the columns we are no skipping
+    for _,col in pairs(t) do
+      col:add(row.cells[col.at]) end end end
+
+-- ### ROW
+-- Store one record.
+function ROW.new(i,t) i.cells=t; end
+--
+-- ### DATA
+-- Store many rows, summarized into columns
+function DATA.new(i,src,     fun)
+  i.rows, i.cols = {}, nil
+  fun = function(x) i:add(x) end
+  if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk
+                           else map(src or {}, fun)  -- [2] load from a list
+                           end end
+  
+function DATA.add(i,t)
+  if   i.cols          -- [6] true if we have already seen the column names
+  then t = t.cells and t or ROW(t) -- [3][4][7]
+       -- t =ROW(t.cells and t.cells or t) -- [3][4][8] "t" can be a ROW or a simple list
+       push(i.rows, t) -- add new data to "i.rows"
+       i.cols:adds(t)  -- update the summary information in "ic.ols"
+  else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row
+       end end
+
+function DATA.clone(i,  init,     data)
+  data=DATA({i.cols.names})
+  map(init or {}, function(x) data:add(x) end)
+  return data end
+
+function DATA.stats(i,what,  fun,cols)
+  function fun(k,col) return getmetatable(col)[what or "mid"](col),k end
+  return kap(cols or i.cols.x, fun) end
+
 -------------------------------------------------------------------------------
 -- ## Misc support functions
 -- ### Numerics
@@ -103,7 +152,7 @@ function keys(t) --> ss; return list of table keys, sorted
   return sort(kap(t, function(k,_) return k end)) end
 
 -- ### Strings
-local fmt,oo,o,coerce
+local fmt,oo,o,coerce,csv
 function fmt(sControl,...) --> str; emulate printf
   return string.format(sControl,...) end
 
@@ -118,6 +167,14 @@ function coerce(s,    fun) --> any; return int or float or bool or string from `
     if s1=="true" then return true elseif s1=="false" then return false end
     return s1 end
   return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
+
+function csv(sFilename,fun) --> nil; call `fun` on rows (after coercing cell text)
+  local src,s,t  = io.input(sFilename)
+  while true do
+    s = io.read()
+    if   s
+    then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t]=coerce(s1) end; fun(t)
+    else return io.close(src) end end end
 
 -- ### Main
 local settings, cli,main
@@ -163,13 +220,6 @@ local function eg(key,str, fun) --> nil; register an example.
 
 eg("the","show settings",function() oo(the) end)
 
-eg("rand","generate, reset, regenerate same", function()
-  local num1,num2 = NUM(),NUM()
-  Seed=the.seed; for i=1,10^3 do num1:add( rand(0,1) ) end
-  Seed=the.seed; for i=1,10^3 do num2:add( rand(0,1) ) end
-  local m1,m2 = rnd(num1:mid(),10), rnd(num2:mid(),10)
-  return m1==m2 and .5 == rnd(m1,1) end )
-
 eg("sym","check syms", function()
   local sym=SYM()
   for _,x in pairs{"a","a","a","a","b","b","c"} do sym:add(x) end
@@ -180,4 +230,10 @@ eg("num", "check nums", function()
   for _,x in pairs{1,1,1,1,2,2,3} do num:add(x) end
   return 11/7 == num:mid() and 0.787 == rnd(num:div()) end )
 
+eg("csv","read from csv", function(n) 
+  n=0;
+  csv(the.file,function(t) n=n+#t end)
+  return n==8*399 end)
+
 main(the,help, egs)
+
