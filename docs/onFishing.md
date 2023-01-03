@@ -464,13 +464,14 @@ Now the above is interesting, but I hope we can do
 much better. Maybe any of the following could be useful?
 Or maybe you can do better?
 
-- cluster on x, label on item, then compute $\Delta{x}$
+- The above only handles discrete values. How to handle
+  numerics?
+  - and if we increment a bucket, what kernel should we apply left and right
+- Cluster on x, label on item, then compute $\Delta{x}$
   and apply to all items on cluster
-- the score fraction _good/(good + bad)_  is only one
+- The score fraction _good/(good + bad)_  is only one
   of dozens of alternatives (see table 3 of
   [this paper](https://ink.library.smu.edu.sg/cgi/viewcontent.cgi?article=2329&context=sis_research)
-- entropy pruning of the wights
-- huebrs 16m spalsh let and right
-- dont use ygap, but use the detal computed by zitlzer
-- dont use zitzler ever, use ygap  instead
-- and more
+- Restrict the example scoring to the highest entropy
+  values.
+- Do not use ygap, but use the delta computed by Zitlzer
