@@ -283,6 +283,8 @@ with acceptance testing.
 This section offers an example of fishing tool. This example has to important points:
 
 - It is a baseline implementation. You are meant to be critical of it, to want to improve it.
+  - For example, the following results comes from only one small data set
+  - So there is much more work to do here.
 - The example comes with an evaluation criteria with which we can compare different fishing tools
 
 ### The Chen Heuristic
@@ -458,15 +460,17 @@ at x=10	|evaluations = B	|median found
 ||36|18
 
 ## Better Fishing?
-Now the above is interesting, but we can much better.
+Now the above is interesting, but I hope we can do
+much better. Maybe any of the following could be useful?
+Or maybe you can do better?
 
-XXX ungood good
-- options, clster then do more
-- tarantual optipns
+- cluster on x, label on item, then compute $\Delta{x}$
+  and apply to all items on cluster
+- the score fraction _good/(good + bad)_  is only one
+  of dozens of alternatives (see table 3 of
+  [this paper](https://ink.library.smu.edu.sg/cgi/viewcontent.cgi?article=2329&context=sis_research)
 - entropy pruning of the wights
 - huebrs 16m spalsh let and right
 - dont use ygap, but use the detal computed by zitlzer
 - dont use zitzler ever, use ygap  instead
 - and more
-
-
