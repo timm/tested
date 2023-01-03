@@ -422,7 +422,7 @@ As to how well that scores, here's the results of a budget of
 12, 16,20 (which is really 24,32,40).
 Note that 12 might be too little and 20 might be too much
 
-<img width=400 src="/etc/out/nasa93dem_g1_yinc_b12.pdf">
+<img width=400 src="https://raw.githubusercontent.com/timm/tested/main/etc/out/nasa93dem_g1_yinc_b12.pdf">
 
 <img src="/etc/out/nasa93dem_g1_yinc_b16.png">
 
