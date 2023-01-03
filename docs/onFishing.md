@@ -292,36 +292,174 @@ proposed a way to quickly sample a large space, with just a few queries:
 
 - evaluate $B$ examples
 - explore the ${B \choose 2}=$B(B-1)/2$ differences between them
-- e.g. $N$=20$ evaluations gives us  information of  190 examples
+  e.g. $N$=20$ evaluations gives us  information of  190 examples
+- reward changes to the $X$ variables, favoring small changes to $X$ that lead
+  to large changes in $Y$
 
 - Input: 
   - a budget $B$ 
   - $N$ examples $((X_1,Y_1),(X_2,Y_2)...)$  (i.e. examples with goal and non-goal attributes)
+  - a distance predicated DIST that report distances in $X_i$ or $Y_i$
+  - a BETTER predicate that sorts two examples on their goals (may be different to the $Y_i$
+    distance measure)
+- phase0: ground truth
 - 20 times repeat
-  - examples = shuffleOrder(examples)
+  - examples = shuffle(examples)
   - take the first $B$ items
-  - for all pairs EG1,EG2 in  the first $B$ items in examples
-    - if BETTER(EG2,EG1) then EG1,EG2 = EG2,EG1 end
-    - let the distance between the goal, non-goal columns be $\delta\frac{\Delta{y}}{\Delta{x}}$ and 
-    - for all the non-goal columns COL do
-      - x= COL of EG1
-      - y= COL of EG2
-      - if $x \neq y$ then 
-        - COL.good[x] += $\delta$
-        - COL.bad[x] += $\delta$
-  - for each x in each COL do COL.x.score = good[x]/(good[x]+bad[x]
+  - phase1: reward
+    -  for all pairs EG1,EG2 in  the first $B$ items in examples
+      - if BETTER(EG2,EG1) then EG1,EG2 = EG2,EG1 end
+      - measure the distance between the goals and the non-goal columns
+        - let $\delta=\frac{\Delta{y}}{\Delta{x}}$ (which rewards small changes in $X$ and large changes to $Y$) 
+      - for all the non-goal columns COL do
+        - x= COL of EG1
+        - y= COL of EG2
+        - if $x \neq y$ then 
+          - COL.good[x] += $\delta$
+          - COL.bad[y] += $\delta$
+  - phase2: score 
+    - for each non-goal COL do
+      - normalize all _good,bad_ values such that $\sum=100$ end
+    - for all z of COL
+      - COL.z.score = good[z]/(good[z]+bad[z] + 1E-31)
+      - (and missing values score 0)
+  - phase3: guess
+    - truth= sort all examples on BETTER, labeling all 1% to 100%, best to worst.
+    - sort examples by sum of their x-scores (most to least)
+    - guessed= first $B$ items
+    - sort the truth scores of the guessed items, the print them
 
-        for j=i+1,$B$ do
-        - if BETTER(some[j], some[j]) then i,j=j,i end
-        - for just the non-goal columns do
-            - x,y = $\DELTA$ - 
-        - if BETTER(evaluate the first Given $E$ examples, Given some predicate _better_, we can explore ${B \choose 2})  pairs:
-  - for each pair, we sort them using the differences between  {\Delta}y and {\Delta}x (between the goal attributes and non-goal attributes) of 
+Without the ground truth computation, the above evaluates $2B$ examples:
+- one $B$ duing phase1 (when it access the $Y$ scores of the first $B$ items)
+- another $B$ during phase3 (when it score the $B$ examples ranked best.
+
+This approach spits out a set of scores of what variables matter most.
+Note what we seek are the variables where a few ranges score most
+
+For example, for 93 examples and a budget of $B=16$
+(which is really 32), we get the following.
+- Here the goals are "reduce effort, defects).
+- Note that `prec`
+  (precedentness, have we done this before) scores really well while
+  `rely` (required reliability) looks kind of wishy wahsy
+
+```
+prec	{:4 6 *
+	 :h 93 ******************
+	}
+flex	{}
+resl	{}
+team	{}
+pmat	{:2 13 **
+	 :3 40 ********
+	 :4 45 *********
+	}
+rely	{:3 35 *******
+	 :4 32 ******
+	 :5 31 ******
+	}
+data	{:2 41 ********
+	 :3 5 *
+	 :4 7 *
+	 :5 45 *********
+	}
+cplx	{:2 6 *
+	 :3 28 *****
+	 :4 34 ******
+	 :5 29 *****
+	 :6 0
+	}
+ruse	{}
+docu	{}
+time	{:3 38 *******
+	 :4 3
+	 :5 45 *********
+	 :6 13 **
+	}
+stor	{:3 31 ******
+	 :4 2
+	 :5 41 ********
+	 :6 24 ****
+	}
+pvol	{:2 55 ***********
+	 :3 19 ***
+	 :4 24 ****
+	}
+acap	{:3 33 ******
+	 :4 14 **
+	 :5 51 **********
+	}
+pcap	{:3 44 ********
+	 :4 10 **
+	 :5 45 *********
+	}
+pcon	{}
+apex	{:2 32 ******
+	 :3 26 *****
+	 :4 9 *
+	 :5 30 ******
+	}
+plex	{:1 36 *******
+	 :2 33 ******
+	 :3 22 ****
+	 :4 7 *
+	}
+ltex	{:1 31 ******
+	 :2 32 ******
+	 :3 0
+	 :4 35 *******
+	}
+tool	{:3 73 **************
+	 :4 26 *****
+	}
+site	{}
+sced	{:2 100 ********************
+	}
+```
 
 
-So, e.g., aftner $N=20$ evalautions, we can explores 
+As to how well that scores, here's the results of a budget of
+12, 16,20 (which is really 24,32,40).
+Note that 12 might be too little and 20 might be too much
+
+![](/etc/out/nasa93dem_g1_yinc_b12.pdf)
+
+![](/etc/out/nasa93dem_g1_yinc_b16.pdf)
+
+![](/etc/out/nasa93dem_g1_yinc_b20.pdf)
+
+These charts are a little verbose to print, so here's
+an executive summary. Lets ask how well we are doing 
+
+at x=1	| evaluation B	| median found
+--------|---------------|-------------
+|12|2
+|16|1
+|20|1
+|24|1
+|28|1
+|32|1
+|36|1
+at x=5	evaluation B	median found
+|12|9
+|16|7
+|20|7
+|24|7
+|28|7
+|32|7
+|36|9
+at x=10	evaluation B	median found
+|12|35
+|16|24
+|20|21
+|24|19
+|28|19
+|32|18
+|36|18
 
 ## Better Fishing?
+Now the above is interesting, but we can much better.
+
 XXX ungood good
 - options, clster then do more
 - tarantual optipns

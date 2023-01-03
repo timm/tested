@@ -188,7 +188,12 @@ function DATA.reinforce(i,quiet,  rows,x,xgap,ygap,n,b,G,B)
        G = g/(g+b)
        B = b/(g+b)
        col.score[k] = G/(G+B) end -- suggested by Tarantula. see table1 of http://shorturl.at/prAP1
-    if not quiet then print(col.txt, o(col.score,true)) end end  end
+    if not quiet then 
+        local show=kap(percent(col.score),function(k,v,    n)
+                                 n=v*100//1
+                                 return fmt("%g %s\n\t",n,("*"):rep(n//5)),k
+                               end)
+       print(col.txt, o(show,true)) end end  end
 
 function DATA.guess(i,  rows,x)
   for _,row in pairs(rows or i.rows) do
