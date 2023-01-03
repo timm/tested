@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,12 +13,14 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
+
 
 # How TESTED stores DATA
 
+
 A repeated structure in my code are the following classes:
+
 
 |class | notes |
 |------|-------|
@@ -26,8 +30,10 @@ A repeated structure in my code are the following classes:
 |COLS  | factory for createing NUMs and SYms|
 |DATA | container for ROWs, summaized into NUMs or SSYMs|
 
+
 Conceptually there is a sixth class that is a super class
 of NUM and SYM... but I don't actually implement that.
+
 
 My CSV parser generates theses instances from data where row1 is some column headers 
 and the other rows are the actual data.
@@ -48,9 +54,11 @@ In these names:
 - if the name ends with "-" or "+" then its a goal we want to minimize or maximize
   - and for such items, we will set "w" to 1.
 
+
 ```
 list of names      call                 weight    goal?
 --------------     ----------------     ------    -----
+
 
 { "Clndrs",        NUM(1, "Clndrs")     1         n
   "Volume",        NUM(2, "Volume")     1         n
@@ -108,7 +116,9 @@ class SYM {
 }
 ```
 
+
 In the above, DATA is the ringmaster that controls xis special cases:
+
 
 - DATA is loaded from either 
   - a disc csv file [1]
@@ -120,8 +130,10 @@ In the above, DATA is the ringmaster that controls xis special cases:
   -the first row (with the column names) [5]
   - or it is all other other rows of data. [6]
 
+
 ```lua
 function ROW.new(i,t) i.cells=t; i.yseen=false end
+
 
 function DATA.new(i,src,     fun)
   i.rows, i.cols = {}, nil
@@ -153,7 +165,9 @@ function DATA.clone(i,  init,     data)
   return data end
 ```
 
+
 ## SYM
+
 
 When a DATA instance stores some rows,
 those rows are summarized in NUM or SYM instances. Note that:
@@ -162,12 +176,14 @@ those rows are summarized in NUM or SYM instances. Note that:
  -  a `mid` method for reporting central tendancy (mid=middle)
 - a `div` methods for reporting the diversion around that center (div=diversity)
 
+
 ```lua
 local SYM = lib.obj"SYM"
 function SYM:new() --> SYM; constructor
   self.n   = 0
   self.has = {}
   self.most, self.mode = 0,nil end
+
 
 function SYM:add(x) --> nil;  update counts of things seen so far
   if x ~= "?" then
@@ -176,8 +192,10 @@ function SYM:add(x) --> nil;  update counts of things seen so far
    if self.has[x] > self.most then
      self.most,self.mode = self.has[x], x end end end
 
+
 function SYM:mid(x) --> n; return the mode
   return self.mode end
+
 
 function SYM:div(x) --> n; return the entropy
   local function fun(p) return p*math.log(p,2) end
@@ -186,9 +204,11 @@ function SYM:div(x) --> n; return the entropy
 ```
 <img src="https://miro.medium.com/max/720/1*mEIWwyolHOdY3TmBus7HtQ.webp" align=right width=400>
 
+
 By the way, to understand SYM.div (entropy), think of it as
 - the effort required by binary chop to find clumps of a signal hiding in a stream of noise
 - and the more diverse the distribution, the greater that effort.
+
 
 e.g. in a vector of size 4,
   - nazis have a "1" near one end
@@ -197,6 +217,7 @@ e.g. in a vector of size 4,
 - and 75% if the time we need to binary chops to find Englad (i.e. $p_{\mathit{england}}$=.75)
 - Each chop will cost us $log2(p_i)$ so the total effort is $e=-\sum_i(p_i\times log_2(p_i))$ 
   - By convention, we  add a minus sign at the front (else all entropies will be negative).
+
 
 (Actually, formally entropy has other definition: 
 - The entropy of a discrete random variable is a lower bound on the expected number of bits required to transfer the result of the random variable.
@@ -210,6 +231,7 @@ function NUM:new() --> NUM;  constructor;
   self.n, self.mu, self.m2 = 0, 0, 0
   self.lo, self.hi = math.huge, -math.huge end
 
+
 function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
   if n ~= "?" then
     self.n  = self.n + 1
@@ -220,15 +242,18 @@ function NUM:add(n) --> NUM; add `n`, update min,max,standard deviation
     self.lo = math.min(n, self.lo)
     self.hi = math.max(n, self.hi) end end
 
+
 function NUM:mid(x) return self.mu end --> n; return mean
 function NUM:div(x) return self.sd end --> n; return standard deviation
 ```
 If we are talking standard deviation, then we had better talk about normal curves.
 
+
 The French mathematician Abraham de Moivre [^deMo1718]
   notes that probabilities associated with discretely 
   generated random variables (such as are obtained by flipping a coin or rolling a die) can 
   be approximated by the area under the graph of an exponential function.
+
 
 This function was generalized by  Laplace[^Lap1812] 
   into the first central limit theorem, which proved that probabilities for almost 
@@ -236,14 +261,17 @@ This function was generalized by  Laplace[^Lap1812]
   (with sample size) to the area under an exponential function—that is, to a normal 
   distribution.
 
+
 This function was extended, extensively by Gauss. Now its a curve with an area under the curve of one.
   As standard deviation shrinks, the curve spikes upwards.
+
 
 <p align=center><img align=center src="/etc/img/norm.png" align=right width=600></p>
 
 
 To sample from a normal curve
 from a Gaussian with mean `mu` and diversity `sd`
+
 
       mu + sd * sqrt(-2*log(random)) * cos(2*pi*random)
 
@@ -256,13 +284,17 @@ to make a variety of shapes (just by adjusting $\lambda,k$):
 
 <p align=center><img src="/etc/img/weibulleq.png" wdith=300 ></p>
 
+
 <br clear=all>
+
 
 Another thing you should know is that even if normality holds, conclusions based on the normal curve (that hold
 across the whole population) may not be appropriate for any individual in that population. Rose[^rose] offers two
 examples of this:
 
+
 <img src="https://images.thestar.com/content/dam/thestar/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages/norma.jpg" align=right width=300>
+
 
 - Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women, from the
   United States (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
@@ -284,15 +316,19 @@ examples of this:
     - Far fewer plane crashes, and far more potential pilots available for recruitment.
     - And you got adjustable seats in your car.
 
+
 Or you could forget all about parametric assumptions.
 Many things get improved by going beyond the Gaussian guess [^dou95]:
 Not everything is best represented by a smooth curve with one peek that is symmetrical around that peek:
+
 
 [^rose]: [When U.S. air force discovered the flaw of averages](https://www.thestar.com/news/insight/2016/01/16/when-us-air-force-discovered-the-flaw-of-averages.html)
   Toronto Star, Todd Rose
   Sat., Jan. 16, 2016
 
+
 <img  align=right width=400 src="https://github.com/txt/fss17/raw/master/img/notnorm8.png">
+
 
 To avoid the trap of the normal assumption, do things:
 - like cluster the data and generate different conclusions per cluster.
@@ -301,9 +337,12 @@ To avoid the trap of the normal assumption, do things:
 
 All that said, Gaussians take up far less space and are very easy to update. So all engineers should know their gaussians.
 
+
 And I find Gaussians better for small samples (under 20) than  using a  [Reservoir Sampler](/docs/onSome.md)
 
+
 <br clear=all>
+
 
 [^Cox07]:      [Regular Expression Matching Can Be Simple And Fast (but is slow in Java, Perl, PHP, Python, Ruby, ...)](https://swtch.com/~rsc/regexp/regexp1.html), 
   Russ Cox rsc@swtch.com, January 2007
@@ -326,5 +365,3 @@ And I find Gaussians better for small samples (under 20) than  using a  [Reservo
 [^Thom68]:     Ken Thompson, “Regular expression search algorithm,” Communications of the ACM 11(6) (June 1968), pp. 419–422. 
   http://doi.acm.org/10.1145/363347.363387 <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
 [^Welford62]:  Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
-
-

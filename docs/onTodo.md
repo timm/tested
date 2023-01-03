@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,14 +13,17 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
+
 
 # Random notes, discarded text
 
+
 <img src="https://ih1.redbubble.net/image.3318871488.2254/ur,pin_small_front,square,1000x1000.jpg">
 
+
 secret of big test is small test
+
 
 -Lional assurance cases
 - timm's test of cinalical instrucment
@@ -318,6 +323,7 @@ with the same rights as conventional values like numbers and strings.
 
 ### Some High-Level Terms 
 
+
 |What | Notes|
 |----:|:------|
 |Theorem provers | explores  a set constraints defined in $B$|
@@ -325,7 +331,9 @@ with the same rights as conventional values like numbers and strings.
 | Optimizers |  methods for jumping between better and worse $X$ and/or $Y$ |
 | Explanation| tools are methods for generating a useful succinct summary from all that was learned from the theorem provers + optimizers + data miners?  Here, _useful_ means if that summary is applied  to the data, then some $m \ll N$ good examples will be selected (and "good" means "has good $Y$ values).|
 
+
 ### Other Lower-Level Terms
+
 
 |What | Terms|
 |----:|:------|
@@ -340,10 +348,12 @@ with the same rights as conventional values like numbers and strings.
 | Many goal optimization | 4 or more|
 |Hyper-parameter optimization| Optimization through $Z,Y$ space|
 
+
 One way to build optimizers is to: 
 - cluster on $X$
 - sort each cluster of their average $Y$ values
 - generate clusters between clusters with worse and better $Y$ values|
+
 
 [^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
 A survey of many-objective optimisation in search-based software engineering,
@@ -359,14 +369,17 @@ https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_op
 beyond standard testing (other testing) rep rule
 ## asdas
 
+
 <a href="/etc/img/scope2.png"><img width=400 align=right src="/etc/img/scope2.png"></a>
 First, astronomers  learn how to grind lens.  Next, they use those
 lens to explore the universe.
+
 
 So, now that SE people know how to match their brackets, it it time
 to table our next challenge. How can we help
 people use our software tools to better
 explore (and change) the world around us?
+
 
 Our answer is based on an idea from the 1990s[^me96]: 
 to test "it", you have to run "it". To say that another way,
@@ -374,6 +387,7 @@ a properly
 implemented "test" engine is also an "inference" engine.
 And if we do it that way, then we have a unified framework
 for both testing  and execution.
+
 
 For example, 
 when SE developers explore software, it is called "testing". When
@@ -384,35 +398,44 @@ incremental agile acceptance process where developers, and the
 others, can use lessons from past tests to improve subsequent
 versions.
 
+
 [^me96]: [On the Practicality of Abductive Validation](https://d1wqtxts1xzle7.cloudfront.net/1189844/57jb73rfr4wygz2.pdf?1425075060=&response-content-disposition=inline%3B+filename%3DOn_the_Practicality_of_Abductive_Validat.pdf&Expires=1671930452&Signature=BApU0XRhl8BjEdE0UaGjG2xWjopeKj9MaNb~UYbfJIe5gLEfpynx08Usk-5ga~cGh9kRwk6vRPdZ1iRVJeVZO3KJ5oxsFXgcsex~iay0uNQBk-H43EKm5TNKRU5SfXWFs~re9erwkOUT7XvIwWGjdwHPCtZo3AvsAbhdkOcu~GekEPA1Kh9mpra0W4EzSisMmRj1iWld8O3iYrXq16etQ1NVaPsfdCQ-46ck6grkpjdttvE04W2HSowijrAdJAaKssBBHJ5w1AAESVAzpnvMvSDq732Gyre7vDJocjRtgF-DWDJSpFVzx3DXrbSdcxj1Z3rbCEsJQNgY8Fp0Qbffsg__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA)
          Menzies, Tim. ECAI. Vol. 96,  1996.
+
 
 Q1) But wait, is this an AI subject or a SE subject?   
 A1) Yes.
 AI is software[^me]  and as such it needs engineers who have the
 experience needed to revise and refactor and improve it[^mart].
 
+
 Q2) Is this an AI subject or a requirements engineering subject?    
 A2) Yes. Requirements and testing are both iterative processes where we
 try to learn the most, using the least samples.
+
 
 [^me]: T. Menzies, 
        ["The Five Laws of SE for AI"](https://github.com/timm/timm.github.io/blob/master/pdf/20FiveLawsSE4AI.pdf),
        in IEEE Software, 
        vol. 37, no. 1, pp. 81-85, Jan.-Feb. 2020, doi: 10.1109/MS.2019.2954841.<br>
 
+
 [^mart]:  Silverio Martínez-Fernández, Justus Bogner, Xavier Franch, Marc Oriol, Julien Siebert, Adam Trendowicz, Anna Maria Vollmer, and Stefan Wagner. 2022. 
         [Software Engineering for AI-Based Systems: A Survey](https://dl.acm.org/doi/pdf/10.1145/3487043)
         ACM Trans. Softw. Eng. Methodol. 31, 2, Article 37e (April 2022), 59 pages. https://doi.org/10.1145/3487043
 
+
 Is all that too complex for you, lets make it simple. Lets go "fishing"., 
 
+
 <img align=right width=400 src="/etc/img/cars.png">
+
 
 [The Road to AI](https://arxiv.org/pdf/2212.11279.pdf) 
 paints an exciting picture of modern AI, dominated by deep learning,
 where those current techniques are the inevitable, inexorable result of
 centuries are prior thought. 
+
 
 It is a great paper, well worth your time. But it has its limitations.
 In all that writing is one important concept:
@@ -421,6 +444,7 @@ If you are a software engineer, you know that AI software is still
 software. Software has bugs and
 Anything with bugs needs to be tested.
 How do you and your stakeholders[^stake] test a complex AI system? 
+
 
 But before answering that, lets make sure we understand testing.
 Firstly, Software has stakeholders so we need systems that can explain themselves
@@ -437,6 +461,7 @@ and comment on the software that effects in. That process needs to support:
 - _incremental testing_ where, each time we return to retest,
     something learned from the past simplifies this next round of testing.
 
+
 Secondly, testing is not just some process of adding check marks to a system.
 Testing needs to verify that the system us built right
 but it also needs to look further and validate that the right system is being built.
@@ -449,6 +474,7 @@ is actually  a generic execution engine that can do many things[^abkl]
 Anyone familiar with the rapid feedback cycles seen in modern software
 development knows that "testing" is also about "exploring" ideas and
 making them better.If w is not true, then we can get stuck...
+
 
 - "Imagine if (the ancient greeks)  had developed robots... 
 automating tasks at that time, 3,000
@@ -473,11 +499,14 @@ https://doi.org/10.1006/ijhc.1996.0054.
 (https://www.sciencedirect.com/science/article/pii/S1071581996900543)
 Abstract: A single inference procedure (abduction) can operationalise a wide variety of knowledge-level modelling problem solving methods; i.e. prediction, classification, explanation, tutoring, qualitative reasoning, planning, monitoring, set-covering diagnosis, consistency-based diagnosis, validation, and verification. This abductive approach offers a uniform view of different problem solving methods in the style proposed by Clancey and Breuker. Also, this adbuctive approach is easily extensible to validation; i.e. using this technique we can implement both inference tools and testing tools. Further, abduction can execute in vague and conflicting domains (which we believe occur very frequently). We therefore propose abduction as a framework for knowledge-level modelling.
 
+
 The third thing we need to understand about testing is that while we can automate
 billions of system inputs per second, all that is useless unless some oracle can tell us
 how to assess those outputs.
 
+
 XXXX oracle problem. metamorphic. large system, sample the least.
+
 
 TESTED assumes that the best way to test something is to give it
 to someone else, and watch them break it.  
@@ -487,7 +516,9 @@ principle of ethical programming.
 pre-condition for the accountability is the knowledge of an 
 **external audience**, who could approve or disapprove of a system.  XXX other components as well
 
+
 TESTED has many tools for such external audiences:
+
 
 - Methods for looking beyond those boundaries (taken from cognitive
 psychology); 
@@ -503,9 +534,11 @@ make conclusions based on a small sample of the total data space
 - Operators for learning the boundaries of a system’s competency;
 - Non-parametric tests for assuring that samples are truly different.
 
+
 [^Vance2015]: Vance, Anthony, Paul Benjamin Lowry, and Dennis Eggett. 
   "Increasing Accountability Through User-Interface Design Artifacts." 
   MIS quarterly 39.2 (2015): 345-366.
+
 
 [^Baltes22]: Baltes, S., Ralph, P. 
   [Sampling in software engineering research: a critical review and guidelines](https://arxiv.org/pdf/2002.07764.pdf);
@@ -515,25 +548,32 @@ make conclusions based on a small sample of the total data space
   [So, You Think You Know Others' Goals? A Repertory Grid Study](https://www.cse.msstate.edu/~niu/papers/SW07.pdf); 
   IEEE Softw. 24(2): 53-61 (2007) https://ieeexplore.ieee.org/document/4118651.
 
+
 ## Background
+
 
 ### The Data Pattern
 
+
 Data Num Sym COLS, ROW
+
 
 ### Explanation
 
 
 isnance-based, model-based
 
+
 TESTED assumes that better
 data mining algorithms are better at explaining their models to
 humans. But is that always the case?
+
 
 The obvious counter-argument is that if no human ever needs
 to understand a model, then it does not need to be comprehensible. For example, a neural net could control the carburetor
 of an internal combustion engine since that carburetor will never
 dispute the model or ask for clarification of any of its reasoning.
+
 
 On the other hand, if a model is to be used to persuade software
 engineers to change what they are doing, it needs to be comprehensible so humans can debate the merits of its conclusions. Several
@@ -549,11 +589,12 @@ blackbox models more explainable, so that human engineers can
 understand and appropriately trust the decisions made by software
 analytics models.
 
+
 Some researchers go further and warn that, for mission critical applications, we should never use opaque back-box models.
 In 
 
+
 XXX
 
+
 LIME
-
-

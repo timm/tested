@@ -1,10 +1,11 @@
-
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -12,15 +13,17 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
+
 
 # Automated SE and Requirements Engineering
+
 
 Readings: 
 - [^malt21], 
 - [^easter07]: case study, repgrids
 - [^carla19]: many methods 
+
 
 [^carla18] [Requirements elicitation techniques: a
 systematic literature review based on the
@@ -39,7 +42,7 @@ Proceedings of the 29th ACM Joint European Software Engineer-
 ing Conference and Symposium on the Foundations of Software Engineering
 (ESEC/FSE ’21), August 23ś28, 2021, Athens, Greece.
 
+
 [^easter07] N. Niu and S. Easterbrook, 
 ["So, You Think You Know Others' Goals? A Repertory Grid Study,"](https://homepages.uc.edu/~niunn/papers/SW07.pdf)
 in IEEE Software, vol. 24, no. 2, pp. 53-61, March-April 2007, doi: 10.1109/MS.2007.52.
-

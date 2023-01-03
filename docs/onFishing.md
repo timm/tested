@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,21 +13,24 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
 # Automated  SE, Stakeholder Testing, and  "Fishing"
+
 
 This section is about "stakeholder testing", which we might also call
 "fishing", which is the
 process
 of prioritizing many things, without knowing too much about each thing. 
 
+
 We can do this for ethical reasons (to address the issues raised above) or we can do improve standard acceptance testing. Whatever the goal, much of the machinery is the same.
+
 
 <img src="https://www.fg-a.com/fishing/ice-fishing-polar.jpg"
      align=right width=300>
+
 
 Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
 - Above the ice, she can see for miles
@@ -42,8 +47,10 @@ Consider a polar bear, going fishing, by bashing holes in the ice[^bear]
     along the way, trying to to make her next guess (about where
     to bash) better.
 
+
 [^bear]: Apologies to all my polar bear readers: I  don't actually know if you  do this. But the metaphor of a vast
 exposed expanse,   floating on top of a hidden space of desired goals, was too much to resist.
+
 
 It turns out that "fishing"  is a very common problem. Consider:
 - You are the captain of a fishing boat.
@@ -54,7 +61,9 @@ It turns out that "fishing"  is a very common problem. Consider:
   you like. After a day of going to car yards, and doing a few test
   drives, you buy a car. Can software help you narrow down how many cars you need to look at?
 
+
 <a href="/etc/img/build.png"><img width=400 align=right src="/etc/img/build.png"></a>
+
 
 - You are an architect trying to design houses with
   a house with lots of light but no glare. You client is a busy (and fussy) person and before
@@ -70,6 +79,7 @@ so they need to be checked before they are used. But data sets can be huge, and 
 everything can be so expensive. So can our software tells us what is the least number  of
 examples to label?
 
+
 [^tu]: H. Tu, Z. Yu and T. Menzies, "Better Data Labelling With EMBLEM (and how that Impacts Defect Prediction)," in IEEE Transactions on Software Engineering, vol. 48, no. 1, pp. 278-294, 1 Jan. 2022, doi: 10.1109/TSE.2020.2986415.
 https://arxiv.org/pdf/1905.01719.pdf
 "We
@@ -82,7 +92,9 @@ and a 50% cull rate for quality control). Using EMBLEM,
 that same task would cost $40K and 4,940 hours; i.e.
 it would be 8 times cheaper."
 
+
 <a href="/etc/img/fairness.png"><img width=400 align=right src="/etc/img/fairness.png"></a>
+
 
 - A software engineer can't try   options
 but after a few experiments, they ship a product. For example:
@@ -94,13 +106,16 @@ but after a few experiments, they ship a product. For example:
     which means your SQL queries take different times to run and use
     different energy. 
 
+
 [^cruz21]: A. F.Cruz, P. Saleiro, C. Belém, C. Soares and P. Bizarro, 
       ["Promoting Fairness through Hyperparameter Optimization"](https://arxiv.org/abs/2103.12715)
       2021 IEEE International Conference on Data Mining (ICDM), 2021, pp. 1036-1041, doi: 10.1109/ICDM51629.2021.00119.
 
+
 [^nn]: <em>class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, \*,<br> 
 weights='uniform', <br>algorithm='auto', <br>leaf_size=30, <br>p=2, <br>metric='minkowski', <br>
 metric_params=None,<br> n_jobs=None)¶</em>
+
 
 BTW, in the above two diagrams,
 there is an outer envelope of
@@ -114,7 +129,9 @@ one objective. For example, in
 AOF, COMPAS, and Donors Choose,
 that frontier is the blue line.
 
+
 ## Let's say that another way.
+
 
 |What|Notes|
 |----:|:------|
@@ -125,7 +142,9 @@ that frontier is the blue line.
 |Z    | parameters controlling the learners that generates F|
 |B    | Background knowledge, which we may not have access to|
 
+
 <img width=400 align=right src="/etc/img/2space.png">
+
 
 We seek  a mapping $F$ such that $Y=F(X)$ where:
 - $X$ and $Y$ are sets of decisions and goals
@@ -140,13 +159,16 @@ We seek  a mapping $F$ such that $Y=F(X)$ where:
 - Finally, there may or may not be some background knowledge $B$ which we can
   use to guide our analysis.
 
+
 In all the examples above,
 it was  cheap to sample $X$ and very, very, very expensive to sample $Y$:
 - e.g. describing the ocean is much cheaper than sailing around it all day looking for fish
 - e.g. listing the Makefile options within SQL is faster than compiling and testing each one,
 
+
 Only some  subset of $X$ are observable and/or controllable (or, indeed, relevant to
     the task at hand).
+
 
 There can be many goals $Y$ and some are  contradictory (e.g. security and availability
     can be mutually exclusive).
@@ -156,6 +178,7 @@ There can be many goals $Y$ and some are  contradictory (e.g. security and avail
   insightful than actually getting find an answer.
 - Vilfredo Pareto:  <em> Give me the fruitful error any time, full of seeds, 
   bursting with its own corrections. You can keep your sterile truth for yourself.</em>
+
 
 Historically, in the SE community this is known as _search-based software engineering_
 [^search]:
@@ -191,7 +214,9 @@ Historically, in the SE community this is known as _search-based software engine
           Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
 
+
 ## Related Work
+
 
 Depending on who you talk to, this process has different names.
 - In the AI literature, stakeholder testing could be  called active learning[^bu09]where access the $y$ labels incurs some cost and we want to
@@ -201,6 +226,7 @@ are all accurate. Semi-supervised learning is a special kind of active learning 
 come from multiple-sources.  The best active learners my grad students ever achieved with human-in-the-loop methods needed to label
 10-30\% of the data[^zhe21]. But with semi-supervised learning, we are now down to 2.5\%, or less[^tu21].
 - In the SE literature, stakeholder testing could be called acceptance testing, with a few twists:
+
 
 [^bu09]: Settles, Burr. ["Active learning literature survey."](https://minds.wisconsin.edu/bitstream/handle/1793/60660/TR1648.pdf?sequence=1)
   (2009).
@@ -240,6 +266,7 @@ on long it takes to examine even a few examples:
   Hence, he is very interested in methods that reduce the number of
   columns and rows of data that need to be discussed with users.
 
+
 [^briand22]: Autonomous Systems: How to address the Dilemma between Autonomy and Safety
   Keynote, ASE'22, Lionel Briand
   https://conf.researchr.org/info/ase-2022/keynotes
@@ -248,13 +275,16 @@ on long it takes to examine even a few examples:
 [^howto]: How to use a repertory grid
   https://www.emeraldgrouppublishing.com/how-to/observation/use-a-repertory-grid
 
+
 [^val11]: R. Valerdi
   Heuristics for systems engineering cost estimation
   IEEE Syst J, 5 (1) (2011), pp. 91-98
 
+
 [^mur12]: B. Murphy
   The difficulties of building generic reliability models for software
   Empir Softw Eng, 17 (2012), pp. 18-22
+
 
 Further to the last point, we know that humans are often asked to work perform way beyond their acceptance test capacity:
 - Ben Green[^green] warns that many recent policies require 
@@ -270,8 +300,10 @@ Further to the last point, we know that humans are often asked to work perform w
           desired effect by “legitimizing the use of faulty and controversial 
           algorithms without addressing (their fundamental issues)" 
 
+
 [^green]: B. Green, [“The flaws of policies requiring human oversight of government algorithms,”](https://arxiv.org/pdf/2109.05067.pdf) 
           Computer Law & Security Review, vol. 45, p. 105681, 2022.
+
 
 The dream of TESTED is that, at least to some extent, we can address some of
 Ben Green's problems with better methods for reducing the effort associated
@@ -280,23 +312,29 @@ with acceptance testing.
 
 ## A Baseline Fishing Tool
 
+
 This section offers an example of fishing tool. This example has to important points:
+
 
 - It is a baseline implementation. You are meant to be critical of it, to want to improve it.
   - For example, the following results comes from only one small data set
   - So there is much more work to do here.
 - The example comes with an evaluation criteria with which we can compare different fishing tools
 
+
 ### The Chen Heuristic
+
 
 In an unpublished paper from his [Ph.D. thesis Jianfeng Chen](https://arxiv.org/pdf/2101.02817.pdf)
 proposed a way to quickly sample a large space, with just a few queries:
+
 
 - evaluate $B$ examples
 - explore the ${B \choose 2}=B(B-1)/2$ differences between them
   e.g. $N$=20$ evaluations gives us  information of  190 examples
 - reward changes to the $X$ variables, favoring small changes to $X$ that lead
   to large changes in $Y$
+
 
 - Input: 
   - a budget $B$ 
@@ -331,12 +369,15 @@ proposed a way to quickly sample a large space, with just a few queries:
     - guessed= first $B$ items
     - sort the truth scores of the guessed items, the print them
 
+
 Without the ground truth computation, the above evaluates $2B$ examples:
 - one $B$ duing phase1 (when it access the $Y$ scores of the first $B$ items)
 - another $B$ during phase3 (when it score the $B$ examples ranked best.
 
+
 This approach spits out a set of scores of what variables matter most.
 Note what we seek are the variables where a few ranges score most
+
 
 For example, for 93 examples and a budget of $B=16$
 (which is really 32), we get the following.
@@ -344,6 +385,7 @@ For example, for 93 examples and a budget of $B=16$
 - Note that `prec`
   (precedentness, have we done this before) scores really well while
   `rely` (required reliability) looks kind of wishy wahsy
+
 
 ```
 prec	{:4 6 *
@@ -424,14 +466,19 @@ As to how well that scores, here's the results of a budget of
 12, 16,20 (which is really 24,32,40).
 Note that 12 might be too little and 20 might be too much
 
+
 <img width=400 src="/etc/out/nasa93dem_g1_yinc_b12.png">
+
 
 <img width=400 src="/etc/out/nasa93dem_g1_yinc_b16.png">
 
+
 <img width=400 src="/etc/out/nasa93dem_g1_yinc_b20.png">
+
 
 These charts are a little verbose to print, so here's
 an executive summary. Lets ask how well we are doing 
+
 
 at x=1	| evaluations = B	| median found
 --------|---------------|-------------
@@ -459,10 +506,12 @@ at x=10	|evaluations = B	|median found
 ||32|18
 ||36|18
 
+
 ## Better Fishing?
 Now the above is interesting, but I hope we can do
 much better. Maybe any of the following could be useful?
 Or maybe you can do better?
+
 
 - The above only handles discrete values. How to handle
   numerics?

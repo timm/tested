@@ -1,9 +1,11 @@
-<p>&nbsp;
+<small><p>&nbsp;
 <a name=top></a>
 <table><tr>
-<td><a href="/README.md#top">Home</a>
+<td><a href="/README.md#top">home</a>
+<td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
-</tr></table>
+<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
+</tr></table></small>
 <img  align=center width=600 src="/docs/img/banner.png"></p>
 <p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
 href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
@@ -11,10 +13,11 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://img.shields.io/badge/language-lua-orange"> <img 
  src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
-<a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">Tim Menzies</a></p>
+ src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
+
 
 ## Project 
+
 
 (Note: you may not understand some parts of the following... yet;  patience, dear reader.)
 
@@ -31,9 +34,12 @@ semi-supervised explanation system:
    $m \ll N$ good examples
     will be selected (and "good" means "has good $Y$ values).
 
+
 Note: avoid many-goal problems at this point. That will be bonus marks, below.
 
+
 Expected Sections:
+
 
 |Grade| Part|
 |-----:|----|
@@ -48,6 +54,7 @@ Expected Sections:
 |20   | Bonsu : HPO study|
 |100  | total |
 |+50  | bonus|
+
 
 - Introduction 
   - First 4 paras:
@@ -107,11 +114,15 @@ Expected Sections:
 - Conclusion
 - References
 
+
 ### Bonus marks
+
 
 #### B1: Repeat the above for many-goal problems.
 
+
 Defined above
+
 
 #### B2: Perform a _REQUIREMENTS STUDY_
 - For 5 humans, run 5 repertory grids studies. 
@@ -123,6 +134,7 @@ Defined above
     can be aligned? (HINT: maybe not)
 - Include a commentary on your experience with rep grids (any surprises?) 
 
+
 #### B3: Perform a _FEBRUARY STUDY_ 
 Requires an explanation facility, as described above.
 - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
@@ -131,17 +143,22 @@ Requires an explanation facility, as described above.
       studied in January). Using what was learned in January, can the same task be solved
       with less budget $B_1 < B_0$?
 
+
 #### B4: Perform an _ABLATION STUDY_
 - Given a preferred method $M$ containing two to four main ideas
   - Disable (or change) each one  thing. If anything get worse, declare that thing important.
+
 
 #### B5: Perform an _HPO study_
 - Apply these minimal sampling methods to learning good $Z$ values for a learner
 - Your goal should be to compare your minimal sampling methods with some established optimization method.
 
+
 ### Word limit
 
+
 The following limits exclude references.
+
 
 - No less that five pages,no more than eight 
 - HARD LIMITS:
@@ -149,9 +166,12 @@ The following limits exclude references.
   - we will not read if less than five.
   - we will not read if it is the wrong format (see below)
 
+
 ### How to write
 
+
 Create an overleaf.com account
+
 
 - Go to https://www.overleaf.com/gallery/tagged/ieee-official
 - Select :IEEE Bare Demo Template for conferences"
@@ -159,6 +179,7 @@ Create an overleaf.com account
 - Hit "open as template"
 - Add your name and email to list of authors.
 -  Add these lines before `\begin{document}`
+
 
          \usepackage[switch]{lineno}
          \linenumbers
@@ -168,4 +189,3 @@ Create an overleaf.com account
           a critical review and guidelines. Empir Software Eng 27, 94 (2022).
           https://doi.org/10.1007/s10664-021-10072-8
           https://arxiv.org/pdf/2002.07764.pdf
-
