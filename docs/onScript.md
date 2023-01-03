@@ -111,6 +111,40 @@ I actually view LUA as LISP
            (parentheses)))))).
 
 
+### Some Coding Convetions
+- The help file /docs/X.md is generated from the doco in /src/X.lua
+- Vars are global by default unless marked with "local" or 
+   defined in function argument lists.
+- Functions must be  names before they are used
+- There is only one underling data structure (a table):
+  - Tables can have numeric or symbolic keys.
+  - Simple tables have consecutive numeric keys amd are said to have size #t>0i
+  - Other tables have symbolic keys and are said to have size #t==0.
+- Tables start and end with {}
+- Global settings are stores in `the` table which is generated from
+  `help`. E.g. from the above the.budget =16
+- For all `key=value` in `the`, a command line flag `-k X` means `value`=X
+- At startup, we run `go[the.go]`
+- `for pos,x in pairs(t) do` is the same as python's 
+  `for pos,x in enumerate(t) do`
+- In my object system, instances are named `i` (since that is shorter than `self`)
+
+In the public function arguments, the following conventions apply (usually):
+- Four spaces denote start of local args.  
+- Two spaces denote start of optional args
+- n = number; e.g. n, nItems, n1
+- s = string; e.g. s, sName, s1
+- t = table; e.g. t, t1
+- is = boolean; e.g. isHappy
+- x = anything; e.g x
+- fun = function; e.g. fun, accessFun
+- UPPER = class; e.g. NUM
+- lower = instance; e.g. num,num1
+- xs = a table of "x"; e.g. ns is a list of numbers and ss is a list of strings.
+  
+
+
+
 ## Test-Drive Development
 
 
