@@ -35,6 +35,20 @@ Note: avoid many-goal problems at this point. That will be bonus marks, below.
 
 Expected Sections:
 
+|Grade| Part|
+|-----:|----|
+|20   | Intro|
+|20   | Related work|
+|20   | Methods|
+|20   | Results|
+|20   | Discussion, Conclusion|
+|10   | Bonus : requirements study|
+|10   | Bonus: February study|
+|10   | Bonus : Ablation study|
+|20   | Bonsu : HPO study|
+|100  | total |
+|+50  | bonus|
+
 - Introduction 
   - First 4 paras:
     1. Everyone does X

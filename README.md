@@ -60,6 +60,25 @@ code much of the others).
   [(ISO/IEC/IEEE
   2015)](https://www.iso.org/standard/63711.html).
 
+## Frequently Asked Questions
+
+So what is TESTED really about?
+- is it about how to reconfigure broken things to make them better? 
+- is it about requirements engineering?
+- is it about software engineering?
+- is it about configuration?
+- is it about data mining?
+- is it about testing?
+
+To which the answer is "yes". All these things share the same underlying
+methods and challenges. Which means tools built for one of these tasks
+can help the other [^duo][^abduction]. 
+
+TESTED aims to support "stakeholder testing". This  is  a kind of black box tested aimed at offering a big picture summary of some code, not
+just for the developers, but also for those that have to use the software. More than just acceptance testing (which is usually
+some contractual thing), stakeholder testing aims to measure then mitigate problems with the system. That is, normal testing
+just finds bugs while stakeholder testing finds gradients along which the system can slip up or down to better or worse behavior
+
 # Install
 
 Install Lua:
@@ -168,21 +187,8 @@ it.
 [^noble]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
 [^joy]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
 
-Lets call that "stakeholder testing".
 
 
-## Frequently Asked Questions
-
-So what is TESTED really about?
-- is it about how to reconfigure broken things to make them better? 
-- is it about requirements engineering?
-- is it about software engineering?
-- is it about data mining?
-- is it about testing?
-
-To which the answer is "yes". All these things share the same underlying
-methods and challenges. Which means tools built for one of these tasks
-can help the other [^duo][^abduction]. 
 
 [^abduction]: For more on the mysterious machine that runs deep
   within testing, SE, requirements engineering, configuration, etc,
