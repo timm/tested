@@ -440,7 +440,7 @@ at x=1	| evaluation B	| median found
 ||28|1
 ||32|1
 ||36|1
-at x=5	evaluation B	median found
+at x=5	|evaluation B	|median found
 ||12|9
 ||16|7
 ||20|7
@@ -448,7 +448,7 @@ at x=5	evaluation B	median found
 ||28|7
 ||32|7
 ||36|9
-at x=10	evaluation B	median found
+at x=10	|evaluation B	|median found
 ||12|35
 ||16|24
 ||20|21
