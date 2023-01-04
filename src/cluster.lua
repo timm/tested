@@ -13,24 +13,25 @@ cluster.lua : an example csv reader script
 USAGE:   cluster.lua  [OPTIONS] [-g ACTION]
 
 OPTIONS:
-  -d  --dump    on crash, dump stack = false
-  -f  --file    name of file         = ../etc/data/auto93.csv
-  -g  --go      start-up action      = data
-  -h  --help    show help            = false
-  -p  --p       distance coefficient = 2
-  -s  --seed    random number seed   = 937162211
-  -S  --sample  sampling data size   = 512
+  -d  --dump    on crash, dump stack  = false
+  -f  --file    name of file          = ../etc/data/auto93.csv
+  -F  --far     distance to "faraway" = .95
+  -g  --go      start-up action       = data
+  -h  --help    show help             = false
+  -p  --p       distance coefficient  = 2
+  -s  --seed    random number seed    = 937162211
+  -S  --Sample  sampling data size    = 512
 
 ACTIONS:
 ]]
-local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- cache old names (so later, we can find rogues)
-local Seed,rand,rint,rnd --maths
-local map,kap,sort,keys,push --lists
+local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
+local id,obj=0 --classes
+local cosine,Seed,rand,rint,rnd --maths
+local map,kap,sort,keys,push,any,many --lists
 local fmt,oo,o,coerce,csv --strings
 local settings,cli,main --settings
 -----------------------------------------------------------------------------------------
 -- ## Classes
-local id,obj=0
 function obj(s,    t,new) --> t; create a klass and a constructor 
   function new(_,...) id=id+1; local i=setmetatable({a=s,id=id}, t); t.new(i,...); return i end
   t={}; t.__index = t;return setmetatable(t, {__call=new}) end
@@ -59,6 +60,9 @@ function SYM.div(i,x,    fun,e) --> n; return the entropy
   return -e end
 
 function SYM.rnd(i,x,n) return x end --> s; return `n` unchanged (SYMs do not get rounded)
+
+function SYM.dist(i,s1,s2)
+  return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
 -- ### NUM
 -- Summarizes a stream of numbers.
 function NUM.new(i,at,txt) --> NUM;  constructor; 
@@ -82,6 +86,17 @@ function NUM.div(i,x)  --> n; return standard deviation using Welford's algorith
     return (i.m2 <0 or i.n < 2) and 0 or (i.m2/(i.n-1))^0.5  end
 
 function NUM.rnd(i,x,n) return x=="?" and x or rnd(x,n) end --> n; return number, rounded
+
+function NUM.norm(i,n)
+  return n == "?" and n  or (n - i.lo)/(i.hi - i.lo + 1E-32) end
+
+function NUM.dist(i,n1,n2)
+  if n1=="?" and n2=="?" then return 1 end
+  n1,n2 = i:norm(n1), i:norm(n2)
+  if n1=="?" then n1 = n2<.5 and 1 or 0 end
+  if n2=="?" then n2 = n1<.5 and 1 or 0 end
+  return math.abs(n1 - n2) end 
+
 -- ### COLS
 -- Factory for managing a set of NUMs or SYMs
 function COLS.new(i,t,     col,cols) --> COLS; generate NUMs and SYMs from column names
@@ -129,21 +144,53 @@ function DATA.stats(i,  what,cols,nPlaces) --> t; reports mid or div of cols (de
   function fun(k,col) return col:rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
   return kap(cols or i.cols.y, fun) end
 
+function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `row1` to `row2`
+  n,d = 0,0
+  for _,col in pairs(cols or i.cols.x) do
+    n = n + 1
+    d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p end
+  return (d/n)^(1/the.p) end
+
+function DATA.furthest(i,row1,rows) --> t; return the largest west,east found in `lines`
+  local n = (the.Far * #rows)//1
+  return sort(map(rows, function(row1) return i:dist(row1,row2) end), lt"dist")[n] end
+
+function DATA.half(i,rows,  cols,above) --> 
+  some = many(rows,the.Sample)
+  local west = above or  = self:furthest(rows)
+  local function d(row1,row2) return i:dist(row1,row2),cols) end
+  local function project(row,   a,b,x,y)
+    
+    local x,y = cosine(d(row,aline - cut.west, line - cut.east, cut.dist)
+    return {line=line, x=x, y=y} end
+  local wests,easts = {},{}
+  for n,tmp in pairs(sort(map(lines, project), lt"x")) do
+    tmp.line.x = tmp.line.x or tmp.x
+    tmp.line.y = tmp.line.y or tmp.y
+    push(n <= (#lines)//2 and wests or easts, tmp.line) end
+  return wests, easts, cut.dist end
+
+
 -------------------------------------------------------------------------------
 -- ## Misc support functions
 -- ### Numerics
 Seed=937162211
-function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end --> n ; a integer lo..hi-1
+function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end --> n; a integer lo..hi-1
 
 function rand(lo,hi) --> n; a float "x" lo<=x < x
   lo, hi = lo or 0, hi or 1
   Seed = (16807 * Seed) % 2147483647
   return lo + (hi-lo) * Seed / 2147483647 end
 
-function rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
+function rnd(n, nPlaces) --> num; return `n` rounded to `nPlaces`
   local mult = 10^(nPlaces or 3)
   return math.floor(n * mult + 0.5) / mult end
 
+function cosine(a,b,c,    x1,x2,y) --> n,n;  find x,y from a line connecting `a` to `b`
+  x1 = (a^2 + c^2 - b^2) / (2*c)
+  x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
+  y  = (a^2 - x2^2)^.5
+  return x2, y end
 -- ### Lists
 -- Note the following conventions for functions passed to  `map` or `kap`.
 -- - If a nil first argument is returned, that means :skip this result"
@@ -158,11 +205,19 @@ function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 
+function lt(x) --> fun;  return a function that sorts ascending on `x`
+  return function(a,b) return a[x] < b[x] end end
+
 function keys(t) --> ss; return list of table keys, sorted
   return sort(kap(t, function(k,_) return k end)) end
 
 function push(t, x) --> any; push `x` to end of list; return `x` 
   table.insert(t,x); return x end
+
+function any(t) return t[rint(#t)] end  --- XXXX does rint got to make item
+
+function many(t,n,    u) 
+   u={}; for i=1,n do u[1+#u]=any(t) end; return u end
 
 -- ### Strings
 function fmt(sControl,...) --> str; emulate printf
