@@ -73,49 +73,49 @@ function NUM.div(i,x)  --> n; return standard deviation using Welford's algorith
 -- ### COLS
 -- Factory for managing a set of NUMs or SYMs
 local COLS=obj"COLS"
-function COLS.new(i,t,     col,cols)
-  i.names, i.all, i.x, i.y = t, {}, {}, {}
+function COLS.new(i,t,     col,cols) --> COLS; generate NUMs and SYMs from column names
+  i.names, i.all, i.x, i.y, i.klass = t, {}, {}, {}
   for n,s in pairs(t) do  -- like PYTHONS's for n,s in enumerate(t) do..
     col = s:find"^[A-Z]+" and NUM(n,s) or SYM(n,s)
     push(i.all, col)
     if not s:find"X$" then
+      if s:find"!$" then i.klass = col end
       push(s:find"[!+-]$" and i.y or i.x, col) end end end
 
-function COLS.add(i,row)
-  for _,t in pairs({i.x,i.y}) do -- update all the columns we are no skipping
+function COLS.add(i,row) --> nil; update the (not skipped) columns with details from `row`
+  for _,t in pairs({i.x,i.y}) do 
     for _,col in pairs(t) do
       col:add(row.cells[col.at]) end end end
 
 -- ### ROW
 -- Store one record.
-function ROW.new(i,t) i.cells=t; end
+function ROW.new(i,t) i.cells=t; end --> ROW; 
 --
 -- ### DATA
 -- Store many rows, summarized into columns
-function DATA.new(i,src,     fun)
+function DATA.new(i,src,     fun) --> DATA; A container of `i.rows`, to be summarized in `i.cols`
   i.rows, i.cols = {}, nil
   fun = function(x) i:add(x) end
-  if type(src) == "string" then csv(src,fun)  -- [1] load from a csv file on disk
-                           else map(src or {}, fun)  -- [2] load from a list
+  if type(src) == "string" then csv(src,fun)  -- load from a csv file on disk
+                           else map(src or {}, fun)  --  load from a list
                            end end
   
-function DATA.add(i,t)
-  if   i.cols          -- [6] true if we have already seen the column names
-  then t = t.cells and t or ROW(t) -- [3][4][7]
-       -- t =ROW(t.cells and t.cells or t) -- [3][4][8] "t" can be a ROW or a simple list
+function DATA.add(i,t) --> nil; add a new row, update column headers
+  if   i.cols          --] true if we have already seen the column names
+  then t = t.cells and t or ROW(t) -- ensure is a ROW, reusing old rows in the are passed in
+       -- t =ROW(t.cells and t.cells or t) -- make a new ROW
        push(i.rows, t) -- add new data to "i.rows"
        i.cols:adds(t)  -- update the summary information in "ic.ols"
-  else i.cols=COLS(t)  -- [5] here, we create "i.cols" from the first row
-       end end
+  else i.cols=COLS(t)  end end --  here, we create "i.cols" from the first row
 
-function DATA.clone(i,  init,     data)
+function DATA.clone(i,  init,     data) --> DATA; return a DATA with same structure as `ii. 
   data=DATA({i.cols.names})
   map(init or {}, function(x) data:add(x) end)
   return data end
 
-function DATA.stats(i,what,  fun,cols)
+function DATA.stats(i,  what,  cols) --> t; reports mid or div of cols (defaults to i.cols.y)
   function fun(k,col) return getmetatable(col)[what or "mid"](col),k end
-  return kap(cols or i.cols.x, fun) end
+  return kap(cols or i.cols.y, fun) end
 
 -------------------------------------------------------------------------------
 -- ## Misc support functions

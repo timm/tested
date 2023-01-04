@@ -104,10 +104,57 @@ Summarizes a stream of numbers.
 
 ### COLS	
 Factory for managing a set of NUMs or SYMs	
+
+<dl>
+<dt><b> COLS.new(i, t:<tt>tab</tt>) &rArr;  COLS </b></dt><dd>
+
+ generate NUMs and SYMs from column names
+
+</dd>
+<dt><b> COLS.add(i, row:<tt>ROW</tt>) &rArr;  nil </b></dt><dd>
+
+ update the (not skipped) columns with details from `row`
+
+</dd>
+</dl>
+
 ### ROW	
 Store one record.	
+
+<dl>
+<dt><b> ROW.new(i, t:<tt>tab</tt>) &rArr;  ROW </b></dt><dd>
+
+ 
+
+</dd>
+</dl>
+
 ### DATA	
 Store many rows, summarized into columns	
+
+<dl>
+<dt><b> DATA.new(i, src:<tt>str</tt>) &rArr;  DATA </b></dt><dd>
+
+ A container of `i.rows`, to be summarized in `i.cols`
+
+</dd>
+<dt><b> DATA.add(i, t:<tt>tab</tt>) &rArr;  nil </b></dt><dd>
+
+ add a new row, update column headers
+
+</dd>
+<dt><b> DATA.clone(i,   init?) &rArr;  DATA </b></dt><dd>
+
+ return a DATA with same structure as `ii. 
+
+</dd>
+<dt><b> DATA.stats(i,   what?,   cols:<tt>tab</tt>?) &rArr;  t </b></dt><dd>
+
+ reports mid or div of cols (defaults to i.cols.y)
+
+</dd>
+</dl>
+
 ## Misc support functions	
 ### Numerics	
 
