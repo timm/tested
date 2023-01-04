@@ -23,3 +23,6 @@ https://github.com/txt/ase19/blob/master/docs/cluster.md#top
 lsh
 cluster
 
+optimizer. zitler
+
+stats on each leaf
