@@ -27,7 +27,7 @@ local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- cache old names (so later,
 local Seed,rand,rint,rnd --maths
 local map,kap,sort,keys,push --lists
 local fmt,oo,o,coerce,csv --strings
-local settings, cli,main --settings
+local settings,cli,main --settings
 -----------------------------------------------------------------------------------------
 -- ## Classes
 local id,obj=0
