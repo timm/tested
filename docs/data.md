@@ -37,6 +37,8 @@ ACTIONS:
   -g  sym	check syms
   -g  num	check nums
   -g  csv	read from csv
+  -g  data	read DATA csv
+  -g  stats	stats from DATA
 
 ```
  
@@ -54,7 +56,7 @@ ACTIONS:
 Summarize a stream of symbols.	
 
 <dl>
-<dt><b> SYM.new(i) &rArr;  SYM </b></dt><dd>
+<dt><b> SYM.new(i, at, txt) &rArr;  SYM </b></dt><dd>
 
  constructor
 
@@ -74,13 +76,18 @@ Summarize a stream of symbols.
  return the entropy
 
 </dd>
+<dt><b> SYM.rnd(i, x, n:<tt>num</tt>) &rArr;  s </b></dt><dd>
+
+ return `n` unchanged (SYMs do not get rounded)
+
+</dd>
 </dl>
 
 ### NUM	
 Summarizes a stream of numbers.	
 
 <dl>
-<dt><b> NUM.new(i) &rArr;  NUM </b></dt><dd>
+<dt><b> NUM.new(i, at, txt) &rArr;  NUM </b></dt><dd>
 
   constructor; 
 
@@ -97,7 +104,12 @@ Summarizes a stream of numbers.
 </dd>
 <dt><b> NUM.div(i, x) &rArr;  n </b></dt><dd>
 
- return standard deviation using Welford's algorithm http://t.ly/nn_W
+ return standard deviation using Welford's algorithm http://.ly/nn_W
+
+</dd>
+<dt><b> NUM.rnd(i, x, n:<tt>num</tt>) &rArr;  n </b></dt><dd>
+
+ return number, rounded
 
 </dd>
 </dl>
@@ -148,7 +160,7 @@ Store many rows, summarized into columns
  return a DATA with same structure as `ii. 
 
 </dd>
-<dt><b> DATA.stats(i,   what?,   cols:<tt>tab</tt>?) &rArr;  t </b></dt><dd>
+<dt><b> DATA.stats(i,   what?, cols:<tt>tab</tt>?, nPlaces:<tt>{num}</tt>?) &rArr;  t </b></dt><dd>
 
  reports mid or div of cols (defaults to i.cols.y)
 
@@ -196,6 +208,11 @@ Note the following conventions for functions passed to  `map` or `kap`.
 <dt><b> keys(t:<tt>tab</tt>) &rArr;  ss </b></dt><dd>
 
  return list of table keys, sorted
+
+</dd>
+<dt><b> push(t:<tt>tab</tt>,  x) &rArr;  any </b></dt><dd>
+
+ push `x` to end of list; return `x` 
 
 </dd>
 </dl>
@@ -246,13 +263,18 @@ Note the following conventions for functions passed to  `map` or `kap`.
 </dl>
 
 `main` fills in the settings, updates them from the command line, runs	
-the start up actions (and before each run, it resets the random number seed and settongs);	
+the start up actions (and before each run, it resets the random number seed and settings);	
 and, finally, returns the number of test crashed to the operating system.	
 
 <dl>
 <dt><b> main(options:<tt>tab</tt>, help, funs:<tt>{fun}</tt>) &rArr;  nil </b></dt><dd>
 
  main program
+
+</dd>
+<dt><b> eg(key, str:<tt>str</tt>,  fun:<tt>fun</tt>) &rArr;  nil </b></dt><dd>
+
+ register an example.
 
 </dd>
 </dl>
