@@ -48,12 +48,12 @@ Expected Sections:
 |20   | Methods|
 |20   | Results|
 |20   | Discussion, Conclusion|
-|10   | Bonus : requirements study|
-|10   | Bonus: February study|
-|10   | Bonus : Ablation study|
-|20   | Bonsu : HPO study|
+|5    | Bonus : requirements study|
+|5    | Bonus: February study|
+|5    | Bonus : Ablation study|
+|5    | Bonus : HPO study|
 |100  | total |
-|+50  | bonus|
+|+20  | bonus|
 
 
 - Introduction 

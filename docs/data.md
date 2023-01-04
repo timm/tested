@@ -172,7 +172,7 @@ Store many rows, summarized into columns
 </dl>
 
 ### Lists	
-Note the following conventions for `map`.	
+Note the following conventions for functions passed to  `map` or `kap`.	
 - If a nil first argument is returned, that means :skip this result"	
 - If a nil second argument is returned, that means place the result as position size+1 in output.	
 - Else, the second argument is the key where we store function output.	
