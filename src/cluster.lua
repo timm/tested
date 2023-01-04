@@ -139,8 +139,7 @@ function DATA.clone(i,  init,     data) --> DATA; return a DATA with same struct
   map(init or {}, function(x) data:add(x) end)
   return data end
 
-function DATA.stats(i,  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
-  local fun
+function DATA.stats(i,  what,cols,nPlaces,fun) --> t; reports mid or div of cols (defaults to i.cols.y)
   function fun(k,col) return col:rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
   return kap(cols or i.cols.y, fun) end
 
@@ -168,7 +167,7 @@ function DATA.half(i,rows,  cols,above) -->
     if   n <= (#rows)//2 
     then push(left,  tmp.row); mid = tmp.row
     else push(right, tmp.row) end end
-  return left, right, A, B, mid end
+  return left, right, A, B, mid, c end
 
 function DATA.cluster(i,  rows,min,cols,above,    node) --> t; returns `rows`, recursively bi-clustered.
   rows = rows or self.rows
@@ -177,8 +176,8 @@ function DATA.cluster(i,  rows,min,cols,above,    node) --> t; returns `rows`, r
   node    = {here=rows}
   if #rows > min then
     left, right, node.A, node.B, node.mid = self:half(rows,cols,above)
-    node.left  = self:cluster(left,min,cols,A)
-    node.right = self:cluster(rightmin,cols,B) end
+    node.left  = self:cluster(left,min,cols,node.A)
+    node.right = self:cluster(rightmin,cols,node.B) end
   return node end
 
 -------------------------------------------------------------------------------
