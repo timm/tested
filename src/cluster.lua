@@ -151,28 +151,50 @@ function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `r
     d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
-function DATA.furthest(i,row1,rows) --> t; return the largest west,east found in `lines`
-  local n = (the.Far * #rows)//1
-  return sort(map(rows, function(row1) return i:dist(row1,row2) end), lt"dist")[n] end
+function DATA.around(i,row1,  rows,cols) --> t; return the largest west,east found in `lines`
+  return sort(map(rows or i.rows, 
+                  function(row2) return {row=row2, dist=i:dist(row1,row2,cols)} end),lt"dist") end
 
-function DATA.half(i,rows,  cols,above) --> 
-  some = many(rows,the.Sample)
-  local west = above or  = self:furthest(rows)
-  local function d(row1,row2) return i:dist(row1,row2),cols) end
-  local function project(row,   a,b,x,y)
-    
-    local x,y = cosine(d(row,aline - cut.west, line - cut.east, cut.dist)
-    return {line=line, x=x, y=y} end
-  local wests,easts = {},{}
-  for n,tmp in pairs(sort(map(lines, project), lt"x")) do
-    tmp.line.x = tmp.line.x or tmp.x
-    tmp.line.y = tmp.line.y or tmp.y
-    push(n <= (#lines)//2 and wests or easts, tmp.line) end
-  return wests, easts, cut.dist end
+function DATA.half(i,rows,  cols,above) -->
+  local A,B,left,right,c,dist,mid,some,project
+  function project(row)    return {row=row, dist=cosine(dist(row,A), dist(row,B), c)} end
+  function dist(row1,row2) return i:dist(row1,row2,cols) end
+  some = many(rows,the.Sample,cols)
+  A    = above or any(some)
+  B    = i:around(B,some)[(the.Far * #rows)//1]
+  c    = dist(A,B)
+  left, right, cut = {}, {}
+  for n,tmp in pairs(sort(map(rows, project), lt"dist")) do
+    if   n <= (#rows)//2 
+    then push(left,  tmp.row); mid = tmp.row
+    else push(right, tmp.row) end end
+  return left, right, A, B, mid end
 
+function DATA.cluster(i,  rows,min,cols,above,    node) --> t; returns `rows`, recursively bi-clustered.
+  rows = rows or self.rows
+  min  = min or (#rows)^the.min
+  cols = cols or i.cols.x
+  node    = {here=rows}
+  if #rows > min then
+    left, right, node.A, node.B, node.mid = self:half(rows,cols,above)
+    node.left  = self:cluster(left,min,cols,A)
+    node.right = self:cluster(rightmin,cols,B) end
+  return node end
 
 -------------------------------------------------------------------------------
 -- ## Misc support functions
+function show(node,  b4,    mid) --> nil; prints the tree generated from `DATA:tree`.
+  function mid(t) return t[#t//2 + (#t%2==1 and 1 or 0)] end
+  b4 = b4 or ""
+  if node then
+    if   node.c 
+    then print(b4..fmt("%.0f",100*node.c))
+    else local it = mid(node.here)
+         print(b4..fmt("%s) %s :: %s",it.tag, it.lhs, it.rhs)) 
+    end
+    show(node.west, "|.. ".. b4)
+    show(node.east, "|.. ".. b4) end end
+
 -- ### Numerics
 Seed=937162211
 function rint(lo,hi) return math.floor(0.5 + rand(lo,hi)) end --> n; a integer lo..hi-1
