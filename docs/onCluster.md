@@ -32,20 +32,18 @@ sway
 
 # "Clustering"
 
-"Clustering" means finding groups of similiar things
+"Clustering" means finding groups of similar things
 - Give goal attributes $Y$  and other attributes $X$ it is typically groupings in $X$ space.
-- But as we shall see, clustering in $X$, pls a little sampleing in $Y$ can be very useful.
+- But as we shall see, clustering in $X$, pls a little sampling in $Y$ can be very useful.
 
-For example, here is a trace of some code (Dscribed below)
-```
-398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
-| 199
-| | 100
-| | | 50
-| | | | 25  {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
-✅ pass:	optimize
-```
+For example, here we are clustering 398 examples of cars using the $X$ variables: 
+- find two distant examples $A,B$
+- divide other examples into those closest to $A$ or $B$
+- recurse on each half
 
+This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
+we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
+values at the root and at each leaf:
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
 | 199
@@ -78,6 +76,23 @@ For example, here is a trace of some code (Dscribed below)
 | | | 50
 | | | | 25  {:Acc+ 13.7 :Lbs- 4143.1 :Mpg+ 18.0}
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
+```
+Now here's nearly the same algorithm, but now we run a   greedy search looking for the best
+splits. When splitting on  two distance points $A,B$, we look at the $Y$ values of 
+$A,B$ and ignore the worse half. 
+```
+398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
+| 199
+| | 100
+| | | 50
+| | | | 25  {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
+```
+Note that:
+- This clustering algorithm is now an optimizer since it can isolate the best 25 examples out of the 398
+- And it does so after evaluating just 5 examples (two at the root, then for each sub-split, we reuse the $A,B$ value
+  that best in the parent).
+Now, this "clustering" algorithm is
+
 `- _The Best Thing You Can Do with Most Data is Throw it Away_.
 
 Goal: repeat until no crap: cut the crap

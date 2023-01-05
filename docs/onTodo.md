@@ -18,6 +18,19 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Random notes, discarded text
 
+discretqion: volumnes not points
+[Discretization: An Enabling Technique](https://sci2s.ugr.es/keel/pdf/algorithm/articulo/liu1-2.pdf)
+Huan Liu
+Farhad Hussain 
+Chew Lim Tan 
+Manoranjan Dash
+Data Mining and Knowledge Discovery, 6, 393–423, 2002
+
+Ramírez-Gallego, Sergio & García, Salvador & Mouriño-Talín, Héctor & Martinez, David 
+and Bolón-Canedo, Verónica & Alonso-Betanzos, Amparo & Benítez, José & Herrera, Francisco. (2015). 
+[Data discretization: Taxonomy and big data challenge](https://www.researchgate.net/publication/284786447_Data_discretization_Taxonomy_and_big_data_challenge)
+Discovery. 6. n/a-n/a. 10.1002/widm.1173. 
+
 
 <img src="https://ih1.redbubble.net/image.3318871488.2254/ur,pin_small_front,square,1000x1000.jpg">
 
