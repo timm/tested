@@ -167,7 +167,7 @@ Idioms for useful code
 
 
 ## LE: Less is More
-1. Most functions are v.short
+1. Most functions are v.short (just a few lines, less than 100 characters wide).
 
 
 ## FP: Functional programming
@@ -178,19 +178,16 @@ with the same rights as conventional values like numbers and strings.
     Functions can be stored in variables (both global and local) and in tables, 
     and can be passed as arguments, and can be returned by other functions.
 
-
 1. Useful for defining a test library (see  101.lua#eg)
 2. Useful for callbacks (see lib.lua#csv). 
 3. Useful for collecting results of an iteration (see lib.lub#map in lib.lua#o)
 4. Writing function that return functions (see lib.lua#lt)
-
 
 ## TE: Test suite
 1. Do you have half a dozen tests per person working on the project per week of work?
 2. Can all the tests be run in batch?
 3. From the command line can you run just one test?
 4. If a test fails and crashes, can the rest of the tests still run (hint try:except:)
-
 
 ## SO: Source control
 1. Is your code in some version control system?
@@ -199,25 +196,21 @@ with the same rights as conventional values like numbers and strings.
 4. Do you have an automated build system (Make, Ant, Maven, Cargo, Flutter, Elm, etc etc etc) for all the tedious details.
 5. Is the build system included in the documentation?
 
-
 ## DI: Data Independence
 1. Your internal model is isolated from I/O operations 
    - When reading csv files, conversions  from strings to types happens once, 
      and once only, before data is loaded into your model
    - All my file I/O routines are isolated (in lib.lua#csv)
 
-
 ## DD: Dialog independence
 1. In the guts of your code, no direct writes to "print" but rather to some `log` function that may or may not write to the screen.
 2. Can you turn off all logging (no log string generation, nothing logged/printed anywhere)?
-
 
 ## Ab: Abstraction
 1. Using try:catch, try:except, (Lua) pcall,
   - See `pcall` in `run1`
 2. You writing your own iterators ? 
   - e.g. lib.lua#csv calls `fun` for every row in a csv file
-
 
 ## OO: Object-oriented programming
 
@@ -232,14 +225,12 @@ with the same rights as conventional values like numbers and strings.
 4. Do your objects have customized sort functions? (e.g. Lua __lt)
 5. Do your objects have customized print functions (e.g. Lua __tostring)
 
-
 ## DSL DSL
 1. Refactoring, on steroids.
 2. Common processing, rewritten as a massive shortcuts
   - e.g. regular expressions
     - see lib.lua#settings' processing of 101.lua#the
   - e.g. help string to options 101.lua#settings
-
 
 ## Pa: Packaging
 1. N-1 globals better than N.
