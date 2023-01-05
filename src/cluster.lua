@@ -10,25 +10,26 @@ local the,help = {},[[
 cluster.lua : an example csv reader script
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 
-USAGE:   cluster.lua  [OPTIONS] [-g ACTION]
+USAGE: cluster.lua  [OPTIONS] [-g ACTION]
 
 OPTIONS:
-  -d  --dump    on crash, dump stack  = false
-  -f  --file    name of file          = ../etc/data/auto93.csv
-  -F  --far     distance to "faraway" = .95
-  -g  --go      start-up action       = data
-  -h  --help    show help             = false
-  -p  --p       distance coefficient  = 2
-  -s  --seed    random number seed    = 937162211
-  -S  --Sample  sampling data size    = 512
+  -d  --dump    on crash, dump stack   = false
+  -f  --file    name of file           = ../etc/data/auto93.csv
+  -F  --Far     distance to "faraway"  = .95
+  -g  --go      start-up action        = data
+  -h  --help    show help              = false
+  -m  --min     stop clusters at N^min = .5
+  -p  --p       distance coefficient   = 2
+  -s  --seed    random number seed     = 937162211
+  -S  --Sample  sampling data size     = 512
 
 ACTIONS:
 ]]
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
 local id,obj=0 --classes
 local cosine,Seed,rand,rint,rnd --maths
-local map,kap,sort,keys,push,any,many --lists
-local fmt,oo,o,coerce,csv --strings
+local map,kap,sort,keys,push,any,many,lt --lists
+local fmt,oo,o,coerce,csv,show --strings
 local settings,cli,main --settings
 -----------------------------------------------------------------------------------------
 -- ## Classes
@@ -143,6 +144,15 @@ function DATA.stats(i,  what,cols,nPlaces,fun) --> t; reports mid or div of cols
   function fun(k,col) return col:rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
   return kap(cols or i.cols.y, fun) end
 
+function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
+  s1,s2,ys,x,y = 0,0,i.cols.y
+  for _,col in pairs(ys) do
+    x  = row1.cells[col.at]
+    y  = row2.cells[col.at]
+    s1 = s1 - math.exp(col.w * (x-y)/#ys)
+    s2 = s2 - math.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
+
 function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `row1` to `row2`
   n,d = 0,0
   for _,col in pairs(cols or i.cols.x) do
@@ -150,49 +160,59 @@ function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `r
     d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
-function DATA.around(i,row1,  rows,cols) --> t; return the largest west,east found in `lines`
+function DATA.around(i,row1,  rows,cols) --> t; sort other `rows` by distance to `row`
   return sort(map(rows or i.rows, 
-                  function(row2) return {row=row2, dist=i:dist(row1,row2,cols)} end),lt"dist") end
+                  function(row2)  return {row=row2, dist=i:dist(row1,row2,cols)} end),lt"dist") end
 
-function DATA.half(i,rows,  cols,above) -->
+function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data using 2 far points
   local A,B,left,right,c,dist,mid,some,project
   function project(row)    return {row=row, dist=cosine(dist(row,A), dist(row,B), c)} end
   function dist(row1,row2) return i:dist(row1,row2,cols) end
-  some = many(rows,the.Sample,cols)
+  rows = rows or i.rows
+  some = many(rows,the.Sample)
   A    = above or any(some)
-  B    = i:around(B,some)[(the.Far * #rows)//1]
+  B    = i:around(A,some)[(the.Far * #rows)//1].row
   c    = dist(A,B)
-  left, right, cut = {}, {}
+  left, right = {}, {}
   for n,tmp in pairs(sort(map(rows, project), lt"dist")) do
-    if   n <= (#rows)//2 
+    if   n <= #rows//2 
     then push(left,  tmp.row); mid = tmp.row
     else push(right, tmp.row) end end
   return left, right, A, B, mid, c end
 
-function DATA.cluster(i,  rows,min,cols,above,    node) --> t; returns `rows`, recursively bi-clustered.
-  rows = rows or self.rows
+function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursively halved
+  local node,left,right,A,B,mid
+  rows = rows or i.rows
   min  = min or (#rows)^the.min
   cols = cols or i.cols.x
-  node    = {here=rows}
-  if #rows > min then
-    left, right, node.A, node.B, node.mid = self:half(rows,cols,above)
-    node.left  = self:cluster(left,min,cols,node.A)
-    node.right = self:cluster(rightmin,cols,node.B) end
+  node = {data=i:clone(rows)} --xxx cloning
+  if #rows > 2*min then
+    left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
+    node.left  = i:cluster(left,  min, cols, node.A)
+    node.right = i:cluster(right, min, cols, node.B) end
   return node end
 
--------------------------------------------------------------------------------
+function DATA.sway(i,  rows,min,cols,above) --> t; returns best leaf
+  local node,left,right,A,B,mid
+  rows = rows or i.rows
+  min  = min or (#rows)^the.min
+  cols = cols or i.cols.x
+  node = {data=i:clone(rows)} --xxx cloning
+  if #rows > 2*min then
+    left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
+    if i:better(node.B,node.A) then left,right,node.A,node.B=right,left,node.B,node.A end
+    node.left  = i:sway(left,  min, cols, node.A) end
+  return node end
+
+-------------------------------------------------------------------------------
 -- ## Misc support functions
-function show(node,  b4,    mid) --> nil; prints the tree generated from `DATA:tree`.
-  function mid(t) return t[#t//2 + (#t%2==1 and 1 or 0)] end
+function show(node,what,cols,nPlaces,    b4) --> nil; prints the tree generated from `DATA:tree`.
   b4 = b4 or ""
   if node then
-    if   node.c 
-    then print(b4..fmt("%.0f",100*node.c))
-    else local it = mid(node.here)
-         print(b4..fmt("%s) %s :: %s",it.tag, it.lhs, it.rhs)) 
-    end
-    show(node.west, "|.. ".. b4)
-    show(node.east, "|.. ".. b4) end end
+    io.write(b4..#node.data.rows.."  ")
+    print(node.left and "" or o(node.data:stats("mid",node.data.cols.y,nPlaces)))
+    show(node.left, what,cols, nPlaces,"| ".. b4)
+    show(node.right, what,cols,nPlaces,"| ".. b4) end end
 
 -- ### Numerics
 Seed=937162211
@@ -235,9 +255,9 @@ function keys(t) --> ss; return list of table keys, sorted
 function push(t, x) --> any; push `x` to end of list; return `x` 
   table.insert(t,x); return x end
 
-function any(t) return t[rint(#t)] end  --- XXXX does rint got to make item
+function any(t) return t[rint(#t)] end  --> x; returns one items at random
 
-function many(t,n,    u) 
+function many(t,n,    u)  --> t1; returns some items from `t`
    u={}; for i=1,n do u[1+#u]=any(t) end; return u end
 
 -- ### Strings
@@ -295,7 +315,7 @@ function main(options,help,funs,     k,saved,fails)  --> nil; main program
   for k,v in pairs(_ENV) do 
     if not b4[k] then print( fmt("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end 
--------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 --- ## Examples
 local egs,eg={}
 function eg(key,str, fun) --> nil; register an example.
@@ -317,11 +337,6 @@ eg("num", "check nums", function()
   for _,x in pairs{1,1,1,1,2,2,3} do num:add(x) end
   return 11/7 == num:mid() and 0.787 == rnd(num:div()) end )
 
-eg("csv","read from csv", function(n) 
-  n=0;
-  csv(the.file,function(t) n=n+#t end)
-  return n==8*399 end)
-
 eg("data","read DATA csv", function(     data) 
   data=DATA(the.file)
   return #data.rows == 398 and
@@ -329,11 +344,37 @@ eg("data","read DATA csv", function(     data)
          data.cols.x[1].at == 1 and 
          #data.cols.x==4 end)
 
-eg("stats","stats from DATA", function(     data) 
+eg("clone", "duplicate structure", function(     data1,data2)
+  data1=DATA(the.file)
+  data2=data1:clone(data1.rows)
+  return #data1.rows == #data2.rows and
+         data1.cols.y[1].w == data2.cols.y[1].w and
+         data1.cols.x[1].at == data2.cols.x[1].at and 
+         #data1.cols.x==#data2.cols.x end)
+
+eg("around", "sorting nearest neighbors", function(     data)
   data=DATA(the.file)
-  for k,cols in pairs({y=data.cols.y,x=data.cols.x}) do
-    print(k,"mid",o(data:stats("mid",cols,2 )))
-    print("", "div",o(data:stats("div",cols,2))) end end)
+  print(0,0,o(data.rows[1].cells))
+  for n,t in   pairs(data:around(data.rows[1])) do
+    if n %50 ==0 then print(n, rnd(t.dist,2) ,o(t.row.cells)) end end end)
+
+eg("half", "1-level bi-clustering", function(     data)
+  data=DATA(the.file)
+  local left,right,A,B,mid,c = data:half() 
+  print(#left,#right,#data.rows)
+  print(o(A.cells),c)
+  print(o(mid.cells)) 
+  print(o(B.cells)) end)
+
+eg("cluster", "N-level bi-clustering", function(     data)
+  data=DATA(the.file)
+  show(data:cluster(),"mid",data.cols.y,1)
+  end)
+
+eg("optimize", "semi-supervised optimization", function(     data)
+  data=DATA(the.file)
+  show(data:sway(),"mid",data.cols.y,1)
+  end)
 
 main(the,help, egs)
 
