@@ -30,3 +30,27 @@ TBD: xai, optimization, theorem proving, commercial AI pipeline
 
 After all that, students can end with a [four week project](docs/onProject.md).
 
+## Hints for coding
+
+To read this code, at first pass, think of it as some cut-down version of Python.
+- But for the real deal, read [learnlua](https://learnxinyminutes.com/docs/lua/)
+
+All code /src/X.lua has:
+- a help file /docs/X.md
+- a sample output file /etc/out/X.out. 
+- and there may also be a support lecture /docs/onX.md.
+
+This code (mostly)
+follows the conventions described [here](https://github.com/timm/tested/blob/main/docs/onScript.md#some-coding-convetions).
+
+To stop team members running over each other, bust up example files into many smaller files:
+- one file per class
+- a "lib" file for miscellaneous support stuff
+- the test suite
+- a main file that loads the rest
+- Do this in a separate sub directory for each week. 
+  - and in a sub-sub directory have `etc/out` where you store the outputs when you run (e.g.) `python3 week3.py -g all`.
+
+Watch for small variations in the same class for different weeks. 
+- Sometimes there are tiny changes in the code that are BIG changes in functionality
+- So first thing is to run a `diff` on my code week[i-1], week[i]
