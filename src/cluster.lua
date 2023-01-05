@@ -200,19 +200,19 @@ function DATA.sway(i,  rows,min,cols,above) --> t; returns best leaf
   node = {data=i:clone(rows)} --xxx cloning
   if #rows > 2*min then
     left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
-    if i:better(node.B,node.A) then left,right,node.A,node.B=right,left,node.B,node.A end
+    if i:better(node.B,node.A) then left,right,node.A,node.B = right,left,node.B,node.A end
     node.left  = i:sway(left,  min, cols, node.A) end
   return node end
 
 -------------------------------------------------------------------------------
 -- ## Misc support functions
-function show(node,what,cols,nPlaces,    b4) --> nil; prints the tree generated from `DATA:tree`.
-  b4 = b4 or ""
+function show(node,what,cols,nPlaces,    lvl) --> nil; prints the tree generated from `DATA:tree`.
   if node then
-    io.write(b4..#node.data.rows.."  ")
-    print(node.left and "" or o(node.data:stats("mid",node.data.cols.y,nPlaces)))
-    show(node.left, what,cols, nPlaces,"| ".. b4)
-    show(node.right, what,cols,nPlaces,"| ".. b4) end end
+    lvl = lvl or 0
+    io.write(("| "):rep(lvl)..#node.data.rows.."  ")
+    print((not node.left or lvl==0) and  o(node.data:stats("mid",node.data.cols.y,nPlaces)) or "")
+    show(node.left, what,cols, nPlaces, lvl+1)
+    show(node.right, what,cols,nPlaces, lvl+1) end end
 
 -- ### Numerics
 Seed=937162211
