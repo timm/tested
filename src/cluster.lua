@@ -192,7 +192,7 @@ function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursivel
     node.right = i:cluster(right, min, cols, node.B) end
   return node end
 
-function DATA.sway(i,  rows,min,cols,above) --> t; returns best leaf
+function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
   local node,left,right,A,B,mid
   rows = rows or i.rows
   min  = min or (#rows)^the.min
