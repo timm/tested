@@ -24,7 +24,9 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
   - Distance calculations in $Y$ space is usually called "domination" (see below)
 - But as we shall see, clustering in $X$, pls a little sampling in $Y$ can be very useful.
 
+
 ## Relevance to SE
+
 
 Applications:
 - as a runtime checker (cluster the data, then report any new inputs that fall outside the range of the clusters of the test data used to test the system)[^liu]
@@ -162,16 +164,10 @@ Note that:
 (Aside: the leaf node found via our optimizer never appears in the cluster tree. Why?)
 
 # Applications to SE
-
-More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
-- In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
-
-<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png">
-
 <img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
 
 
-## Defect Prediction and Clusering (a detailed example)
+## Defect Prediction and Clustering (a detailed example)
 
 [Papakroni](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd) argued that, for that purpose,
 you do not need to show models... just insightful samples from the domain.
