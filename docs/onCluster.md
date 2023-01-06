@@ -326,7 +326,10 @@ Which, just to remind us, gives us this:
 
 <img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
 
-k-means:  pick $k$ reandom points, labelling everyone by their cloest $k$. move $k$ to mean vale of all points with same label
+k-means:
+- pick $k$ random points
+- labeling everyone by their closest $k$
+- move $k$ to mean value of all points with same label
 
 
 E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
