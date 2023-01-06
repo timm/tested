@@ -23,8 +23,8 @@ To present this work as a syllabus, here is a weekly guide (assumes a 14 week se
 |0   | fishing| [onFish](/docs/onFishing.md) |  - |  stakeholder, developer, bias, discrimination, decision space, objective space, $(W,X,Y,Z,B)$, fishing, active learning; why limited budgets?; semi-supervised learning; |
 |1   | scripting| [onScript](/docs/onScript.md)| ([src](/src/script.lua) :: [doc](/docs/script.md)) <br> do not use CLI or testing library (roll your own) |version control,test-driven development, red-green-refactor, command-line interfaces, regular expressions,random number seeds|
 |2   | data| [onData](/docs/onData.md) | ([src](/src/data.lua) :: [doc](/docs/data.md)) <br> do not use PANDAS or the like (roll your own) |coercion (string to thing), normal(Gaussian), Weibull, ,mean, median, mode, standard deviation, entropy, Welford, Aha, row (example), column (attribute, feature,goal)| 
-|3   | clustering | [onCluster](/docs/onCluster.md)<br>[optimise](/docs/onOptimize.md) | [cluster](/src/cluster.md) | distance, Euclidean, Aha, LSH, Fastmap, cosine rule, k-means, DBscan, kd-tree, multi-goal, many-goal, bdom(binary domination); cdom(continuous domination, Zitzler)|
-|4   | repertory grids|  | | requirements engineering |
+|3   | clustering | [onCluster](/docs/onCluster.md)<br>[optimise](/docs/onOptimize.md) | [cluster](/src/cluster.md) | distance, Euclidean, Aha, LSH, Fastmap, cosine rule, k-means, mini-batch k-means, out-liners, multi-goal, many-goal, bdom(binary domination); cdom(continuous domination, Zitzler)|
+|4   | repertory grids|  | | requirements engineering|
 |4b  | requirements engineering | | - | |
 |5   | bins and trees|   |  | discretization, decision trees|
 |5a  | data mining     | | - | |

@@ -334,7 +334,7 @@ k-means:
 
 E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
 - Pick first 20 examples (at random) as _controids_
-- for everything else, run thrugh in batches of size (say 500,2000,etc)
+- for everything else, run through in batches of size (say 500,2000,etc)
   - mark each item with its nearest centroid
   - between batch B and B+1, move centroid towards its marked examples
     - "n" stores how often this centroid has been picked by new data
@@ -366,10 +366,10 @@ E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans
               - this row's d.i = 0 if (row closer to p than o) else 1
       - repeat d=log(sqrt(N))+1 pivots to get  d random projectsion
    - If you want not 0,1 on each dimension but a continuous number then:
-      - given pivots (p,o) seperated by "c"
-      - a = dist(row,p)
-      - b = dist(row,o)
-      - this row's d.i = (a^2 + c^2 - b^2) / (2c)
+      - given pivots (A,B) separated by "c"
+      - a = dist(row,A)
+      - b = dist(row,B)
+      - this row's d.x = (a^2 + c^2 - b^2) / (2c)
           - Cosine rule
    - Can be done via random sampling over some of the data.
       - Better for bigger data
