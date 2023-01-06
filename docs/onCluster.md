@@ -31,8 +31,8 @@ Applications:
 - as an optimization tool (don't explore the whole space; instead cluster and run your analysis on many small clusters)[^maj18][^riot]
 - as an optimizer in its own right (see below)[^chen]
 - as a test generation tool (to partition the input space, then run just a few tests per partition) [^stall]
-- as a verification tool to visualize the output space of a system 
-- as a requirements engineering tool (to encourage a fast discussion across the whole space)[^leit][^davies]
+- as a verification tool to visualize the output space of a system[^davies] 
+- as a requirements engineering tool (to encourage a fast discussion across the whole space)[^leit]
   - In the summer of 2011 and 2012,  I spent two months working on-site at Microsoft Redmond, observing data mining analysts.
     - I observed numerous meetings where Microsoft’s data scientists and business users discussed logs of defect data. 
     - There was a surprising little inspection of the output of data miners as compared to another process, 
@@ -79,7 +79,7 @@ In Proceedings of the 15th International Conference on Mining Software Repositor
   [RIOT: A Stochastic-Based Method for Workflow Scheduling in the Cloud](https://arxiv.org/pdf/1708.08127.pdf)
   IEEE CLOUD 2018: 318-325
 
-[^chen] J. Chen, V. Nair, R. Krishna and T. Menzies, 
+[^chen]: J. Chen, V. Nair, R. Krishna and T. Menzies, 
  ["Sampling” as a Baseline Optimizer for Search-Based Software Engineering,"](https://arxiv.org/pdf/1608.07617.pdf)
  in IEEE Transactions on Software Engineering, vol. 45, no. 6, pp. 597-614, 1 June 2019, doi: 10.1109/TSE.2018.2790925.
 
