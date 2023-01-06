@@ -249,7 +249,10 @@ function cosine(a,b,c,    x1,x2,y) --> n,n;  find x,y from a line connecting `a`
   x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
   y  = (a^2 - x2^2)^.5
   return x2, y end
+```
 
+Project every point to a line connecting two distance items.
+```lua
 function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data using 2 far points
   local A,B,left,right,c,dist,mid,some,project
   function project(row)    return {row=row, dist=cosine(dist(row,A), dist(row,B), c)} end
