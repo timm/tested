@@ -17,6 +17,43 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 
 # Clustering
+Goal: repeat until no crap: cut the crap
+
+<img src="https://user-images.githubusercontent.com/29195/131719589-f259227c-562c-4249-956b-4ba9c62f6bfb.png" align=right width=400>
+
+"Every <strike>block of stone</strike> has a <strike>statue</strike> signal inside it and it is the taks of the scultpro to discover it. "       
+-- <strike>Michelangelo</strike> some bald guy
+
+“Perfection is achieved when there is nothing left to take away.”        
+ -- Antoine de Saint-Exupéry 
+
+
+"Less, but better."      
+-- Dieter Rams
+
+"In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
+a lower-dimensional manifold. Learners can implicitly take
+advantage of this lower effective dimension."      
+-- Pedro Domingoes
+
+<br clear=all>
+<img src="https://user-images.githubusercontent.com/29195/131719792-eca77ca2-b7ee-436a-9e6d-cfbe521aa157.png"  width=900>
+
+## Motivating Examples
+
+### Example1:   effort estiamtion
+
+Question: is highly complex software slower to build?    
+Answer: the question is irrelevant (at some sites)
+
+![image](https://user-images.githubusercontent.com/29195/131710162-3f3869f3-95cb-4f97-93c9-e7b7e013bda6.png)
+
+So what else can we throw away.
+
+![image](https://user-images.githubusercontent.com/29195/131708345-b3e25f09-c4c2-4a34-8979-b96a178d26e5.png)
+
+![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
+
 
 https://github.com/txt/ase19/blob/master/docs/cluster.md#top
 
@@ -32,18 +69,27 @@ sway
 
 # "Clustering"
 
-"Clustering" means finding groups of similar things
+"Clustering" means grouping together  similar things
 - Give goal attributes $Y$  and other attributes $X$ it is typically groupings in $X$ space.
 - But as we shall see, clustering in $X$, pls a little sampling in $Y$ can be very useful.
+
+Large amounts of data can be approximated by the centroids of a few clusters. Why?
+- "In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
+  a lower-dimensional manifold. Learners can implicitly take
+  advantage of this lower effective dimension."      
+  -- Pedro Domingoes
+- Also,  Many rows must be similar to the point of redundancy  since
+ - when we build a model, 
+  each part of that model should have support from multiple
+  data points. 
+ - This means that all the rows can be shrunk back to just a few examples.
 
 For example, here we are clustering 398 examples of cars using the $X$ variables: 
 - find two distant examples $A,B$
 - divide other examples into those closest to $A$ or $B$
 - recurse on each half
+- As a result, we can approximate 398 examples with just 16.
 
-This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
-we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
-values at the root and at each leaf:
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
 | 199
@@ -77,9 +123,14 @@ values at the root and at each leaf:
 | | | | 25  {:Acc+ 13.7 :Lbs- 4143.1 :Mpg+ 18.0}
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
 ```
-Now here's nearly the same algorithm, but now we run a   greedy search looking for the best
-splits. When splitting on  two distance points $A,B$, we look at the $Y$ values of 
-$A,B$ and ignore the worse half. 
+This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
+we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
+values at the root and at each leaf:
+- Note that even though we are not trying to, our clusters do separate good from bad $Y$ values
+
+Now here's nearly the same algorithm, but now we run a   greedy search over the splits.
+When splitting on  two distance points $A,B$, we peel at the $Y$ values  
+ and ignore the worse half. 
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
 | 199
@@ -88,40 +139,21 @@ $A,B$ and ignore the worse half.
 | | | | 25  {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
 ```
 Note that:
-- This clustering algorithm is now an optimizer since it can isolate the best 25 examples out of the 398
-- And it does so after evaluating just 5 examples (two at the root, then for each sub-split, we reuse the $A,B$ value
-  that best in the parent).
-Now, this "clustering" algorithm is
+- This "clustering" algorithm is now an optimizer since it can isolate the best 25 examples out of the 398
+- And it does so after evaluating just 5 examples
+ - two at the root, 
+ - then for each sub-split, we reuse one of the $A,B$ from the parent (the one that was best)
 
-`- _The Best Thing You Can Do with Most Data is Throw it Away_.
-
-Goal: repeat until no crap: cut the crap
-
-<img src="https://user-images.githubusercontent.com/29195/131719589-f259227c-562c-4249-956b-4ba9c62f6bfb.png" align=right width=400>
-
-"Every <strike>block of stone</strike> has a <strike>statue</strike> signal inside it and it is the taks of the scultpro to discover it. "       
--- <strike>Michelangelo</strike> some bald guy
-
-“Perfection is achieved when there is nothing left to take away.”        
- -- Antoine de Saint-Exupéry 
+# Applications to SE
 
 
-"Less, but better."      
--- Dieter Rams
-
-"In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
-a lower-dimensional manifold. Learners can implicitly take
-advantage of this lower effective dimension."      
--- Pedro Domingoes
-
-<br clear=all>
-<img src="https://user-images.githubusercontent.com/29195/131719792-eca77ca2-b7ee-436a-9e6d-cfbe521aa157.png"  width=900>
-
+## Application 1: Requirements Engineering
 
 In the summer of 2011 and 2012,  Menzies spent two months working on-site at Microsoft Redmond, observing data mining analysts.
 - He observed numerous meetings where Microsoft’s data scientists and business users discussed logs of defect data. 
-- There was a surprising little inspection of the output of data miners as compared to another process, which we will call _fishing_. 
-- In peeking, analysts and users spend much time inspecting and discussing small samples of either raw or exemplary or synthesized project data. 
+- There was a surprising little inspection of the output of data miners as compared to another process, 
+    which we will call _fishing_. 
+- In fishing, analysts and users spend much time inspecting and discussing small samples of either raw or exemplary or synthesized project data. 
 - For example, in _data engagement meetings_, users debated the implications of data displayed on a screen. 
 -  In this way, users engaged with the data and with each other by monitoring each other’s queries and checking each other’s conclusions.
 
@@ -131,11 +163,12 @@ Cluster + contrast was another fishing method seen at Microsoft.
 -  In this way, very large data sets can be shown on one PowerPoint slide. 
 -  Note that cluster+contrast is a tool that can be usefully employed within data engagement meetings.
 
-
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
 - In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
 
-<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png"><img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
+<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png">
+
+<img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
 
  Apart from simpler explanations (and hence more user engagement and more auditability), throwing data away has privacy implications.
 - Instead of sharing all data, if only share the reduced data set, then all the non-shared information is 100% private, by definition.
@@ -147,29 +180,15 @@ More generally, this process is based on the manifold assumption (used extensive
  - As for the remaining 7% of the data, we ran a mutator that pushed up items up the boundary point between classes (and no further). Bu certain common measures of privacy, that made the 7% space 80% private. 
  - Net effect 93% + .8*7 = 98.4% private,
 
- 
-## Motivating Examples
+<img width=90 src="/etc/img/peters1.png">
 
-### Example1:   effort estiamtion
-
-Question: is highly complex software slower to build?    
-Answer: the question is irrelevant (at some sites)
-
-![image](https://user-images.githubusercontent.com/29195/131710162-3f3869f3-95cb-4f97-93c9-e7b7e013bda6.png)
-
-So what else can we throw away.
-
-![image](https://user-images.githubusercontent.com/29195/131708345-b3e25f09-c4c2-4a34-8979-b96a178d26e5.png)
-
-![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
+<img width=90 src="/etc/img/peters2.png">
 
 
-
-### Example2:   Defect prediction
+### Application 2:   Defect prediction
 
 [Papakroni](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd) argued that, for that purpose,
 you do not need to show models... just insightful samples from the domain.
-
 
 For example, here's a summary of [POI-3.0](https://zenodo.org/record/322443#.YS-obNNuc2k). The original data set is reduced from 442 rows and
 21 columns to 21 rows and 6 columns.
@@ -192,8 +211,6 @@ And we know how to change these
 
 ![image](https://user-images.githubusercontent.com/29195/131708447-c0f0c4af-31e9-4389-acd6-d438b9bb835b.png)
 
- 
- 
 Btw, see the colors?
 - One surprisingly [good defect predictor](https://home.cse.ust.hk/~hunkim/papers/nam-ase2015.pdf)
 is "count how often an example has attribute values falling into the worst part of each column" (e..g which side of the emdian your fall).
@@ -202,6 +219,8 @@ is "count how often an example has attribute values falling into the worst part 
 - And recently we've found it [useful  to look at just a few (2.5% ) of the data labels](https://arxiv.org/pdf/2108.09847.pdf)
    to refine  what we mean by "worst half"
    
+# How to Cluster
+
 ## Distance (Basic)
  Here is Aha's instance-based distance algorithm,
 [section 2.4](https://link.springer.com/content/pdf/10.1007/BF00153759.pdf).
@@ -248,10 +267,10 @@ function SYM.dist(i,s1,s2)
   return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
 
 function NUM.dist(i,n1,n2)
-  if n1=="?" and n2=="?" then return 1 end
+  if n1=="?" and n2=="?" then return 1 end -- here's the AHA assumption (assume the max)
   n1,n2 = i:norm(n1), i:norm(n2)
-  if n1=="?" then n1 = n2<.5 and 1 or 0 end
-  if n2=="?" then n2 = n1<.5 and 1 or 0 end
+  if n1=="?" then n1 = n2<.5 and 1 or 0 end -- here's the AHA assumption (assume the max)
+  if n2=="?" then n2 = n1<.5 and 1 or 0 end -- here's the AHA assumption (assume the max)
   return math.abs(n1 - n2) end 
 
 function NUM.norm(i,n)
@@ -274,8 +293,11 @@ function lt(x) --> fun;  return a function that sorts ascending on `x`
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 ```
-### Clustering
-Once we know distance, then we 
+## Recursive Bi-Clustering
+
+<img align=right src="/etc/img/abc.png">
+Once we know distance, then we  project things in $N$ dimensions down to one dimension (being a line between 2 distant points).
+
 ```lua
 function cosine(a,b,c,    x1,x2,y) --> n,n;  find x,y from a line connecting `a` to `b`
   x1 = (a^2 + c^2 - b^2) / (2*c)
@@ -289,7 +311,7 @@ function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data usin
   function dist(row1,row2) return i:dist(row1,row2,cols) end
   rows = rows or i.rows
   some = many(rows,the.Sample)
-  A    = above or any(some)
+  A    = above or any(some)  -- if a parent found a distant point, use that
   B    = i:around(A,some)[(the.Far * #rows)//1].row
   c    = dist(A,B)
   left, right = {}, {}
@@ -300,6 +322,7 @@ function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data usin
   return left, right, A, B, mid, c end
 ```
 
+Once we can divide some data in two, then recursive clustering is just recursive division.
 
 ```lua
 function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursively halved
@@ -315,15 +338,7 @@ function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursivel
   return node end
 
 ```
-```
-398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
-| 199
-| | 100
-| | | 50
-| | | | 25  {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
-✅ pass:	optimize
-```
-
+Which, just to remind us, gives us this:
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
 | 199
@@ -358,6 +373,9 @@ function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursivel
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
 ```
 
+## From Clustering to Optimization
+With very little work, the above can become an optimizer.
+
 ```lua
 function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
   s1,s2,ys,x,y = 0,0,i.cols.y
@@ -381,52 +399,12 @@ function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursivel
   return node end
 ```
 
-```
-398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
-| 199
-| | 100
-| | | 50
-| | | | 25  {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
-✅ pass:	optimize
-```
-
-Distance for Symbols:
-
-```lua
-function Sym:dist(x,y) 
-  return x==y and 0 or 1 end
-```
-
-Distance for Numbers:
-
-```lua
-function Num:dist(x,y)
-  if     x=="?" then y=self:norm(y); x = y>.5 and 0 or 1 
-  elseif y=="?" then x=self:norm(x); y = x>.5 and 0 or 1 
-  else               x,y = self:norm(x), self:norm(y) end
-  return math.abs(x-y) end
-
-function Num:norm(x,    a)
-  if x =="?" then return x end
-  return (x-self.lo) / (self.hi - self.lo + 1E-32) end
-```
-
+# Notes on Distanec
 
 Btw, distance calcualtions are really slow
 - heuristic for faster distance: divde up the space into small pieces (e.g. &sqrt;(N)
 - Space between pieces = &infty;
 - Space inside pieces: L2
-
-E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
-- Pick first 20 examples (at random) as _controids_
-- for everything else, run thrugh in batches of size (say 500,2000,etc)
-  - mark each item with its nearest centroid
-  - between batch B and B+1, move centroid towards its marked examples
-    - "n" stores how often this centroid has been picked by new data
-    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   `c = (1-1/n)*c + x/n`. 
-    - Note that when "n" is large, "c" barely moves at all.
-   
-## Distance (Advanced)
 
 Distance gets weird for high dimensions
 
@@ -445,41 +423,23 @@ a moderate dimension of 100 and a huge training set of a trillion examples, the 
 ones. In high dimensions, most of the mass may not be near the mean, but in an
 increasingly distant “shell” around it; and most of the volume of a high-dimensional orange is in the skin, not the pulp."
 
-Example of crazy high dimensional effects:
- - A large N-dimensional unit sphere (radius=1) has finitely small volume.
- - V(2)=  circle = &pi;r<sup>2</sup>
- - V(3)= sphere = 4/3&pi;r<sup>3</sup>
- - V(n) = hypersphere = 2&pi;r<sup>2</sup> \* V(n-2) / n
-   - at r=1,n=6, V(n) > V(n-2)
-   - but after r=1,n=7  V(n) &lt; V(n-2)
-   - Why? well for unit spheres (where r=1) L2 says ((a1-a2)<sup>2</sup> +(b1-b2)<sup>2</sup> + (c1-c2)<sup>2</sup> + .... )<sup>1/2</sup>
-     - Q: How to  maintain r=1 as the number of dimensions icnreasea?
-     - A: Minimize all the gaps (a1-a2), (b1-b2), (c1-c2), etc
-     - So for constant radius, as dimensions grows, the gap betweeen examples has to shrinl
- - Practical consequences: as models get more complex, the space of relevant (i.e. nearby) examples gets vanishingly small
-   - Good news: only need to search in nearby region for relevant data
-   - Bad news: models are either low-dimensional or can't be modeled (not enough relevant data)
-   - Better news: the models that can be modeled conform to the manifold assumption.
- 
- Q: How to find those lower dimensions?    
- A: Let them find you.
-- multiple times, take randoms steps across the space
- 
- - technique used to reduce the dimensionality of a set of points
--  known for their power, simplicity, and low error rates when compared to other methods
-- if n randomly selected dimension say you are similar to something else
-    - then you are probably similar
+# Standard Algorithms
 
- - "Fortunately
- in most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
-a lower-dimensional manifold. "
- - "For example, k-nearest neighbor works quite well for handwritten digit recognition even
-though images of digits have one dimension per pixel, because the space of digit images is much smaller than the
-space of all possible images." 
-- "Learners can implicitly take
-advantage of this lower effective dimension"
- 
- 
+k-meams
+
+min-batch k-menas
+
+E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
+- Pick first 20 examples (at random) as _controids_
+- for everything else, run thrugh in batches of size (say 500,2000,etc)
+  - mark each item with its nearest centroid
+  - between batch B and B+1, move centroid towards its marked examples
+    - "n" stores how often this centroid has been picked by new data
+    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   `c = (1-1/n)*c + x/n`. 
+    - Note that when "n" is large, "c" barely moves at all.
+   
+
+random projectsion eg. wsay
  
 ![](https://ars.els-cdn.com/content/image/1-s2.0-S0031320315003945-gr2.jpg)
 
@@ -519,7 +479,3 @@ advantage of this lower effective dimension"
 
 - A safe thing might be to sort the pivots  by their distance and take something that is
   90% of max distance
-
-                                                
-                                                
-

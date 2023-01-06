@@ -31,6 +31,41 @@ and Bolón-Canedo, Verónica & Alonso-Betanzos, Amparo & Benítez, José & Herre
 [Data discretization: Taxonomy and big data challenge](https://www.researchgate.net/publication/284786447_Data_discretization_Taxonomy_and_big_data_challenge)
 Discovery. 6. n/a-n/a. 10.1002/widm.1173. 
 
+Example of crazy high dimensional effects:
+ - A large N-dimensional unit sphere (radius=1) has finitely small volume.
+ - V(2)=  circle = &pi;r<sup>2</sup>
+ - V(3)= sphere = 4/3&pi;r<sup>3</sup>
+ - V(n) = hypersphere = 2&pi;r<sup>2</sup> \* V(n-2) / n
+   - at r=1,n=6, V(n) > V(n-2)
+   - but after r=1,n=7  V(n) &lt; V(n-2)
+   - Why? well for unit spheres (where r=1) L2 says ((a1-a2)<sup>2</sup> +(b1-b2)<sup>2</sup> + (c1-c2)<sup>2</sup> + .... )<sup>1/2</sup>
+     - Q: How to  maintain r=1 as the number of dimensions icnreasea?
+     - A: Minimize all the gaps (a1-a2), (b1-b2), (c1-c2), etc
+     - So for constant radius, as dimensions grows, the gap betweeen examples has to shrinl
+ - Practical consequences: as models get more complex, the space of relevant (i.e. nearby) examples gets vanishingly small
+   - Good news: only need to search in nearby region for relevant data
+   - Bad news: models are either low-dimensional or can't be modeled (not enough relevant data)
+   - Better news: the models that can be modeled conform to the manifold assumption.
+ 
+ Q: How to find those lower dimensions?    
+ A: Let them find you.
+- multiple times, take randoms steps across the space
+ 
+ - technique used to reduce the dimensionality of a set of points
+-  known for their power, simplicity, and low error rates when compared to other methods
+- if n randomly selected dimension say you are similar to something else
+    - then you are probably similar
+
+ - "Fortunately
+ in most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
+a lower-dimensional manifold. "
+ - "For example, k-nearest neighbor works quite well for handwritten digit recognition even
+though images of digits have one dimension per pixel, because the space of digit images is much smaller than the
+space of all possible images." 
+- "Learners can implicitly take
+advantage of this lower effective dimension"
+ 
+ 
 
 <img src="https://ih1.redbubble.net/image.3318871488.2254/ur,pin_small_front,square,1000x1000.jpg">
 

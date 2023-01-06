@@ -13,17 +13,16 @@ t1={bins=4,lo=10, hi=90, bins={[10]=5,[30]=3,[50]=10,[70]=20,[90]=0}}
 function RANGE(lo,hi) return {lo=lo, hi=hi,n=} end
 
 function overlap(i,j,      n) -- steal from i, add to j
-  if  j.lo < i.lo and j.hi >= i.lo and j.hi <= i.hi                  then n= j.hi - i.lo end
-  if j.lo >= i.lo and j.lo <= i.hi and j.hi >= i.lo and j.hi <= i.hi then n= j.hi - j.lo
-  if j.lo >= i.lo and j.lo <= i.hi and j.hi>i.lo                     then n= i.lo - j.hi end 
-  if n then j
-    j.n = j.n + i.n * n/(i.hi - i.lo)
-    return true end end end
+  n=0
+  if     j.lo  < i.lo and j.hi >= i.lo and j.hi <= i.hi                  then n= j.hi - i.lo 
+  elseif j.lo >= i.lo and j.lo <= i.hi and j.hi >= i.lo and j.hi <= i.hi then n= j.hi - j.lo
+  elseif j.lo >= i.lo and j.lo <= i.hi and j.hi >  i.lo                  then n= i.lo - j.hi end 
+  return i.n * n/(i.hi - i.lo) end 
 
 function transfer(olds,news)
   for _,old in pairs(olds) do 
     for _,new in pairs(news) do
-      overlap(old.new) end end end 
+      new.n = new.n + overlap(old,new) end end end 
 
 -- small bins inside large nins
 print(t1.bins[30])

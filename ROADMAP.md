@@ -29,6 +29,7 @@ To present this work as a syllabus, here is a weekly guide (assumes a 14 week se
 |4b  | requirements engineering | | - | |
 |5   | bins and trees|   |  | discretization, decision trees|
 |5a  | data mining     | | - | |
+|5b  | XAI             | | - | |
 |6   | incompetency |    |  | anomaly detection|
 |7   | knn, naive bayes|  |  | |
 |8   | stats |           |  |  | | 
