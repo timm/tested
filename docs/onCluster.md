@@ -363,8 +363,8 @@ E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans
     - Note that when "n" is large, "c" barely moves at all.
    
 
-random projectsion eg. wsay
- 
+### Random Projections
+
 ![](https://ars.els-cdn.com/content/image/1-s2.0-S0031320315003945-gr2.jpg)
 
 - Method one: Guassian random projections
