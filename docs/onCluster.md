@@ -348,9 +348,10 @@ increasingly distant “shell” around it; and most of the volume of a high-dim
 
 # Standard Algorithms
 
-k-meams
+<img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
 
-min-batch k-menas
+k-means:  pick $k$ reandom points, labelling everyone by their cloest $k$. move $k$ to mean vale of all points with same label
+
 
 E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
 - Pick first 20 examples (at random) as _controids_
@@ -358,7 +359,7 @@ E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans
   - mark each item with its nearest centroid
   - between batch B and B+1, move centroid towards its marked examples
     - "n" stores how often this centroid has been picked by new data
-    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   `c = (1-1/n)*c + x/n`. 
+    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   $c = (1-1/n)*c + x/n$. 
     - Note that when "n" is large, "c" barely moves at all.
    
 
@@ -513,7 +514,7 @@ to another if we lost the least jumping to it; i.e. $s_1 \lt s_2$.
   - there to here is `i.e\*(2-10) = -8`
   - leaving here loses worst
   - so here is better than there
-- and the point of Zitzler is that it works for comparing on $N \ge 1$ dimensions.
+- and the point of Zitzler is that it works for comparing on $N\ge 1$ dimensions.
 
 ```lua
 function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
