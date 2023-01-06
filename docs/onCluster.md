@@ -497,8 +497,8 @@ So we often distinguish
 Zilter’s continuous domination predicate [52] is useful [38, 42, 52]. Continuous domination judges the
 domination status of pair of individuals by running a “what-if”
 query which checks the situation when we jump from one individual to another, and back again. Specifically:
-- For the forward jump, we compute $s_1 = − \sum_i e^{w_i(a_i = b_i)/n}$
-- For the backward jump, we compute $s_2 = − \sum_i e^{w_i(ab_i = a_i)/n}$
+- For the forward jump, we compute $s_1 = − \sum_i e^{w_i(a_i - b_i)/n}$
+- For the backward jump, we compute $s_2 = − \sum_i e^{w_i(b_i - a_i)/n}$
 
 where $a_i$  and $b_i$  are the values on the same index from two individuals, 
 $n$ is the number of goals (in our case $n = 3$), and $w_i$𝑖
@@ -510,8 +510,8 @@ to another if we lost the least jumping to it; i.e. $s_1 \lt s_2$.
 - e.g. in one dimension, 
   - suppose we are moving between 10 pounds and 2 pounds
   - and we want to maximize (`i.w=1`)
-  - here to there is `i.w\*(10-2) = 8`
-  - there to here is `i.e\*(2-10) = -8`
+  - here to there is `i.w*(10-2) = 8`
+  - there to here is `i.e*(2-10) = -8`
   - leaving here loses worst
   - so here is better than there
 - and the point of Zitzler is that it works for comparing on $N\ge 1$ dimensions.
