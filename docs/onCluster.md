@@ -322,30 +322,6 @@ Which, just to remind us, gives us this:
 ```
 
 
-# Notes on Distance
-
-Btw, distance calculations are really slow
-- heuristic for faster distance: divide up the space into small pieces (e.g. &sqrt;(N)
-- Space between pieces = &infty;
-- Space inside pieces: L2
-
-Distance gets weird for high dimensions
-
-- for an large dimensional orange, most of the mass is in the skin
-- volume of the space increases so fast that the available data become sparse.
-- amount of data needed to support the result grows exponentially with dimensions
- 
-[Distance is wierd](https://haralick.org/ML/useful_things_about_machine_learning.pdf):
-
-- "Generalizing correctly becomes
-exponentially harder as the dimensionality (number of features) of the examples grows, because a fixed-size training
-set covers a dwindling fraction of the input space. Even with
-a moderate dimension of 100 and a huge training set of a trillion examples, the latter covers only a fraction of about
-10<sup>−18<sup> of the input space"
-- "Our intuitions, which come from a three-dimensional world, often do not apply in high-dimensional
-ones. In high dimensions, most of the mass may not be near the mean, but in an
-increasingly distant “shell” around it; and most of the volume of a high-dimensional orange is in the skin, not the pulp."
-
 # Standard Algorithms
 
 <img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
@@ -403,6 +379,30 @@ E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans
 
 - A safe thing might be to sort the pivots  by their distance and take something that is
   90% of max distance
+
+# Notes on Distance
+
+Btw, distance calculations are really slow
+- heuristic for faster distance: divide up the space into small pieces (e.g. &sqrt;(N)
+- Space between pieces = &infty;
+- Space inside pieces: L2
+
+Distance gets weird for high dimensions
+
+- for an large dimensional orange, most of the mass is in the skin
+- volume of the space increases so fast that the available data become sparse.
+- amount of data needed to support the result grows exponentially with dimensions
+ 
+[Distance is wierd](https://haralick.org/ML/useful_things_about_machine_learning.pdf):
+
+- "Generalizing correctly becomes
+exponentially harder as the dimensionality (number of features) of the examples grows, because a fixed-size training
+set covers a dwindling fraction of the input space. Even with
+a moderate dimension of 100 and a huge training set of a trillion examples, the latter covers only a fraction of about
+10<sup>−18<sup> of the input space"
+- "Our intuitions, which come from a three-dimensional world, often do not apply in high-dimensional
+ones. In high dimensions, most of the mass may not be near the mean, but in an
+increasingly distant “shell” around it; and most of the volume of a high-dimensional orange is in the skin, not the pulp."
 
 
 # From Clustering to Optimization
