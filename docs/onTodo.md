@@ -17,6 +17,44 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 
 # Random notes, discarded text
+Goal: repeat until no crap: cut the crap
+
+<img src="https://user-images.githubusercontent.com/29195/131719589-f259227c-562c-4249-956b-4ba9c62f6bfb.png" align=right width=400>
+
+"Every <strike>block of stone</strike> has a <strike>statue</strike> signal inside it and it is the taks of the scultpro to discover it. "       
+-- <strike>Michelangelo</strike> some bald guy
+
+“Perfection is achieved when there is nothing left to take away.”        
+ -- Antoine de Saint-Exupéry 
+
+
+"Less, but better."      
+-- Dieter Rams
+
+"In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
+a lower-dimensional manifold. Learners can implicitly take
+advantage of this lower effective dimension."      
+-- Pedro Domingoes
+
+<br clear=all>
+<img src="https://user-images.githubusercontent.com/29195/131719792-eca77ca2-b7ee-436a-9e6d-cfbe521aa157.png"  width=900>
+
+## Motivating Examples
+
+### Example1:   effort estiamtion
+
+Question: is highly complex software slower to build?    
+Answer: the question is irrelevant (at some sites)
+
+![image](https://user-images.githubusercontent.com/29195/131710162-3f3869f3-95cb-4f97-93c9-e7b7e013bda6.png)
+
+So what else can we throw away.
+
+![image](https://user-images.githubusercontent.com/29195/131708345-b3e25f09-c4c2-4a34-8979-b96a178d26e5.png)
+
+![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
+
+
 
 discretqion: volumnes not points
 [Discretization: An Enabling Technique](https://sci2s.ugr.es/keel/pdf/algorithm/articulo/liu1-2.pdf)

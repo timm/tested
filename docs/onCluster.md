@@ -16,62 +16,74 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
+
 # Clustering
-Goal: repeat until no crap: cut the crap
-
-<img src="https://user-images.githubusercontent.com/29195/131719589-f259227c-562c-4249-956b-4ba9c62f6bfb.png" align=right width=400>
-
-"Every <strike>block of stone</strike> has a <strike>statue</strike> signal inside it and it is the taks of the scultpro to discover it. "       
--- <strike>Michelangelo</strike> some bald guy
-
-“Perfection is achieved when there is nothing left to take away.”        
- -- Antoine de Saint-Exupéry 
-
-
-"Less, but better."      
--- Dieter Rams
-
-"In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
-a lower-dimensional manifold. Learners can implicitly take
-advantage of this lower effective dimension."      
--- Pedro Domingoes
-
-<br clear=all>
-<img src="https://user-images.githubusercontent.com/29195/131719792-eca77ca2-b7ee-436a-9e6d-cfbe521aa157.png"  width=900>
-
-## Motivating Examples
-
-### Example1:   effort estiamtion
-
-Question: is highly complex software slower to build?    
-Answer: the question is irrelevant (at some sites)
-
-![image](https://user-images.githubusercontent.com/29195/131710162-3f3869f3-95cb-4f97-93c9-e7b7e013bda6.png)
-
-So what else can we throw away.
-
-![image](https://user-images.githubusercontent.com/29195/131708345-b3e25f09-c4c2-4a34-8979-b96a178d26e5.png)
-
-![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
-
-
-https://github.com/txt/ase19/blob/master/docs/cluster.md#top
-
-lsh
-cluster
-
-optimizer. zitler
-
-stats on each leaf
-
-
-sway
-
-# "Clustering"
 
 "Clustering" means grouping together  similar things
 - Give goal attributes $Y$  and other attributes $X$ it is typically groupings in $X$ space.
+  - Distance calculations in $Y$ space is usually called "domination" (see below)
 - But as we shall see, clustering in $X$, pls a little sampling in $Y$ can be very useful.
+
+## Relevance to SE
+
+Applications:
+- as a runtime checker (cluster the data, then report any new inputs that fall outside the range of the clusters of the test data used to test the system)[^liu]
+- as an optimization tool (don't explore the whole space; instead cluster and run your analysis on many small clusters)[^maj18][^riot]
+- as an optimizer in its own right (see below)[^chen]
+- as a test generation tool (to partition the input space, then run just a few tests per partition) [^stall]
+- as a verification tool to visualize the output space of a system 
+- as a requirements engineering tool (to encourage a fast discussion across the whole space)[^leit][^davies]
+  - In the summer of 2011 and 2012,  I spent two months working on-site at Microsoft Redmond, observing data mining analysts.
+    - I observed numerous meetings where Microsoft’s data scientists and business users discussed logs of defect data. 
+    - There was a surprising little inspection of the output of data miners as compared to another process, 
+        which we might call _fishing_. 
+    - In fishing, analysts and users spend much time inspecting and discussing small samples of either raw or exemplary or synthesized project data. 
+    - For example, in _data engagement meetings_, users debated the implications of data displayed on a screen. 
+    -  In this way, users engaged with the data and with each other by monitoring each other’s queries and checking each other’s conclusions.
+- As a privacy tool (why share all the data? why not just cluster and just a few cluster centroids?)[^peters]
+  - [Fayola Peters](https://www.ezzoterik.com/papers/15lace2.pdf) used cluster + contrast to prune, as she passed data around a community. 
+    - At east step, and anomaly detector was called about members of that community only added in theory local data that was not already in the shared cache (i.e. only if it was anomalous).
+   - She ended up sharing 20% of the rows and around a third of the columns. 1 - 1/5\*1/3 thus offered 93%   privacy
+   - As for the remaining 7% of the data, we ran a mutator that pushed up items up the boundary point between classes (and no further). Bu certain common measures of privacy, that made the 7% space 80% private. 
+   - Net effect 93% + .8*7 = 98.4% private,
+
+<img width=90 src="/etc/img/peters1.png">
+
+<img width=90 src="/etc/img/peters2.png">
+
+[^peters]: Peters, Fayola, Tim Menzies, and Lucas Layman.](https://www.ezzoterik.com/papers/15lace2.pdf)
+    2015 IEEE/ACM 37th IEEE International Conference on Software Engineering. Vol. 1. IEEE, 2015.
+
+[^davies]: Davies, Misty, and Karen Gundy-Burlet. 
+  ["Visualization of Global Sensitivity Analysis Results Based on a Combination of Linearly Dependent and Independent Directions."](https://ntrs.nasa.gov/api/citations/20110010856/downloads/20110010856.pdf)
+  AIAA Infotech@ Aerospace 2010. 2010. 3387.
+
+
+[^stall]: Dimitri Stallenberg, Mitchell Olsthoorn, and Annibale Panichella. 2022. 
+ [Improving test case generation for REST APIs through hierarchical clustering] https://chinagator.github.io/papers/J5.pdf)
+ In Proceedings of the 36th IEEE/ACM International Conference on Automated Software Engineering (ASE '21). IEEE Press, 117–128. https://doi.org/10.1109/ASE51524.2021.9678586
+
+[^maj18]: Suvodeep Majumder, Nikhila Balaji, Katie Brey, Wei Fu, and Tim Menzies. 2018. 
+[500+ times faster than deep learning: a case study exploring faster methods for text mining stackoverflow](https://arxiv.org/pdf/1802.05319.pdf). 
+In Proceedings of the 15th International Conference on Mining Software Repositories (MSR '18). Association for Computing Machinery, New York, NY, USA, 554–563. https://doi.org/10.1145/3196398.3196424
+
+[^leit]: Veerappa, Varsha, and Emmanuel Letier. 
+  ["Understanding clusters of optimal solutions in multi-objective decision problems."](http://www0.cs.ucl.ac.uk/staff/e.letier/publications/2011-clusteringSolutions.pdf)
+  2011 IEEE 19Th international requirements engineering conference. IEEE, 2011.
+
+[^liu]: Liu, Z., Qin, T., Guan, X., Jiang, H., & Wang, C. (2018). 
+  [An integrated method for anomaly detection from massive system logs](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8371223)
+  IEEE Access, 6, 30602-30611.
+
+[^riot]:  Jianfeng Chen, Tim Menzies:
+  [RIOT: A Stochastic-Based Method for Workflow Scheduling in the Cloud](https://arxiv.org/pdf/1708.08127.pdf)
+  IEEE CLOUD 2018: 318-325
+
+[^chen] J. Chen, V. Nair, R. Krishna and T. Menzies, 
+ ["Sampling” as a Baseline Optimizer for Search-Based Software Engineering,"](https://arxiv.org/pdf/1608.07617.pdf)
+ in IEEE Transactions on Software Engineering, vol. 45, no. 6, pp. 597-614, 1 June 2019, doi: 10.1109/TSE.2018.2790925.
+
+## The Core of Clustering
 
 Large amounts of data can be approximated by the centroids of a few clusters. Why?
 - "In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
@@ -90,6 +102,11 @@ For example, here we are clustering 398 examples of cars using the $X$ variables
 - recurse on each half
 - As a result, we can approximate 398 examples with just 16.
 
+This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
+we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
+values at the root and at each leaf:
+- Note that even though we are not trying to, our clusters do separate good from bad $Y$ values:
+
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
 | 199
@@ -105,7 +122,7 @@ For example, here we are clustering 398 examples of cars using the $X$ variables
 | | | | 25  {:Acc+ 16.2 :Lbs- 2362.5 :Mpg+ 32.0}
 | | | | 25  {:Acc+ 16.4 :Lbs- 2184.1 :Mpg+ 34.8}
 | | | 50
-| | | | 25  {:Acc+ 16.2 :Lbs- 2185.8 :Mpg+ 29.6}
+| | | | 25  {:Acc+ 16.2 :Lbs- 2185.8 :Mpg+ 29.6} <== best?
 | | | | 25  {:Acc+ 16.3 :Lbs- 2179.4 :Mpg+ 26.4}
 | 199
 | | 99
@@ -118,17 +135,12 @@ For example, here we are clustering 398 examples of cars using the $X$ variables
 | | 100
 | | | 50
 | | | | 25  {:Acc+ 12.4 :Lbs- 4320.5 :Mpg+ 12.4}
-| | | | 25  {:Acc+ 11.3 :Lbs- 4194.2 :Mpg+ 12.8}
+| | | | 25  {:Acc+ 11.3 :Lbs- 4194.2 :Mpg+ 12.8} <== worst
 | | | 50
 | | | | 25  {:Acc+ 13.7 :Lbs- 4143.1 :Mpg+ 18.0}
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
 ```
-This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
-we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
-values at the root and at each leaf:
-- Note that even though we are not trying to, our clusters do separate good from bad $Y$ values
-
-Now here's nearly the same algorithm, but now we run a   greedy search over the splits.
+Now here's nearly the same algorithm, but know we run a   greedy search over the splits.
 When splitting on  two distance points $A,B$, we peel at the $Y$ values  
  and ignore the worse half. 
 ```
@@ -144,24 +156,9 @@ Note that:
  - two at the root, 
  - then for each sub-split, we reuse one of the $A,B$ from the parent (the one that was best)
 
+(Aside: the leaf node found via our optimizer never appears in the cluster tree. Why?)
+
 # Applications to SE
-
-
-## Application 1: Requirements Engineering
-
-In the summer of 2011 and 2012,  Menzies spent two months working on-site at Microsoft Redmond, observing data mining analysts.
-- He observed numerous meetings where Microsoft’s data scientists and business users discussed logs of defect data. 
-- There was a surprising little inspection of the output of data miners as compared to another process, 
-    which we will call _fishing_. 
-- In fishing, analysts and users spend much time inspecting and discussing small samples of either raw or exemplary or synthesized project data. 
-- For example, in _data engagement meetings_, users debated the implications of data displayed on a screen. 
--  In this way, users engaged with the data and with each other by monitoring each other’s queries and checking each other’s conclusions.
-
-Cluster + contrast was another fishing method seen at Microsoft. 
-- In this method, data was reduced to a few clusters and users were then just shown the delta between those clusters (a technique we first saw used by Sauvik Das). 
-- While contrasting, if feature values are the same in both clusters, then these were pruned from the reports to the user.
--  In this way, very large data sets can be shown on one PowerPoint slide. 
--  Note that cluster+contrast is a tool that can be usefully employed within data engagement meetings.
 
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
 - In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
@@ -170,22 +167,8 @@ More generally, this process is based on the manifold assumption (used extensive
 
 <img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
 
- Apart from simpler explanations (and hence more user engagement and more auditability), throwing data away has privacy implications.
-- Instead of sharing all data, if only share the reduced data set, then all the non-shared information is 100% private, by definition.
-- Also, if we deploy systems based on the reduced set, then we never need to collect the attributes removed by pruning. 
-  - So less intrusion into people's lives
-- [Fayola Peters](https://www.ezzoterik.com/papers/15lace2.pdf) used cluster + contrast to prune, as she passed data around a community. 
-  - At east step, and anomaly detector was called about members of that community only added in theor local data that was not already in the shared cache (i.e. only if it was anomalous).
- - She ended up sharing 20% of the rows and around a third of the columns. 1 - 1/5\*1/3 thus offered 93%   privacy
- - As for the remaining 7% of the data, we ran a mutator that pushed up items up the boundary point between classes (and no further). Bu certain common measures of privacy, that made the 7% space 80% private. 
- - Net effect 93% + .8*7 = 98.4% private,
 
-<img width=90 src="/etc/img/peters1.png">
-
-<img width=90 src="/etc/img/peters2.png">
-
-
-### Application 2:   Defect prediction
+## Defect Prediction and Clusering (a detailed example)
 
 [Papakroni](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd) argued that, for that purpose,
 you do not need to show models... just insightful samples from the domain.
@@ -373,36 +356,11 @@ Which, just to remind us, gives us this:
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
 ```
 
-## From Clustering to Optimization
-With very little work, the above can become an optimizer.
 
-```lua
-function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
-  s1,s2,ys,x,y = 0,0,i.cols.y
-  for _,col in pairs(ys) do
-    x  = row1.cells[col.at]
-    y  = row2.cells[col.at]
-    s1 = s1 - math.exp(col.w * (x-y)/#ys)
-    s2 = s2 - math.exp(col.w * (y-x)/#ys) end
-  return s1/#ys < s2/#ys end
+# Notes on Distance
 
-function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
-  local node,left,right,A,B,mid
-  rows = rows or i.rows
-  min  = min or (#rows)^the.min
-  cols = cols or i.cols.x
-  node = {data=i:clone(rows)} --xxx cloning
-  if #rows > 2*min then
-    left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
-    if i:better(node.B,node.A) then left,right,node.A,node.B = right,left,node.B,node.A end
-    node.left  = i:sway(left,  min, cols, node.A) end
-  return node end
-```
-
-# Notes on Distanec
-
-Btw, distance calcualtions are really slow
-- heuristic for faster distance: divde up the space into small pieces (e.g. &sqrt;(N)
+Btw, distance calculations are really slow
+- heuristic for faster distance: divide up the space into small pieces (e.g. &sqrt;(N)
 - Space between pieces = &infty;
 - Space inside pieces: L2
 
@@ -479,3 +437,179 @@ random projectsion eg. wsay
 
 - A safe thing might be to sort the pivots  by their distance and take something that is
   90% of max distance
+
+
+# From Clustering to Optimization
+Clustering is normally seen as an $X$ space thing. But if also explore $Y$ space...
+
+Example: one spreadsheet, 8 columns, 3 goals ($Y$ space) and 5 other ($X$ space)
+
+```
+list of names      call                 weight    goal?
+--------------     ----------------     ------    -----
+
+
+{ "Clndrs",        NUM(1, "Clndrs")     1         n
+  "Volume",        NUM(2, "Volume")     1         n
+  "HpX",           NUM(3, "HpX")        1         n
+  "Lbs-",          NUM(4, "Lbs-")         -1         y
+  "Acc+",          NUM(5, "Acc+")       1            y
+  "Model",         NUM(6, "Model")      1         n
+  "origin",        SYM(7, "origin")               n
+  "Mpg+"}          NUM(8, "Mgp+")       1            y
+```
+With very little work, the above can become an optimizer. One of the problems with such optimization
+is deciding how to trade off between competing concerns. For example, in the above, if one leaf node
+has better acceleration than another, but worse miles per hour, how to trade-off between them? Welcome to
+the _domination_ problem:
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt65J-qM4GQvPeZdvf28zLytx-x1tCXYpkfqTjTjg6jGYx8MxYVMonn8qixREdOr4duVI&usqp=CAU" align=right width=400>
+
+Here we go:
+- Is 2 better than 3? Depends if we want to _minimimize_ of _maximize_.
+- Are (2 cars plus 4 clowns) better than (1 car and 5) clowns? Depends on how much we want
+to minimize the number of cars and maximize the number of clowns.
+
+
+The standard _boolean domination_ (bdom) predicate says one thing dominates another
+if
+- RULE1: it never worse on any goals, and  
+- RULE2: it is better for at least one goal. 
+
+
+So if we want to minimize
+cars and maximize clowns then compared to 2cars,4clowns
+- 1car + 5clowns is better  (since better on all)
+- 1car + 3clowns is not better  (since worse on one)
+
+The great thing about boolean domination is that a single
+point can wipe out thousands, millions of rivals. E.g. suppose
+we are guessing what is the equation of a pendulum. A good
+equation has to:
+- cover the data (be accurate)
+- without being too complex
+
+<img src="/etc/img/pendulm.png" width=600>
+
+The few points on the thick black line dominate the rest. Which is cool
+since, to find a better solution, we only need to search around those few.
+
+<img src="/etc/img/2dplot.png" width=600>
+
+
+But when the number of goals 
+grows over three[^wag07][^sayyad], 
+boolean domination can fail to distinguish different things.
+Why?
+- Well, it is RULE1: "never worse on any goal" condition. 
+- The more goals there are, the more ways you can be a tiny bit worse on at least one goal.
+- So nothing seems to be better than anything else.  
+
+
+[^wag07]: T. Wagner, N. Beume, and B. Naujoks, 
+  ["Pareto-, Aggregation-, and Indicator-Based Methods in Many-Objective Optimization,"](https://link.springer.com/content/pdf/10.1007/978-3-540-70928-2.pdf?pdf=button)
+  in Proc. EMO, LNCS Volume 4403/2007, 2007, pp. 742-756.
+
+
+[^sayyad]:  Sayyad, Abdel Salam, Tim Menzies, and Hany Ammar. 
+  ["On the value of user preferences in search-based software engineering: A case study in software product lines."](https://fada.birzeit.edu/bitstream/20.500.11889/4528/1/dcb6eddbdac1c26b605ce3dff62e27167848.pdf)
+  2013 35Th international conference on software engineering (ICSE). IEEE, 2013.
+
+
+So we often distinguish
+- Multi-goal reasoning (up to 3 goals) where boolean domination works ok
+- Many-goal reasoning (4 or more) [^many], which needs something else called continuous domination (e.g. _better_, see below)
+  - Note that continuous domination also works for multi-goal.
+
+
+[^many]: Aurora Ramírez, José Raúl Romero, Sebastián Ventura,
+  [A survey of many-objective optimisation in search-based software engineering](https://www.researchgate.net/publication/329736475_A_survey_of_many-objective_optimisation_in_search-based_software_engineering)
+  Journal of Systems and Software, Volume 149, 2019, Pages 382-395,
+  ISSN 0164-1212, https://doi.org/10.1016/j.jss.2018.12.015.
+
+
+Zilter’s continuous domination predicate [52] is useful [38, 42, 52]. Continuous domination judges the
+domination status of pair of individuals by running a “what-if”
+query which checks the situation when we jump from one individual to another, and back again. Specifically:
+- For the forward jump, we compute $s_1 = − \sum_i e^{w_i(a_i = b_i)/n}$
+- For the backward jump, we compute $s_2 = − \sum_i e^{w_i(ab_i = a_i)/n}$
+
+where $a_i$  and $b_i$  are the values on the same index from two individuals, 
+$n$ is the number of goals (in our case $n = 3$), and $w_i$𝑖
+is
+the weight {-1,1} if we are minimization or maximizing the goal 𝑖
+correspondingly. According to Zitzler [^zizt], one example is preferred
+to another if we lost the least jumping to it; i.e. $s_1 \lt s_2$.
+
+- e.g. in one dimension, 
+  - suppose we are moving between 10 pounds and 2 pounds
+  - and we want to maximize (`i.w=1`)
+  - here to there is `i.w\*(10-2) = 8`
+  - there to here is `i.e\*(2-10) = -8`
+  - leaving here loses worst
+  - so here is better than there
+- and the point of Zitzler is that it works for comparing on $N \ge 1$ dimensions.
+
+```lua
+function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
+  s1,s2,ys,x,y = 0,0,i.cols.y
+  for _,col in pairs(ys) do -- note that we are iterating over the goal columns
+    x  = row1.cells[col.at]
+    y  = row2.cells[col.at]
+    s1 = s1 - math.exp(col.w * (x-y)/#ys)
+    s2 = s2 - math.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
+```
+
+To see this in action, lets sort all our cars and print every 50th car.
+In the following, the end  list has the heaviest cars with worst mileage and acceleration.
+```
+              {Clndrs Volume Hpx  Lbs-  Acc+   Model   origin  Mpg+}
+              ------- ------ ---  ----  -----  ------  ------  ------
+t1  = {cells= {4      97     52   2130  24.6   82      2       40}}
+t50 = {cells= {4      97     54   2254  23.5   72      2       20}}
+t100= {cells= {4      97     78   2188  15.8   80      2       30}}
+t150= {cells= {4      151    90   2950  17.3   82      1       30}}
+t200= {cells= {6      200    ?    2875  17     74      1       20}}
+t250= {cells= {6      146    97   2815  14.5   77      3       20}}
+t300= {cells= {8      267    125  3605  15     79      1       20}}
+t350= {cells= {8      307    130  4098  14     72      1       10}}
+```
+
+```lua
+function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
+  local node,left,right,A,B,mid
+  rows = rows or i.rows
+  min  = min or (#rows)^the.min
+  cols = cols or i.cols.x
+  node = {data=i:clone(rows)} --xxx cloning
+  if #rows > 2*min then
+    left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
+    if i:better(node.B,node.A) then left,right,node.A,node.B = right,left,node.B,node.A end
+    node.left  = i:sway(left,  min, cols, node.A) end
+  return node end
+```
+
+### Aggregation Functions
+
+An alternate scheme to bdom and cdom functions like Zitzler is an _aggregation functions_
+that  adds a little weights to each dimension and
+add all the goals up; e.g.
+- mph times four plus  acceleration times two
+- Everyone who has every studied this reports that such objective functions
+  get stuck in local maxima[^chen22]  and that other schemes (e.g. Zitzler) are better.
+  - worse, you have to start re-running your analysis, 
+    jiggling the magic weights in the objective function.
+ 
+[^zizt]: Zitzler, E., Künzli, S. (2004). 
+  [Indicator-Based Selection in Multiobjective Search](https://www.simonkuenzli.ch/docs/ZK04.pdf),
+  In: , et al. Parallel Problem Solving from Nature - 
+  PPSN VIII. PPSN 2004. Lecture Notes in Computer Science, 
+  vol 3242. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-540-30217-9_84
+
+
+[^chen22]: Tao Chen and Miqing Li. 2022. 
+  [The Weights can be Harmful: Pareto Search versus Weighted Search in Multi-Objective Search-Based Software i Engineering.](https://arxiv.org/pdf/2202.03728.pdf
+  ACM Trans. Softw. Eng. Methodol. Just Accepted (April 2022). https://doi.org/10.1145/3514233
+
+
