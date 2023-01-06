@@ -163,44 +163,7 @@ Note that:
 
 (Aside: the leaf node found via our optimizer never appears in the cluster tree. Why?)
 
-# Applications to SE
-<img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
-
-
-## Defect Prediction and Clustering (a detailed example)
-
-[Papakroni](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd) argued that, for that purpose,
-you do not need to show models... just insightful samples from the domain.
-
-For example, here's a summary of [POI-3.0](https://zenodo.org/record/322443#.YS-obNNuc2k). The original data set is reduced from 442 rows and
-21 columns to 21 rows and 6 columns.
-
-![image](https://user-images.githubusercontent.com/29195/131706893-d46a785a-5ce1-4999-8e08-b770d8728ecb.png)
-
-
-|name | what | notes |
-|---| ------|--|
-|lcom3| cohesion| if m,a are the number of methods,attributes in a class number and µ(a) is the number of methods accessing an attribute,then _lcom3 = (mean(µ(a)) - m)/ (1 - m)_ |
-|ce  | efferent couplings| how many other classes is used by the specific class|
-|rfc |response for a class | number of methods invoked in response to a message to the object.|
-|cbm |coupling between objects |total number of new/redefined methods to which all the inherited methods are coupled|
-|loc |lines of code | |
-|defect| defect| Binary class. Indicates whether any defect is found in a post-release bug-tracking system. |
-
-And we know how to change these
-
-![image](https://user-images.githubusercontent.com/29195/131706567-b348b940-c7c3-4a2f-b20b-3303e036b4db.png)
-
-![image](https://user-images.githubusercontent.com/29195/131708447-c0f0c4af-31e9-4389-acd6-d438b9bb835b.png)
-
-Btw, see the colors?
-- One surprisingly [good defect predictor](https://home.cse.ust.hk/~hunkim/papers/nam-ase2015.pdf)
-is "count how often an example has attribute values falling into the worst part of each column" (e..g which side of the emdian your fall).
-- And this does not even need clss labels to impement.
-  -  Defeats most other unsupervised methods (at least, on SE data). See [IVSBC in Fig8](https://yanmeng.github.io/papers/JSS203.pdf).
-- And recently we've found it [useful  to look at just a few (2.5% ) of the data labels](https://arxiv.org/pdf/2108.09847.pdf)
-   to refine  what we mean by "worst half"
-   
+  
 # How to Cluster
 
 ## Distance (Basic)

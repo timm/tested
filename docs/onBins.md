@@ -18,6 +18,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Discretization
 
+feature reduction is good
+More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
+- In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
+
+<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png">
+
+
 volumnes not points
 
 explain things
