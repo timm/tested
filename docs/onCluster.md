@@ -42,10 +42,13 @@ Applications:
     -  In this way, users engaged with the data and with each other by monitoring each other’s queries and checking each other’s conclusions.
 - As a privacy tool (why share all the data? why not just cluster and just a few cluster centroids?)[^peters]
   - [Fayola Peters](https://www.ezzoterik.com/papers/15lace2.pdf) used cluster + contrast to prune, as she passed data around a community. 
-    - At east step, and anomaly detector was called about members of that community only added in theory local data that was not already in the shared cache (i.e. only if it was anomalous).
+   - For example, in the following, green rows are those nearest the cluster centroids and blue rows are the ones most associated with the last column
+       (bugs/10Kloc).
+   - Discard things are aren't blue of green. 
    - She ended up sharing 20% of the rows and around a third of the columns. 1 - 1/5\*1/3 thus offered 93%   privacy
    - As for the remaining 7% of the data, we ran a mutator that pushed up items up the boundary point between classes (and no further). Bu certain common measures of privacy, that made the 7% space 80% private. 
    - Net effect 93% + .8*7 = 98.4% private,
+   - And, FYI, inference on the tiny green+blue region was as effective as inference over all
 
 <img width=700 src="/etc/img/peters1.png">
 
