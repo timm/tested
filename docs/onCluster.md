@@ -47,9 +47,9 @@ Applications:
    - As for the remaining 7% of the data, we ran a mutator that pushed up items up the boundary point between classes (and no further). Bu certain common measures of privacy, that made the 7% space 80% private. 
    - Net effect 93% + .8*7 = 98.4% private,
 
-<img width=90 src="/etc/img/peters1.png">
+<img width=700 src="/etc/img/peters1.png">
 
-<img width=90 src="/etc/img/peters2.png">
+<img width=700 src="/etc/img/peters2.png">
 
 [^peters]: Peters, Fayola, Tim Menzies, and Lucas Layman.](https://www.ezzoterik.com/papers/15lace2.pdf)
     2015 IEEE/ACM 37th IEEE International Conference on Software Engineering. Vol. 1. IEEE, 2015.
