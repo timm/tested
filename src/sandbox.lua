@@ -1,24 +1,40 @@
 t1={bins=4,lo=10, hi=90, bins={[10]=5,[30]=3,[50]=10,[70]=20,[90]=0}}
 
---ins        5     3    10   20   0
---old    10    30    50   70     90 
---new  5    15    35     55    85    95
---     5 10 15 30 35  50 55 70 85 90 95
+--        v0
+--old     10    30   50   70    90 
+--new  5     15    35   55  85     95
+--     v1    v2                  v1    v2
+--     5 10 15 30 35 50 55 70 85 90 95
 
-for j,new in pairs(news) do
 
 1={lo=5,n=0},
 2={lo=10,n=10}
 
+function RANGE(lo,hi) return {lo=lo, hi=hi,n=} end
+
+function overlap(i,j,      n) -- steal from i, add to j
+  if  j.lo < i.lo and j.hi >= i.lo and j.hi <= i.hi                  then n= j.hi - i.lo end
+  if j.lo >= i.lo and j.lo <= i.hi and j.hi >= i.lo and j.hi <= i.hi then n= j.hi - j.lo
+  if j.lo >= i.lo and j.lo <= i.hi and j.hi>i.lo                     then n= i.lo - j.hi end 
+  if n then j
+    j.n = j.n + i.n * n/(i.hi - i.lo)
+    return true end end end
+
+function transfer(olds,news)
+  for _,old in pairs(olds) do 
+    for _,new in pairs(news) do
+      overlap(old.new) end end end 
+
 -- small bins inside large nins
 print(t1.bins[30])
 
-for j,new in pairs(news) do
-  for i,old in pairs(olds) do
-    v0=new.lo
-    v1=new.lo
-    v2=new[i+1] or math.huge or olds[i+1].lo
-    if v1 > v0 then
-      a = (v1-v0)/(v2-v1)
+for j,new in pairs(news) do   -- v1 v2
+  for i,old in pairs(olds) do -- v0
+    v1 = new.lo
+    v2 = news[j+1] and news[j+1].lo
+    v0 = old.lo
+    if v0>=v1 and v2 and v0<=v2 then
+      a = (v2-v0)/(v2-v1)
       b = 1-a
-    if v1 <= v0 and v0 <= v2 then 
+      new.n = new.n + old.n * a
+      new.n = new.n + old.n * (1-a)
