@@ -7,10 +7,8 @@ t1={bins=4,lo=10, hi=90, bins={[10]=5,[30]=3,[50]=10,[70]=20,[90]=0}}
 --     5 10 15 30 35 50 55 70 85 90 95
 
 
-1={lo=5,n=0},
-2={lo=10,n=10}
 
-function RANGE(lo,hi) return {lo=lo, hi=hi,n=} end
+function RANGE(lo,hi) return {lo=lo, hi=hi,n=0} end
 
 function overlap(i,j,      n) -- steal from i, add to j
   n=0
@@ -36,4 +34,4 @@ for j,new in pairs(news) do   -- v1 v2
       a = (v2-v0)/(v2-v1)
       b = 1-a
       new.n = new.n + old.n * a
-      new.n = new.n + old.n * (1-a)
+      new.n = new.n + old.n * (1-a) end end end 

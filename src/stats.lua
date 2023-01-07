@@ -414,11 +414,11 @@ function eg10()
 
 the=settings(help,the)
 
---eg1(); eg2(); 
---eg4(); eg5(); eg6(); eg7();eg8()
---eg4();
-for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
-if   pcall(debug.getlocal,4,1) 
-then return sk
-else the=cli(help,the)
-     for _,rx in pairs(sk(the.file)) do print(rx.rank,rx.name,rx.show) end end
+eg1(); eg2(); 
+eg3(); eg4(); eg5(); eg6(); eg7();eg8()
+eg4(); eg10()
+-- for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
+-- if   pcall(debug.getlocal,4,1) 
+-- then return sk
+-- else the=cli(help,the)
+--      for _,rx in pairs(sk(the.file)) do print(rx.rank,rx.name,rx.show) end end
