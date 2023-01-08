@@ -197,11 +197,13 @@ function transpose(t,    u)
   return u end
 
 function repCols(t,cols,      t)
-  t={}
-  for _,col in pairs(cols) do
-    row={}
-    for j=2,#cols in pair(col) do
-      push(row,col[j])
+  t=copy(cols)
+  for _,col in pairs(t) do
+    col[#col] = col[1]..col[#col]
+    for j=2,#col do col[j-1] = col[j] end
+    col[#col]=nil end 
+  table.insert(t,1,kap(t[1], function(k,v) return "Num"..k end))
+  t[1][#t]="nameX"
   return cols end
 
 function repRows(t, rows)
@@ -211,7 +213,7 @@ function repRows(t, rows)
     if n==1 then push(row,"nameX") else
       u=t.rows[#t.rows - n + 2]
       push(row, u[#u]) end end
-  return rows end
+  return  rows end
 
 function repgrid(sFile,     trows)
   t = dofile(sFile) 
@@ -274,6 +276,11 @@ function any(t) return t[rint(#t)] end  --> x; returns one items at random
 
 function many(t,n,    u)  --> t1; returns some items from `t`
    u={}; for i=1,n do u[1+#u]=any(t) end; return u end
+
+function copy(t,    u) --> t; deep copy. Includes meta-table
+  if type(t) ~= "table" then return t end 
+  u= kap(t, function(k,v) return copy(v),copy(k) end)
+  return setmetatable(u, getmetatable(t)) end
 
 -- ### Strings
 function fmt(sControl,...) --> str; emulate printf

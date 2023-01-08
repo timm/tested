@@ -331,59 +331,29 @@ proposed a way to quickly sample a large space, with just a few queries:
 
 - evaluate $B$ examples
 - explore the ${B \choose 2}=B(B-1)/2$ differences between them
-  e.g. $N$=20$ evaluations gives us  information of  190 examples
-- reward changes to the $X$ variables, favoring small changes to $X$ that lead
-  to large changes in $Y$
+  e.g. $N=20$ evaluations gives us  information of  190 examples
+- i.e. score via _yvap/xgap_ = $\Delta{Y}/\Delta{X}$
+  - so the best thing has the smallest change in $X$ that leads to the biggest change in $Y$.
 
+How:
+- For some fixed budged $B$
+- Evaluate $B$ examples and compare their $X$ and $Y$ column values by $v_x=\Delta{Y}/\Delta{X}$
+- Rank every non-evaluated example by the sum of their $v_x$ scores
+- Best guess= first $B$ items
+  - Evaluate the best guesses and perform  a final sort on the best $B$ items
+    - Alert: this means that we are actually doing $2B$ evals.
+- Compare that final sort order against "ground truth"
+  - i.e. let some omniscient being rank all the examples by their Y-scores.
 
-- Input: 
-  - a budget $B$ 
-  - $N$ examples $((X_1,Y_1),(X_2,Y_2)...)$  (i.e. examples with goal and non-goal attributes)
-  - a distance predicated DIST that report distances in $X_i$ or $Y_i$
-  - a BETTER predicate that sorts two examples on their goals (may be different to the $Y_i$
-    distance measure)
-- phase0: ground truth
-- 20 times repeat
-  - examples = shuffle(examples)
-  - take the first $B$ items
-  - phase1: reward
-    -  for all pairs EG1,EG2 in  the first $B$ items in examples
-      - if BETTER(EG2,EG1) then EG1,EG2 = EG2,EG1 end
-      - measure the distance between the goals and the non-goal columns
-        - let $\delta=\frac{\Delta{y}}{\Delta{x}}$ (which rewards small changes in $X$ and large changes to $Y$) 
-      - for all the non-goal columns COL do
-        - x= COL of EG1
-        - y= COL of EG2
-        - if $x \neq y$ then 
-          - COL.good[x] += $\delta$
-          - COL.bad[y] += $\delta$
-  - phase2: score 
-    - for each non-goal COL do
-      - normalize all _good,bad_ values such that $\sum=100$ end
-    - for all z of COL
-      - COL.z.score = good[z]/(good[z]+bad[z] + 1E-31)
-      - (and missing values score 0)
-  - phase3: guess
-    - truth= sort all examples on BETTER, labeling all 1% to 100%, best to worst.
-    - sort examples by sum of their x-scores (most to least)
-    - guessed= first $B$ items
-    - sort the truth scores of the guessed items, the print them
-
-
-Without the ground truth computation, the above evaluates $2B$ examples:
-- one $B$ duing phase1 (when it access the $Y$ scores of the first $B$ items)
-- another $B$ during phase3 (when it score the $B$ examples ranked best.
-
-
-This approach spits out a set of scores of what variables matter most.
-Note what we seek are the variables where a few ranges score most
 
 
 For example, for 93 examples and a budget of $B=16$
 (which is really 32), we get the following.
-- Here the goals are "reduce effort, defects).
-- Note that `prec`
-  (precedentness, have we done this before) scores really well while
+- Here the goals are "reduce effort, defects".
+- And the $X$ attribute values are 2=low, 3=nominal, 4=high, 5= very high
+
+Note that `prec`
+  (precedent less, have we done this before) scores really well while
   `rely` (required reliability) looks kind of wishy wahsy
 
 
@@ -518,7 +488,7 @@ Or maybe you can do better?
   - and if we increment a bucket, what kernel should we apply left and right
 - Cluster on x, label on item, then compute $\Delta{x}$
   and apply to all items on cluster
-- The score fraction _good/(good + bad)_  is only one
+- The above used a  score fraction _good/(good + bad)_  is only one
   of dozens of alternatives (see table 3 of
   [this paper](https://ink.library.smu.edu.sg/cgi/viewcontent.cgi?article=2329&context=sis_research)
 - Restrict the example scoring to the highest entropy
