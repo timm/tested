@@ -17,23 +17,20 @@ USAGE: grid.lua  [OPTIONS] [-g ACTION]
 OPTIONS:
   -d  --dump    on crash, dump stack   = false
   -f  --file    name of file           = ../etc/data/repgrid1.csv
-  -F  --Far     distance to "faraway"  = 1
   -g  --go      start-up action        = data
   -h  --help    show help              = false
-  -m  --min     stop clusters at N^min = .5
   -p  --p       distance coefficient   = 2
   -s  --seed    random number seed     = 937162211
-  -S  --Sample  sampling data size     = 512
 
 ACTIONS:
 ]]
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
 local id,obj=0 --classes
 local cosine,Seed,rand,rint,rnd --maths
-local map,kap,sort,keys,push,any,many,lt --lists
+local map,kap,sort,keys,push,any,many,lt,copy,last --lists
 local fmt,oo,o,coerce,csv,show --strings
 local settings,cli,main --settings
-local repgrid,transpose --rep
+local repgrid,transpose,repRows,repCols --rep
 -----------------------------------------------------------------------------------------
 -- ## Classes
 function obj(s,    t,new) --> t; create a klass and a constructor 
@@ -159,32 +156,38 @@ function DATA.around(i,row1,  rows,cols) --> t; sort other `rows` by distance to
   return sort(map(rows or i.rows, 
                   function(row2)  return {row=row2, dist=i:dist(row1,row2,cols)} end),lt"dist") end
 
+function DATA.furthest(i,row1,  rows,cols,    t) --> t; sort other `rows` by distance to `row`
+  t=i:around(row1,rows,cols)
+  return t[#t] end
+
 function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data using 2 far points
   local A,B,left,right,c,dist,mid,some,project
-  function project(row)    return {row=row, dist=cosine(dist(row,A), dist(row,B), c)} end
+  function project(row,      x,y)    
+     x,y = cosine(dist(row,A), dist(row,B),c)
+     row.x = row.x or x
+     row.y = row.y or y
+     return {row=row, x=x,y=y} end
   function dist(row1,row2) return i:dist(row1,row2,cols) end
   rows = rows or i.rows
-  some = many(rows,the.Sample)
-  A    = above or any(some)
-  B    = i:around(A,some)[(the.Far * #rows)//1].row
+  A    = above or any(rows)
+  B    = i:furthest(A,rows).row
   c    = dist(A,B)
   left, right = {}, {}
-  for n,tmp in pairs(sort(map(rows, project), lt"dist")) do
+  for n,tmp in pairs(sort(map(rows, project), lt"x")) do
     if   n <= #rows//2 
     then push(left,  tmp.row); mid = tmp.row
     else push(right, tmp.row) end end
   return left, right, A, B, mid, c end
 
-function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursively halved
+function DATA.cluster(i,  rows,cols,above) --> t; returns `rows`, recursively halved
   local node,left,right,A,B,mid
   rows = rows or i.rows
-  min  = min or (#rows)^the.min
   cols = cols or i.cols.x
   node = {data=i:clone(rows)} --xxx cloning
-  if #rows > 2*min then
-    left, right, node.A, node.B, node.mid = i:half(rows,cols,above)
-    node.left  = i:cluster(left,  min, cols, node.A)
-    node.right = i:cluster(right, min, cols, node.B) end
+  if #rows >= 2 then
+    left, right, node.A, node.B, node.mid, node.c = i:half(rows,cols,above)
+    node.left  = i:cluster(left,  cols, node.A)
+    node.right = i:cluster(right, cols, node.B) end
   return node end
 
 -------------------------------------------------------------------------------
@@ -194,40 +197,42 @@ function transpose(t,    u)
   u={}
   for i = 1, #t[1] do
     u[i]={}; for j = 1, #t do u[i][j] = t[j][i] end end
-  return u end
+  return u end 
 
-function repCols(t,cols,      t)
-  t=copy(cols)
-  for _,col in pairs(t) do
-    col[#col] = col[1]..col[#col]
+function repCols(cols)
+  cols=copy(cols)
+  for _,col in pairs(cols) do
+    col[#col] = col[1]..":"..col[#col]
     for j=2,#col do col[j-1] = col[j] end
     col[#col]=nil end 
-  table.insert(t,1,kap(t[1], function(k,v) return "Num"..k end))
-  t[1][#t]="nameX"
-  return cols end
+  table.insert(cols,1,kap(cols[1], function(k,v) return "Num"..k end))
+  cols[1][#cols[1]]="thingX"
+  return DATA(cols)
+  end
 
-function repRows(t, rows)
+function repRows(t, rows,u)
+  rows=copy(rows)
   for j,s in pairs(rows[#rows]) do rows[1][j] = rows[1][j] .. ":" .. s end
   rows[#rows] = nil
   for n,row in pairs(rows) do
-    if n==1 then push(row,"nameX") else
+    if n==1 then push(row,"thingX") else
       u=t.rows[#t.rows - n + 2]
       push(row, u[#u]) end end
-  return  rows end
+  return  DATA(rows) end
 
-function repgrid(sFile,     trows)
+function repgrid(sFile,     t,rows)
   t = dofile(sFile) 
   rows = repRows(t, transpose(t.cols)) 
-  cols = repCols(t,t.cols)
-  map(rows,oo)
+  cols = repCols(t.cols)
+  show(rows:cluster())
+  show(cols:cluster())
 end
-
 
 function show(node,what,cols,nPlaces,    lvl) --> nil; prints the tree generated from `DATA:tree`.
   if node then
     lvl = lvl or 0
-    io.write(("| "):rep(lvl)..#node.data.rows.."  ")
-    print((not node.left or lvl==0) and  o(node.data:stats("mid",node.data.cols.y,nPlaces)) or "")
+    io.write(("|.. "):rep(lvl))
+    print(not node.left and  o(last(last(node.data.rows).cells))  or fmt("%.f",rnd(100*node.c)))
     show(node.left, what,cols, nPlaces, lvl+1)
     show(node.right, what,cols,nPlaces, lvl+1) end end
 
@@ -276,6 +281,9 @@ function any(t) return t[rint(#t)] end  --> x; returns one items at random
 
 function many(t,n,    u)  --> t1; returns some items from `t`
    u={}; for i=1,n do u[1+#u]=any(t) end; return u end
+
+function last(t) --> x
+  return t[#t] end
 
 function copy(t,    u) --> t; deep copy. Includes meta-table
   if type(t) ~= "table" then return t end 
@@ -349,6 +357,12 @@ function eg(key,str, fun) --> nil; register an example.
 
 eg("the","show settings",function() oo(the) end)
 
+eg("copy","check copy", function(     t1,t2)
+  t1={a=1,b={c=2,d={3}}}
+  t2=copy(t1)
+  t2.b.d[1]=10000
+  print("b4",o(t1),"\nafter",o(t2))  end)
+
 eg("sym","check syms", function()
   local sym=SYM()
   for _,x in pairs{"a","a","a","a","b","b","c"} do sym:add(x) end
@@ -393,6 +407,8 @@ eg("cluster", "N-level bi-clustering", function(     data)
   show(data:cluster(),"mid",data.cols.y,1)
   end)
 
-repgrid(cli(settings(help)).file)
---main(the,help, egs)
+eg("rep","checking repgrid", function()
+    repgrid(the.file) end)
+
+main(the,help, egs)
 
