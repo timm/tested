@@ -38,7 +38,7 @@ of NUM and SYM... but I don't actually implement that.
 My CSV parser generates theses instances from data where row1 is some column headers 
 and the other rows are the actual data.
 ```
-Clndrs,Volume, Hpx,  Lbs-,  Acc+,  Model, origin, Mpg+
+Clndrs,Volume, HpX,  Lbs-,  Acc+,  Model, origin, Mpg+
 4,      97,     52,  2130,  24.6,  82,    2,      40
 4,      97,     54,  2254,  23.5,  72,    2,      20
 4,      97,     78,  2188,  15.8,  80,    2,      30
@@ -302,12 +302,13 @@ examples of this:
 
 
 - Meet "Norma", a statue crafted in the 1940s from the average measurements of 15,000 women, from the
-  United States (and if you want to meed "Normman", see [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
+  United States (and if you want to meed "Normman", see
+  [here](https://www.cabinetmagazine.org/issues/15/cambers.php)).
   In her time, "Norma" was something of a cultural icon:
   - A notable physical anthropologist argued that Norma’s physique was “a kind of perfection of bodily form,” 
   - artists proclaimed her beauty an “excellent standard” 
   - physical education instructors used her as a model for how young women should look, suggesting exercise based on a student’s deviation from the ideal.
-  - But in reality, "Norma" did not exist.  
+  - But in reality, "Norma" did not exist.
     - In   1945, an American newspaper gave its  "Norma" prize to the woman who best matched this statue.
     - Only 40 of the 3,864 contestants were average size on just five of the nine dimensions 
     - No contestant (not even the winner) same close on all nine dimensions. 

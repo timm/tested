@@ -30,7 +30,7 @@ local cosine,Seed,rand,rint,rnd --maths
 local map,kap,sort,keys,push,any,many,lt,copy,last --lists
 local fmt,oo,o,coerce,csv,show --strings
 local settings,cli,main --settings
-local repgrid,transpose,repRows,repCols --rep
+local repgrid,transpose,repRows,repCols,repPlace --rep
 -----------------------------------------------------------------------------------------
 -- ## Classes
 function obj(s,    t,new) --> t; create a klass and a constructor 
@@ -389,40 +389,6 @@ eg("num", "check nums", function()
   local num=NUM()
   for _,x in pairs{1,1,1,1,2,2,3} do num:add(x) end
   return 11/7 == num:mid() and 0.787 == rnd(num:div()) end )
-
-eg("data","read DATA csv", function(     data) 
-  data=DATA(the.file)
-  return #data.rows == 398 and
-         data.cols.y[1].w == -1 and
-         data.cols.x[1].at == 1 and 
-         #data.cols.x==4 end)
-
-eg("clone", "duplicate structure", function(     data1,data2)
-  data1=DATA(the.file)
-  data2=data1:clone(data1.rows)
-  return #data1.rows == #data2.rows and
-         data1.cols.y[1].w == data2.cols.y[1].w and
-         data1.cols.x[1].at == data2.cols.x[1].at and 
-         #data1.cols.x==#data2.cols.x end)
-
-eg("around", "sorting nearest neighbors", function(     data)
-  data=DATA(the.file)
-  print(0,0,o(data.rows[1].cells))
-  for n,t in   pairs(data:around(data.rows[1])) do
-    if n %50 ==0 then print(n, rnd(t.dist,2) ,o(t.row.cells)) end end end)
-
-eg("half", "1-level bi-clustering", function(     data)
-  data=DATA(the.file)
-  local left,right,A,B,mid,c = data:half() 
-  print(#left,#right,#data.rows)
-  print(o(A.cells),c)
-  print(o(mid.cells)) 
-  print(o(B.cells)) end)
-
-eg("cluster", "N-level bi-clustering", function(     data)
-  data=DATA(the.file)
-  show(data:cluster(),"mid",data.cols.y,1)
-  end)
 
 eg("rep","checking repgrid", function()
     repgrid(the.file) end)

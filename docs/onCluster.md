@@ -238,10 +238,88 @@ function lt(x) --> fun;  return a function that sorts ascending on `x`
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 ```
+### K-means
+
+<img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
+
+k-means:
+- pick $k$ random points
+- labeling everyone by their closest $k$
+- move $k$ to mean value of all points with same label
+
+
+E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
+- Pick first 20 examples (at random) as _controids_
+- for everything else, run through in batches of size (say 500,2000,etc)
+  - mark each item with its nearest centroid
+  - between batch B and B+1, move centroid towards its marked examples
+    - "n" stores how often this centroid has been picked by new data
+    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   $c = (1-1/n)*c + x/n$. 
+    - Note that when "n" is large, "c" barely moves at all.
+   
+
 ## Recursive Bi-Clustering
 
+e.g. recursive k-means with k=2.
+
+But there are many more:
+
+### KD-Treess
+- Look at all the attributes
+- Findthe one with the greatest diversity
+- Split on its central point (e.g. mean, median, mode)
+- Recurse on both halves.
+
+```python
+from collections import namedtuple
+from operator import itemgetter
+from pprint import pformat
+
+class Node(namedtuple("Node", "location left_child right_child")):
+    def __repr__(self):
+        return pformat(tuple(self))
+
+def kdtree(point_list, depth: int = 0):
+    if not point_list:
+        return None
+
+    k = len(point_list[0])  # assumes all points have the same dimension
+    # Select axis based on depth so that axis cycles through all valid values
+    axis = depth % k
+
+    # Sort point list by axis and choose median as pivot element
+    point_list.sort(key=itemgetter(axis))
+    median = len(point_list) // 2
+
+    # Create node and construct subtrees
+    return Node(
+        location=point_list[median],
+        left_child=kdtree(point_list[:median], depth + 1),
+        right_child=kdtree(point_list[median + 1 :], depth + 1),
+    )
+
+def main():
+    """Example usage"""
+    point_list = [(7, 2), (5, 4), (9, 6), (4, 7), (8, 1), (2, 3)]
+    tree = kdtree(point_list)
+    print(tree)
+
+if __name__ == "__main__":
+    main()
+```
+
+Curse of dimensionality:
+- Each split halves the training data size
+- Pretty soon, run of data.
+  - As a general rule, if the dimensionality is $k$, the number of points in the data, $n$, should be $2^k$.
+    - So, theoretically,  20 attributes needs a million rows. 
+    - Yet we often achieve competency on much smaller data sets.
+
+### SWAY (the sampling way)
+
 <img align=right src="/etc/img/abc.png">
-Once we know distance, then we  project things in $N$ dimensions down to one dimension (being a line between 2 distant points).
+Once we know distance, then we  project things in $N$ dimensions down to one dimension 
+(being a line between 2 distant points).
 
 ```lua
 function cosine(a,b,c,    x1,x2,y) --> n,n;  find x,y from a line connecting `a` to `b`
@@ -321,26 +399,6 @@ Which, just to remind us, gives us this:
 | | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
 ```
 
-
-# Standard Algorithms
-
-<img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
-
-k-means:
-- pick $k$ random points
-- labeling everyone by their closest $k$
-- move $k$ to mean value of all points with same label
-
-
-E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans.pdf)
-- Pick first 20 examples (at random) as _controids_
-- for everything else, run through in batches of size (say 500,2000,etc)
-  - mark each item with its nearest centroid
-  - between batch B and B+1, move centroid towards its marked examples
-    - "n" stores how often this centroid has been picked by new data
-    - Each item "pulls" its centroid  attribute "c" towards its own attribute "x"  by an amount weighted   $c = (1-1/n)*c + x/n$. 
-    - Note that when "n" is large, "c" barely moves at all.
-   
 
 ### Random Projections
 
