@@ -313,11 +313,10 @@ Curse of dimensionality:
 - Pretty soon, run of data.
   - As a general rule, if the dimensionality is $k$, the number of points in the data, $n$, should be $2^k$.
     - So, theoretically,  20 attributes needs a million rows. 
-    - Yet we often achieve competency on much smaller data sets.
+    - Strange... we often achieve competency on much smaller data sets.
 
 ### Recursive Fastmap (the sampling way)
-<img align=right 
-src="https://en.wikipedia.org/wiki/Principal_component_analysis#/media/File:GaussianScatterPCA.svg" width=500>
+<img align=right src="/etc/img/pca.png" width=500>
 
 "Fastmap" belongs to a class of approximation algorithms to principal component analysis (PCA).
 - Eigenvectors of the correlation matrix. 
