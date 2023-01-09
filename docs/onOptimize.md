@@ -96,8 +96,9 @@ When there was very little memory (1950s):
 <img src="/etc/img/Hill_Climbing_with_Simulated_Annealing.gif" width=600 > 
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/TwoPointCrossover.svg/226px-TwoPointCrossover.svg.png" align=right width=300>
+
 When there was more memory (1960s):
-- m+n rasonong (many candidates and many mutatnts)
+- m+n rationing (many candidates and many mutants)
 - e.g. genetic algorithms
   - given an population $P_i$
   - **mutant** some, a little
@@ -108,11 +109,18 @@ When there was more memory (1960s):
 ![](/etc/img/evolve.png)
 Important ideas from this era:
 - _domination_ (see 
-  [from clustering to otpimization](onCluster.md#from-clustering-to-optimization)
+  [from clustering to optimization](onCluster.md#from-clustering-to-optimization)
 - the external archive
   - when generating mutants, draw from a special population of candidates known to be better
-      than most others).
-
+      than most others.
+  - e.g. Differential evolution:
+    - Population $P_i$ = 10 items per variable being optimized
+    - In generation $G_i$, for $d \in P_i$, pick three other items $a,b,c$ then build $d'$ using
+      - if cr &lt random() then $d'_j=a_j  + f(b_j - c_j)$
+        - e.g. (cr,f) = 0.5, 0.8
+      - replace $d$ with $d'$ if latter is better
+    - At end of $G_i$ everything there is better than at least one other solution
+      - So $G_{j>i}$ mutates using better and better options
 
 When there was more CPU (1990s)
 - stochastic methods
@@ -131,7 +139,14 @@ When there were more than one or two goals (2000s)
 - 20th century optimization: given N goals, add magic weights and try to change the sum:
   - $\sum_i w_i G__i$
   - problem: results dependent on $w_i$ 
-    - so a standard technique in the 20th century was 
+    - so a standard technique in the 20th century was to re-run the analysis with perturbations to $w_i$
+      - tedious
+- Then came algorithms that reasoned across Parento fronter XXX
+
+MOEA/D
+Gaussian process models
+G,A,T,E,
+
 ## Search-base SE.
 
 Many algorithms: e.g. hill-climbing
