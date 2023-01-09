@@ -220,12 +220,29 @@ function repRows(t, rows,u)
       push(row, u[#u]) end end
   return  DATA(rows) end
 
+function repPlace(data,    n,g,maxx,maxy,x,y,c)
+  n,g = 20,{}
+  for i=1,n+1 do 
+    g[i]={}
+    for j=1,n+1 do g[i][j]=" " end end 
+  maxy=0
+  print""
+  for r,row in pairs(data.rows) do
+    c=string.char(64+r) 
+    print(c, last(row.cells))
+    x,y= row.x*n//1, row.y*n//1
+    maxy = math.max(maxy,y+1)
+    g[y+1][x+1] = c end
+  print""
+  for y=1,maxy do oo(g[y]) end  end
+
 function repgrid(sFile,     t,rows)
   t = dofile(sFile) 
   rows = repRows(t, transpose(t.cols)) 
   cols = repCols(t.cols)
   show(rows:cluster())
   show(cols:cluster())
+  repPlace(rows)
 end
 
 function show(node,what,cols,nPlaces,    lvl) --> nil; prints the tree generated from `DATA:tree`.
