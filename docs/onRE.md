@@ -36,12 +36,6 @@ IET Software,
 doi: 10.1049/iet-sen.2017.0144
 
 
-[^malt21]: [XAI Tools in the Public Sector: A Case Study on Predicting Combined Sewer Overflows](https://www.evernote.com/shard/s14/sh/25f4e214-e798-4fea-b978-e70426adb942/c17a39dbe423d1ec88dec8c7633ba365)
-Nicholas Maltbie, Nan Niu, Matthew Van Doren, and Reese Johnson. 2021.
-Proceedings of the 29th ACM Joint European Software Engineer-
-ing Conference and Symposium on the Foundations of Software Engineering
-(ESEC/FSE ’21), August 23ś28, 2021, Athens, Greece.
-
 
 [^easter07] N. Niu and S. Easterbrook, 
 ["So, You Think You Know Others' Goals? A Repertory Grid Study,"](https://homepages.uc.edu/~niunn/papers/SW07.pdf)

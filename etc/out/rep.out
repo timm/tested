@@ -1,0 +1,60 @@
+74
+|.. 48
+|.. |.. 33
+|.. |.. |.. CrossPlatformGUIs
+|.. |.. |.. VisualProgramming
+|.. |.. 75
+|.. |.. |.. ObjectOrientedSystems
+|.. |.. |.. 28
+|.. |.. |.. |.. MultimediaAndHypermedia
+|.. |.. |.. |.. ElectronicPublishing
+|.. 65
+|.. |.. 42
+|.. |.. |.. IntelligentAgents
+|.. |.. |.. KnowledgeBasedSystems
+|.. |.. 43
+|.. |.. |.. BroadbandNetworks
+|.. |.. |.. 34
+|.. |.. |.. |.. VirtualReality
+|.. |.. |.. |.. InformationHighway
+74
+|.. 61
+|.. |.. 54
+|.. |.. |.. ConventionalCommunication:NovelCommunication
+|.. |.. |.. DevelopmentTool:Application
+|.. |.. 43
+|.. |.. |.. ConventionalSystem:IntelligentSystem
+|.. |.. |.. OnlyActAsProgrammed:Semi-autonomous
+|.. 51
+|.. |.. 30
+|.. |.. |.. HumanOrientedTool:SystemTool
+|.. |.. |.. CommunicationTechnology:ApplicationTechnology
+|.. |.. 49
+|.. |.. |.. Multimedia:Programming
+|.. |.. |.. TargetedOnInterface:TargetedOnOverallSystem
+
+A	ElectronicPublishing
+B	VirtualReality
+C	MultimediaAndHypermedia
+D	VisualProgramming
+E	CrossPlatformGUIs
+F	ObjectOrientedSystems
+G	KnowledgeBasedSystems
+H	IntelligentAgents
+I	InformationHighway
+J	BroadbandNetworks
+
+{E                           H            }
+{                                         }
+{                                         }
+{                                         }
+{                                         }
+{      D                                  }
+{                  G                      }
+{                                         }
+{      F                                  }
+{  A C     J                              }
+{              I                          }
+✅ pass:	rep
+#W ?cols table
+#W ?repPlace function
