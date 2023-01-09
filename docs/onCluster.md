@@ -333,9 +333,9 @@ Once we know distance, then we  project things in $N$ dimensions down to one dim
 (being a line between 2 distant points).
 
 ```lua
-function cosine(a,b,c,    x1,x2,y) --> n,n;  find x,y from a line connecting `a` to `b`
+function cosine(a,b,c,    x1,x2,y) 
   x1 = (a^2 + c^2 - b^2) / (2*c)
-  x2 = math.max(0, math.min(1, x1)) -- in the incremental case, x1 might be outside 0,1
+  x2 = math.max(0, math.min(1, x1)) 
   y  = (a^2 - x2^2)^.5
   return x2, y end
 ```

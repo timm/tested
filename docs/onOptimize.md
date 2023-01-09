@@ -16,6 +16,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
+(Before reading this, please review ["From clustering to optimization"](onCluster.md#from-clustering-to-optimization).)
 # Optimization
 
 Data mining = "what is"; i.e they divide things up. 
@@ -94,6 +95,7 @@ When there was very little memory (1950s):
   
 <img src="/etc/img/Hill_Climbing_with_Simulated_Annealing.gif" width=600 > 
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/TwoPointCrossover.svg/226px-TwoPointCrossover.svg.png" align=right width=300>
 When there was more memory (1960s):
 - m+n rasonong (many candidates and many mutatnts)
 - e.g. genetic algorithms
@@ -108,6 +110,8 @@ Important ideas from this era:
 - _domination_ (see 
   [from clustering to otpimization](onCluster.md#from-clustering-to-optimization)
 - the external archive
+  - when generating mutants, draw from a special population of candidates known to be better
+      than most others).
 
 
 When there was more CPU (1990s)
