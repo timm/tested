@@ -315,9 +315,21 @@ Curse of dimensionality:
     - So, theoretically,  20 attributes needs a million rows. 
     - Yet we often achieve competency on much smaller data sets.
 
-### SWAY (the sampling way)
+### Recursive Fastmap (the sampling way)
+<img align=right 
+src="https://en.wikipedia.org/wiki/Principal_component_analysis#/media/File:GaussianScatterPCA.svg" width=500>
 
+"Fastmap" belongs to a class of approximation algorithms to principal component analysis (PCA).
+- Eigenvectors of the correlation matrix. 
+- e.g. at image on right, what is the dimension that best models the data?
+  - maybe not the $x,y$ dimensions but the direction of that big arrow
+    - which points along the direction of greatest variance.
+      - and the 2nd component is the little arrow at right-angles to the first principal arrow.
+
+
+<br clear=all>
 <img align=right src="/etc/img/abc.png">
+We can simplify PCA from polynominal to near-linear time with FASTMAP.
 Once we know distance, then we  project things in $N$ dimensions down to one dimension 
 (being a line between 2 distant points).
 
@@ -429,10 +441,6 @@ Which, just to remind us, gives us this:
       - b = dist(row,B)
       - this row's d.x = (a^2 + c^2 - b^2) / (2c)
           - Cosine rule
-   - Can be done via random sampling over some of the data.
-      - Better for bigger data
-      - But less exact
-      - still, darn useful
 
  
 
