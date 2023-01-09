@@ -18,23 +18,120 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Optimization
 
-Welcome to Search-base SE.
+Data mining = "what is"; i.e they divide things up. 
 
-Historically, in the SE community this is known as _search-based software engineering_[^sbse][^search]:
-- Which explores issues like:
-  - What is the smallest set of test cases that covers all branches in this program?
-  - What is the best way to structure the architecture of this system to enhance its maintainability?
-  - What is the set of requirements that balances software development cost and customer satisfaction?
-  - What is the best allocation of resources to this software development project?
-  - What is the best sequence of refactoring steps to apply to this system?
-- Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
-  and   hill climbing.
-  Having tried many of those, I now prefer
-  something called "landscape analysis" where  data mining divides up a problem (after
-  which _optimization_ is just a matter of finding the difference between good and bad divisions).
+Optimization = "what to do" i.e.  tell you where to go.
+
+Optimization problems in life:
+- Do the least work for most reward
+
+Essential: you can't always get what you want
+- but if you try some time, you just might find, you get what you need
+
+![](/etc/img/build.png)
+
+Optimization problems in SE:
+- What is the smallest set of test cases that covers all branches in this program?
+- What is the best way to structure the architecture of this system to enhance its maintainability?
+- What is the set of requirements that balances software development cost and customer satisfaction?
+- What is the best allocation of resources to this software development project?
+- What is the best sequence of refactoring steps to apply to this system?
+- These topics are explored in the SE _search-based software engineering_[^sbse][^search] community:
+  - Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
+    and   hill climbing.
+
+The great secret:
+- all learners need a little (or a lot) of  optimizers:
+
+![](/etc/img/grad.png)![](/etc/img/roc.png)
+
+## Some History Rationality is an Empirical Science
+
+For centuries, philosophers and scientists explored the Platonic goal of total rational decisions. That fell apart when:
+
+- Godel's 1930 incompleteness theorem showed that in any interesting axiomatic system (where "interesting" means "able to at least support integer arithmetic") there exists conclusions that are true, but not reachable from the premises.
+- Turing's 1937 work on the halting problem showed that, in the general case, it is not possible to decide beforehand whether or not a computer program is "hard" or "easy" (where "easy" meant "will finish processing some arbitrary input"). More specifically, the halting problem is undecidable over a Turing machine (a general description of all computational processes).
+
+While this sounds like very bad news, it had a curious and profound side effect.
+- For Godel and Turing to make their conclusions, they first had to precisely define what it meant to do "computing".
+- That definition was precise enough to allow for the construction of the post-WWII new generation of general computers.
+- For example, after the war at the Institute for Advanced Studies at Princeton, the engineers designing the next generation of general-purposes computers literally tore apart Turing's books (since they read them so obsessively).
+
+So in a very real sense, the legacy of Turing and Godel's work on "limits to computing" was actually a statement of "how to compute".
+- Sure, that computational process had limits but between current human ignorance and those eventual limits lay a very useful middle zone.
+- And in that zone, since WWII, we have built UNIX, the Internet, the open source revolution, social and ubiquitous computing, Google, Facebook, Microsoft, etc etc.
+
+One of the first pioneers to use Turing and Godel's work was John Von Neumann.
+-  Von Neumann was a towering figure in the history of the 20th century. Apart from his seminal contributions to the mathematics of shaped charges, geometry, measure theory, ergodic theory, operator theory, lattice theory, mathematical formulation of quantum mechanics, quantum logic, game theory, mathematical economics, linear programming, mathematical statistics, fluid dynamics, weather systems, etc, etc, etc, etc he also lead the computer work at Princeton's Institute for Advance Studies.
+- He was the one who told his engineers to read Turing in such great detail.
+- He was also a great fan of Godel's work. In his book Turing's Cathedral, Geroge Dyson documents the extraordinary efforts of Von Neumann in rescuing Godel from the pre-WWII chaos in Europe (after which, he gave Godel an office two doors down from his at Princeton).
+
+Von Neumann was the one of the first to fully appreciate the engineering implications of Turing and Godel's work. In summary:
+-  He realized that thanks to Godel and Turing, rationality had just become an experimental science.
+- Given that we cannot guarantee what happens when we fire up a computer program, all we can do is "try it and see" what happens next.
+
+Von Neumann's Princeton group was very successfully in selling this idea to the American government.
+- As a result, they had funds to build the computers needed for very large scale "try it and see" studies.
+- At the height of their research in the 1950s, they were simulating everything from weather effects to stars to atomic bombs:
+  - Stellar evolution: simulating the lifetime of the sun, over $10^{14}$ years;
+  - Biological evolution: simulation the human life space, over 30 years;
+  - Meteorology: simulating 8 hours of atmospheric effects;
+  - Shock waves in ballistic: simulating events that happen in the blink of an eye;
+  - Nuclear explosions: simulating events over the lifetime of a neutron in a nuclear explosion (a mere 10^{-8}) seconds).
+ 
+## Methods
+
+When there was very little memory (1950s):
+- 1+1 reasoning (one canidate solution and 1 mutant)
+- e.g. simulated anneallong:
+  - need a way to score $S$ each possibilities
+  - repeat for time t=1... N
+    -  $m$= mutant = jiggle( current solution $c$) 
+    - if S(c) &gt; S(m) then better so, current = mutant
+    - else, maybe if (abs(S(m) - S(c))/t < random()) then current = mutatn
+      - i.e. initially (when $t$ is small) ,we take chances
+      - this is how we escape local maxima
+  
+<img src="/etc/img/Hill_Climbing_with_Simulated_Annealing.gif" width=600 > 
+
+When there was more memory (1960s):
+- m+n rasonong (many candidates and many mutatnts)
+- e.g. genetic algorithms
+  - given an population $P_i$
+  - **mutant** some, a little
+  - **crossover** (take two "parents" and combine their bits into a "child)
+  - new population = $P_{i+1}$ = **select** (prune worse kids) 
+  - Typical parameter: 100 individuls, evloved for 100 generations, 1% mutation rate
+
+![](/etc/img/evolve.png)
+Important ideas from this era:
+- _domination_ (see 
+  [from clustering to otpimization](onCluster.md#from-clustering-to-optimization)
+- the external archive
+
+
+When there was more CPU (1990s)
+- stochastic methods
+- e.g ISAMP: run ahead with mutants $m_1 \rightarrow m_2 \rightarrow m_3 ...$,
+  reset to start when no further progress seen
+- e.g.  GSAT
+  - given N clauses to satisfiy, makes the change which minimizes the number of unsatisfied clauses 
+  - more generally this is called _local search_ 
+    -  sometimes mtuate at random
+    - other times, do a hill climb on just on variable
+    - its like sking: sometimes you ski in any direction
+      - other times, you just see what happens if you only go backwards and forwards
+
+When there were more than one or two goals (2000s)
+- Frontier reasoning
+- 20th century optimization: given N goals, add magic weights and try to change the sum:
+  - $\sum_i w_i G__i$
+  - problem: results dependent on $w_i$ 
+    - so a standard technique in the 20th century was 
+## Search-base SE.
 
 Many algorithms: e.g. hill-climbing
-- may need "restarts" to avoid local optima
+- may need "restarts" to avoid local optima (iterative sampling, isamp)
 
 [hillClimb](/etc/img/hill.png)
 
@@ -211,7 +308,6 @@ def sa(s0,              # some intial guess; e.g. all rands
 Initially, `t` is large so this algorithm will often jump to sub-optimal solutions. But as things "cool", this algorithm becomes a 
 hill climber that just steps up to the next solution. In the following, just to confuse you, we score things by 1-f (so _better_ means _larger_): 
 
-<img src="/etc/img/Hill_Climbing_with_Simulated_Annealing.gif" width=600 > 
 
 
 GA
