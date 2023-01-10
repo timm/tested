@@ -159,7 +159,7 @@ Important ideas from this era:
     - its like sking: sometimes you ski in any direction
       - other times, you just see what happens if you only go backwards and forwards
 
-[^gsat] Selman, B.; Levesque, H.; and Mitchell, D. 1992.
+[^gsat]: Selman, B.; Levesque, H.; and Mitchell, D. 1992.
   [A New Method for Solving Hard Satisfiability Problems](http://www.cs.cornell.edu/selman/papers/pdf/92.aaai.gsat.pdf)
   In Proceedings of the Tenth National Conference on Artificial Intelligence (AAAI-92), 440-446.
 
