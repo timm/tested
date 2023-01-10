@@ -354,7 +354,7 @@ _social_ weights $w,\phi_p,\phi_g$
   (i.e. being mutated across a set of vectors),
   then:
   - The $w$ 
-  {\em interia} factor pushes   $p_i$ along the  
+   _interia_ factor pushes   $p_i$ along the  
   current direction. 
   - While  the _cognitive_ and 
     _social_ weightings 
