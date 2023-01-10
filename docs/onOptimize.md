@@ -319,3 +319,72 @@ Technology, 43(14):833–839, December 2001.
           simplified world, or by finding satisfactory solutions for a more realistic world.
           Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
+
+### 2020? When background knowledge got good?
+
+Recently, researchers have applied large pre-trained language
+models to take a set of domain terms, then expand that to a large one using associations offered by the
+language model. For example, Fu et al. [29] recently reported success in improving predictions using
+BERT to expand the usecase stories vocab [18]. Co-PI Kuttal used transformer-based language models,
+specifically, BERT, GPT2, and XLNet, to classify the intent of developer conversations 
+
+So can we use generative language models to create detailed backgorund models? Guide search using that extra information? Here's a crazy idea:
+
+
+- Researchers in _particle swam optimization_ (PSO)~\cite{kennedy95particle} implemented
+optimization   as   a set of candidates
+``flying around''
+(i.e.   being mutated)  a shared space. 
+ -  One advantage of this  scheme is that it lends itself to a group performing model maintenance. 
+    - In PSO, particles do not just arrive at some location and stop. 
+    - Instead, each particle is like a   helicopter buzzing around the landscape. 
+    - New model conditions are like a breeze that pushes the particles   some distance across the decision space in a model.  
+    - Our particles then must make new decisions as they   negotiate their way back to their preferred positions.   
+
+![](/etc/img/pos101.png)
+ 
+Is
+ PSO is  a natural method for negotiating  shared solutions.
+- Particle velocity   is controlled by     
+_inertial_,   _cognitive_, and  
+_social_ weights $w,\phi_p,\phi_g$ 
+(where $p, g$ are short for ``personnel'' and ``group'').
+i- In a swam of ``particles'' $p$ 
+ ``flying around''  
+(i.e. being mutated across a set of vectors),
+then:
+- The $w$ 
+{\em interia} factor pushes   $p_i$ along the  
+current direction. 
+- While  the _cognitive_ and 
+  _social_ weightings 
+  $\phi_p,\phi_g$ pulls $p_i$ towards
+  - the best solution found this
+particle or
+  - the best solution found by the entire
+swarm of particles. 
+- $w,\phi_p,\phi_g$ serve to  nudge
+  $p_i$ to a new direction.
+
+In this scheme,  PSO's particles  find a balance between   past decisions ($w$), the preferences of one explorer 
+($\phi_p$), and the preferences made by the team ($\phi_g$).
+ Stakeholders  gets multiple particles, initialized to:
+
+- An initial random  position within the space of options.
+- Or, if the crowd knowledge is available (see next section), 
+positioned  admist the crowd knowledge collected for one stakeholder.
+
+Initial particle velocity is  set according to how far, and in what direction, are the ideal answers for each individual (the further  you start from your ideal, the more aggressively you jump towards it). 
+
+New idea:
+- add a new term $x$ preference
+term $\phi_x$ to
+the set $w,\phi_p,\phi_g$  that controls
+PSO.    
+- The PSO proposed has
+different particles assigned to different stakeholders;
+and an extra term $\phi_x$ that nudges particles towards/away from  things that this stakeholder likes/dislikes. 
+- Weight 
+terminology from the domain
+   by how  much
+  humans like (or loathe) each term.

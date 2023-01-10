@@ -10,6 +10,16 @@ function NUM(n,s)
   return {isNum=true, lo=math.huge, hi=-math.huge, at=n or 0, txt=s or 0,
           w=(s or ""):find"-$" and -1 or 1 } end
 
+function add(col,x)
+  if x == "?" then return x end
+  if col.isNum then
+    col.lo = math.min(x,col.lo)
+    col.hi = math.max(x,col.hi)  
+  else col.seen[x] = true end
+
+function norm(num,x)
+  return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
+
 function COLS(row,     col)
   cols={names=row, all={},x={},y={}}
   for n,s in pairs(row) do  
@@ -35,40 +45,54 @@ function adds(data,row)
         add(col, row[col.at]) end end 
   else data.cols = COLS(row) end end  
         
-function add(col,x)
-  if x == "?" then return x end
-  if col.isNum then
-    col.lo = math.min(x,col.lo)
-    col.hi = math.max(x,col.hi)  
-  else col.seen[x] = true end
-
-function dists(data,row1,row2,  cols,     n,d)
-  n,d = 0,0
-  for _,col in pairs(cols or data.cols.x) do
+function dist(data,row1,row2,  cols,     n,d,gap)
+  function gap(col,x,y)
+    if x=="?" and y=="?" then return  1
+    elseif col.isNum then 
+      x,y = norm(col,x), norm(col,y)
+      if x=="?" then x= y<.5 and 1 or 0 end
+      if y=="?" then y= x<.5 and 1 or 0 end
+      return math.abs(x-y)
+    else return x==y and 0 or 1 end 
+  end --------------------------------
+  n,d,cols = 0,0, cols or data.cols.x
+  for _,col in pairs(cols) do
     n = n + 1
-    d = d + col:dist(row1[col.at], row2[col.at])^the.p end
+    d = d + gap(col, row1[col.at], row2[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
-function far(data,row1,  rows,cols)
-   rows = sort(map(rows or i.rows, function(row2) 
-	    return {row=row2, dist=dist(data,row1,row2,cols)} end),lt"dist") end
-   return rows[(the.Far * #rows)//1].row end
+function around(data,row1,  rows,cols)
+  return sort(map(rows or i.rows, function(row2) 
+	         return {row=row2, dist=dist(data,row1,row2,cols)} end),lt"dist") end
 
-function dist(col,x,y)
-  if x=="?" and y=="?"then return 1 e
-  elseif col.isNum then 
-    x,y = norm(col,x), norm(col,y)
-    if x=="?" then x= y<.5 and 1 or 0 end
-    if y=="?" then y= x<.5 and 1 or 0 end
-    return math.abs(x-y)
-  else return x==y and 0 or 1 end end
- 
-function norm(num,x)
-  return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
+function far(data,row1,  rows,cols)
+  tmp=around(data,row1,rows,cols)
+  return tmp[(the.Far * #tmp)//1].row end
+
+function half(i,rows,  cols,above)
+  local A,B,left,right,c,mid,some
+  local gap,project,farAway
+  function gap(row1,row2) return dist(data,row1,row2,cols) end
+  function project(row)   return {row=row, dist=(gap(row,A)^2+ c^2-gap(row,B)^2)/(2*c)} end
+  function farAway(data,row1,     here,there)
+    here= above or any(some)
+    there= far(data,row1,some,cols)
+    return here,there,gap(here,there) 
+  end --------------------------------
+  rows = rows or data.rows
+  some = many(rows,the.Sample)
+  A,B,c = farAway(data, above or any(some))
+  left, right = {}, {}
+  for n,tmp in pairs(sort(map(rows, project), lt"dist")) do
+    if   n <= #rows//2 
+    then push(left,  tmp.row); mid = tmp.row
+    else push(right, tmp.row) end end
+  return left, right, A, B, mid, c end
+
 ------------------------------------------------------   
 function copy(t,    u) --> t; deep copy
   if type(t) ~= "table" then return t  
-  else u={}; for k,v in pairs(t) do u[k]=copy(v) end; return u end
+  else u={}; for k,v in pairs(t) do u[k]=copy(v) end; return u end end
 
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
@@ -101,16 +125,16 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
 
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) return nil,string.format(":%s %s",k,o(v)) end 
+  fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
-function cli(options) --> t; update key,vals in `t` from command-line flags
+function cli(options,flags) --> t; update key,vals in `t` from command-line flags
   for k,v in pairs(options) do
     v=tostring(v)
-    for n,x in ipairs(arg) do
+    for n,x in ipairs(flags) do
       if x=="-"..(k:sub(1,1)) then
-         v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = coerce(v) end  end
+         v = v=="false" and "true" or v=="true" and "false" or flags[n+1] end end
+    options[k] = coerce(v) end end
 
 function main(funs,settings,    fails,saved)
   cli(settings)
@@ -120,11 +144,11 @@ function main(funs,settings,    fails,saved)
       for k,v in pairs(saved) do setings[k]=v end
       Seed = settings.seed
       if fun()==false then print("FAIL",name); fails=fail+1
-	                   print("PASS",name) end end
+	                   print("PASS",name) end end end
   for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
     if not b4[k] then print( string.formant("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end  
 
 eg={}
 function eg.the() print(o(the)) end
-main(egs,the)
+main(egs,the,arg)
