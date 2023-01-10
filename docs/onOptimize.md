@@ -349,7 +349,7 @@ Is
 _inertial_,   _cognitive_, and  
 _social_ weights $w,\phi_p,\phi_g$ 
 (where $p, g$ are short for "personnel" and "group").
-  - In a swam of "particles" $p$ 
+- In a swam of "particles" $p$ 
    "flying around"  
   (i.e. being mutated across a set of vectors),
   then:
@@ -366,8 +366,8 @@ _social_ weights $w,\phi_p,\phi_g$
   - $w,\phi_p,\phi_g$ serve to  nudge
     $p_i$ to a new direction.
   
-In this scheme,  PSO's particles  find a balance between   past decisions ($w$), the preferences of one explorer 
-($\phi_p$), and the preferences made by the team ($\phi_g$).
+In this scheme,  PSO's particles  find a balance between   past decisions $w$, the preferences of one explorer 
+$\phi_p$, and the preferences made by the team $\phi_g$.
  Stakeholders  gets multiple particles, initialized to:
 
 - An initial random  position within the space of options.
