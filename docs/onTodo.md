@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -22,11 +22,14 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 ## Defect Prediction and Clustering (a detailed example)
 
+
 [Papakroni](https://researchrepository.wvu.edu/cgi/viewcontent.cgi?article=4403&context=etd) argued that, for that purpose,
 you do not need to show models... just insightful samples from the domain.
 
+
 For example, here's a summary of [POI-3.0](https://zenodo.org/record/322443#.YS-obNNuc2k). The original data set is reduced from 442 rows and
 21 columns to 21 rows and 6 columns.
+
 
 ![image](https://user-images.githubusercontent.com/29195/131706893-d46a785a-5ce1-4999-8e08-b770d8728ecb.png)
 
@@ -40,11 +43,15 @@ For example, here's a summary of [POI-3.0](https://zenodo.org/record/322443#.YS-
 |loc |lines of code | |
 |defect| defect| Binary class. Indicates whether any defect is found in a post-release bug-tracking system. |
 
+
 And we know how to change these
+
 
 ![image](https://user-images.githubusercontent.com/29195/131706567-b348b940-c7c3-4a2f-b20b-3303e036b4db.png)
 
+
 ![image](https://user-images.githubusercontent.com/29195/131708447-c0f0c4af-31e9-4389-acd6-d438b9bb835b.png)
+
 
 Btw, see the colors?
 - One surprisingly [good defect predictor](https://home.cse.ust.hk/~hunkim/papers/nam-ase2015.pdf)
@@ -55,10 +62,13 @@ is "count how often an example has attribute values falling into the worst part 
    to refine  what we mean by "worst half"
  Goal: repeat until no crap: cut the crap
 
+
 <img src="https://user-images.githubusercontent.com/29195/131719589-f259227c-562c-4249-956b-4ba9c62f6bfb.png" align=right width=400>
+
 
 "Every <strike>block of stone</strike> has a <strike>statue</strike> signal inside it and it is the taks of the scultpro to discover it. "       
 -- <strike>Michelangelo</strike> some bald guy
+
 
 “Perfection is achieved when there is nothing left to take away.”        
  -- Antoine de Saint-Exupéry 
@@ -67,29 +77,37 @@ is "count how often an example has attribute values falling into the worst part 
 "Less, but better."      
 -- Dieter Rams
 
+
 "In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
 a lower-dimensional manifold. Learners can implicitly take
 advantage of this lower effective dimension."      
 -- Pedro Domingoes
 
+
 <br clear=all>
 <img src="https://user-images.githubusercontent.com/29195/131719792-eca77ca2-b7ee-436a-9e6d-cfbe521aa157.png"  width=900>
 
+
 ## Motivating Examples
 
+
 ### Example1:   effort estiamtion
+
 
 Question: is highly complex software slower to build?    
 Answer: the question is irrelevant (at some sites)
 
+
 ![image](https://user-images.githubusercontent.com/29195/131710162-3f3869f3-95cb-4f97-93c9-e7b7e013bda6.png)
+
 
 So what else can we throw away.
 
+
 ![image](https://user-images.githubusercontent.com/29195/131708345-b3e25f09-c4c2-4a34-8979-b96a178d26e5.png)
 
-![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
 
+![image](https://user-images.githubusercontent.com/29195/131708361-1ad1e4ec-712a-4454-a90d-4d6e8a156a50.png)
 
 
 discretqion: volumnes not points
@@ -100,10 +118,12 @@ Chew Lim Tan
 Manoranjan Dash
 Data Mining and Knowledge Discovery, 6, 393–423, 2002
 
+
 Ramírez-Gallego, Sergio & García, Salvador & Mouriño-Talín, Héctor & Martinez, David 
 and Bolón-Canedo, Verónica & Alonso-Betanzos, Amparo & Benítez, José & Herrera, Francisco. (2015). 
 [Data discretization: Taxonomy and big data challenge](https://www.researchgate.net/publication/284786447_Data_discretization_Taxonomy_and_big_data_challenge)
 Discovery. 6. n/a-n/a. 10.1002/widm.1173. 
+
 
 Example of crazy high dimensional effects:
  - A large N-dimensional unit sphere (radius=1) has finitely small volume.
@@ -130,6 +150,7 @@ Example of crazy high dimensional effects:
 - if n randomly selected dimension say you are similar to something else
     - then you are probably similar
 
+
  - "Fortunately
  in most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
 a lower-dimensional manifold. "
@@ -140,6 +161,7 @@ space of all possible images."
 advantage of this lower effective dimension"
  
  
+
 
 <img src="https://ih1.redbubble.net/image.3318871488.2254/ur,pin_small_front,square,1000x1000.jpg">
 
@@ -300,16 +322,19 @@ with the same rights as conventional values like numbers and strings.
     Functions can be stored in variables (both global and local) and in tables, 
     and can be passed as arguments, and can be returned by other functions.
 
+
 1. Useful for defining a test library (see  101.lua#eg)
 2. Useful for callbacks (see lib.lua#csv). 
 3. Useful for collecting results of an iteration (see lib.lub#map in lib.lua#o)
 4. Writing function that return functions (see lib.lua#lt)
+
 
 ## TE: Test suite
 1. Do you have half a dozen tests per person working on the project per week of work?
 2. Can all the tests be run in batch?
 3. From the command line can you run just one test?
 4. If a test fails and crashes, can the rest of the tests still run (hint try:except:)
+
 
 ## SO: Source control
 1. Is your code in some version control system?
@@ -318,21 +343,25 @@ with the same rights as conventional values like numbers and strings.
 4. Do you have an automated build system (Make, Ant, Maven, Cargo, Flutter, Elm, etc etc etc) for all the tedious details.
 5. Is the build system included in the documentation?
 
+
 ## DI: Data Independence
 1. Your internal model is isolated from I/O operations 
    - When reading csv files, conversions  from strings to types happens once, 
      and once only, before data is loaded into your model
    - All my file I/O routines are isolated (in lib.lua#csv)
 
+
 ## DD: Dialog independence
 1. In the guts of your code, no direct writes to "print" but rather to some `log` function that may or may not write to the screen.
 2. Can you turn off all logging (no log string generation, nothing logged/printed anywhere)?
+
 
 ## Ab: Abstraction
 1. Using try:catch, try:except, (Lua) pcall,
   - See `pcall` in `run1`
 2. You writing your own iterators ? 
   - e.g. lib.lua#csv calls `fun` for every row in a csv file
+
 
 ## OO: Object-oriented programming
 
@@ -347,12 +376,14 @@ with the same rights as conventional values like numbers and strings.
 4. Do your objects have customized sort functions? (e.g. Lua __lt)
 5. Do your objects have customized print functions (e.g. Lua __tostring)
 
+
 ## DSL DSL
 1. Refactoring, on steroids.
 2. Common processing, rewritten as a massive shortcuts
   - e.g. regular expressions
     - see lib.lua#settings' processing of 101.lua#the
   - e.g. help string to options 101.lua#settings
+
 
 ## Pa: Packaging
 1. N-1 globals better than N.

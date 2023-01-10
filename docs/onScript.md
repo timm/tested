@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -129,6 +129,7 @@ I actually view LUA as LISP
   `for pos,x in enumerate(t) do`
 - In my object system, instances are named `i` (since that is shorter than `self`)
 
+
 In the public function arguments, the following conventions apply (usually):
 - Four spaces denote start of local args.  
 - Two spaces denote start of optional args
@@ -142,7 +143,6 @@ In the public function arguments, the following conventions apply (usually):
 - lower = instance; e.g. num,num1
 - xs = a table of "x"; e.g. ns is a list of numbers and ss is a list of strings.
   
-
 
 
 ## Test-Drive Development

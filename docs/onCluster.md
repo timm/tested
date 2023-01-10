@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -16,8 +16,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
-
 # Clustering
+
 
 "Clustering" means grouping together  similar things
 - Give goal attributes $Y$  and other attributes $X$ it is typically groupings in $X$ space.
@@ -52,12 +52,16 @@ Applications:
    - Net effect 93% + .8*7 = 98.4% private,
    - And, FYI, inference on the tiny green+blue region was as effective as inference over all
 
+
 <img width=700 src="/etc/img/peters1.png">
+
 
 <img width=700 src="/etc/img/peters2.png">
 
+
 [^peters]: Peters, Fayola, Tim Menzies, and Lucas Layman.](https://www.ezzoterik.com/papers/15lace2.pdf)
     2015 IEEE/ACM 37th IEEE International Conference on Software Engineering. Vol. 1. IEEE, 2015.
+
 
 [^davies]: Davies, Misty, and Karen Gundy-Burlet. 
   ["Visualization of Global Sensitivity Analysis Results Based on a Combination of Linearly Dependent and Independent Directions."](https://ntrs.nasa.gov/api/citations/20110010856/downloads/20110010856.pdf)
@@ -68,27 +72,34 @@ Applications:
  [Improving test case generation for REST APIs through hierarchical clustering] https://chinagator.github.io/papers/J5.pdf)
  In Proceedings of the 36th IEEE/ACM International Conference on Automated Software Engineering (ASE '21). IEEE Press, 117–128. https://doi.org/10.1109/ASE51524.2021.9678586
 
+
 [^maj18]: Suvodeep Majumder, Nikhila Balaji, Katie Brey, Wei Fu, and Tim Menzies. 2018. 
 [500+ times faster than deep learning: a case study exploring faster methods for text mining stackoverflow](https://arxiv.org/pdf/1802.05319.pdf). 
 In Proceedings of the 15th International Conference on Mining Software Repositories (MSR '18). Association for Computing Machinery, New York, NY, USA, 554–563. https://doi.org/10.1145/3196398.3196424
+
 
 [^leit]: Veerappa, Varsha, and Emmanuel Letier. 
   ["Understanding clusters of optimal solutions in multi-objective decision problems."](http://www0.cs.ucl.ac.uk/staff/e.letier/publications/2011-clusteringSolutions.pdf)
   2011 IEEE 19Th international requirements engineering conference. IEEE, 2011.
 
+
 [^liu]: Liu, Z., Qin, T., Guan, X., Jiang, H., & Wang, C. (2018). 
   [An integrated method for anomaly detection from massive system logs](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8371223)
   IEEE Access, 6, 30602-30611.
+
 
 [^riot]:  Jianfeng Chen, Tim Menzies:
   [RIOT: A Stochastic-Based Method for Workflow Scheduling in the Cloud](https://arxiv.org/pdf/1708.08127.pdf)
   IEEE CLOUD 2018: 318-325
 
+
 [^chen]: J. Chen, V. Nair, R. Krishna and T. Menzies, 
  ["Sampling” as a Baseline Optimizer for Search-Based Software Engineering,"](https://arxiv.org/pdf/1608.07617.pdf)
  in IEEE Transactions on Software Engineering, vol. 45, no. 6, pp. 597-614, 1 June 2019, doi: 10.1109/TSE.2018.2790925.
 
+
 ## The Core of Clustering
+
 
 Large amounts of data can be approximated by the centroids of a few clusters. Why?
 - "In most applications examples are not spread uniformly throughout the instance space, but are concentrated on or near
@@ -101,16 +112,19 @@ Large amounts of data can be approximated by the centroids of a few clusters. Wh
   data points. 
  - This means that all the rows can be shrunk back to just a few examples.
 
+
 For example, here we are clustering 398 examples of cars using the $X$ variables: 
 - find two distant examples $A,B$
 - divide other examples into those closest to $A$ or $B$
 - recurse on each half
 - As a result, we can approximate 398 examples with just 16.
 
+
 This data has three $Y$ variables, acceleration (which we want to maximize), weight (which
 we want to minimize) and miles per hour (which we want to maximize). We print the mean of these
 values at the root and at each leaf:
 - Note that even though we are not trying to, our clusters do separate good from bad $Y$ values:
+
 
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
@@ -161,23 +175,31 @@ Note that:
  - two at the root, 
  - then for each sub-split, we reuse one of the $A,B$ from the parent (the one that was best)
 
+
 (Aside: the leaf node found via our optimizer never appears in the cluster tree. Why?)
+
 
   
 # How to Cluster
+
 
 ## Distance (Basic)
  Here is Aha's instance-based distance algorithm,
 [section 2.4](https://link.springer.com/content/pdf/10.1007/BF00153759.pdf).
 
+
 (Note: slow. Ungood for large dimensional spaces. We'll fix that below.)
 
+
 L-norm (L2):
+
 
 - D= (&sum; (&Delta;(x,y))<sup>p</sup>))<sup>1/p</sup>
 - euclidean : p=2
 
+
 But what is &Delta;  ?
+
 
 -  &Delta; Symbols: 
     - return 0 if x == y else 1
@@ -185,7 +207,9 @@ But what is &Delta;  ?
     -  x - y
     - to make numbers fair with symbols, normalize x,y 0,1 using (x-min)/(max-min)
 
+
 What about missing values:
+
 
 - assume worst case
 - if both unknown, assume &delta; = 1
@@ -196,9 +220,11 @@ What about missing values:
     - x = 0 if y > 0.5 else 1
     - &Delta; =  (x-y)
 
+
 In the following recall that `DaATA` keeps column headers separately
 for the `i.cols.x` (independent) columns and the
 `i.cols.y` (dependent) columns. 
+
 
 ```lua
 function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `row1` to `row2`
@@ -208,8 +234,10 @@ function DATA.dist(i,row1,row2,  cols,      n,d) --> n; returns 0..1 distance `r
     d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
+
 function SYM.dist(i,s1,s2)
   return s1=="?" and s2=="?" and 1 or (s1==s2) and 0 or 1 end 
+
 
 function NUM.dist(i,n1,n2)
   if n1=="?" and n2=="?" then return 1 end -- here's the AHA assumption (assume the max)
@@ -217,6 +245,7 @@ function NUM.dist(i,n1,n2)
   if n1=="?" then n1 = n2<.5 and 1 or 0 end -- here's the AHA assumption (assume the max)
   if n2=="?" then n2 = n1<.5 and 1 or 0 end -- here's the AHA assumption (assume the max)
   return math.abs(n1 - n2) end 
+
 
 function NUM.norm(i,n)
   return n == "?" and n  or (n - i.lo)/(i.hi - i.lo + 1E-32) end
@@ -231,16 +260,20 @@ In the above, `sort` is a table sort function that controls the sorting via a se
 In this case, the secondary function is `lt` which is a function that returns a function that sorts
 items ascending on some argument:
 
+
 ```lua
 function lt(x) --> fun;  return a function that sorts ascending on `x`
   return function(a,b) return a[x] < b[x] end end
+
 
 function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 ```
 ### K-means
 
+
 <img src="https://dashee87.github.io/images/kmeans.gif" width=600 align=right>
+
 
 k-means:
 - pick $k$ random points
@@ -258,11 +291,15 @@ E.g. [mini-batch k-means](https://www.eecs.tufts.edu/~dsculley/papers/fastkmeans
     - Note that when "n" is large, "c" barely moves at all.
    
 
+
 ## Recursive Bi-Clustering
+
 
 e.g. recursive k-means with k=2.
 
+
 But there are many more:
+
 
 ### KD-Treess
 - Look at all the attributes
@@ -270,26 +307,32 @@ But there are many more:
 - Split on its central point (e.g. mean, median, mode)
 - Recurse on both halves.
 
+
 ```python
 from collections import namedtuple
 from operator import itemgetter
 from pprint import pformat
 
+
 class Node(namedtuple("Node", "location left_child right_child")):
     def __repr__(self):
         return pformat(tuple(self))
+
 
 def kdtree(point_list, depth: int = 0):
     if not point_list:
         return None
 
+
     k = len(point_list[0])  # assumes all points have the same dimension
     # Select axis based on depth so that axis cycles through all valid values
     axis = depth % k
 
+
     # Sort point list by axis and choose median as pivot element
     point_list.sort(key=itemgetter(axis))
     median = len(point_list) // 2
+
 
     # Create node and construct subtrees
     return Node(
@@ -298,15 +341,18 @@ def kdtree(point_list, depth: int = 0):
         right_child=kdtree(point_list[median + 1 :], depth + 1),
     )
 
+
 def main():
     """Example usage"""
     point_list = [(7, 2), (5, 4), (9, 6), (4, 7), (8, 1), (2, 3)]
     tree = kdtree(point_list)
     print(tree)
 
+
 if __name__ == "__main__":
     main()
 ```
+
 
 Curse of dimensionality:
 - Each split halves the training data size
@@ -315,8 +361,10 @@ Curse of dimensionality:
     - So, theoretically,  20 attributes needs a million rows. 
     - Strange... we often achieve competency on much smaller data sets.
 
+
 ### Recursive Fastmap (the sampling way)
 <img align=right src="/etc/img/pca.png" width=500>
+
 
 "Fastmap" belongs to a class of approximation algorithms to principal component analysis (PCA).
 - Eigenvectors of the correlation matrix. 
@@ -332,6 +380,7 @@ We can simplify PCA from polynominal to near-linear time with FASTMAP.
 Once we know distance, then we  project things in $N$ dimensions down to one dimension 
 (being a line between 2 distant points).
 
+
 ```lua
 function cosine(a,b,c,    x1,x2,y) 
   x1 = (a^2 + c^2 - b^2) / (2*c)
@@ -339,6 +388,7 @@ function cosine(a,b,c,    x1,x2,y)
   y  = (a^2 - x2^2)^.5
   return x2, y end
 ```
+
 
 Project every point to a line connecting two distance items.
 ```lua
@@ -359,7 +409,9 @@ function DATA.half(i,rows,  cols,above) --> t,t,row,row,row,n; divides data usin
   return left, right, A, B, mid, c end
 ```
 
+
 Once we can divide some data in two, then recursive clustering is just recursive division.
+
 
 ```lua
 function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursively halved
@@ -373,6 +425,7 @@ function DATA.cluster(i,  rows,min,cols,above) --> t; returns `rows`, recursivel
     node.left  = i:cluster(left,  min, cols, node.A)
     node.right = i:cluster(right, min, cols, node.B) end
   return node end
+
 
 ```
 Which, just to remind us, gives us this:
@@ -413,7 +466,9 @@ Which, just to remind us, gives us this:
 
 ### Random Projections
 
+
 ![](https://ars.els-cdn.com/content/image/1-s2.0-S0031320315003945-gr2.jpg)
+
 
 - Method one: Guassian random projections
    - Matrix = rows \* cols
@@ -441,27 +496,35 @@ Which, just to remind us, gives us this:
       - this row's d.x = (a^2 + c^2 - b^2) / (2c)
           - Cosine rule
 
+
  
 
+
 (\*) beware outliers :  
+
 
 - A safe thing might be to sort the pivots  by their distance and take something that is
   90% of max distance
 
+
 # Notes on Distance
+
 
 Btw, distance calculations are really slow
 - heuristic for faster distance: divide up the space into small pieces (e.g. &sqrt;(N)
 - Space between pieces = &infty;
 - Space inside pieces: L2
 
+
 Distance gets weird for high dimensions
+
 
 - for an large dimensional orange, most of the mass is in the skin
 - volume of the space increases so fast that the available data become sparse.
 - amount of data needed to support the result grows exponentially with dimensions
  
 [Distance is wierd](https://haralick.org/ML/useful_things_about_machine_learning.pdf):
+
 
 - "Generalizing correctly becomes
 exponentially harder as the dimensionality (number of features) of the examples grows, because a fixed-size training
@@ -476,7 +539,9 @@ increasingly distant “shell” around it; and most of the volume of a high-dim
 # From Clustering to Optimization
 Clustering is normally seen as an $X$ space thing. But if also explore $Y$ space...
 
+
 Example: one spreadsheet, 8 columns, 3 goals ($Y$ space) and 5 other ($X$ space)
+
 
 ```
 list of names      call                 weight    goal?
@@ -497,7 +562,9 @@ is deciding how to trade off between competing concerns. For example, in the abo
 has better acceleration than another, but worse miles per hour, how to trade-off between them? Welcome to
 the _domination_ problem:
 
+
 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt65J-qM4GQvPeZdvf28zLytx-x1tCXYpkfqTjTjg6jGYx8MxYVMonn8qixREdOr4duVI&usqp=CAU" align=right width=400>
+
 
 Here we go:
 - Is 2 better than 3? Depends if we want to _minimimize_ of _maximize_.
@@ -516,6 +583,7 @@ cars and maximize clowns then compared to 2cars,4clowns
 - 1car + 5clowns is better  (since better on all)
 - 1car + 3clowns is not better  (since worse on one)
 
+
 The great thing about boolean domination is that a single
 point can wipe out thousands, millions of rivals. E.g. suppose
 we are guessing what is the equation of a pendulum. A good
@@ -523,10 +591,13 @@ equation has to:
 - cover the data (be accurate)
 - without being too complex
 
+
 <img src="/etc/img/pendulm.png" width=600>
+
 
 The few points on the thick black line dominate the rest. Which is cool
 since, to find a better solution, we only need to search around those few.
+
 
 <img src="/etc/img/2dplot.png" width=600>
 
@@ -568,12 +639,14 @@ query which checks the situation when we jump from one individual to another, an
 - For the forward jump, we compute $s_1 = − \sum_i e^{w_i(a_i - b_i)/n}$
 - For the backward jump, we compute $s_2 = − \sum_i e^{w_i(b_i - a_i)/n}$
 
+
 where $a_i$  and $b_i$  are the values on the same index from two individuals, 
 $n$ is the number of goals (in our case $n = 3$), and $w_i$𝑖
 is
 the weight {-1,1} if we are minimization or maximizing the goal 𝑖
 correspondingly. According to Zitzler [^zizt], one example is preferred
 to another if we lost the least jumping to it; i.e. $s_1 \lt s_2$.
+
 
 - e.g. in one dimension, 
   - suppose we are moving between 10 pounds and 2 pounds
@@ -583,6 +656,7 @@ to another if we lost the least jumping to it; i.e. $s_1 \lt s_2$.
   - leaving here loses worst
   - so here is better than there
 - and the point of Zitzler is that it works for comparing on $N\ge 1$ dimensions.
+
 
 ```lua
 function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
@@ -594,6 +668,7 @@ function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` domi
     s2 = s2 - math.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
 ```
+
 
 To see this in action, lets sort all our cars and print every 50th car.
 In the following, the end  list has the heaviest cars with worst mileage and acceleration.
@@ -610,6 +685,7 @@ t300= {cells= {8      267    125  3605  15     79      1       20}}
 t350= {cells= {8      307    130  4098  14     72      1       10}}
 ```
 
+
 ```lua
 function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
   local node,left,right,A,B,mid
@@ -624,7 +700,9 @@ function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursivel
   return node end
 ```
 
+
 ### Aggregation Functions
+
 
 An alternate scheme to bdom and cdom functions like Zitzler is an _aggregation functions_
 that  adds a little weights to each dimension and
@@ -645,5 +723,3 @@ add all the goals up; e.g.
 [^chen22]: Tao Chen and Miqing Li. 2022. 
   [The Weights can be Harmful: Pareto Search versus Weighted Search in Multi-Objective Search-Based Software i Engineering.](https://arxiv.org/pdf/2202.03728.pdf
   ACM Trans. Softw. Eng. Methodol. Just Accepted (April 2022). https://doi.org/10.1145/3514233
-
-

@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -335,6 +335,7 @@ proposed a way to quickly sample a large space, with just a few queries:
 - i.e. score via _yvap/xgap_ = $\Delta{Y}/\Delta{X}$
   - so the best thing has the smallest change in $X$ that leads to the biggest change in $Y$.
 
+
 How:
 - For some fixed budged $B$
 - Evaluate $B$ examples and compare their $X$ and $Y$ column values by $v_x=\Delta{Y}/\Delta{X}$
@@ -346,11 +347,11 @@ How:
   - i.e. let some omniscient being rank all the examples by their Y-scores.
 
 
-
 For example, for 93 examples and a budget of $B=16$
 (which is really 32), we get the following.
 - Here the goals are "reduce effort, defects".
 - And the $X$ attribute values are 2=low, 3=nominal, 4=high, 5= very high
+
 
 Note that `prec`
   (precedent less, have we done this before) scores really well while

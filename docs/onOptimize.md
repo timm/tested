@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -19,24 +19,32 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 (Before reading this, please review ["From clustering to optimization"](onCluster.md#from-clustering-to-optimization).)
 # Optimization
 
+
 Life is wondering  around look for ways to get ahead without falling down holes.
 
+
 ![](/etc/img/3dfront.png)
+
 
 [![](/etc/img/birds.png)](https://www.youtube.com/watch?v=KnndQgIUraQ)
 
 
 Data mining = "what is"; i.e they divide things up. 
 
+
 Optimization = "what to do" i.e.  tell you where to go.
+
 
 Optimization problems in life:
 - Do the least work for most reward
 
+
 Essential: you can't always get what you want
 - but if you try some time, you just might find, you get what you need
 
+
 ![](/etc/img/build.png)
+
 
 Optimization problems in SE:
 - What is the smallest set of test cases that covers all branches in this program?
@@ -48,39 +56,51 @@ Optimization problems in SE:
   - Using techniques like local search,  tabu search, simulated annealing, genetic algorithms, 
     and   hill climbing.
 
+
 The great secret:
 - all learners need a little (or a lot) of  optimizers:
 
+
 ![](/etc/img/grad.png)![](/etc/img/roc.png)
+
 
 ## Some History: How Rationality Became an Experimental Science
 
+
 <img align=right src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTen66W99fr6cZWAG9Y1BAguBj2EyQuv8l_umY8QlB1B7cUvF69">
+
 
 For centuries, philosophers and scientists explored the Platonic goal of total rational decisions. That fell apart when:
 
+
 - Godel's 1930 incompleteness theorem showed that in any interesting axiomatic system (where "interesting" means "able to at least support integer arithmetic") there exists conclusions that are true, but not reachable from the premises.
 - Turing's 1937 work on the halting problem showed that, in the general case, it is not possible to decide beforehand whether or not a computer program is "hard" or "easy" (where "easy" meant "will finish processing some arbitrary input"). More specifically, the halting problem is undecidable over a Turing machine (a general description of all computational processes).
+
 
 While this sounds like very bad news, it had a curious and profound side effect.
 - For Godel and Turing to make their conclusions, they first had to precisely define what it meant to do "computing".
 - That definition was precise enough to allow for the construction of the post-WWII new generation of general computers.
 - For example, after the war at the Institute for Advanced Studies at Princeton, the engineers designing the next generation of general-purposes computers literally tore apart Turing's books (since they read them so obsessively).
 
+
 So in a very real sense, the legacy of Turing and Godel's work on "limits to computing" was actually a statement of "how to compute".
 - Sure, that computational process had limits but between current human ignorance and those eventual limits lay a very useful middle zone.
 - And in that zone, since WWII, we have built UNIX, the Internet, the open source revolution, social and ubiquitous computing, Google, Facebook, Microsoft, etc etc.
 
+
 <img src="https://c8.alamy.com/comp/HRKNPH/von-neumann-and-oppenheimer-1952-HRKNPH.jpg" align=right width=300>
+
 
 One of the first pioneers to use Turing and Godel's work was John Von Neumann.
 -  Von Neumann was a towering figure in the history of the 20th century. Apart from his seminal contributions to the mathematics of shaped charges, geometry, measure theory, ergodic theory, operator theory, lattice theory, mathematical formulation of quantum mechanics, quantum logic, game theory, mathematical economics, linear programming, mathematical statistics, fluid dynamics, weather systems, etc, etc, etc, etc he also lead the computer work at Princeton's Institute for Advance Studies.
 - He was the one who told his engineers to read Turing in such great detail.
 - He was also a great fan of Godel's work. In his book Turing's Cathedral, Geroge Dyson documents the extraordinary efforts of Von Neumann in rescuing Godel from the pre-WWII chaos in Europe (after which, he gave Godel an office two doors down from his at Princeton).
 
+
 Von Neumann was the one of the first to fully appreciate the engineering implications of Turing and Godel's work. In summary:
 -  He realized that thanks to Godel and Turing, rationality had just become an experimental science.
 - Given that we cannot guarantee what happens when we fire up a computer program, all we can do is "try it and see" what happens next.
+
 
 Von Neumann's Princeton group was very successfully in selling this idea to the American government.
 - As a result, they had funds to build the computers needed for very large scale "try it and see" studies.
@@ -93,7 +113,9 @@ Von Neumann's Princeton group was very successfully in selling this idea to the 
  
 ## Methods
 
+
 ### When there was very little memory (1950s):
+
 
 - 1+1 reasoning (one canidate solution and 1 mutant)
 - e.g. simulated anneallong:
@@ -106,9 +128,12 @@ Von Neumann's Princeton group was very successfully in selling this idea to the 
       - this is how we escape local maxima
   - in the following, temperature does DOWN and time goes UP
 
+
 <img src="/etc/img/Hill_Climbing_with_Simulated_Annealing.gif" width=600 > 
 
+
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/TwoPointCrossover.svg/226px-TwoPointCrossover.svg.png" align=right width=300>
+
 
 ### When there was more memory (1960s):
 - m+n rationing (many candidates and many mutants)
@@ -119,9 +144,11 @@ Von Neumann's Princeton group was very successfully in selling this idea to the 
   - new population = $P_{i+1}$ = **select** (prune worse kids) 
   - Typical parameter: 100 individuals, evolved for 100 generations, 1% mutation rate
 
+
 [^holland]: John H. Holland:
   [Genetic algorithms](http://papers.cumincad.org/data/works/att/7e68.content.pdf)
   Scholarpedia 7(12): 1482 (2012)
+
 
 ![](/etc/img/evolve.png)
 Important ideas from this era:
@@ -142,7 +169,9 @@ Important ideas from this era:
     - At end of $G_i$ everything there is better than at least one other solution
       - So $G_{j>i}$ mutates using better and better options
 
+
 [^storn]: Storn, R.; Price, K. (1997). "Differential evolution - a simple and efficient heuristic for global optimization over continuous spaces". Journal of Global Optimization. 11 (4): 341–359. doi:10.1023/A:1008202821328. S2CID 5297867.
+
 
 ### When there was more CPU (1990s)
 - stochastic methods
@@ -159,13 +188,16 @@ Important ideas from this era:
     - its like sking: sometimes you ski in any direction
       - other times, you just see what happens if you only go backwards and forwards
 
+
 [^gsat]: Selman, B.; Levesque, H.; and Mitchell, D. 1992.
   [A New Method for Solving Hard Satisfiability Problems](http://www.cs.cornell.edu/selman/papers/pdf/92.aaai.gsat.pdf)
   In Proceedings of the Tenth National Conference on Artificial Intelligence (AAAI-92), 440-446.
 
+
 [^lurch]: Owen, D., & Menzies, T. (2003, July). 
   [Lurch: a Lightweight Alternative to Model Checking](https://menzies.us/pdf/03lurch.pdf)
   In SEKE (Vol. 3, pp. 158-165).
+
 
 ### When there were more than one goals (2000s)
 - 20th century optimization: given N goals, add magic weights and try to change the sum:
@@ -177,7 +209,9 @@ Important ideas from this era:
   - Generate across the whole space, then see you find
   - In the following, the blue lines are the Pareto frontier (all the solutions not dominated by something else)
 
+
 ![](/etc/img/fairness.png)
+
 
 Important ideas from this era:
 - Non-dominated sorting 
@@ -196,6 +230,7 @@ Important ideas from this era:
 - $\epsilon$ domination: if goal difference less than $\epsilon$ do not matter
   - just optimize to $\epsilon$ and stop.
 
+
 [^chen]: J. Chen, V. Nair, R. Krishna and T. Menzies, 
  ["Sampling” as a Baseline Optimizer for Search-Based Software Engineering,"](https://arxiv.org/pdf/1608.07617.pdf)
  in IEEE Transactions on Software Engineering, vol. 45, no. 6, pp. 597-614, 1 June 2019, doi: 10.1109/TSE.2018.2790925.
@@ -205,11 +240,15 @@ Important ideas from this era:
   ["MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition,"](https://core.ac.uk/download/pdf/228200360.pdf)
   in IEEE Transactions on Evolutionary Computation, vol. 11, no. 6, pp. 712-731, Dec. 2007, doi: 10.1109/TEVC.2007.892759.
 
+
 ![](/etc/img/epsdom.png)
+
 
 ### When data miners got good (2010)
 
+
 <img src="/etc/img/sway.png" width=400 align=right>
+
 
 - Landscape analysis (simple)
   - Peek at the data
@@ -228,21 +267,27 @@ Important ideas from this era:
   - sample the data a little, build a little surrogate, apply that surrogate to the rest of the data
   - grab the data item with (say) the most variance [^flash].
 
+
 [^deb]: K. Deb, A. Pratap, S. Agarwal and T. Meyarivan, 
   ["A fast and elitist multiobjective genetic algorithm: NSGA-II,"](https://pdfs.semanticscholar.org/df2b/c681c725f89218dbabdd53780b42be754c4a.pdf?_ga=2.122853000.2057283161.1673318967-975372106.1668530242)
   in IEEE Transactions on Evolutionary Computation, vol. 6, no. 2, pp. 182-197, April 2002, doi: 10.1109/4235.996017.
+
 
 [^nair]: Nair, V., Menzies, T., Siegmund, N., & Apel, S. (2017, August). 
   [Using bad learners to find good configurations](https://dl.acm.org/doi/pdf/10.1145/3106237.3106238)
   In Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering (pp. 257-267).
 
+
 [^flash]: Vivek Nair, Zhe Yu, Tim Menzies, Norbert Siegmund, Sven Apel:
  [Finding Faster Configurations Using FLASH](https://arxiv.org/pdf/1801.02175.pdf). 
  IEEE Trans. Software Eng. 46(7): 794-811 (2020)
 
+
 ![](/etc/img/smbo.png)
 
+
 - Other acqusition functions:
+
 
 ![](/etc/img/gate.png)
 
@@ -252,9 +297,9 @@ Important ideas from this era:
   Nat Comput 21, 219–242 (2022). https://doi.org/10.1007/s11047-020-09820-4
 
 
-
 [^sbse]: Mark Harman and Bryan F. Jones. Search based software engineering. Information and Software
 Technology, 43(14):833–839, December 2001.
+
 
 [^search]: Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. 2012. 
            Search-based software engineering: Trends, techniques and applications. ACM Comput. Surv. 45, 1, Article 11 (November 2012), 61 pages. https://doi.org/10.1145/2379776.2379787
@@ -274,7 +319,3 @@ Technology, 43(14):833–839, December 2001.
           simplified world, or by finding satisfactory solutions for a more realistic world.
           Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
-
-
-
-

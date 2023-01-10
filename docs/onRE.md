@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -34,7 +34,6 @@ Miryam Reyes.
 IET Software,
 2018, Vol. 12 Iss. 4, pp. 365-378
 doi: 10.1049/iet-sen.2017.0144
-
 
 
 [^easter07] N. Niu and S. Easterbrook, 

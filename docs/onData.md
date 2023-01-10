@@ -1,6 +1,6 @@
 <small><p>&nbsp;
 <a name=top></a>
-<table><tr>
+<table><tr> 
 <td><a href="/README.md#top">home</a>
 <td><a href="/ROADMAP.md">roadmap</a>
 <td><a href="http:github.com/timm/tested/issues">issues</a>
@@ -132,7 +132,6 @@ In the above, DATA is the ringmaster that controls eigjt special cases:
 - When we work with data, we can either share the same ROWs [7] (e.g.
   if we are recursively cluster the same data) 
   or make new rows each time [8].
-
 
 
 ```lua
