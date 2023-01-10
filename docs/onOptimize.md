@@ -119,7 +119,7 @@ Von Neumann's Princeton group was very successfully in selling this idea to the 
   - new population = $P_{i+1}$ = **select** (prune worse kids) 
   - Typical parameter: 100 individuals, evolved for 100 generations, 1% mutation rate
 
-[holland]: John H. Holland:
+[^holland]: John H. Holland:
   [Genetic algorithms](http://papers.cumincad.org/data/works/att/7e68.content.pdf)
   Scholarpedia 7(12): 1482 (2012)
 
@@ -167,7 +167,7 @@ Important ideas from this era:
   [Lurch: a Lightweight Alternative to Model Checking](https://menzies.us/pdf/03lurch.pdf)
   In SEKE (Vol. 3, pp. 158-165).
 
-### When there were more than one or two goals (2000s)
+### When there were more than one goals (2000s)
 - 20th century optimization: given N goals, add magic weights and try to change the sum:
   - $\sum_iw_i{\times}G_i$
   - problem: results dependent on $w_i$ 
