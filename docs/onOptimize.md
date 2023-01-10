@@ -324,14 +324,19 @@ Technology, 43(14):833–839, December 2001.
 
 Recently, researchers have applied large pre-trained language
 models to take a set of domain terms, then expand that to a large one using associations offered by the
-language model. For example, Fu et al. [29] recently reported success in improving predictions using
-BERT to expand the usecase stories vocab [18]. Co-PI Kuttal used transformer-based language models,
-specifically, BERT, GPT2, and XLNet, to classify the intent of developer conversations 
+language model. For example, Fu et al. [^fu] recently reported success in improving predictions using
+BERT to expand the usecase stories vocab [^vocab]. Co-PI Kuttal used transformer-based language models,
+specifically, BERT, GPT2, and XLNet, to classify the intent of developer conversations [^kuttal]
+
+[^vocab]: J. Burstein, C. Doran, and T. Solorio, Eds., Proceedings of the 2019 Conference of the North American
+Chapter of the Association for Computational Linguistics: Human Language Technologies, NAACL-HLT
+2019, Minneapolis, MN, USA, June 2-7, 2019, Volume 1 (Long and Short Papers). Association for
+Computational Linguistics, 2019. [Online]. Available: https://aclanthology.org/volumes/N19-1/
 
 So can we use generative language models to create detailed backgorund models? Guide search using that extra information? Here's a crazy idea:
 
 
-- Researchers in _particle swam optimization_ (PSO)~\cite{kennedy95particle} implemented
+- Researchers in _particle swam optimization_ (PSO) [^pso1]  implements
 optimization   as   a set of candidates
 "flying around"
 (i.e.   being mutated)  a shared space. 
@@ -340,6 +345,15 @@ optimization   as   a set of candidates
     - Instead, each particle is like a   helicopter buzzing around the landscape. 
     - New model conditions are like a breeze that pushes the particles   some distance across the decision space in a model.  
     - Our particles then must make new decisions as they   negotiate their way back to their preferred positions.   
+
+[^kuttal]: J. A. J. Hart and S. K. Kuttal, “Feasibility of using youtube conversations for pair programming
+  intent classification,” in VL/HCC, 2022
+
+[^fu]: M. Fu and C. Tantithamthavorn, “Gpt2sp: A transformer-based agile story point estimation ap-
+  proach,” IEEE Transactions on Software Engineering, no. 01, pp. 1–1, mar 5555.
+
+[^pso1]:  J. Kennedy and R. C. Eberhart, “Particle swarm optimization,” in Proceedings of the IEEE International
+  Conference on Neural Networks, 1995, pp. 1942–1948
 
 <img align=right src="/etc/img/pso101.png">
  
