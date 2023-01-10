@@ -196,6 +196,11 @@ Important ideas from this era:
 - $\epsilon$ domination: if goal difference less than $\epsilon$ do not matter
   - just optimize to $\epsilon$ and stop.
 
+[^chen]: J. Chen, V. Nair, R. Krishna and T. Menzies, 
+ ["Sampling” as a Baseline Optimizer for Search-Based Software Engineering,"](https://arxiv.org/pdf/1608.07617.pdf)
+ in IEEE Transactions on Software Engineering, vol. 45, no. 6, pp. 597-614, 1 June 2019, doi: 10.1109/TSE.2018.2790925.
+
+
 [^moead]; Q. Zhang and H. Li, 
   ["MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition,"](https://core.ac.uk/download/pdf/228200360.pdf)
   in IEEE Transactions on Evolutionary Computation, vol. 11, no. 6, pp. 712-731, Dec. 2007, doi: 10.1109/TEVC.2007.892759.
