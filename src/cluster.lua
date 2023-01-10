@@ -255,6 +255,9 @@ function keys(t) --> ss; return list of table keys, sorted
 function push(t, x) --> any; push `x` to end of list; return `x` 
   table.insert(t,x); return x end
 
+function push(t, x) --> any; push `x` to end of list; return `x` 
+  table.insert(t,x); return x end
+
 function any(t) return t[rint(#t)] end  --> x; returns one items at random
 
 function many(t,n,    u)  --> t1; returns some items from `t`
