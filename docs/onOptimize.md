@@ -141,6 +141,9 @@ Important ideas from this era:
 - stochastic methods
 - e.g ISAMP: run ahead with mutants $m_1 \rightarrow m_2 \rightarrow m_3 ...$,
   reset to start when no further progress seen
+  - i.e. run forward as fast as you
+  - when nothing new is happening, give up and start again
+  - works well when the CPU is fast end evaluation is cheap
 - e.g.  GSAT
   - given N clauses to satisfy, makes the change which minimizes the number of unsatisfied clauses 
   - more generally this is called _local search_ 
