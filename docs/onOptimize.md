@@ -333,7 +333,7 @@ So can we use generative language models to create detailed backgorund models? G
 
 - Researchers in _particle swam optimization_ (PSO)~\cite{kennedy95particle} implemented
 optimization   as   a set of candidates
-``flying around''
+"flying around"
 (i.e.   being mutated)  a shared space. 
  -  One advantage of this  scheme is that it lends itself to a group performing model maintenance. 
     - In PSO, particles do not just arrive at some location and stop. 
@@ -348,9 +348,9 @@ Is
 - Particle velocity   is controlled by     
 _inertial_,   _cognitive_, and  
 _social_ weights $w,\phi_p,\phi_g$ 
-(where $p, g$ are short for ``personnel'' and ``group'').
-i- In a swam of ``particles'' $p$ 
- ``flying around''  
+(where $p, g$ are short for "personnel" and "group").
+i- In a swam of "particles" $p$ 
+ "flying around"  
 (i.e. being mutated across a set of vectors),
 then:
 - The $w$ 
