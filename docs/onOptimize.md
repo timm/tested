@@ -379,6 +379,8 @@ _social_ weights $w,\phi_p,\phi_g$
   swarm of particles. 
   - $w,\phi_p,\phi_g$ serve to  nudge
     $p_i$ to a new direction.
+
+![](/etc/img/psoeq.png)
   
 In this scheme,  PSO's particles  find a balance between   past decisions $w$, the preferences of one explorer 
 $\phi_p$, and the preferences made by the team $\phi_g$.
