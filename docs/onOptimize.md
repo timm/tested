@@ -151,7 +151,7 @@ Important ideas from this era:
 
 ### When there were more than one or two goals (2000s)
 - 20th century optimization: given N goals, add magic weights and try to change the sum:
-  - $\sum_i w_i G__i$
+  - $\sum_iw_i{\times}G__i$
   - problem: results dependent on $w_i$ 
     - so a standard technique in the 20th century was to re-run the analysis with perturbations to $w_i$
       - tedious
