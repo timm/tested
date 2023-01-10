@@ -380,11 +380,11 @@ _social_ weights $w,\phi_p,\phi_g$
   - $w,\phi_p,\phi_g$ serve to  nudge
     $p_i$ to a new direction.
 
-So for current velocity 4V_i^t$ and position $V_i$ at time $t$, particle $i$ is updated as follows:
+So for current velocity $V_i^t$ and position $V_i$ at time $t$, particle $i$ is updated as follows:
 
-$$V_i^{t+1} = wV_i^t + \phi_pr(P_p - X^t_i) + \phi_pr(P_g - X_i^t)$$ 
+$$V_i^{t+1} = wV_i^t + \phi_pr(P_p - X^t_i) + \phi_gr(P_g - X_i^t)$$ 
  
- (where $P_p$ and $P_q$ are the best solutions found by this particle or the group, respectively.)
+ (where $P_p$ and $P_q$ are the best solutions found by this particle or the group, respectively; and $r$ is a random number generator)
 
 In this scheme,  PSO's particles  find a balance between   past decisions $w$, the preferences of one explorer 
 $\phi_p$, and the preferences made by the team $\phi_g$.
