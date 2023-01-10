@@ -53,7 +53,7 @@ The great secret:
 
 ![](/etc/img/grad.png)![](/etc/img/roc.png)
 
-## Some History Rationality is an Empirical Science
+## Some History: How Rationality Became an Experimental Science
 
 <img align=right src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTen66W99fr6cZWAG9Y1BAguBj2EyQuv8l_umY8QlB1B7cUvF69">
 
