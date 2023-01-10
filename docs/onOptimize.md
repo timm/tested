@@ -55,6 +55,8 @@ The great secret:
 
 ## Some History Rationality is an Empirical Science
 
+<img align=right src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTen66W99fr6cZWAG9Y1BAguBj2EyQuv8l_umY8QlB1B7cUvF69">
+
 For centuries, philosophers and scientists explored the Platonic goal of total rational decisions. That fell apart when:
 
 - Godel's 1930 incompleteness theorem showed that in any interesting axiomatic system (where "interesting" means "able to at least support integer arithmetic") there exists conclusions that are true, but not reachable from the premises.
@@ -68,6 +70,8 @@ While this sounds like very bad news, it had a curious and profound side effect.
 So in a very real sense, the legacy of Turing and Godel's work on "limits to computing" was actually a statement of "how to compute".
 - Sure, that computational process had limits but between current human ignorance and those eventual limits lay a very useful middle zone.
 - And in that zone, since WWII, we have built UNIX, the Internet, the open source revolution, social and ubiquitous computing, Google, Facebook, Microsoft, etc etc.
+
+<img src="https://c8.alamy.com/comp/HRKNPH/von-neumann-and-oppenheimer-1952-HRKNPH.jpg" align=right width=300>
 
 One of the first pioneers to use Turing and Godel's work was John Von Neumann.
 -  Von Neumann was a towering figure in the history of the 20th century. Apart from his seminal contributions to the mathematics of shaped charges, geometry, measure theory, ergodic theory, operator theory, lattice theory, mathematical formulation of quantum mechanics, quantum logic, game theory, mathematical economics, linear programming, mathematical statistics, fluid dynamics, weather systems, etc, etc, etc, etc he also lead the computer work at Princeton's Institute for Advance Studies.
