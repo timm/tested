@@ -112,12 +112,16 @@ Von Neumann's Princeton group was very successfully in selling this idea to the 
 
 ### When there was more memory (1960s):
 - m+n rationing (many candidates and many mutants)
-- e.g. genetic algorithms
+- e.g. genetic algorithms [^holland]
   - given an population $P_i$
   - **mutant** some, a little
   - **crossover** (take two "parents" and combine their bits into a "child)
   - new population = $P_{i+1}$ = **select** (prune worse kids) 
   - Typical parameter: 100 individuals, evolved for 100 generations, 1% mutation rate
+
+[holland]: John H. Holland:
+  [Genetic algorithms](http://papers.cumincad.org/data/works/att/7e68.content.pdf)
+  Scholarpedia 7(12): 1482 (2012)
 
 ![](/etc/img/evolve.png)
 Important ideas from this era:
@@ -128,14 +132,17 @@ Important ideas from this era:
 - the external archive
   - when generating mutants, draw from a special population of candidates known to be better
       than most others.
-  - e.g. Differential evolution:
+  - e.g. Differential evolution [^storn]:
     - Population $P_i$ = 10 items per variable being optimized
     - In generation $G_i$, for $d \in P_i$, pick three other items $a,b,c$ then build $d'$ using
-      - if cr &lt random() then $d'_j=a_j  + f(b_j - c_j)$
+      - let $d'$ have fields $d'_1,d'_2,d'_3..$
+      - if cr &lt; random() then $d'_j=a_j  + f(b_j - c_j)$
         - e.g. (cr,f) = 0.5, 0.8
       - replace $d$ with $d'$ if latter is better
     - At end of $G_i$ everything there is better than at least one other solution
       - So $G_{j>i}$ mutates using better and better options
+
+[^storn]: Storn, R.; Price, K. (1997). "Differential evolution - a simple and efficient heuristic for global optimization over continuous spaces". Journal of Global Optimization. 11 (4): 341–359. doi:10.1023/A:1008202821328. S2CID 5297867.
 
 ### When there was more CPU (1990s)
 - stochastic methods
@@ -143,8 +150,8 @@ Important ideas from this era:
   reset to start when no further progress seen
   - i.e. run forward as fast as you
   - when nothing new is happening, give up and start again
-  - works well when the CPU is fast end evaluation is cheap
-- e.g.  GSAT
+  - works well when the CPU is fast end evaluation is cheap[^lurch]
+- e.g.  GSAT [^gsat]
   - given N clauses to satisfy, makes the change which minimizes the number of unsatisfied clauses 
   - more generally this is called _local search_ 
     -  sometimes mutate at random
@@ -152,53 +159,81 @@ Important ideas from this era:
     - its like sking: sometimes you ski in any direction
       - other times, you just see what happens if you only go backwards and forwards
 
+[^gsat] Selman, B.; Levesque, H.; and Mitchell, D. 1992.
+  [A New Method for Solving Hard Satisfiability Problems](http://www.cs.cornell.edu/selman/papers/pdf/92.aaai.gsat.pdf)
+  In Proceedings of the Tenth National Conference on Artificial Intelligence (AAAI-92), 440-446.
+
+[^lurch]: Owen, D., & Menzies, T. (2003, July). 
+  [Lurch: a Lightweight Alternative to Model Checking](https://menzies.us/pdf/03lurch.pdf)
+  In SEKE (Vol. 3, pp. 158-165).
+
 ### When there were more than one or two goals (2000s)
 - 20th century optimization: given N goals, add magic weights and try to change the sum:
   - $\sum_iw_i{\times}G_i$
   - problem: results dependent on $w_i$ 
     - so a standard technique in the 20th century was to re-run the analysis with perturbations to $w_i$
       - tedious
-- Then came algorithms that reasoned across Parento frontier
+- Then came algorithms that reasoned across Pareto frontier
   - Generate across the whole space, then see you find
+  - In the following, the blue lines are the Pareto frontier (all the solutions not dominated by something else)
 
 ![](/etc/img/fairness.png)
 
 Important ideas from this era:
 - Non-dominated sorting 
   - when binary domination leaves you with too many options
-  - the NSGA-II (2003) algorithm sorts frontier the returns the items that dominate the most
+  - the NSGA-II (2003) algorithm sorts frontier the returns the items that dominate the most[^deb]
 - Indicator-based dominance: the Zitzler algorithm:
-  - multi-objective "better" is a gradient, not some trite binary
-- Decomposition (MOEA/D)
+  - multi-objective "better" is a gradient, not some trite binary[^zizt]
+- Decomposition (MOEA/D)[^moead]
   - before
     - generate population
     - assign random weights to each item
     - cluster population on that weight (each cluster is one decomposition)
   - during optimization
     - if anyone finds an improvement, drag all your near neighbors along for the right
+    - this is FAST since near neighbors are pre-computed and cached
 - $\epsilon$ domination: if goal difference less than $\epsilon$ do not matter
   - just optimize to $\epsilon$ and stop.
 
+[^moead]; Q. Zhang and H. Li, 
+  ["MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition,"](https://core.ac.uk/download/pdf/228200360.pdf)
+  in IEEE Transactions on Evolutionary Computation, vol. 11, no. 6, pp. 712-731, Dec. 2007, doi: 10.1109/TEVC.2007.892759.
+
 ![](/etc/img/epsdom.png)
 
-### When date miners got good (2010)
+### When data miners got good (2010)
 
 <img src="/etc/img/sway.png" width=400 align=right>
 
 - Landscape analysis (simple)
   - Peek at the data
-  - Jump away from dull regions
+  - Jump away from dull regions [^chen]
 - Surrogates
   - Don't evaluate all
   - Evaluate some and use those results and  data mining to build a _surrogate_ (a decision tree that guesses
     what the evaluation scores might be)
   - From then one, evaluate new items using the surrogate (so we no longer have to build every car,
     we only need ask the surrogate a quick question)
+  - Note that the surrogate need not give great predictions
+    - Just as long as it can guess that $x \lt y$.
 - Acquisition functions
   - suppose your data miner can report predictions AND variance on those predictions
   - e.g. random forest with 100 decision trees: count how many agree with some conclusion X
   - sample the data a little, build a little surrogate, apply that surrogate to the rest of the data
-  - grab the data item with most variance
+  - grab the data item with (say) the most variance [^flash].
+
+[^deb]: K. Deb, A. Pratap, S. Agarwal and T. Meyarivan, 
+  ["A fast and elitist multiobjective genetic algorithm: NSGA-II,"](https://pdfs.semanticscholar.org/df2b/c681c725f89218dbabdd53780b42be754c4a.pdf?_ga=2.122853000.2057283161.1673318967-975372106.1668530242)
+  in IEEE Transactions on Evolutionary Computation, vol. 6, no. 2, pp. 182-197, April 2002, doi: 10.1109/4235.996017.
+
+[^nair]: Nair, V., Menzies, T., Siegmund, N., & Apel, S. (2017, August). 
+  [Using bad learners to find good configurations](https://dl.acm.org/doi/pdf/10.1145/3106237.3106238)
+  In Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering (pp. 257-267).
+
+[^flash]: Vivek Nair, Zhe Yu, Tim Menzies, Norbert Siegmund, Sven Apel:
+ [Finding Faster Configurations Using FLASH](https://arxiv.org/pdf/1801.02175.pdf). 
+ IEEE Trans. Software Eng. 46(7): 794-811 (2020)
 
 ![](/etc/img/smbo.png)
 
