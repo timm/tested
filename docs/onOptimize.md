@@ -341,7 +341,7 @@ optimization   as   a set of candidates
     - New model conditions are like a breeze that pushes the particles   some distance across the decision space in a model.  
     - Our particles then must make new decisions as they   negotiate their way back to their preferred positions.   
 
-![](/etc/img/pos101.png)
+<img align=right src="/etc/img/pso101.png">
  
 Is
  PSO is  a natural method for negotiating  shared solutions.
