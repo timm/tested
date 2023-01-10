@@ -380,7 +380,7 @@ _social_ weights $w,\phi_p,\phi_g$
   - $w,\phi_p,\phi_g$ serve to  nudge
     $p_i$ to a new direction.
 
-$$V_i^{t+1} = wV_i^t + \phi_pr(P_i - X^t_i) _ \phi_pr(P_g - X_i^t)$$ 
+$$V_i^{t+1} = wV_i^t + \phi_pr(P_i - X^t_i) + \phi_pr(P_g - X_i^t)$$ 
   
 In this scheme,  PSO's particles  find a balance between   past decisions $w$, the preferences of one explorer 
 $\phi_p$, and the preferences made by the team $\phi_g$.
