@@ -19,6 +19,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 (Before reading this, please review ["From clustering to optimization"](onCluster.md#from-clustering-to-optimization).)
 # Optimization
 
+Life is wondering  around look for ways to get ahead without falling down holes.
+
+![](/etc/img/3dfront.png)
+
+[![](/etc/img/birds.png)](https://www.youtube.com/watch?v=KnndQgIUraQ)
+
+
 Data mining = "what is"; i.e they divide things up. 
 
 Optimization = "what to do" i.e.  tell you where to go.
@@ -108,6 +115,8 @@ When there was more memory (1960s):
 
 ![](/etc/img/evolve.png)
 Important ideas from this era:
+- stochastic search, is good
+  - escapes dead ends, finds novel solutlions
 - _domination_ (see 
   [from clustering to optimization](onCluster.md#from-clustering-to-optimization)
 - the external archive
@@ -127,9 +136,9 @@ When there was more CPU (1990s)
 - e.g ISAMP: run ahead with mutants $m_1 \rightarrow m_2 \rightarrow m_3 ...$,
   reset to start when no further progress seen
 - e.g.  GSAT
-  - given N clauses to satisfiy, makes the change which minimizes the number of unsatisfied clauses 
+  - given N clauses to satisfy, makes the change which minimizes the number of unsatisfied clauses 
   - more generally this is called _local search_ 
-    -  sometimes mtuate at random
+    -  sometimes mutate at random
     - other times, do a hill climb on just on variable
     - its like sking: sometimes you ski in any direction
       - other times, you just see what happens if you only go backwards and forwards
@@ -142,6 +151,11 @@ When there were more than one or two goals (2000s)
     - so a standard technique in the 20th century was to re-run the analysis with perturbations to $w_i$
       - tedious
 - Then came algorithms that reasoned across Parento fronter XXX
+
+Important ideas from this era:
+- surrogates
+- landscapes
+- semi-supervised learning
 
 MOEA/D
 Gaussian process models

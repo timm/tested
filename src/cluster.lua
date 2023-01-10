@@ -376,5 +376,4 @@ eg("optimize", "semi-supervised optimization", function(     data)
   show(data:sway(),"mid",data.cols.y,1)
   end)
 
-main(the,help, egs)
-
+main(the,help,egs)
