@@ -41,19 +41,19 @@ Note: avoid many-goal problems at this point. That will be bonus marks, below.
 Expected Sections:
 
 
-|Grade| Part|
-|-----:|----|
-|20   | Intro|
-|20   | Related work|
-|20   | Methods|
-|20   | Results|
-|20   | Discussion, Conclusion|
-|5    | Bonus : requirements study|
-|5    | Bonus: February study|
-|5    | Bonus : Ablation study|
-|5    | Bonus : HPO study|
-|100  | total |
-|+20  | bonus|
+|Masters Grade| Phd Grade| Part|
+|-----:|-------|----|
+|10   | 10   |Intro|
+|20   | 20   |Related work|
+|20   | 10   |Methods|
+|30   | 20   |Results|
+|20   | 20   |Discussion, Conclusion|
+|5    | 5   |Bonus : requirements study|
+|5    | 5   |Bonus: February study|
+|5    | 5   |Bonus : Ablation study|
+|5    | 5   |Bonus : HPO study|
+|100  | 100   |total |
+|+20  |  0   |bonus|
 
 
 - Introduction 
