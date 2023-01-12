@@ -147,8 +147,8 @@ function DATA.stats(i,  what,cols,nPlaces,fun) --> t; reports mid or div of cols
 function DATA.better(i,row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
   s1,s2,ys,x,y = 0,0,i.cols.y
   for _,col in pairs(ys) do
-    x  = row1.cells[col.at]
-    y  = row2.cells[col.at]
+    x  = col:norm( row1.cells[col.at] )
+    y  = col:norm( row2.cells[col.at] )
     s1 = s1 - math.exp(col.w * (x-y)/#ys)
     s2 = s2 - math.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end

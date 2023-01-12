@@ -1,10 +1,27 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
-local add,cli,coerce,copy,csv,dist,eg,far,half,lt
-local main,map,kap,norm,o,push,record,sort
+local add,cli,coerce,copy,csv,dist,half,kap,lt,main,map
+local norm,o,csv,push,record,sort 
 local COL, SYM, NUM, COLS, DATA, ROW
-local the={p=2,far=.95, seed=1, Sample=256}
---------------------------------------------------------------------------
+local the, help = {}, [[
+fetchr : learn a rule to fetch good rows, after peeking at just a few rows
+(c) 2023 Tim Menzies <timm@ieee.org> BSD-2 license (t.ly/74ji)
+
+OPTIONS:
+  -b --budget   max peeking budget           = 20
+  -p  --p       distance coefficient         = 2
+  -F  --Far     how far is long distances    = .95
+  -s  --seed    random number seed           = 10029
+  -S  --Sample  search space for clustering  = 512
+]]
+ --------------------------------------------------------------------------
 -- ## Columns
+function COL(n,s,    col)
+  col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
+  col.isIgnored = col.txt:find"X$"
+  col.isKlass   = col.txt.find"!$"
+  col.isGoal    = col.txt.find"[!+-]$"
+  return col end
+
 function SYM(n,s)
   return {at=n, txt=s,seen={}} end
 
@@ -14,13 +31,6 @@ function NUM(n,s)
 
 function norm(num,x)
   return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
-
-function COL(n,s,    col)
-  col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
-  col.isIgnored = col.txt:find"X$"
-  col.isKlass   = col.txt.find"!$"
-  col.isGoal    = col.txt.find"[!+-]$"
-  return col end
 
 function add(col,x)
   if x == "?" then return x end
@@ -67,32 +77,26 @@ function dist(data,row1,row2,  cols)
       if y=="?" then y= x<.5 and 1 or 0 end
       return math.abs(x-y)
     else return x==y and 0 or 1 end  
-  end -----
+  end ------------------------------
   for _,col in pairs(cols or data.cols.x) do
     n = n + 1
     d = d + dist1(row1.cells[col.at], row2.cells[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
 function half(data,rows,  cols,above)
-  local left,right,rows = {},{},rows or data.rows
-  local far,gap,cos,proj,some,A,B,c
-  function far(here,rows,     them,tmp,there)
-    them = function(r1) 
-             return map(rows, function(r2) return {row=r2,dist=gap(r1,r2)} end) end
-    tmp  = sort(them(here),lt"dist")
-    there= tmp[(#tmp*the.Far)//1] 
-    return here, there.row, there.dist  
-  end --------------------------------
-  function gap(row1,row2) return dist(data,row1,row2,cols) end
-  function cos(a,b,c)     return (a^2 + c^2 - b^2) / (2*c) end
-  function proj(row)      return {row=row, dist=cos(gap(row,A),gap(row,B),c)} end
-  some  = many(rows, the.Sample)
-  A,B,c = far(above or any(some),some)
+  local left,right,far,gap,some,proj,tmp,A,B,c = {},{}
+  function gap(r1,r2) return dist(data, r1, r2, cols) end
+  function proj(r)    return {row=r, dist=(gap(r,A)^2 + c^2 - gap(r,B)^2)/(2*c)} end
+  rows = rows or data.rows
+  some = many(rows, the.Sample)
+  A    = above or any(some)
+  tmp  = sort(map(some, function(r) return {row=r,dist=gap(A,r)} end),lt"dist") 
+  far  = tmp[(#tmp*the.Far)//1] 
+  B,c  = far.row, far.dist
   for n,tmp in pairs(sort(map(rows,proj), lt"dist")) do
     push(n <= (rows//2) and left or right, tmp.row) end
   return left, right, A, B, c end  
---------------------------------------------------------------------------
--- ## Misc Functions 
+-------------------------------------------------------------------------
 function copy(t,    u) --> t; deep copy
   if type(t) ~= "table" then return t end 
   u={}; for k,v in pairs(t) do u[k]=copy(v) end; return u end 
@@ -123,37 +127,38 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
   while true do
     s = io.read()
     if   s
-    then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t]=coerce(s1) end; fun(t)
+    then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; fun(t)
     else return io.close(src) end end end
 
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) return nil,string.format(":%s %s",k,o(v)) end 
+  fun= function(k,v) return nistring.format(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
-function cli(options) --> t; update key,vals in `t` from command-line flags
-  for k,v in pairs(options) do
-    v=tostring(v)
+function cli(options,txt) --> t; update key,vals in `t` from command-line flags
+  txt:gsub("\n[%s]+([-][%S])[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(flag,k,v) 
     for n,x in ipairs(arg) do
-      if x=="-"..(k:sub(1,1)) then 
+      if x==flag then
         v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = coerce(v) end end
+    options[k] = coerce(v) end) end
 
-function main(funs,settings,    fails,saved)
-  cli(settings)
+function main(funs,settings,txt,    fails,saved)
+  cli(settings,txt)
+  print(o(cli))
   fails,saved = 0,copy(settings)
-  for name,fun in pairs(funs) do
-    if settings.go =="all" or settings.go==name then
-      for k,v in pairs(saved) do setings[k]=v end
-      Seed = settings.seed
-      if fun()==false then print("FAIL",name); fails=fail+1
-	                         print("PASS",name) end end end
+  if settings.help then print(help) else
+    for name,fun in pairs(funs) do
+      if settings.go =="all" or settings.go==name then
+        for k,v in pairs(saved) do setings[k]=v end
+        Seed = settings.seed
+        if fun()==false then print("❌ FAIL",name); fails=fail+1
+	                           print("✅ PASS",name) end end end end
   for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
     if not b4[k] then print( string.format("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end  
---------------------------------------------------------------------------
--- ## Examples 
-eg={}
-function eg.the() print(o(the)) end
---------------------------------------------------------------------------
-main(eg,the)
+-------------------------------------------------------------------------
+local egs={}
+function egs.show()  print(o(the)) end
+function egs.maths() print(10 + 10) end
+-------------------------------------------------------------------------
+main(egs,the,help)
