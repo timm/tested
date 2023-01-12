@@ -1,19 +1,24 @@
-local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
-local add,cli,coerce,copy,csv,dist,half,kap,lt,main,map
-local norm,o,csv,push,record,sort 
-local COL, SYM, NUM, COLS, DATA, ROW
 local the, help = {}, [[
 fetchr : find a rule to fetch good rows, after peeking at just a few rows
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2 license (t.ly/74ji)
+
+USAGE: lua fetchr.lua [OPTIONS] [-g ACTION]
 
 OPTIONS:
   -b --budget   max peeking budget           = 20
   -p  --p       distance coefficient         = 2
   -F  --Far     how far is long distances    = .95
-  -s  --seed    random number seed           = 10029
+  -s  --seed    random number seed           = 937162211 
+  -g  --go      start up action              = nothing
+  -h  --help    show help                    = false
   -S  --Sample  search space for clustering  = 512
-]]
- --------------------------------------------------------------------------
+
+ACTIONS:]]
+local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- lua trivia (used to find rogue locals)
+local Seed,add,bin,cli,coerce,copy,csv,dist,half,kap,keys
+local lt,main,map,norm,o,oo,push,rand,record,rint,sort 
+local COL, SYM, NUM, COLS, DATA, ROW
+--------------------------------------------------------------------------
 -- ## Columns
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
@@ -31,6 +36,12 @@ function NUM(n,s)
 
 function norm(num,x)
   return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
+
+function bin(col,x,     gap)
+  if x~="?" and col.isNum then
+    gap = (col.hi - col.lo)/the.Bins 
+    x= gap*math.min(((x-col.lo)/gap//1 +1),the.Bins) end
+  return x end 
 
 function add(col,x)
   if x == "?" then return x end
@@ -116,6 +127,16 @@ function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil r
 function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
 
+function keys(t)
+  return sort(kap(t,function(k,_) return k end)) end
+
+Seed=937162211
+function rint(nlo,nhi)  return math.floor(0.5 + rand(nlo,nhi)) end
+function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
+  nlo, nhi = nlo or 0, nhi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return nlo + (nhi-nlo) * Seed / 2147483647 end
+
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
     if s1=="true" then return true elseif s1=="false" then return false end
@@ -130,29 +151,32 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
     then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; fun(t)
     else return io.close(src) end end end
 
+function oo(t) print(o(t)); return t end
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
   fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function cli(options,txt) --> t; update key,vals in `t` from command-line flags
-  txt:gsub("\n[%s]+([-][%S])[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(flag,k,v) 
-    print(flag)
+  txt:gsub("\n[%s]+(-[%S])[%s]+([-][-]([%S]+))[^\n]+= ([%S]+)",function(short,long,k,v) 
     for n,x in ipairs(arg) do
-      if x==flag then
+      if x==short or x==long then
         v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
     options[k] = coerce(v) end) end
 
 function main(funs,settings,txt,    fails,saved)
   cli(settings,txt)
   fails,saved = 0,copy(settings)
-  if settings.help then print(txt) else
-    for name,fun in pairs(funs) do
-      if settings.go =="all" or settings.go==name then
-        for k,v in pairs(saved) do setings[k]=v end
-        Seed = settings.seed
-        if fun()==false then print("❌ FAIL",name); fails=fail+1
-	                           print("✅ PASS",name) end end end end
+  if   settings.help 
+  then print(txt)
+       for _,name in pairs(keys(funs)) do print("  -g",name) end
+  else for _,name in pairs(keys(funs)) do
+        if settings.go =="all" or settings.go==name then
+          for k,v in pairs(saved) do settings[k]=v end
+          Seed = settings.seed
+          if funs[name]()==false then print("❌ FAIL",name); fails=fail+1
+	                                    print("✅ PASS",name) end end end 
+  end
   for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
     if not b4[k] then print( string.format("#W ?%s %s",k,type(v)) ) end end 
   os.exit(fails) end  
