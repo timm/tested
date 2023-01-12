@@ -3,7 +3,7 @@ local add,cli,coerce,copy,csv,dist,half,kap,lt,main,map
 local norm,o,csv,push,record,sort 
 local COL, SYM, NUM, COLS, DATA, ROW
 local the, help = {}, [[
-fetchr : learn a rule to fetch good rows, after peeking at just a few rows
+fetchr : find a rule to fetch good rows, after peeking at just a few rows
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2 license (t.ly/74ji)
 
 OPTIONS:
@@ -132,11 +132,12 @@ function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coerc
 
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) return nistring.format(":%s %s",k,o(v)) end 
+  fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function cli(options,txt) --> t; update key,vals in `t` from command-line flags
   txt:gsub("\n[%s]+([-][%S])[%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",function(flag,k,v) 
+    print(flag)
     for n,x in ipairs(arg) do
       if x==flag then
         v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
@@ -144,9 +145,8 @@ function cli(options,txt) --> t; update key,vals in `t` from command-line flags
 
 function main(funs,settings,txt,    fails,saved)
   cli(settings,txt)
-  print(o(cli))
   fails,saved = 0,copy(settings)
-  if settings.help then print(help) else
+  if settings.help then print(txt) else
     for name,fun in pairs(funs) do
       if settings.go =="all" or settings.go==name then
         for k,v in pairs(saved) do setings[k]=v end
