@@ -63,6 +63,14 @@ function COLS(row,     cols,col)
 -- ## Row
 function ROW(t) return {cells=t} end
 
+function scores(data,row,bins)
+  for _,col in pairs(data.cols.x) do
+    x=row.cells[col.at]
+    if x ~= "?" then
+      for _,bin in pairs(bins) do
+        if bin.lo <= x and x < bin.hi then n=n+score(binreturn true end end end end
+--- we have to ahve the total score somewhere. so think there is a bins object
+
 -- ## Data
 function DATA(src,    data,fun)
   data = {rows={}}
@@ -122,11 +130,6 @@ function merge(bin1,bin2,  lo,hi)
   return {lo = lo or bin1.lo,
           hi = hi or bin2.hi, 
           yes= bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} end
-
-function accepts(bins, x)
-  if x~="?" then 
-    for _,bin in pairs(bins) do 
-      if bin.lo <= x and x < bin.hi then return true end end end end
 
 function merges(bins,    n,fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(now)
