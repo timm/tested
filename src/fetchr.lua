@@ -70,7 +70,8 @@ function scores(data,row,bins)
       for _,bin in pairs(bins) do
         if bin.lo <= x and x < bin.hi then n=n+score(binreturn true end end end end
 --- we have to ahve the total score somewhere. so think there is a bins object
-
+-- col need to know how many times forced
+-- col keeps bins. bings have entropy of bins. 
 -- ## Data
 function DATA(src,    data,fun)
   data = {rows={}}
