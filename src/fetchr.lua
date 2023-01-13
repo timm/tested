@@ -28,7 +28,38 @@ local function O(s,    t) --> t; create a klass and a constructor
 
 local COL,COLS -- factories
 local SYM,NUM,DATA,ROW,BIN=O"SYM",O"NUM",O"DATA",O"ROW",O"BIN" -- classes
---------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+--[[
+In this code:
+- vars are global by default unless marked with "local" or 
+  defined in function argument lists.
+- There is only one data structure: a table.
+  - Tables can have numeric or symbolic keys.
+  - Tables start and end with {}
+- Global settings are stores in "the" table which is generated from
+  "help". E.g. from the above the.budget =16
+- For all `key=value` in `the`, a command line flag `-k X` means `value`=X
+- At startup, we run `go[the.go]`
+- #t is length of the table t (and empty tables have #t==0)
+- Tables can have numeric or symbolic fields.
+- `for pos,x in pairs(t) do` is the same as python's 
+  `for pos,x in enumerate(t) do`
+
+In the function arguments, the following conventions apply (usually):
+- n == number
+- s == string
+- t == table
+- is == boolean
+- x == anything
+- fun == function
+- UPPER = class
+- lower = instance; e.g. rx is an instance of RX
+- xs == a table of "x"; e.g. "ns" is a list of numbers
+- Two spaces denote start of optional args
+- Four spaces denote start of local args.  
+
+In my object system, instances are named `i` (since that is shorter than `self`).--]]
+--------------------------------------------------------------------------
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
   col.isIgnored = col.txt:find"X$"
