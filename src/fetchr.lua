@@ -25,25 +25,29 @@ local function O(s,    t) --> t; create a klass and a constructor
   t={}; t.__index = t
   return setmetatable(t, {__call=function(_,...) 
     local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
-
-local COL,COLS -- factories
-local SYM,NUM,DATA,ROW,BIN=O"SYM",O"NUM",O"DATA",O"ROW",O"BIN" -- classes
 --------------------------------------------------------------------------------------
 --[[
-In this code:
+About this code:
+
+This code starts with a help string and ends with a library of examples 
+(see "function egs.xyz()" at end of file). Read the help and exmaples before anyting
+else. Any of the examples can be run from the command line; e.g. "-g show" runs
+all the actions that start with "show". All the settings in the help string can
+be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
+
+In the code:
 - vars are global by default unless marked with "local" or 
   defined in function argument lists.
 - There is only one data structure: a table.
   - Tables can have numeric or symbolic keys.
   - Tables start and end with {}
-- Global settings are stores in "the" table which is generated from
-  "help". E.g. from the above the.budget =16
+  - #t is length of the table t (and empty tables have #t==0)
+  - Tables can have numeric or symbolic fields.
+    - `for pos,x in pairs(t) do` is the same as python's 
+       `for pos,x in enumerate(t) do`
+- Global settings are stores in "l.the" table which is generated from
+  "l.help". E.g. from the above the.budget =16
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
-- At startup, we run `go[the.go]`
-- #t is length of the table t (and empty tables have #t==0)
-- Tables can have numeric or symbolic fields.
-- `for pos,x in pairs(t) do` is the same as python's 
-  `for pos,x in enumerate(t) do`
 
 In the function arguments, the following conventions apply (usually):
 - n == number
@@ -60,6 +64,9 @@ In the function arguments, the following conventions apply (usually):
 
 In my object system, instances are named `i` (since that is shorter than `self`).--]]
 --------------------------------------------------------------------------
+local SYM,NUM,DATA,ROW,BIN=O"SYM",O"NUM",O"DATA",O"ROW",O"BIN" -- classes
+local COL,COLS -- factories
+--------------------------------------------------------------------------------------
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
   col.isIgnored = col.txt:find"X$"
