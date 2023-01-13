@@ -320,7 +320,9 @@ Technology, 43(14):833–839, December 2001.
           Neither approach, in general, 
           dominates the other, and both have continued to co-exist in the world of management science".
 
+
 ### 2020? When background knowledge got good?
+
 
 Recently, researchers have applied large pre-trained language
 models to take a set of domain terms, then expand that to a large one using associations offered by the
@@ -328,10 +330,12 @@ language model. For example, Fu et al. [^fu] recently reported success in improv
 BERT to expand the usecase stories vocab [^vocab]. Co-PI Kuttal used transformer-based language models,
 specifically, BERT, GPT2, and XLNet, to classify the intent of developer conversations [^kuttal]
 
+
 [^vocab]: J. Burstein, C. Doran, and T. Solorio, Eds., Proceedings of the 2019 Conference of the North American
 Chapter of the Association for Computational Linguistics: Human Language Technologies, NAACL-HLT
 2019, Minneapolis, MN, USA, June 2-7, 2019, Volume 1 (Long and Short Papers). Association for
 Computational Linguistics, 2019. [Online]. Available: https://aclanthology.org/volumes/N19-1/
+
 
 So can we use generative language models to create detailed backgorund models? Guide search using that extra information? Here's a crazy idea:
 
@@ -346,14 +350,18 @@ optimization   as   a set of candidates
     - New model conditions are like a breeze that pushes the particles   some distance across the decision space in a model.  
     - Our particles then must make new decisions as they   negotiate their way back to their preferred positions.   
 
+
 [^kuttal]: J. A. J. Hart and S. K. Kuttal, “Feasibility of using youtube conversations for pair programming
   intent classification,” in VL/HCC, 2022
+
 
 [^fu]: M. Fu and C. Tantithamthavorn, “Gpt2sp: A transformer-based agile story point estimation ap-
   proach,” IEEE Transactions on Software Engineering, no. 01, pp. 1–1, mar 5555.
 
+
 [^pso1]:  J. Kennedy and R. C. Eberhart, “Particle swarm optimization,” in Proceedings of the IEEE International
   Conference on Neural Networks, 1995, pp. 1942–1948
+
 
 <img align=right src="/etc/img/pso101.png">
  
@@ -380,21 +388,27 @@ _social_ weights $w,\phi_p,\phi_g$
   - $w,\phi_p,\phi_g$ serve to  nudge
     $p_i$ to a new direction.
 
+
 So for current velocity $V_i^t$ and position $V_i$ at time $t$, particle $i$ is updated as follows:
+
 
 $$V_i^{t+1} = wV_i^t + \phi_pr(P_p - X^t_i) + \phi_gr(P_g - X_i^t)$$ 
  
  (where $P_p$ and $P_q$ are the best solutions found by this particle or the group, respectively; and $r$ is a random number generator)
 
+
 In this scheme,  PSO's particles  find a balance between   past decisions $w$, the preferences of one explorer 
 $\phi_p$, and the preferences made by the team $\phi_g$.
  Stakeholders  gets multiple particles, initialized to:
+
 
 - An initial random  position within the space of options.
 - Or, if the crowd knowledge is available (see next section), 
 positioned  admist the crowd knowledge collected for one stakeholder.
 
+
 Initial particle velocity is  set according to how far, and in what direction, are the ideal answers for each individual (the further  you start from your ideal, the more aggressively you jump towards it). 
+
 
 New idea:
 - add a new term $x$ preference

@@ -18,8 +18,10 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Random notes, discarded text
 
+
 Our automated tools lets us explore the world better,  so lets explore it for good.   In this class, your goal as automated software engineers
   use your automated tools to find better options
+
 
 Its all about choice
 - Choice and power
@@ -39,7 +41,9 @@ Its all about choice
 
 [^coaston]: The intersectionality wars By Jane Coaston, jane.coaston@vox.com. Updated May 28, 2019.  https://www.vox.com/the-highlight/2019/5/20/18542843/intersectionality-conservatism-law-race-gender-discrimination
 
+
 [^crenshaw]: Demarginalizing the Intersection of Race and Sex: A Black Feminist Critique of Antidiscrimination Doctrine, Feminist Theory and Antiracist Politics.  Kimberle Crenshaw.  The University of Chicago Legal Forum 140:139-167 (1989)
+
 
 [^picasso]: From [MFA
 Masterworks](https://news.masterworksfineart.com/2018/10/31/pablo-picasso-and-cubism#:~:text=In%20collaboration%20with%20his%20friend,how%20he%20achieved%20this%20goal.):
@@ -58,13 +62,17 @@ artist was looking at."
 <h2> gonna b so much FUNNNN !! </h2>
 <img align=right width=400 src="http://se16.unbox.org/.worksite/img/elearning_image1.jpg">
 
+
 Y'all yearning to be learning? Me too!
+
 
 Education is the not the filling of a pail, but the lighting of a fire.   
 -- W.Yeats
 
+
 If the world merely lived up to our wildest dreamings, what a dull place it would be. Happily...   
 -- Me
+
 
 Learn why the world wags and what wags it. That is the only thing which the mind
 can never exhaust, never alienate, never be tortured by, never fear or distrust,
@@ -72,23 +80,33 @@ and never dream of regretting. Learning is the only thing for you. Look what a
 lot of things there are to learn.  
 -- T.H. White (The Once and Future King)
 
+
 ## Grad subject structure (sample)
+
 
 (Note: often can be taken in any order-- see class syllabus to check if any restrictions apply.)
 
+
 <img width=900 src="http://se16.unbox.org/_img/subjects.png">
+
 
 ## About NC State SE
 
+
 We're number one! Nearly!
+
 
 <a href="http://csrankings.org/"><img width=900 src="etc/img/csrankings.png"></a>
 
+
 Largest percent female faculty in CS  in the country:
+
 
 <img width=900 src="https://www.csc.ncsu.edu/enews/images2/features/1952-large.jpg">
 
+
 If you want to know our SE work:
+
 
 <a href="https://www.amazon.com/Perspectives-Data-Science-Software-Engineering/dp/0128042060"><img 
 width=250 src="http://menzies.us/img/perspectivesBook.jpg"></a>
@@ -97,9 +115,12 @@ width=250 src="http://menzies.us/img/asdbookCover.png"></a>
 <a href="https://www.amazon.com/Sharing-Data-Models-Software-Engineering/dp/0124172954"><img 
 width=250 src="http://menzies.us/img/shareBookCover.png"></a> 
 
+
 ## About me
 
+
 http://menzies.us
+
 
 <img width=300 src="https://user-images.githubusercontent.com/29195/131709868-4e2c7444-0e37-4a71-bd47-b171bd2679f4.png">
 
