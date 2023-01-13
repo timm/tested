@@ -155,8 +155,8 @@ function merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
       before = push(new,a).hi
       j=j+1
     end
-    bins[#bins].hi =  math.huge
-    return #now == #new and now or fun(new) 
+    new[#new].hi =  math.huge
+    return #now == #new and new or fun(new) 
   end -----------------------------
   return fun(sort(bins,lt"lo")) end
 -------------------------------------------------------------------------
