@@ -14,11 +14,12 @@ OPTIONS:
   -h  --help    show help                    = false
   -p  --p       distance coefficient         = 2
   -s  --seed    random number seed           = 937162211 
-  -S  --Sample  search space for clustering  = 512
-
-ACTIONS:]]}
+  -S  --Sample  search space for clustering  = 512]]}
 --------------------------------------------------------------------------------------
-local b4={}; for k,v in pairs(_ENV) do b4[k]=v end -- used at end to find rogue locals
+local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
+local function find_rogue_locals()
+  for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
+    if not b4[k] then print( string.format("#W ?%s %s",k,type(v)) ) end end end
 
 local function O(s,    t) --> t; create a klass and a constructor 
   t={}; t.__index = t
@@ -27,7 +28,6 @@ local function O(s,    t) --> t; create a klass and a constructor
 
 local COL,COLS -- factories
 local SYM,NUM,DATA,ROW,BIN=O"SYM",O"NUM",O"DATA",O"ROW",O"BIN" -- classes
-local FetchR={l=l,COL=COL,COLS=COLS,SYM=SYM,NUM=NUM,DATA=DATA,ROW=ROW,BIN=BIN}
 --------------------------------------------------------------------------
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
@@ -235,21 +235,22 @@ function l.main(funs,settings,txt,    fails,saved)
   fails,saved = 0,l.copy(settings)
   if   settings.help 
   then print(txt)
-       for _,name in pairs(l.keys(funs)) do 
-         print("  -g",(name:gsub("_"," "))) end
+       print("\nACTIONS:\n  -g","all (runs all actions)") 
+       for _,name in pairs(l.keys(funs)) do print("  -g",name) end
   else for _,name in pairs(l.keys(funs)) do
         if settings.go =="all" or name:find("^"..settings.go..".*") then
           for k,v in pairs(saved) do settings[k]=v end
           l.Seed = settings.seed
           if funs[name]()==false then print("❌ "..name); fails=fail+1
-                                 else print("✅ "..name) end end end 
-  end
-  for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
-    if not b4[k] then print( string.format("#W ?%s %s",k,type(v)) ) end end 
+                                 else print("✅ "..name) end end end end
+  find_rogue_locals()
   os.exit(fails) end  
 -------------------------------------------------------------------------
 local egs={}
 function egs.show_config() l.oo(l.the) end
 function egs.test_maths()  print(10 + 10) end
 -------------------------------------------------------------------------
-return pcall(debug.getlocal,4,1) and FetchR or l.main(egs,l.the,l.help)
+if pcall(debug.getlocal,4,1) 
+then return {l=l,COL=COL,COLS=COLS,SYM=SYM,NUM=NUM,
+             DATA=DATA,ROW=ROW,BIN=BIN}
+else l.main(egs,l.the,l.help) end
