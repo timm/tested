@@ -5,12 +5,14 @@ fetchr : find a rule to fetch good rows, after peeking at just a few rows
 USAGE: lua fetchr.lua [OPTIONS] [-g ACTION]
 
 OPTIONS:
-  -b --budget   max peeking budget           = 20
-  -p  --p       distance coefficient         = 2
+  -b  --budget  max peeking budget           = 20
+  -B  --Bins    how to divide data           = 16
+  -f  --file    csv file to load             = ../etc/data/auto93.csv
   -F  --Far     how far is long distances    = .95
-  -s  --seed    random number seed           = 937162211 
   -g  --go      start up action              = nothing
   -h  --help    show help                    = false
+  -p  --p       distance coefficient         = 2
+  -s  --seed    random number seed           = 937162211 
   -S  --Sample  search space for clustering  = 512
 
 ACTIONS:]]
@@ -28,11 +30,12 @@ function COL(n,s,    col)
   return col end
 
 function SYM(n,s)
-  return {at=n, txt=s,seen={}} end
+  return {at=n, txt=s,seen={},bins={}} end
 
 function NUM(n,s)
   return {isNum=true, lo=math.huge, hi=-math.huge, at=n or 0, txt=s or "",
-          w=(s or ""):find"-$" and -1 or 1 } end
+          w=(s or ""):find"-$" and -1 or 1,
+          bins={}} end
 
 function norm(num,x)
   return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
@@ -50,6 +53,11 @@ function add(col,x)
     col.hi = math.max(x,col.hi)  
   else col.seen[x] = true end end
 
+-- function force(col,x,inc)
+--   if x =="?" then return end
+--   if col.isNum then
+--     gap=(col.hi - col.lo)/the.Bins
+--
 -- ## Factory for Making Columns
 function COLS(row,     cols,col)
   cols={names=row, all={}, x={}, y={}}
@@ -63,15 +71,16 @@ function COLS(row,     cols,col)
 -- ## Row
 function ROW(t) return {cells=t} end
 
-function scores(data,row,bins)
+function guess(row,data,nall,     s,x)
+  s = 0
   for _,col in pairs(data.cols.x) do
-    x=row.cells[col.at]
+    x = row.cells[col.at]
     if x ~= "?" then
-      for _,bin in pairs(bins) do
-        if bin.lo <= x and x < bin.hi then n=n+score(binreturn true end end end end
---- we have to ahve the total score somewhere. so think there is a bins object
--- col need to know how many times forced
--- col keeps bins. bings have entropy of bins. 
+      for _,bin in pairs(col.bins) do
+        if bin.lo <= x and x < bin.hi then 
+          s = s + score(bin,nall); break end end end end 
+  return s end
+
 -- ## Data
 function DATA(src,    data,fun)
   data = {rows={}}
@@ -119,8 +128,8 @@ function half(data,rows,  cols,above)
 -------------------------------------------------------------------------
 function BIN(lo,hi) return{lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
 
-function score(bin,  n)
-  return (bin.yes/(bin.yes+bin.no)) * bin.n/(n or 1) end
+function score(bin,  nall)
+  return (bin.yes/(bin.yes+bin.no)) * bin.n/(nall or 1) end
 
 function reinforce(bin,  inc)
   inc   = inc or 1
@@ -132,14 +141,14 @@ function merge(bin1,bin2,  lo,hi)
           hi = hi or bin2.hi, 
           yes= bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} end
 
-function merges(bins,    n,fun) -- {hi,lo,yes,no,n,     all,merge1}
+function merges(bins,nall,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(now)
     local new,j,before,a,b,c = {},1,-math.huge
     while j <= #now do
       a,b = now[j],now[j+1]
       if b then
 	      c = merge(a,b,before)
-	      if score(c,n) >= .95*(score(a,n) + score(b,n)) 
+	      if score(c,nall) >= .95*(score(a,nall) + score(b,nall)) 
 	      then a=c; j=j+1 end 
       end
       before = push(new,a).hi
@@ -147,8 +156,7 @@ function merges(bins,    n,fun) -- {hi,lo,yes,no,n,     all,merge1}
     end
     bins[#bins].hi =  math.huge
     return #now == #new and now or fun(new) 
-  end ----------------
-  n=0; map(bins, function(bin) n= n+bin.n end)
+  end -----------------------------
   return fun(sort(bins,lt"lo")) end
 -------------------------------------------------------------------------
 function copy(t,    u) --> t; deep copy
@@ -186,13 +194,16 @@ function coerce(s,    fun) --> any; return int or float or bool or string from `
     return s1 end
   return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
 
-function csv(sFilename,fun,    src,s,t) --> nil; call `fun` on rows (after coercing cell text)
+function cells(s,    t)
+  t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
+
+function lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
   src,s,t  = io.input(sFilename)
   while true do
-    s = io.read()
-    if   s
-    then t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; fun(t)
-    else return io.close(src) end end end
+    s = io.read(); if s then fun(s) else return io.close(src) end end end
+
+function csv(sFilename,fun)
+  lines(sFilename, function(line) fun(cells(line)) end) end
 
 function oo(t) print(o(t)); return t end
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
@@ -212,9 +223,9 @@ function main(funs,settings,txt,    fails,saved)
   fails,saved = 0,copy(settings)
   if   settings.help 
   then print(txt)
-       for _,name in pairs(keys(funs)) do print("  -g",name) end
+       for _,name in pairs(keys(funs)) do print("  -g",(name:gsub("_"," "))) end
   else for _,name in pairs(keys(funs)) do
-        if settings.go =="all" or settings.go==name then
+        if settings.go =="all" or name:find("^"..settings.go..".*") then
           for k,v in pairs(saved) do settings[k]=v end
           Seed = settings.seed
           if funs[name]()==false then print("❌ FAIL",name); fails=fail+1
@@ -225,7 +236,7 @@ function main(funs,settings,txt,    fails,saved)
   os.exit(fails) end  
 -------------------------------------------------------------------------
 local egs={}
-function egs.show()  print(o(the)) end
-function egs.maths() print(10 + 10) end
+function egs.show_config() print(o(the)) end
+function egs.test_maths()  print(10 + 10) end
 -------------------------------------------------------------------------
 main(egs,the,help)
