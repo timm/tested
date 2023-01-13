@@ -40,10 +40,10 @@ function NUM(n,s)
 function norm(num,x)
   return x=="?" and x or (x-col.lo)/(col.hi - col.lo +1E-32)  end
 
-function bin(col,x,     gap)
+function bucket(col,x,     gap)
   if x~="?" and col.isNum then
     gap = (col.hi - col.lo)/the.Bins 
-    x= gap*math.min(((x-col.lo)/gap//1 +1),the.Bins) end
+    x = math.min(((x-col.lo)/gap//1 + 1),the.Bins) end
   return x end 
 
 function add(col,x)
@@ -71,14 +71,14 @@ function COLS(row,     cols,col)
 -- ## Row
 function ROW(t) return {cells=t} end
 
-function guess(row,data,nall,     s,x)
+function guess(row,data,     s,x)
   s = 0
   for _,col in pairs(data.cols.x) do
     x = row.cells[col.at]
     if x ~= "?" then
       for _,bin in pairs(col.bins) do
         if bin.lo <= x and x < bin.hi then 
-          s = s + score(bin,nall); break end end end end 
+          s = s + score(bin); break end end end end 
   return s end
 
 -- ## Data
@@ -126,10 +126,10 @@ function half(data,rows,  cols,above)
     push(n <= (rows//2) and left or right, tmp.row) end
   return left, right, A, B, c end  
 -------------------------------------------------------------------------
-function BIN(lo,hi) return{lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
+function BIN(nall,lo,hi) return{nall=nall,lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
 
-function score(bin,  nall)
-  return (bin.yes/(bin.yes+bin.no)) * bin.n/(nall or 1) end
+function score(bin)
+  return (bin.yes/(bin.yes+bin.no)) * bin.n/bin.nall end
 
 function reinforce(bin,  inc)
   inc   = inc or 1
@@ -137,18 +137,19 @@ function reinforce(bin,  inc)
   if inc >= 0 then bin.yes=bin.yes + inc else bin.no=bin.no - inc end end
 
 function merge(bin1,bin2,  lo,hi)
-  return {lo = lo or bin1.lo,
-          hi = hi or bin2.hi, 
-          yes= bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} end
+  return {lo  = lo or bin1.lo,
+          hi  = hi or bin2.hi, 
+          nall= math.max(bin1.nall, bin2.nall),
+          yes = bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} end
 
-function merges(bins,nall,    fun) -- {hi,lo,yes,no,n,     all,merge1}
+function merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(now)
     local new,j,before,a,b,c = {},1,-math.huge
     while j <= #now do
       a,b = now[j],now[j+1]
       if b then
 	      c = merge(a,b,before)
-	      if score(c,nall) >= .95*(score(a,nall) + score(b,nall)) 
+	      if score(c) >= .95*(score(a) + score(b))
 	      then a=c; j=j+1 end 
       end
       before = push(new,a).hi
