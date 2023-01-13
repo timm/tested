@@ -141,7 +141,7 @@ function ROW:guess(data,     s,x)
 function DATA:new(src,    data,fun)
   self.rows={}
   function fun(row) self:add(row) end 
-  if type(src)=="string" then l.csv(src,fun) else l.map(src or {},fun) end end
+  if type(src)=="string" then l.csv(src,fun) else l.map(src or {},fun) end end 
 
 function DATA:add(row)
   if self.cols then
@@ -289,6 +289,6 @@ function egs.show_config() l.oo(l.the) end
 function egs.test_maths()  print(10 + 10) end
 -------------------------------------------------------------------------
 if pcall(debug.getlocal,4,1) 
-then return {l=l,COL=COL,COLS=COLS,SYM=SYM,NUM=NUM,
+then return {l=l,the=the,COL=COL,COLS=COLS,SYM=SYM,NUM=NUM,
              DATA=DATA,ROW=ROW,BIN=BIN}
 else l.main(egs,l.the,l.help) end
