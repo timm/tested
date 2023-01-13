@@ -46,6 +46,12 @@ function bucket(col,x,     gap)
     x = math.min(((x-col.lo)/gap//1 + 1),the.Bins) end
   return x end 
 
+function tekcub(col,n,   gap)
+  if x~="?" and col.isNum then
+    gap = (col.hi - col.lo)/the.Bins 
+    return n==the.Bins and col.hi - gap or col.lo + gap*(n-1) end
+  return x end 
+
 function add(col,x)
   if x == "?" then return x end
   if col.isNum then
@@ -136,22 +142,20 @@ function reinforce(bin,  inc)
   bin.n = bin.n + 1
   if inc >= 0 then bin.yes=bin.yes + inc else bin.no=bin.no - inc end end
 
-function merge(bin1,bin2,  lo,hi)
-  return {lo  = lo or bin1.lo,
+function merged(bin1,bin2,  lo,hi,bins2)
+   bin3= {lo  = lo or bin1.lo,
           hi  = hi or bin2.hi, 
           nall= math.max(bin1.nall, bin2.nall),
-          yes = bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} end
+          yes = bin1.yes+bin2.yes, no= bin1.no+bin2.no, n= bin1.n+bin2.n} 
+  if score(bin3) >= .95*(score(bin1)+score(bin2)) then return bin3 end end 
 
 function merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(now)
     local new,j,before,a,b,c = {},1,-math.huge
     while j <= #now do
-      a,b = now[j],now[j+1]
-      if b then
-	      c = merge(a,b,before)
-	      if score(c) >= .95*(score(a) + score(b))
-	      then a=c; j=j+1 end 
-      end
+      a,b,c = now[j],now[j+1]
+      if b then c = merged(a,b,before) end
+	    if c then a=c; j=j+1 end 
       before = push(new,a).hi
       j=j+1
     end
@@ -199,7 +203,7 @@ function cells(s,    t)
   t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
 
 function lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
-  src,s,t  = io.input(sFilename)
+  src = io.input(sFilename)
   while true do
     s = io.read(); if s then fun(s) else return io.close(src) end end end
 
