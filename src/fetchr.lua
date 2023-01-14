@@ -88,27 +88,51 @@ function COLS(ss,     col,cols)
   return cols end
 --------------------------------------------------------------------------
 -- Classes
-function SYM:new(n,s)
-  return {at=n or 0, txt=s or "",seen={},bins={}} end
+function SYM:new(nat,s)
+  return {at=nat or 0, txt=s or "",seen={},bins={},
+          n=0, mode=nil,most=0} end
 
-function SYM:add(s)  if s~="?" then self.seen[s]=s end end
+function SYM:add(s,  inc)  
+  if s~="?" then 
+    inc = inc or 1
+    n   = n+1
+    self.seen[s] = inc+(self.seen[s] or 0)  
+    if self.seen[s] > self.most then
+      self.mode,self.most = s, self.seen[s] end  end end
+
+function SYM:mid() return i.mode end
+function SYM:div(      e,fun)
+   fun = function(p) return p*math.log(p,2) end
+   e=0; for _,n in pairs(i.seen) do e = e + fun(n/i.n) end;
+   return -e end
+
 function SYM:bucket(s) return s end
 function SYM:tekcub(s) return s end
 function SYM:dist(s1,s2)
   return  s1=="?" and s2=="?" and 1 or s1==s2 and 0 or 1 end
 --------------------------------------------------------------------------
-function NUM:new(n,s)
-  return {lo=math.huge, hi=-math.huge, at=n or 0, txt=s or "",
+function NUM:new(nat,s)
+  return {lo=math.huge, hi=-math.huge, at=nat or 0, txt=s or "",
+          n-0,
+          mu=0, m2=0,
           w=(s or ""):find"-$" and -1 or 1,
           bins={}} end
 
+function NUM:mid() return i.mu end
+function NUM:div() return i.sd end
 function NUM:norm(n)
   return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
 function NUM:add(n)
-  if n ~= "?" then self.lo = math.min(n,self.lo)
-                   self.hi = math.max(n,self.hi) end end  
-
+  if n ~= "?" then
+    self.n  = self.n + 1
+    d       = n - self.mu
+    self.mu = self.mu + d/self.n
+    self.m2 = self.m2 + d*(n - self.mu)
+    self.sd = (self.m2/(self.n-1))^0.5  
+    self.lo = math.min(n, self.lo)
+    self.hi = math.max(n, self.hi) end end
+  
 function NUM:bucket(n,     gap)
   if n ~="?" then gap = (self.hi - self.lo)/the.Bins 
                   return math.min(((n-self.lo)/gap//1 + 1),the.Bins) end end
@@ -155,7 +179,12 @@ function DATA:add(row)
       for _,col in pairs(cols) do
         col:add(row.cells[col.at]) end end 
   else self.cols = COLS(row) end end  
-        
+  
+function DATA:clone(  init,new)
+  new=DATA{self.cols.names}
+  for _,row in pairs(row or {}) do new:add(row) end
+  return new end
+
 function DATA:dist(row1,row2,  cols)
   local n,d,x1,x2,inc = 0,0
   for _,col in pairs(cols or self.cols.x) do
@@ -190,10 +219,15 @@ function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursivel
     node.left  = i:sway(left, min, cols, node.A) end
   return node end
 
--------------------------------------------------------------------------
-function BIN:new(nall,lo,hi) return{nall=nall,lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
+function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
+  local fun
+  function fun(k,col) return col:rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
+  return kap(cols or i.cols.all, fun) end
 
-function BIN:score()
+-------------------------------------------------------------------------
+function BIN:new(lo,hi) return{lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
+
+function BIN:score(     nall)
   return (bin.yes/(bin.yes+bin.no)) * bin.n/bin.nall end
 
 function BIN:reinforce(  inc)
@@ -205,19 +239,19 @@ function BIN:merged(bin,  lo,hi,bins2)
    new      = copy(self)
    new.lo   = lo or self.lo
    new.hi   = hi or bin.hi
-   new.nall = self.nall + bin.nall
    new.yes  = self.yes  + bin.yes
    new.no   = self.no   + bin.no
    new.n    = self.n    + bin.n 
-  if score(new) >= .95*(score(self)+score(bin)) then return new end end
 
-function BIN.merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
+function BIN.merges(bins,n,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(now)
     local new,j,before,a,b,c = {},1,-math.huge
     while j <= #now do
-      a,b,c = now[j],now[j+1]
-      if b then c = a:merged(b,before) end
-	    if c then a=c; j=j+1 end 
+      a,b = now[j],now[j+1]
+      if b then 
+         c = a:merged(b,before) end
+         if score(c,n) >= .95*(score(a,n) + score(b,n)) then 
+	         a=c; j=j+1 end end
       before = push(new,a).hi
       j=j+1
     end
