@@ -1,5 +1,5 @@
 -- vim: ts=2 sw=2 et :
-local l={the={},help=[[
+local the,help={},[[
 fetchr : find a rule to fetch good rows, after peeking at just a few rows
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2 license (t.ly/74ji)
 
@@ -14,7 +14,7 @@ OPTIONS:
   -h  --help    show help                    = false
   -p  --p       distance coefficient         = 2
   -s  --seed    random number seed           = 937162211 
-  -S  --Sample  search space for clustering  = 512]]}
+  -S  --Sample  search space for clustering  = 512]]
 --------------------------------------------------------------------------------------
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local function find_rogue_locals()
@@ -25,6 +25,9 @@ local function O(s,    t) --> t; create a klass and a constructor
   t={}; t.__index = t
   return setmetatable(t, {__call=function(_,...) 
     local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
+
+local cells,cli,coerce,copy,csv,fmt,kap,keys,lines,lt
+local main,map,o,oo,push,settings,rand,rint,sort,Seed
 --------------------------------------------------------------------------------------
 --[[
 About this code:
@@ -45,8 +48,8 @@ In the code:
   - Tables can have numeric or symbolic fields.
     - `for pos,x in pairs(t) do` is the same as python's 
        `for pos,x in enumerate(t) do`
-- Global settings are stores in "l.the" table which is generated from
-  "l.help". E.g. From the above the.budget =16
+- Global settings are stores in "the" table which is generated from
+  "help". E.g. From the above the.budget =16
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
 
 In the function arguments, the following conventions apply (usually):
@@ -70,22 +73,22 @@ local COL,COLS -- factories
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
   col.isIgnored = col.txt:find"X$"
-  col.isKlass   = col.txt.find"!$"
-  col.isGoal    = col.txt.find"[!+-]$"
+  col.isKlass   = col.txt:find"!$"
+  col.isGoal    = col.txt:find"[!+-]$"
   return col end
 
 function COLS(ss,     col,cols)
   cols={names=ss, all={},x={},y={}}
   for n,s in pairs(ss) do  
-    col = l.push(cols.all, COL(n,s))
+    col = push(cols.all, COL(n,s))
     if not col.isIgnored then
       if col.isKlass then cols.klass = col end
-      l.push(col.isGoal and cols.y or cols.x, col) end end 
+      push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 --------------------------------------------------------------------------
 -- Classes
 function SYM:new(n,s)
-  return {at=n, txt=s,seen={},bins={}} end
+  return {at=n or 0, txt=s or "",seen={},bins={}} end
 
 function SYM:add(s)  if s~="?" then self.seen[s]=s end end
 function SYM:bucket(s) return s end
@@ -138,14 +141,15 @@ function ROW:guess(data,     s,x)
           s = s + bin:score(); break end end end end 
   return s end
 --------------------------------------------------------------------------
-function DATA:new(src,    data,fun)
+function DATA:new(src,    fun)
   self.rows={}
   function fun(row) self:add(row) end 
-  if type(src)=="string" then l.csv(src,fun) else l.map(src or {},fun) end end 
+  if type(src)=="string" then csv(src,fun) else map(src or {},fun) end end 
 
 function DATA:add(row)
   if self.cols then
-    row = l.push(self.rows, row.cells and row or ROW(row))
+    row = row.cells and row or ROW(row)
+    push(self.rows, row)
     for _,col in pairs{self.cols.x, self.cols.y} do
       for _,col in pairs(cols) do
         col:add(row.cells[col.at]) end end 
@@ -163,12 +167,12 @@ function DATA:half(  rows,cols,above)
   function gap(r1,r2) return self:dist(r1, r2, cols) end
   function proj(r)    return {row=r, dist=(gap(r,A)^2 + c^2 - gap(r,B)^2)/(2*c)} end
   rows = rows or self.rows
-  some = l.many(rows, the.Sample)
-  A    = above or l.any(some)
-  tmp  = l.sort(l.map(l.some, function(r) return {row=r,dist=gap(A,r)} end),l.lt"dist") 
+  some = many(rows, the.Sample)
+  A    = above or any(some)
+  tmp  = sort(map(some, function(r) return {row=r,dist=gap(A,r)} end),lt"dist") 
   far  = tmp[(#tmp*the.Far)//1] 
   B,c  = far.row, far.dist
-  for n,tmp in pairs(l.sort(l.map(rows,proj), l.lt"dist")) do
+  for n,tmp in pairs(sort(map(rows,proj), lt"dist")) do
     push(n <= (rows//2) and left or right, tmp.row) end
   return left, right, A, B, c end  
 -------------------------------------------------------------------------
@@ -183,7 +187,7 @@ function BIN:reinforce(  inc)
   if inc >= 0 then self.yes=self.yes + inc else self.no=self.no - inc end end
 
 function BIN:merged(bin,  lo,hi,bins2)
-   new      = l.copy(self)
+   new      = copy(self)
    new.lo   = lo or self.lo
    new.hi   = hi or bin.hi
    new.nall = self.nall + bin.nall
@@ -199,7 +203,7 @@ function BIN.merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
       a,b,c = now[j],now[j+1]
       if b then c = a:merged(b,before) end
 	    if c then a=c; j=j+1 end 
-      before = l.push(new,a).hi
+      before = push(new,a).hi
       j=j+1
     end
     new[#new].hi =  math.huge
@@ -207,88 +211,107 @@ function BIN.merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   end -----------------------------
   return fun(sort(bins,lt"lo")) end
 -------------------------------------------------------------------------
-l.fmt = string.format
-function l.copy(t,    u) --> t; deep copy
+fmt = string.format
+function copy(t,    u) --> t; deep copy
   if type(t) ~= "table" then return t end 
-  u={}; for k,v in pairs(t) do u[k]=l.copy(v) end
+  u={}; for k,v in pairs(t) do u[k]=copy(v) end
   return setmetatable(u,getmetatable(t)) end 
 
-function l.sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
+function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
   table.sort(t,fun); return t end
 
-function l.lt(x) --> fun;  return a function that sorts ascending on `x`
+function lt(x) --> fun;  return a function that sorts ascending on `x`
   return function(a,b) return a[x] < b[x] end end
 
-function l.push(t, x) --> any; push `x` to end of list; return `x` 
+function push(t, x) --> any; push `x` to end of list; return `x` 
   table.insert(t,x); return x end
 
-function l.map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
+function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do v,k=fun(v); u[k or (1+#u)]=v end;  return u end
  
-function l.kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
+function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
   u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
 
-function l.keys(t)
-  return l.sort(l.kap(t,function(k,_) return k end)) end
+function keys(t)
+  return sort(kap(t,function(k,_) return k end)) end
 
-l.Seed=937162211
-function l.rint(nlo,nhi)  return math.floor(0.5 + l.rand(nlo,nhi)) end
-function l.rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
+Seed=937162211
+function rint(nlo,nhi)  return math.floor(0.5 + rand(nlo,nhi)) end
+function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
   nlo, nhi = nlo or 0, nhi or 1
   Seed = (16807 * Seed) % 2147483647
   return nlo + (nhi-nlo) * Seed / 2147483647 end
 
-function l.coerce(s,    fun) --> any; return int or float or bool or string from `s`
+function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
     if s1=="true" then return true elseif s1=="false" then return false end
     return s1 end
   return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
 
-function l.cells(s,    t)
+function cells(s,    t)
   t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
 
-function l.lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
+function lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
   src = io.input(sFilename)
   while true do
     s = io.read(); if s then fun(s) else return io.close(src) end end end
 
-function l.csv(sFilename,fun)
-  l.lines(sFilename, function(line) fun(l.cells(line)) end) end
+function csv(sFilename,fun)
+  lines(sFilename, function(line) fun(cells(line)) end) end
 
-function l.oo(t) print(l.o(t)); return t end
-function l.o(t,    fun) --> s; convert `t` to a string. sort named keys. 
+function oo(t) print(o(t)); return t end
+function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) return string.format(":%s %s",k,l.o(v)) end 
-  return "{"..table.concat(#t>0  and l.map(t,l.o) or l.sort(l.kap(t,fun))," ").."}" end
+  fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
+  return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
-function l.cli(options,txt) --> t; update key,vals in `t` from command-line flags
-  txt:gsub("\n[%s]+(-[%S])[%s]+([-][-]([%S]+))[^\n]+= ([%S]+)",function(short,long,k,v) 
+function settings(txt,t) --> t; update key,vals in `t` from command-line flags
+  txt:gsub("\n[%s]+(-[%S])[%s]+([-][-]([%S]+))[^\n]+= ([%S]+)",
+           function(short,long,k,v)  t[k] = coerce(v) end)  end
+
+function cli(t)
+  for k,v in pairs(t) do
+    v = tostring(v)
     for n,x in ipairs(arg) do
-      if x==short or x==long then
-        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end
-    options[k] = l.coerce(v) end) end
+      if x=="-"..(k:sub(1,1)) then
+        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end 
+    t[k] = coerce(v) end end
 
-function l.main(funs,settings,txt,    fails,saved)
-  l.cli(settings,txt)
-  fails,saved = 0,l.copy(settings)
+function main(funs,settings,txt,    fails,saved)
+  cli(settings)
+  fails,saved = 0,copy(settings)
   if   settings.help 
   then print(txt)
-       print("\nACTIONS:\n  -g","all (runs all actions)") 
-       for _,name in pairs(l.keys(funs)) do print("  -g",name) end
-  else for _,name in pairs(l.keys(funs)) do
-        if settings.go =="all" or name:find("^"..settings.go..".*") then
+       print("\nACTIONS:\n  -g","_ (runs all actions)") 
+       for _,name in pairs(keys(funs)) do print("  -g",name) end
+  else for _,name in pairs(keys(funs)) do
+        if name:find(".*"..settings.go..".*") then
           for k,v in pairs(saved) do settings[k]=v end
-          l.Seed = settings.seed
+          Seed = settings.seed
           if funs[name]()==false then print("❌ "..name); fails=fail+1
                                  else print("✅ "..name) end end end end
   find_rogue_locals()
   os.exit(fails) end  
+
 -------------------------------------------------------------------------
 local egs={}
-function egs.show_config() l.oo(l.the) end
+function egs.show_config() oo(the) end
 function egs.test_maths()  print(10 + 10) end
+function egs.NUM_test()    oo(COL(2,"Asda+")) end
+function egs.cols_test() 
+  map(COLS({"aa","bbX","Funds+","Wght-","Age-"}).y,oo) end
+function egs.csv_test(     n) 
+  n=0
+  csv(the.file, function(t) n=n+#t end)
+  return n==3192 end
+function egs.data_test(      data)
+  data = DATA(the.file)
+  print(#data.rows) end
+
 -------------------------------------------------------------------------
+settings(help, the)
+
 if pcall(debug.getlocal,4,1) 
 then return {l=l,the=the,COL=COL,COLS=COLS,SYM=SYM,NUM=NUM,
              DATA=DATA,ROW=ROW,BIN=BIN}
-else l.main(egs,l.the,l.help) end
+else main(egs, the, help) end
