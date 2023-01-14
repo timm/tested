@@ -12,6 +12,7 @@ OPTIONS:
   -F  --Far     how far is long distances    = .95
   -g  --go      start up action              = nothing
   -h  --help    show help                    = false
+  -m  --min     min size of clusters         = .5
   -p  --p       distance coefficient         = 2
   -s  --seed    random number seed           = 937162211 
   -S  --Sample  search space for clustering  = 512]]
@@ -26,8 +27,8 @@ local function O(s,    t) --> t; create a klass and a constructor
   return setmetatable(t, {__call=function(_,...) 
     local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
 
-local cells,cli,coerce,copy,csv,fmt,kap,keys,lines,lt
-local main,map,o,oo,push,settings,rand,rint,sort,Seed
+local any,cells,cli,coerce,copy,csv,fmt,kap,keys,lines,lt
+local main,many,map,o,oo,push,settings,rand,rint,sort,Seed
 --------------------------------------------------------------------------------------
 --[[
 About this code:
@@ -102,19 +103,19 @@ function NUM:new(n,s)
           bins={}} end
 
 function NUM:norm(n)
-  return n=="?" and n or (x-self.lo)/(self.hi - self.lo +1E-32)  end
+  return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
 function NUM:add(n)
-  if n == "?" then self.lo = math.min(n,self.lo)
+  if n ~= "?" then self.lo = math.min(n,self.lo)
                    self.hi = math.max(n,self.hi) end end  
 
 function NUM:bucket(n,     gap)
-  if n~="?" then gap = (self.hi - self.lo)/the.Bins 
-                 return math.min(((n-self.lo)/gap//1 + 1),the.Bins) end end
+  if n ~="?" then gap = (self.hi - self.lo)/the.Bins 
+                  return math.min(((n-self.lo)/gap//1 + 1),the.Bins) end end
 
 function NUM:tekcub(n,   gap)
-  if n~="?" then gap = (self.hi - self.lo)/the.Bins 
-                 return n==the.Bins and self.hi - gap or self.lo + gap*(n-1) end end
+  if n ~="?" then gap = (self.hi - self.lo)/the.Bins 
+                  return n==the.Bins and self.hi - gap or self.lo + gap*(n-1) end end
 
 function NUM:dist(n1,n2)
   if n1=="?" and n2=="?" then return 1 end 
@@ -150,16 +151,16 @@ function DATA:add(row)
   if self.cols then
     row = row.cells and row or ROW(row)
     push(self.rows, row)
-    for _,col in pairs{self.cols.x, self.cols.y} do
+    for _,cols in pairs{self.cols.x, self.cols.y} do
       for _,col in pairs(cols) do
         col:add(row.cells[col.at]) end end 
   else self.cols = COLS(row) end end  
         
 function DATA:dist(row1,row2,  cols)
-  local n,d = 0,0
+  local n,d,x1,x2,inc = 0,0
   for _,col in pairs(cols or self.cols.x) do
     n = n + 1
-    d = d + col:dist(row1.cells[col.at], row2.cells[col.at])^the.p end
+    d = d+ col:dist(row1.cells[col.at],row2.cells[col.at])^the.p end
   return (d/n)^(1/the.p) end
 
 function DATA:half(  rows,cols,above)
@@ -173,8 +174,22 @@ function DATA:half(  rows,cols,above)
   far  = tmp[(#tmp*the.Far)//1] 
   B,c  = far.row, far.dist
   for n,tmp in pairs(sort(map(rows,proj), lt"dist")) do
-    push(n <= (rows//2) and left or right, tmp.row) end
+    push(n <= (#rows//2) and left or right, tmp.row) end
   return left, right, A, B, c end  
+
+function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
+  local node,left,right,A,B,mid
+  rows = rows or i.rows
+  min  = min or (#rows)^the.min
+  cols = cols or i.cols.x
+  node = {data=rows} --xxx cloning
+  if #rows > 2*min then
+    left, right, node.A, node.B, c = i:half(rows,cols,above)
+    node.mid = right[1]
+    if i:better(node.B,node.A) then left,right,node.A,node.B=right,left,node.B,node.A end
+    node.left  = i:sway(left, min, cols, node.A) end
+  return node end
+
 -------------------------------------------------------------------------
 function BIN:new(nall,lo,hi) return{nall=nall,lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
 
@@ -212,6 +227,12 @@ function BIN.merges(bins,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   return fun(sort(bins,lt"lo")) end
 -------------------------------------------------------------------------
 fmt = string.format
+function any(t) --> any; return any item from `t`, picked at random
+  return t[rint(#t)] end
+
+function many(t,n) --> t; return `n` items from `t`, picked at random
+  local u={}; for i=1,n do push(u, any(t)) end; return u end 
+
 function copy(t,    u) --> t; deep copy
   if type(t) ~= "table" then return t end 
   u={}; for k,v in pairs(t) do u[k]=copy(v) end
@@ -260,14 +281,15 @@ function csv(sFilename,fun)
   lines(sFilename, function(line) fun(cells(line)) end) end
 
 function oo(t) print(o(t)); return t end
+
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
   fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function settings(txt,t) --> t; update key,vals in `t` from command-line flags
-  txt:gsub("\n[%s]+(-[%S])[%s]+([-][-]([%S]+))[^\n]+= ([%S]+)",
-           function(short,long,k,v)  t[k] = coerce(v) end)  end
+  txt:gsub("\n[%s]+-[%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",
+           function(k,v) t[k] = coerce(v) end)  end
 
 function cli(t)
   for k,v in pairs(t) do
@@ -282,7 +304,7 @@ function main(funs,settings,txt,    fails,saved)
   fails,saved = 0,copy(settings)
   if   settings.help 
   then print(txt)
-       print("\nACTIONS:\n  -g","_ (runs all actions)") 
+       print("\nACTIONS:\n  -g",". (runs all actions)") 
        for _,name in pairs(keys(funs)) do print("  -g",name) end
   else for _,name in pairs(keys(funs)) do
         if name:find(".*"..settings.go..".*") then
@@ -298,15 +320,30 @@ local egs={}
 function egs.show_config() oo(the) end
 function egs.test_maths()  print(10 + 10) end
 function egs.NUM_test()    oo(COL(2,"Asda+")) end
+
 function egs.cols_test() 
   map(COLS({"aa","bbX","Funds+","Wght-","Age-"}).y,oo) end
+
 function egs.csv_test(     n) 
   n=0
   csv(the.file, function(t) n=n+#t end)
   return n==3192 end
+
 function egs.data_test(      data)
   data = DATA(the.file)
+  map(data.cols.y,oo)
   print(#data.rows) end
+
+function egs.dists(    data)
+  data=DATA(the.file)
+  for j=1,#data.rows,30 do 
+    print(j,fmt("%s",data:dist(data.rows[1],data.rows[j]),
+                     o(data.rows[j].cells))) end end
+
+function egs.half(    data)
+  data=DATA(the.file)
+  local left,right,A,B,c = data:half() 
+  print(#left,#right,o(A.cells), o(B.cells),c) end
 
 -------------------------------------------------------------------------
 settings(help, the)
