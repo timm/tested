@@ -30,7 +30,7 @@ local function O(s,    t) --> t; create a klass and a constructor
 About this code:
 
 This code starts with a help string and ends with a library of examples 
-(see "function egs.xyz()" at end of file). Read the help and exmaples before anyting
+(see "function egs.xyz()" at end of file). Read the help and examples before anything
 else. Any of the examples can be run from the command line; e.g. "-g show" runs
 all the actions that start with "show". All the settings in the help string can
 be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
@@ -46,7 +46,7 @@ In the code:
     - `for pos,x in pairs(t) do` is the same as python's 
        `for pos,x in enumerate(t) do`
 - Global settings are stores in "l.the" table which is generated from
-  "l.help". E.g. from the above the.budget =16
+  "l.help". E.g. From the above the.budget =16
 - For all `key=value` in `the`, a command line flag `-k X` means `value`=X
 
 In the function arguments, the following conventions apply (usually):
