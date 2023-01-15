@@ -234,40 +234,42 @@ function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defa
   return kap(cols or self.cols.all, fun) end
 
 -------------------------------------------------------------------------
-function BIN:new(lo,hi) return{lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
+function XY:new(lo,hi) return{xlo=lo,xhi=lo or hi or lo,ys={},n=0} end
 
-function BIN:score(     nall)
-  return (bin.yes/(bin.yes+bin.no)) * bin.n/bin.nall end
+function XY:score()
+  local yes,no = self.ys[true], self.ys[false]+1e-32
+  return (yes/(yes+no)) * self.n end
 
-function BIN:reinforce(  inc)
+function XY:add(x,y,  inc)
   inc   = inc or 1
   self.n = self.n + 1
-  if inc >= 0 then self.yes=self.yes + inc else self.no=self.no - inc end end
+  self.xlo = math.min(x, self.xlo)
+  self.xhi = math.max(x, self.xhi)
+  self.ys[y] = inc + (self.ys[y] or 0) end
 
-function BIN:merged(bin,  lo,hi,bins2)
-   new      = copy(self)
-   new.lo   = lo or self.lo
-   new.hi   = hi or bin.hi
-   new.yes  = self.yes  + bin.yes
-   new.no   = self.no   + bin.no
-   new.n    = self.n    + bin.n 
+function XY:merge(xy,  lo,hi,    xy)
+  xy     = copy(self)
+  xy.xlo = lo or self.xlo
+  xy.xhi = hi or xy.xhi
+  for y,n in pairs(xy.ys) do xy:add(xy.xhi,y,n) end
+  return xy end 
 
-function BIN.merges(bins,n,    fun) -- {hi,lo,yes,no,n,     all,merge1}
-  function fun(now)
-    local new,j,before,a,b,c = {},1,-math.huge
-    while j <= #now do
-      a,b = now[j],now[j+1]
+function XY.merges(xys,    fun) -- {hi,lo,yes,no,n,     all,merge1}
+  function fun(xys0)
+    local xys1,j,before,a,b,c = {},1,xys0[1].xlo
+    while j <= #xys0 do
+      a,b = xys0[j],xys0[j+1]
       if b then 
-         c = a:merged(b,before) end
-         if score(c,n) >= .95*(score(a,n) + score(b,n)) then 
-	         a=c; j=j+1 end end
-      before = push(new,a).hi
+         c = a:merge(b,before) end
+         if c:score() >= .95*(a:score() + b:score()) then a=c; j=j+1 end 
+      before = push(xys1,a).xhi
       j=j+1
     end
-    new[#new].hi =  math.huge
-    return #now == #new and new or fun(new) 
+    xys1[1].xlo    = -math.huge
+    xys1[#xys1].xhi =  math.huge
+    return #xys0 == #xys1 and xys1 or fun(xys1) 
   end -----------------------------
-  return fun(sort(bins,lt"lo")) end
+  return fun(sort(xys,lt"lo")) end
 -------------------------------------------------------------------------
 fmt = string.format
 function any(t) --> any; return any item from `t`, picked at random
