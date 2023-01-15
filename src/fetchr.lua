@@ -6,16 +6,17 @@ fetchr : find a rule to fetch good rows, after peeking at just a few rows
 USAGE: lua fetchr.lua [OPTIONS] [-g ACTION]
 
 OPTIONS:
-  -b  --budget  max peeking budget           = 20
-  -B  --Bins    how to divide data           = 16
-  -f  --file    csv file to load             = ../etc/data/auto93.csv
-  -F  --Far     how far is long distances    = .95
-  -g  --go      start up action              = nothing
-  -h  --help    show help                    = false
-  -m  --min     min size of clusters         = .5
-  -p  --p       distance coefficient         = 2
-  -s  --seed    random number seed           = 937162211 
-  -S  --Sample  search space for clustering  = 512]]
+  -b  --budget     max peeking budget           = 20
+  -B  --Bins       how to divide data           = 16
+  -f  --file       csv file to load             = ../etc/data/auto93.csv
+  -F  --Far        how far is long distances    = .95
+  -g  --go         start up action              = nothing
+  -h  --help       show help                    = false
+  -m  --min        min size of clusters         = .5
+  -c  --contrasts  number of contrasts          = 512
+  -p  --p          distance coefficient         = 2
+  -s  --seed       random number seed           = 937162211 
+  -S  --Sample     search space for clustering  = 512]]
 --------------------------------------------------------------------------------------
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local function find_rogue_locals()
@@ -28,7 +29,7 @@ local function O(s,    t) --> t; create a klass and a constructor
     local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
 
 local any,cells,cli,coerce,copy,csv,fmt,kap,keys,lines,lt
-local main,many,map,o,oo,push,settings,rand,rint,sort,Seed
+local main,many,map,o,oo,push,settings,rand,rint,rnd,sort,Seed
 --------------------------------------------------------------------------------------
 --[[
 About this code:
@@ -87,7 +88,6 @@ function COLS(ss,     col,cols)
       push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 --------------------------------------------------------------------------
--- Classes
 function SYM:new(nat,s)
   return {at=nat or 0, txt=s or "",seen={},bins={},
           n=0, mode=nil,most=0} end
@@ -95,15 +95,15 @@ function SYM:new(nat,s)
 function SYM:add(s,  inc)  
   if s~="?" then 
     inc = inc or 1
-    n   = n+1
+    self.n = self.n + 1
     self.seen[s] = inc+(self.seen[s] or 0)  
     if self.seen[s] > self.most then
       self.mode,self.most = s, self.seen[s] end  end end
 
-function SYM:mid() return i.mode end
+function SYM:mid() return self.mode end
 function SYM:div(      e,fun)
    fun = function(p) return p*math.log(p,2) end
-   e=0; for _,n in pairs(i.seen) do e = e + fun(n/i.n) end;
+   e=0; for _,n in pairs(self.seen) do e = e + fun(n/self.n) end;
    return -e end
 
 function SYM:bucket(s) return s end
@@ -113,17 +113,17 @@ function SYM:dist(s1,s2)
 --------------------------------------------------------------------------
 function NUM:new(nat,s)
   return {lo=math.huge, hi=-math.huge, at=nat or 0, txt=s or "",
-          n-0,
+          n=0,
           mu=0, m2=0,
           w=(s or ""):find"-$" and -1 or 1,
           bins={}} end
 
-function NUM:mid() return i.mu end
-function NUM:div() return i.sd end
+function NUM:mid() return self.mu end
+function NUM:div() return self.sd end
 function NUM:norm(n)
   return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
-function NUM:add(n)
+function NUM:add(n,     d)
   if n ~= "?" then
     self.n  = self.n + 1
     d       = n - self.mu
@@ -154,7 +154,7 @@ function NUM:dist(n1,n2)
 --     gap=(col.hi - col.lo)/the.Bins
 --
 --------------------------------------------------------------------------
-function ROW:new(t) return {cells=t} end
+function ROW:new(t) return {cells=t,yused=false} end
 
 function ROW:guess(data,     s,x)
   s = 0
@@ -180,10 +180,21 @@ function DATA:add(row)
         col:add(row.cells[col.at]) end end 
   else self.cols = COLS(row) end end  
   
-function DATA:clone(  init,new)
-  new=DATA{self.cols.names}
-  for _,row in pairs(row or {}) do new:add(row) end
+function DATA:clone(  init,     new)
+  new=DATA({self.cols.names})
+  for _,row in pairs(init or {}) do new:add(row) end
   return new end
+
+function DATA:better(row1,row2,    s1,s2,ys,x,y) --> bool; true if `row1` dominates (via Zitzler04).
+  row1.yused=true
+  row2.yused=true
+  s1,s2,ys,x,y = 0,0,self.cols.y
+  for _,col in pairs(ys) do
+    x  = col:norm( row1.cells[col.at] )
+    y  = col:norm( row2.cells[col.at] )
+    s1 = s1 - math.exp(col.w * (x-y)/#ys)
+    s2 = s2 - math.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
 
 function DATA:dist(row1,row2,  cols)
   local n,d,x1,x2,inc = 0,0
@@ -206,23 +217,20 @@ function DATA:half(  rows,cols,above)
     push(n <= (#rows//2) and left or right, tmp.row) end
   return left, right, A, B, c end  
 
-function DATA.sway(i,  rows,min,cols,above) --> t; returns best half, recursively
-  local node,left,right,A,B,mid
-  rows = rows or i.rows
-  min  = min or (#rows)^the.min
-  cols = cols or i.cols.x
-  node = {data=rows} --xxx cloning
-  if #rows > 2*min then
-    left, right, node.A, node.B, c = i:half(rows,cols,above)
-    node.mid = right[1]
-    if i:better(node.B,node.A) then left,right,node.A,node.B=right,left,node.B,node.A end
-    node.left  = i:sway(left, min, cols, node.A) end
-  return node end
+function DATA:sway() --> t; returns best half, recursively
+  function fun(rows,b4,  above)
+    if   #rows < (#self.rows)^the.min 
+    then return rows,b4 
+    else local left, right, A, B = self:half(rows,self.cols.x,above)
+         if self:better(B,A) then left, right, A, B = right, left, B, A end
+         for _,row in pairs(right) do push(b4,row) end
+         self:sway(left, b4, A) end end 
+  return fun(rows,{}) end
 
 function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
   local fun
-  function fun(k,col) return col:rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
-  return kap(cols or i.cols.all, fun) end
+  function fun(k,col) return rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
+  return kap(cols or self.cols.all, fun) end
 
 -------------------------------------------------------------------------
 function BIN:new(lo,hi) return{lo=lo,hi=hi or lo,yes=0,no=0,n=0} end
@@ -297,6 +305,10 @@ function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
   Seed = (16807 * Seed) % 2147483647
   return nlo + (nhi-nlo) * Seed / 2147483647 end
 
+function rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
+  local mult = 10^(nPlaces or 3)
+  return math.floor(n * mult + 0.5) / mult end
+
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
   function fun(s1)
     if s1=="true" then return true elseif s1=="false" then return false end
@@ -355,8 +367,10 @@ function egs.show_config() oo(the) end
 function egs.test_maths()  print(10 + 10) end
 function egs.NUM_test()    oo(COL(2,"Asda+")) end
 
-function egs.cols_test() 
-  map(COLS({"aa","bbX","Funds+","Wght-","Age-"}).y,oo) end
+function egs.cols_test(     t) 
+  t={"aa","bbX","Funds+","Wght-","Age-"}
+  oo(t)
+  map(COLS(t).y,oo) end
 
 function egs.csv_test(     n) 
   n=0
@@ -368,16 +382,33 @@ function egs.data_test(      data)
   map(data.cols.y,oo)
   print(#data.rows) end
 
+function egs.data_clone(     data1,data2)
+  data1 = DATA(the.file)
+  data2 = data1:clone(data1.rows) 
+  oo(data1.cols.y[1])
+  oo(data2.cols.y[1])
+end
+
 function egs.dists(    data)
   data=DATA(the.file)
   for j=1,#data.rows,30 do 
     print(j,fmt("%s",data:dist(data.rows[1],data.rows[j]),
                      o(data.rows[j].cells))) end end
 
+function egs.betters(     data,t)
+  data=DATA(the.file)
+  t=sort(data.rows, function(a,b) return data:better(a,b) end)
+  oo(data.cols.names)
+  for j= 1,#data.rows,50 do
+    print(j, o(t[j].cells)) end end
+
 function egs.half(    data)
   data=DATA(the.file)
   local left,right,A,B,c = data:half() 
-  print(#left,#right,o(A.cells), o(B.cells),c) end
+  left = data:clone(left)
+  right = data:clone(right) 
+  print("left",o(left:stats("mid",left.cols.y)))
+  print("right",o(right:stats("mid",right.cols.y))) end
 
 -------------------------------------------------------------------------
 settings(help, the)
