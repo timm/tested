@@ -224,7 +224,7 @@ function DATA:sway() --> t; returns best half, recursively
     else local left, right, A, B = self:half(rows,self.cols.x,above)
          if self:better(B,A) then left, right, A, B = right, left, B, A end
          for _,row in pairs(right) do push(b4,row) end
-         self:sway(left, b4, A) end end 
+         return self:sway(left, b4,A) end end 
   return fun(rows,{}) end
 
 function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
