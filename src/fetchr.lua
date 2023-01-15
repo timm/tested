@@ -218,14 +218,15 @@ function DATA:half(  rows,cols,above)
   return left, right, A, B, c end  
 
 function DATA:sway() --> t; returns best half, recursively
-  function fun(rows,b4,  above)
-    if   #rows < (#self.rows)^the.min 
-    then return rows,b4 
-    else local left, right, A, B = self:half(rows,self.cols.x,above)
-         if self:better(B,A) then left, right, A, B = right, left, B, A end
-         for _,row in pairs(right) do push(b4,row) end
-         return self:sway(left, b4,A) end end 
-  return fun(rows,{}) end
+  local other,recurse,halve={}
+  function recurse(yes,no,above)
+    for _,row in pairs(no) do push(other,row) end
+    return halve(yes,above) end
+  function halve(rows,  above)
+    if #rows < (#self.rows)^the.min then return rows,other else 
+      local left, right, A, B = self:half(rows,self.cols.x,above)
+      return self:better(B,A) and recurse(right,left,B) or recurse(left,right,A) end end
+  return halve(self.rows) end
 
 function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
   local fun
