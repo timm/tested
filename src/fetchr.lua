@@ -240,33 +240,33 @@ function XY:score()
   local yes,no = self.ys[true], self.ys[false]+1e-32
   return (yes/(yes+no)) * self.n end
 
-function XY:add(x,y,  inc)
-  inc   = inc or 1
+function XY:add(y,  inc,x)
+  inc    = inc or 1
   self.n = self.n + 1
-  self.xlo = math.min(x, self.xlo)
-  self.xhi = math.max(x, self.xhi)
-  self.ys[y] = inc + (self.ys[y] or 0) end
+  self.ys[y] = inc + (self.ys[y] or 0) 
+  if x then self.xlo = math.min(x,self.xlo)
+            self.xhi = math.max(x,self.xhi) end end
 
-function XY:merge(xy,  lo,hi,    xy)
-  xy     = copy(self)
-  xy.xlo = lo or self.xlo
-  xy.xhi = hi or xy.xhi
-  for y,n in pairs(xy.ys) do xy:add(xy.xhi,y,n) end
-  return xy end 
+function XY:merge(xy,  lo,hi,    a,b,c)
+  a,b = self,xy
+  c   = XY(lo or a.xlo, hi or b.xhi)
+  c.n = a.n + b.n
+  for _,t in pair{a.ys,b.ys} do
+    for y,seen in pairs(t) do c.ys[y] = seen+(c.ys[y] or 0) end end
+  return c end 
 
 function XY.merges(xys,    fun) -- {hi,lo,yes,no,n,     all,merge1}
   function fun(xys0)
-    local xys1,j,before,a,b,c = {},1,xys0[1].xlo
+    local xys1,j,before,a,b,c = {},1,-math.huge
     while j <= #xys0 do
       a,b = xys0[j],xys0[j+1]
       if b then 
-         c = a:merge(b,before) end
-         if c:score() >= .95*(a:score() + b:score()) then a=c; j=j+1 end 
+         c = a:merge(b,before) 
+         if c:score() >= .95*(a:score() + b:score()) then a=c; j=j+1 end end
       before = push(xys1,a).xhi
       j=j+1
     end
-    xys1[1].xlo    = -math.huge
-    xys1[#xys1].xhi =  math.huge
+    xys0[#xys0].xhi =  math.huge
     return #xys0 == #xys1 and xys1 or fun(xys1) 
   end -----------------------------
   return fun(sort(xys,lt"lo")) end
