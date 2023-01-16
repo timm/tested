@@ -33,6 +33,7 @@ alias grep='grep --color=auto'
 alias h="history"
 alias hello="git pull" 
 alias ls="ls -G "       
+alias tmux="\tmux -f $here/etc/dottmux "
 alias vi="vim -u $here/etc/vimrc"
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
