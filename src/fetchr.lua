@@ -229,13 +229,14 @@ function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defa
 
 function DATA:diffs(data,  cols,     diff)
   function diff(col,    x) 
-    function x(row,     z)  z = row.cells[col.at]; if z~="?" then return z end end
+    function x(row) local z = row.cells[col.at]; if z~="?" then return z end end
     local x1s,x2s = map(self.rows,x), map(data.rows,x) 
-    local n1,n2   = #x1s, #x2s
+    local n1,n2 = #x1s, #x2s
     local m = math.min(n1,n2)
-    x1s = many(x1s,m)
-    x2s = many(x2s,m)
-    return mwu(x1s,x2s) and not cliffsDelta(x1s,x2s),col.txt end
+    if n1>m then x1s = many(x1s,m) end
+    if n2>m then x2s = many(x2s,m) end
+    return mwu(x1s,x2s) and not cliffsDelta(x1s,x2s),col.txt 
+  end -------------------------------------
   return map(cols or self.cols.y, diff) end
 
 -------------------------------------------------------------------------
@@ -397,7 +398,7 @@ function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
   return nlo + (nhi-nlo) * Seed / 2147483647 end
 
 function rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
-  local mult = 10^(nPlaces or 3)
+  local mult = 10^(nPlaces or 2)
   return math.floor(n * mult + 0.5) / mult end
 
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
@@ -505,7 +506,7 @@ function egs.row_sway(    data,a,b)
   a,b = data:sway() 
   a = data:clone(a) 
   b = data:clone(b) 
-  oo(a:diffs(b, a.cols.y))
+  print("d", o(a:diffs(b, a.cols.y)))
   print("a", o(a:stats("mid",a.cols.y)),
              o(a:stats("div",a.cols.y)))
   print("b", o(b:stats("mid",b.cols.y)),
