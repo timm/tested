@@ -215,17 +215,19 @@ function DATA:half(  rows,cols,above)
 
 function DATA:sway(  rows,other,above) --> t; returns best half, recursively
   rows  = rows or self.rows
-  if   #rows < 2*(#self.rows)^the.min 
+  if   #rows < (#self.rows)^the.min 
   then return rows,other 
   else local as, bs, a, b = self:half(rows,self.cols.x,above)
        if self:better(b,a) then as,bs,a,b = bs,as,b,a end
-       other = other or bs
+       other= other or bs
        return self:sway(as,other,a) end end 
 
 function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defaults to i.cols.y)
-  local fun
+  local fun,tmp
   function fun(k,col) return rnd(getmetatable(col)[what or "mid"](col),nPlaces),col.txt end
-  return kap(cols or self.cols.all, fun) end
+  tmp= kap(cols or self.cols.all, fun) 
+  tmp["N"]=#self.rows
+  return tmp end
 
 function DATA:diffs(data,  cols,     diff)
   function diff(col,    x) 
@@ -501,16 +503,22 @@ function egs.row_split(    data)
   print("left",o(left:stats("mid",left.cols.y)))
   print("right",o(right:stats("mid",right.cols.y))) end
 
-function egs.row_sway(    data,a,b)
+function egs.row_sway(    data,a,b,c)
+  local function p(s) return fmt("%-10s",s) end
+  local function fun(s,d)
+    print(p(s), o(d:stats("mid",d.cols.y)),
+             o(d:stats("div",d.cols.y))) end
   data=DATA(the.file)
   a,b = data:sway() 
   a = data:clone(a) 
-  b = data:clone(b) 
-  print("d", o(a:diffs(b, a.cols.y)))
-  print("a", o(a:stats("mid",a.cols.y)),
-             o(a:stats("div",a.cols.y)))
-  print("b", o(b:stats("mid",b.cols.y)),
-             o(b:stats("div",b.cols.y)))
+  b = data:clone(b)
+  c = data:clone(many(data.rows, #a.rows))
+  fun("a= all", data)
+  fun("\nr= rand", c)
+  fun("b= best", a)
+  fun("w= worst", b)
+  print(p"b vs w", o(a:diffs(b, b.cols.y)))
+  print(p"b vs r", o(a:diffs(c, c.cols.y)))
 end
 
 function egs.stats_eg1()
