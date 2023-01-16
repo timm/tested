@@ -235,8 +235,8 @@ function DATA:diffs(data,  cols,     diff)
     local x1s,x2s = map(self.rows, x), map(data.rows, x) 
     local n1,n2 = #x1s, #x2s
     local m = math.min(n1,n2)
-    if n1>m then x1s = many(x1s,m) end
-    if n2>m then x2s = many(x2s,m) end
+    if n1>10*m then x1s = many(x1s,10*m) end
+    if n2>10*m then x2s = many(x2s,10*m) end
     return mwu(x1s,x2s) and not cliffsDelta(x1s,x2s),col.txt 
   end -------------------------------------
   return map(cols or self.cols.y, diff) end
