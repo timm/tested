@@ -70,7 +70,7 @@ In the function arguments, the following conventions apply (usually):
 - Four spaces denote start of local args.  
 
 In my object system, instances are named `i` (since that is shorter than `self`).--]]
---------------------------------------------------------------------------
+-------------------------------------------------------------------------
 local SYM,NUM,DATA,ROW,XY=O"SYM",O"NUM",O"DATA",O"ROW",O"XY" -- classes
 local COL,COLS -- factories
 --------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defa
 function DATA:diffs(data,  cols,     diff)
   function diff(col,    x) 
     function x(row) local z = row.cells[col.at]; if z~="?" then return z end end
-    local x1s,x2s = map(self.rows,x), map(data.rows,x) 
+    local x1s,x2s = map(self.rows, x), map(data.rows, x) 
     local n1,n2 = #x1s, #x2s
     local m = math.min(n1,n2)
     if n1>m then x1s = many(x1s,m) end
