@@ -227,6 +227,9 @@ function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defa
   tmp["N"]=#self.rows
   return tmp end
 
+function DATA:evaled(  rows)
+  n=0; map(rows or self.rows, function(r) n=n+(r.yused and 1 or 0) end); return n end
+
 function DATA:diffs(data,  cols,     diff)
   function diff(col,    x) 
     function x(row) local z = row.cells[col.at]; if z~="?" then return z end end
@@ -513,13 +516,12 @@ function egs.row_split(    data)
 function egs.row_sway(    data,a,b,c)
   local function p(s) return fmt("%-10s",s) end
   local function fun(s,d)
-    print(p(s), o(d:stats("mid",d.cols.y)),
-             o(d:stats("div",d.cols.y))) end
-  data=DATA(the.file)
-  a,b = data:sway() 
-  a = data:clone(a) 
-  b = data:clone(b)
-  c = data:clone(many(data.rows, #a.rows))
+    print(p(s), o(d:stats("mid",d.cols.y)), o(d:stats("div",d.cols.y))) end
+  data = DATA(the.file)
+  a,b  = data:sway() 
+  a    = data:clone(a) 
+  b    = data:clone(b)
+  c    = data:clone(many(data.rows, data:evaled()))
   fun("a= all", data)
   fun("\nr= rand", c)
   fun("b= best", a)
