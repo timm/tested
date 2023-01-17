@@ -244,9 +244,9 @@ function DATA:diffs(data,  cols,     diff)
 -------------------------------------------------------------------------
 function XY:new(lo,hi) return{xlo=lo,xhi=lo or hi or lo,ys={},n=0} end
 
-function XY:score()
+function XY:score(  nall)
   local yes,no = self.ys[true], self.ys[false]+1e-32
-  return (yes/(yes+no)) * self.n end
+  return (yes/(yes+no)) * self.n/(nall or 1) end
 
 function XY:add(y,  inc,x)
   inc    = inc or 1
@@ -263,21 +263,30 @@ function XY:merge(xy,  lo,hi,    a,b,c)
     for y,seen in pairs(t) do c.ys[y] = seen+(c.ys[y] or 0) end end
   return c end 
 
-function XY.merges(xys,    fun) -- {hi,lo,yes,no,n,     all,merge1}
+function XY.merges(xys,n,    fun,fill) -- {hi,lo,yes,no,n,     all,merge1}
+  function fill(xys)
+    for j=2,#xys do xys[j].lo = xys[j-1].hi end
+    xys[1].lo    = - math.huge
+    xys[#xys].hi =   math.huge
+    return xys end
   function fun(xys0)
-    local xys1,j,before,a,b,c = {},1,-math.huge
+    local xys1,j = {},1
     while j <= #xys0 do
+      local a,b
       a,b = xys0[j],xys0[j+1]
       if b then 
-         c = a:merge(b,before) 
-         if c:score() >= .95*(a:score() + b:score()) then a=c; j=j+1 end end
-      before = push(xys1,a).xhi
+         local c,sa,sb,sc
+         c = a:merge(b) 
+         sa,sb,sc = a:score(n), b:score(n), c:score(n)
+         if sc >= .95*(a.n*sa + b.n*sb)/(a.n + b.n) then 
+           a=c
+           j=j+1 end end
+      push(xys1,a)
       j=j+1
     end
-    xys0[#xys0].xhi =  math.huge
     return #xys0 == #xys1 and xys1 or fun(xys1) 
-  end -----------------------------
-  return fun(sort(xys,lt"lo")) end
+  end -----------------------------------
+  return fill(fun(sort(xys,lt"lo"))) end
 -------------------------------------------------------------------------
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
