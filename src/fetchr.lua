@@ -67,9 +67,7 @@ In the function arguments, the following conventions apply (usually):
 - lower = instance; e.g. rx is an instance of RX
 - xs == a table of "x"; e.g. "ns" is a list of numbers
 - Two spaces denote start of optional args
-- Four spaces denote start of local args.  
-
-In my object system, instances are named `i` (since that is shorter than `self`).--]]
+- Four spaces denote start of local args.  ]]
 -------------------------------------------------------------------------
 local SYM,NUM,DATA,ROW,XY=O"SYM",O"NUM",O"DATA",O"ROW",O"XY" -- classes
 local COL,COLS -- factories
