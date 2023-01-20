@@ -15,10 +15,12 @@ OPTIONS:
   -F  --Far        how far is long distances    = .95
   -g  --go         start up action              = nothing
   -h  --help       show help                    = false
+  -H  --Halves     search space for clustering  = 512
   -m  --min        min size of clusters         = .5
   -p  --p          distance coefficient         = 2
-  -s  --seed       random number seed           = 937162211 
-  -S  --Sample     search space for clustering  = 512]]
+  -s  --seed       random number seed           = 937162211
+  -S  --Some       how many nums to keep        = 256
+]]
 --------------------------------------------------------------------------------------
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local function find_rogue_locals()
@@ -106,40 +108,63 @@ function SYM:div(      e,fun)
   e=0; for _,n in pairs(self.seen) do e = e + fun(n/self.n) end;
   return -e end
 
-function SYM:bucket(s) return s end
-function SYM:tekcub(s) return s end
+function SYM:bin(s) return s end
+
 function SYM:dist(s1,s2)
   return  s1=="?" and s2=="?" and 1 or s1==s2 and 0 or 1 end
+
+function SYM:merge(other,     new)
+  new=SYM(self.at,self.txt)
+  for _,t in pairs{self.seen,other.seen} do
+    for k,n in pairs(t) do new:inc(k.n) end end
+  new.n = self.n + other.n 
+  return new end
+
 --------------------------------------------------------------------------
+local NUM = lib.obj"SOME"
 function NUM:new(nat,s)
   return {lo=math.huge, hi=-math.huge, at=nat or 0, txt=s or "",
           n=0,
-          mu=0, m2=0,
-          w=(s or ""):find"-$" and -1 or 1,
-          bins={}} end
+          _seen={}, max=the.Some, ok=false,
+          w=(s or ""):find"-$" and -1 or 1} end
 
-function NUM:mid() return self.mu end
-function NUM:div() return self.sd end
+function NUM:add(n) --> nil. If full, add at odds i.max/i.n (replacing old items at random)
+  if n ~= "?" then
+    local pos
+    self.n  = self.n + 1
+    self.lo = math.min(n, self.lo)
+    self.hi = math.max(n, self.hi)
+    if     #self._seen < self.max   then pos= 1+#self._seen
+    elseif rand() < self.max/self.n then pos= rint(#self._seen) end
+    if pos then
+       self._seen[pos]=n
+       self.ok=false end end end
+
+function NUM:merge(other,     new)
+  new=NUM(self.at,self.txt)
+  for _,t in pairs{self._seen,other._seen} do
+    for _,n in pairs(t) do new:add(n) end end
+  self.lo = math.min(self.lo, other.lo)
+  self.hi = math.max(self.hi, other.ho)
+  return new end
+
+function NUM:has() --> t; return kept contents, sorted
+  if not self.ok then self._seen = sort(self._seen) end 
+  self.ok = true
+  return self._has end
+
+function NUM:mid(x) --> n; return the number in middle of sort
+  return per(i:has(),.5) end
+
+function NUM:div(x) --> n; return the entropy
+  return (per(selff:has(), .9) - per(self:has(), .1))/2.58 end
+
 function NUM:norm(n)
   return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
-function NUM:add(n,     d)
-  if n ~= "?" then
-    self.n  = self.n + 1
-    d       = n - self.mu
-    self.mu = self.mu + d/self.n
-    self.m2 = self.m2 + d*(n - self.mu)
-    self.sd = (self.m2/(self.n-1))^0.5  
-    self.lo = math.min(n, self.lo)
-    self.hi = math.max(n, self.hi) end end
-  
-function NUM:bucket(n,     gap)
-  if n ~="?" then gap = (self.hi - self.lo)/the.Bins 
-                  return math.min(((n-self.lo)/gap//1 + 1),the.Bins) end end
-
-function NUM:tekcub(n,   gap)
-  if n ~="?" then gap = (self.hi - self.lo)/the.Bins 
-                  return n==the.Bins and self.hi - gap or self.lo + gap*(n-1) end end
+function NUM:bin(n,     gap)
+  gap = (self.hi - self.lo)/the.Bins 
+  return n=="?" and n or n==self.hi and n-gap or self.lo +  (n - self.lo)//gap * gap end
 
 function NUM:dist(n1,n2)
   if n1=="?" and n2=="?" then return 1 end 
@@ -202,7 +227,7 @@ function DATA:half(  rows,cols,above)
   function gap(r1,r2) return self:dist(r1, r2, cols) end
   function proj(r)    return {row=r, dist=(gap(r,A)^2 + c^2 - gap(r,B)^2)/(2*c)} end
   rows = rows or self.rows
-  some = many(rows, the.Sample)
+  some = many(rows, the.Halves)
   A    = above or any(some)
   tmp  = sort(map(some, function(r) return {row=r,dist=gap(A,r)} end),lt"dist") 
   far  = tmp[(#tmp*the.Far)//1] 
@@ -243,11 +268,9 @@ function DATA:diffs(data,  cols,     diff)
   return map(cols or self.cols.y, diff) end
 
 -------------------------------------------------------------------------
-function XY:new(lo,hi) return{xlo=lo,xhi=lo or hi or lo,ys={},n=0} end
+function XY:new(lo,hi) return{xlo=lo,xhi=lo or hi or lo,ys=SYM(),n=0} end
 
-function XY:score(  nall)
-  local yes,no = self.ys[true], self.ys[false]+1e-32
-  return (yes/(yes+no)) * self.n/(nall or 1) end
+function XY:score(  nall) return self.ys:div() end
 
 function XY:add(y,  inc,x)
   inc    = inc or 1
@@ -373,6 +396,9 @@ function ranks(ns1,ns2) -->t; numbers of both populations are jointly ranked
   return u end
 -------------------------------------------------------------------------
 fmt = string.format
+function per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
+  p=math.floor(((p or .5)*#t)+.5); return t[math.max(1,math.min(#t,p))] end
+
 function any(t) --> any; return any item from `t`, picked at random
   return t[rint(#t)] end
 
