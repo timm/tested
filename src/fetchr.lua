@@ -33,7 +33,7 @@ local function O(s,    t) --> t; create a klass and a constructor
     local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
 
 local any,cells,cli,cliffsDelta,coerce,copy,critical,csv,fmt,kap,keys,lines,lt
-local main,many,map,mwu,o,oo,push,settings,rand,rank,ranks,rint,rnd,sort,Seed
+local main,many,map,mwu,o,oo,per,push,settings,rand,rank,ranks,rint,rnd,sort,Seed
 --------------------------------------------------------------------------------------
 --[[
 About this code:
@@ -104,8 +104,8 @@ function SYM:add(s,  inc)
 
 function SYM:mid() return self.mode end
 function SYM:div(      e,fun)
-  fun = function(p) return p*math.log(p,2) end
-  e=0; for _,n in pairs(self.seen) do e = e + fun(n/self.n) end;
+  local e,fun = 0,function(p) return p*math.log(p,2) end
+  for _,n in pairs(self.seen) do e = e + fun(n/self.n) end
   return -e end
 
 function SYM:bin(s) return s end
@@ -121,7 +121,6 @@ function SYM:merge(other,     new)
   return new end
 
 --------------------------------------------------------------------------
-local NUM = lib.obj"SOME"
 function NUM:new(nat,s)
   return {lo=math.huge, hi=-math.huge, at=nat or 0, txt=s or "",
           n=0,
@@ -148,23 +147,25 @@ function NUM:merge(other,     new)
   self.hi = math.max(self.hi, other.ho)
   return new end
 
-function NUM:has() --> t; return kept contents, sorted
+function NUM:seen() --> t; return kept contents, sorted
   if not self.ok then self._seen = sort(self._seen) end 
   self.ok = true
-  return self._has end
+  return self._seen end
 
 function NUM:mid(x) --> n; return the number in middle of sort
-  return per(i:has(),.5) end
+  return per(self:seen(),.5) end
 
 function NUM:div(x) --> n; return the entropy
-  return (per(selff:has(), .9) - per(self:has(), .1))/2.58 end
+  return (per(self:seen(), .9) - per(self:seen(), .1))/2.58 end
 
 function NUM:norm(n)
   return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
 function NUM:bin(n,     gap)
+  if n=="?" then return n end
   gap = (self.hi - self.lo)/the.Bins 
-  return n=="?" and n or n==self.hi and n-gap or self.lo +  (n - self.lo)//gap * gap end
+  if n == self.hi then return self.hi - gap end
+  return (n - self.lo) // gap * gap + self.lo end
 
 function NUM:dist(n1,n2)
   if n1=="?" and n2=="?" then return 1 end 
@@ -460,7 +461,7 @@ function oo(t) print(o(t)); return t end
 
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  fun= function(k,v) return string.format(":%s %s",k,o(v)) end 
+  function fun (k,v) if tostring(k):sub(1,1)~="_" then return string.format(":%s %s",k,o(v)) end end
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function settings(txt,t) --> t; update key,vals in `t` from command-line flags
@@ -480,7 +481,7 @@ function main(funs,settings,txt,    fails,saved)
   fails,saved = 0,copy(settings)
   if   settings.help 
   then print(txt)
-       print("\nACTIONS:\n  -g  .  (runs all actions)") 
+       print("ACTIONS:\n  -g  .  (runs all actions)") 
        for _,name in pairs(keys(funs)) do print("  -g   "..name) end
   else for _,name in pairs(keys(funs)) do
         if name:find(".*"..settings.go..".*") then
@@ -494,7 +495,13 @@ function main(funs,settings,txt,    fails,saved)
 -------------------------------------------------------------------------
 local egs={}
 function egs.alternatives() oo(the) end
-function egs.NUM_test()    oo(COL(2,"Asda+")) end
+function egs.COL()    oo(COL(2,"Asda+")) end
+
+function egs.NUM(     num)
+  num=NUM()
+  num.max=32
+  for i=1,10000 do num:add(i) end
+  oo(num:seen()) end
 
 function egs.cols_test(     t) 
   t={"aa","bbX","Funds+","Wght-","Age-"}
