@@ -94,6 +94,8 @@ function SYM:new(nat,s)
   return {at=nat or 0, txt=s or "",seen={},bins={},
           n=0, mode=nil,most=0} end
 
+function SYM:clone() return SYM(self.at,self.txt) end
+
 function SYM:add(s,  inc)  
   if s~="?" then 
     inc = inc or 1
@@ -126,6 +128,8 @@ function NUM:new(nat,s)
           n=0,
           _seen={}, max=the.Some, ok=false,
           w=(s or ""):find"-$" and -1 or 1} end
+
+function NUM:clone() return NUM(self.at,self.txt) end
 
 function NUM:add(n) --> nil. If full, add at odds i.max/i.n (replacing old items at random)
   if n ~= "?" then
@@ -269,7 +273,10 @@ function DATA:diffs(data,  cols,     diff)
   return map(cols or self.cols.y, diff) end
 
 -------------------------------------------------------------------------
-function XY:new(lo,hi) return{xlo=lo,xhi=lo or hi or lo,ys=SYM(),n=0} end
+function XY:new(at,lo,hi) 
+  sselfxlef.x=UM(at)
+  self.y=SYM()
+  i.y=NUM(), y=SYM()} end
 
 function XY:score(  nall) return self.ys:div() end
 
@@ -289,7 +296,7 @@ function XY:merge(xy,  lo,hi,    a,b,c)
   return c end 
 
 function XY.merges(xys,n,    fun,fill) -- {hi,lo,yes,no,n,     all,merge1}
-  function fill(xys)
+  function bridge(xys)
     for j=2,#xys do xys[j].lo = xys[j-1].hi end
     xys[1].lo    = - math.huge
     xys[#xys].hi =   math.huge
@@ -311,7 +318,7 @@ function XY.merges(xys,n,    fun,fill) -- {hi,lo,yes,no,n,     all,merge1}
     end
     return #xys0 == #xys1 and xys1 or fun(xys1) 
   end -----------------------------------
-  return fill(fun(sort(xys,lt"lo"))) end
+  return bridge(fun(sort(xys,lt"lo"))) end
 -------------------------------------------------------------------------
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
