@@ -468,7 +468,8 @@ function oo(t) print(o(t)); return t end
 
 function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
   if type(t)~="table" then return tostring(t) end
-  function fun (k,v) if tostring(k):sub(1,1)~="_" then return string.format(":%s %s",k,o(v)) end end
+  function fun (k,v) 
+    if tostring(k):sub(1,1)~="_" then return string.format(":%s %s",k,o(v)) end end
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
 function settings(txt,t) --> t; update key,vals in `t` from command-line flags
