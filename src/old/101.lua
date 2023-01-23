@@ -88,6 +88,7 @@ function SOME.has(i) --> t; return kept contents, sorted
   return i._has end
 
 function SOME.mid(x) --> n; return the number in middle of sort
+  -- readhttps://www.researchgate.net/profile/J-Bickel/publication/262325372_Reexamining_Discrete_Approximations_to_Continuous_Distributions/links/547c66040cf2a961e48a0662/Reexamining-Discrete-Approximations-to-Continuous-Distributions.pdf
   return per(i:has(),.5) end
 
 function SOME.div(x) --> n; return the entropy

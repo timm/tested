@@ -101,9 +101,8 @@ function SYM:clone() return SYM(self.at,self.txt) end
 
 function SYM:add(s,  inc)  
   if s~="?" then 
-    inc = inc or 1
     self.n = self.n + 1
-    self.seen[s] = inc+(self.seen[s] or 0)  
+    self.seen[s] = (inc or 1) + (self.seen[s] or 0)  
     if self.seen[s] > self.most then
       self.mode,self.most = s, self.seen[s] end  end end
 
@@ -168,11 +167,9 @@ function NUM:div(x) --> n; return the entropy
 function NUM:norm(n)
   return n=="?" and n or (n-self.lo)/(self.hi - self.lo +1E-32)  end
 
-function NUM:bin(n,     gap)
-  if n=="?" then return n end
-  gap = (self.hi - self.lo)/the.Bins 
-  if n == self.hi then return self.hi - gap end
-  return (n - self.lo) // gap * gap + self.lo end
+function NUM:bin(n,     tmp)
+  local tmp = (self.hi - self.lo)/(the.Bins - 1)
+  return self.hi==self.lo and 1 or math.floor(n/tmp + .5)*tmp end 
 
 function NUM:dist(n1,n2)
   if n1=="?" and n2=="?" then return 1 end 
@@ -181,18 +178,16 @@ function NUM:dist(n1,n2)
   if n2=="?" then n2= n1<.5 and 1 or 0 end
   return math.abs(n1-n2) end
 
+function NUM.diffs(num1,num2)
+  local n1,n2,m,t1,t2
+  n1,n2 = #num1._seen, #num2._seen
+  m = math.min(n1,n2)
+  t1 = n1> 5*m and many(num1._seen,5*m) or num1._seen 
+  t2 = n2> 5*m and many(num2._seen,5*m) or num2._seen 
+  return mwu(t1,t2) and cliffsDelta(t1,t2) end
+
 -- ### Row
 function ROW:new(t) return {cells=t,yused=false} end
-
-function ROW:guess(data,     s,x)
-  s = 0
-  for _,col in pairs(data.cols.x) do
-    x = self.cells[col.at]
-    if x ~= "?" then
-      for _,bin in pairs(col.bins) do
-        if bin.lo <= x and x < bin.hi then 
-          s = s + bin:score(); break end end end end 
-  return s end
 
 -- ### Data
 function DATA:new(src,    fun)
@@ -265,62 +260,67 @@ function DATA:stats(  what,cols,nPlaces) --> t; reports mid or div of cols (defa
 function DATA:evaled(  rows)
   n=0; map(rows or self.rows, function(r) n=n+(r.yused and 1 or 0) end); return n end
 
-function DATA:diffs(data,  cols,     diff)
-  function diff(col,    x) 
-    function x(row) local z = row.cells[col.at]; if z~="?" then return z end end
-    local x1s,x2s = map(self.rows, x), map(data.rows, x) 
-    local n1,n2 = #x1s, #x2s
-    local m = math.min(n1,n2)
-    if n1>10*m then x1s = many(x1s,10*m) end
-    if n2>10*m then x2s = many(x2s,10*m) end
-    return mwu(x1s,x2s) and not cliffsDelta(x1s,x2s),col.txt 
+function DATA.diffs(data1,data2,  cols,     diff)
+  function diff(col,    x,num1,num2) 
+    num1,num2 = Num(),Num()
+    for _,row in pairs(data1.rows) do num1:add(row[col.at]) end
+    for _,row in pairs(data2.rows) do num2:add(row[col.at]) end
+    return num1: diff(num2), col.txt 
   end -------------------------------------
-  return map(cols or self.cols.y, diff) end
+  return map(cols or data1.cols.y, diff) end
+
+function DATA:delta(rows1,rows2,     cols)
+  function update(rows,at,klass,out)
+    for _,row in pairs(rows) do XXX
+  function delta(col)
+    return update(rows1,col.at,"true",
+             update(rows2,col.at,"false",{})),col end
+  kap(cols or self.cols.x, delta) end
 
 -- ### XY
-function XY:new(col,lo,hi) 
-  self.lo = lo
-  self.hi = hi or lo
-  self.y  = SYM(col) end
+function XY:new(col) 
+  self.x, self.y = NUM(col), SYM(col) end
 
-function XY:score() return self.y:div() end
+function XY:add(x,y)
+  self.x:add(x) 
+  self.y:add(y) end
 
-function XY:add(y,  inc,x)
-  self.y:add(x, inc or 1)
-  if x then self.xlo = math.min(x,self.xlo)
-            self.xhi = math.max(x,self.xhi) end end
-
-function XY:merge(xy,  lo,hi,    new)
-  new    = copy(self)
-  new.lo = math.min(lo or xy.lo, self.lo)
-  new.hi = math.max(hi or xy.hi, self.hi)
-  for y,n in pairs(xy.y) do new:add(y,n) end
-  return new end 
+function XY:merge(xy,    new)
+  new   = XY(self.x.at)
+  new.x = self.x:merge(xy.x)
+  new.y = self.y:merge(xy.y)
+  return new end
 
 function XY:merged(xy,     new)
   new = self:merged(xy)
-  if new:score() <= 1.05*(self.y.n*self:score() + xy.y.n*xy:score())/new.y.n then
+  if new.y:div() <= 1.05*(self.y.n*self.y:div() + xy.y.n*xy.y:div())/new.y.n then
     return new end end
 
-local _bridge,_merges
-function XY.merges(xys) -- {hi,lo,yes,no,n,     all,merge1}
-  return _bridge(_merges(sort(xys,lt"lo"))) end
+local _bridge,_merges, _lo
+function SYM:merges(xys) 
+  return sort(xys,_lo) end
+function NUM:merges(xys) 
+  return _bridge(_merges(sort(xys,_lo))) end
+
+function _lo(a,b) return a.lo < b.lo end
 
 function _merges(xys0)
-  local xys1,j,a,b,c = {},1
+  local xys1,j,a,b = {},1
   while j <= #xys0 do
-    a,b = xys0[j], xys0[j+1]
-    c   = b and a:merged(b) 
-    if c then a=c; j=j+1 end 
+    a = xys0[j]
+    if j < #xys0 then
+      b = a:merged(xys0[j+1]) 
+      if b then a=b; j=j+1 end 
+    end
     push(xys1,a)
     j = j + 1
   end
-  return #xys0 == #xys1 and xys1 or _merges(xys1) end
+  return #xys0 == #xys1 and xys0 or _merges(xys1) end
 
 function _bridge(xys)
-  for j=2,#xys do xys[j].lo = xys[j-1].hi end
-  xys[1].lo    = -math.huge
-  xys[#xys].hi =  math.huge
+  for j=2,#xys do xys[j].x.lo = xys[j-1].x.hi end
+  xys[1].x.lo    = -math.huge
+  xys[#xys].x.hi =  math.huge
   return xys end
 
 -- ### BINS
@@ -454,7 +454,7 @@ function cliffsDelta(ns1,ns2,  dull) --> bool; true if different by a trivial am
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= (dull or the.dull) end
+  return math.abs(lt - gt)/n > (dull or the.dull) end
 
 function critical(c,n1,n2)
   local t={
