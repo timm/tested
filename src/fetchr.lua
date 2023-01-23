@@ -70,10 +70,12 @@ In the function arguments, the following conventions apply (usually):
 - xs == a table of "x"; e.g. "ns" is a list of numbers
 - Two spaces denote start of optional args
 - Four spaces denote start of local args.  ]]
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+-- ## Classes
 local SYM,NUM,DATA,ROW,XY=O"SYM",O"NUM",O"DATA",O"ROW",O"XY" -- classes
 local COL,COLS -- factories
---------------------------------------------------------------------------------------
+
+-- ### Factories
 function COL(n,s,    col)
   col = (s:find"^[A-Z]+" and NUM or SYM)(n,s)
   col.isIgnored = col.txt:find"X$"
@@ -89,7 +91,8 @@ function COLS(ss,     col,cols)
       if col.isKlass then cols.klass = col end
       push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
---------------------------------------------------------------------------
+
+-- ### SYM
 function SYM:new(nat,s)
   return {at=nat or 0, txt=s or "",seen={},bins={},
           n=0, mode=nil,most=0} end
@@ -122,7 +125,7 @@ function SYM:merge(other,     new)
   new.n = self.n + other.n 
   return new end
 
---------------------------------------------------------------------------
+-- ### NUM
 function NUM:new(nat,s)
   return {lo=math.huge, hi=-math.huge, at=nat or 0, txt=s or "",
           n=0,
@@ -177,7 +180,8 @@ function NUM:dist(n1,n2)
   if n1=="?" then n1= n2<.5 and 1 or 0 end
   if n2=="?" then n2= n1<.5 and 1 or 0 end
   return math.abs(n1-n2) end
---------------------------------------------------------------------------
+
+-- ### Row
 function ROW:new(t) return {cells=t,yused=false} end
 
 function ROW:guess(data,     s,x)
@@ -189,7 +193,8 @@ function ROW:guess(data,     s,x)
         if bin.lo <= x and x < bin.hi then 
           s = s + bin:score(); break end end end end 
   return s end
---------------------------------------------------------------------------
+
+-- ### Data
 function DATA:new(src,    fun)
   self.rows={}
   function fun(row) self:add(row) end 
@@ -272,63 +277,161 @@ function DATA:diffs(data,  cols,     diff)
   end -------------------------------------
   return map(cols or self.cols.y, diff) end
 
--------------------------------------------------------------------------
-function XY:new(at,lo,hi) 
-  sselfxlef.x=UM(at)
-  self.y=SYM()
-  i.y=NUM(), y=SYM()} end
+-- ### XY
+function XY:new(col,lo,hi) 
+  self.lo = lo
+  self.hi = hi or lo
+  self.y  = SYM(col) end
 
-function XY:score(  nall) return self.ys:div() end
+function XY:score() return self.y:div() end
 
 function XY:add(y,  inc,x)
-  inc    = inc or 1
-  self.n = self.n + 1
-  self.ys[y] = inc + (self.ys[y] or 0) 
+  self.y:add(x, inc or 1)
   if x then self.xlo = math.min(x,self.xlo)
             self.xhi = math.max(x,self.xhi) end end
 
-function XY:merge(xy,  lo,hi,    a,b,c)
-  a,b = self,xy
-  c   = XY(lo or a.xlo, hi or b.xhi)
-  c.n = a.n + b.n
-  for _,t in pair{a.ys,b.ys} do
-    for y,seen in pairs(t) do c.ys[y] = seen+(c.ys[y] or 0) end end
-  return c end 
+function XY:merge(xy,  lo,hi,    new)
+  new    = copy(self)
+  new.lo = math.min(lo or xy.lo, self.lo)
+  new.hi = math.max(hi or xy.hi, self.hi)
+  for y,n in pairs(xy.y) do new:add(y,n) end
+  return new end 
 
-function XY.merges(xys,n,    fun,fill) -- {hi,lo,yes,no,n,     all,merge1}
-  function bridge(xys)
-    for j=2,#xys do xys[j].lo = xys[j-1].hi end
-    xys[1].lo    = - math.huge
-    xys[#xys].hi =   math.huge
-    return xys end
-  function fun(xys0)
-    local xys1,j = {},1
-    while j <= #xys0 do
-      local a,b
-      a,b = xys0[j],xys0[j+1]
-      if b then 
-         local c,sa,sb,sc
-         c = a:merge(b) 
-         sa,sb,sc = a:score(n), b:score(n), c:score(n)
-         if sc >= .95*(a.n*sa + b.n*sb)/(a.n + b.n) then 
-           a=c
-           j=j+1 end end
-      push(xys1,a)
-      j=j+1
-    end
-    return #xys0 == #xys1 and xys1 or fun(xys1) 
-  end -----------------------------------
-  return bridge(fun(sort(xys,lt"lo"))) end
+function XY:merged(xy,     new)
+  new = self:merged(xy)
+  if new:score() <= 1.05*(self.y.n*self:score() + xy.y.n*xy:score())/new.y.n then
+    return new end end
+
+local _bridge,_merges
+function XY.merges(xys) -- {hi,lo,yes,no,n,     all,merge1}
+  return _bridge(_merges(sort(xys,lt"lo"))) end
+
+function _merges(xys0)
+  local xys1,j,a,b,c = {},1
+  while j <= #xys0 do
+    a,b = xys0[j], xys0[j+1]
+    c   = b and a:merged(b) 
+    if c then a=c; j=j+1 end 
+    push(xys1,a)
+    j = j + 1
+  end
+  return #xys0 == #xys1 and xys1 or _merges(xys1) end
+
+function _bridge(xys)
+  for j=2,#xys do xys[j].lo = xys[j-1].hi end
+  xys[1].lo    = -math.huge
+  xys[#xys].hi =  math.huge
+  return xys end
+
+-- ### BINS
+--
 -------------------------------------------------------------------------
-function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
-  local n,gt,lt = 0,0,0
-  for _,x in pairs(ns1) do
-    for _,y in pairs(ns2) do
-      n = n + 1
-      if x > y then gt = gt + 1 end
-      if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= (dull or the.dull) end
----------------------------------------------------------------------------------------------------
+-- ## Library
+-- ### Help to Settings
+function settings(txt,t) --> t; update key,vals in `t` from command-line flags
+  txt:gsub("\n[%s]+-[%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",
+           function(k,v) t[k] = coerce(v) end)  end
+
+function cli(t)
+  for k,v in pairs(t) do
+    v = tostring(v)
+    for n,x in ipairs(arg) do
+      if x=="-"..(k:sub(1,1)) then
+        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end 
+    t[k] = coerce(v) end end
+
+-- ### Unit Tests
+function main(funs,settings,txt,    fails,saved)
+  cli(settings)
+  fails,saved = 0,copy(settings)
+  if   settings.help 
+  then print(txt)
+       print("ACTIONS:\n  -g  .  (runs all actions)") 
+       for _,name in pairs(keys(funs)) do print("  -g   "..name) end
+  else for _,name in pairs(keys(funs)) do
+        if name:find(".*"..settings.go..".*") then
+          for k,v in pairs(saved) do settings[k]=v end
+          Seed = settings.seed
+          if funs[name]()==false then print("❌ "..name); fails=fail+1
+                                 else print("✅ "..name) end end end end
+  find_rogue_locals()
+  os.exit(fails) end  
+
+-- ### Maths
+Seed=937162211
+function rint(nlo,nhi)  return math.floor(0.5 + rand(nlo,nhi)) end
+function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
+  nlo, nhi = nlo or 0, nhi or 1
+  Seed = (16807 * Seed) % 2147483647
+  return nlo + (nhi-nlo) * Seed / 2147483647 end
+
+function rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
+  local mult = 10^(nPlaces or 2)
+  return math.floor(n * mult + 0.5) / mult end
+
+-- ### Sample
+function per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
+  p=math.floor(((p or .5)*#t)+.5); return t[math.max(1,math.min(#t,p))] end
+
+function any(t) --> any; return any item from `t`, picked at random
+  return t[rint(#t)] end
+
+function many(t,n) --> t; return `n` items from `t`, picked at random
+  local u={}; for i=1,n do push(u, any(t)) end; return u end 
+
+-- ### Tables
+function copy(t,    u) --> t; deep copy
+  if type(t) ~= "table" then return t end 
+  u={}; for k,v in pairs(t) do u[k]=copy(v) end
+  return setmetatable(u,getmetatable(t)) end 
+
+function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
+  table.sort(t,fun); return t end
+
+function lt(x) --> fun;  return a function that sorts ascending on `x`
+  return function(a,b) return a[x] < b[x] end end
+
+function push(t, x) --> any; push `x` to end of list; return `x` 
+  table.insert(t,x); return x end
+
+function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do v,k=fun(v); u[k or (1+#u)]=v end;  return u end
+ 
+function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
+  u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
+
+function keys(t)
+  return sort(kap(t,function(k,_) return k end)) end
+
+-- ### String to thing
+function coerce(s,    fun) --> any; return int or float or bool or string from `s`
+  function fun(s1)
+    if s1=="true" then return true elseif s1=="false" then return false end
+    return s1 end
+  return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
+
+function cells(s,    t)
+  t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
+
+function lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
+  src = io.input(sFilename)
+  while true do
+    s = io.read(); if s then fun(s) else return io.close(src) end end end
+
+function csv(sFilename,fun)
+  lines(sFilename, function(line) fun(cells(line)) end) end
+
+-- ### Thing to String
+fmt = string.format
+function oo(t) print(o(t)); return t end
+
+function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
+  if type(t)~="table" then return tostring(t) end
+  function fun (k,v) 
+    if tostring(k):sub(1,1)~="_" then return fmt(":%s %s",k,o(v)) end end
+  return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
+
+-- ### Stats Test
 function rank(rx) return rx.ranks/rx.n end --> n; returns average range in a treatment  
 
 function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at confidence `nConf` 
@@ -343,6 +446,15 @@ function mwu(ns1,ns2,nConf) -->bool; True if ranks of `ns1,ns2` are different at
   u2 = n1*n2 + n2*(n2+1)/2 - r2
   local word = math.min(u1,u2)<=c 
   return math.min(u1,u2)<=c  end  -- not evidence evidence to say they are the same
+
+function cliffsDelta(ns1,ns2,  dull) --> bool; true if different by a trivial amount
+  local n,gt,lt = 0,0,0
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
+      n = n + 1
+      if x > y then gt = gt + 1 end
+      if x < y then lt = lt + 1 end end end
+  return math.abs(lt - gt)/n <= (dull or the.dull) end
 
 function critical(c,n1,n2)
   local t={
@@ -402,104 +514,6 @@ function ranks(ns1,ns2) -->t; numbers of both populations are jointly ranked
     u[x].ranks = u[x].ranks + i -- for repeated numbers, they share the rank of all the repeats
     u[x].n     = u[x].n + 1 end
   return u end
--------------------------------------------------------------------------
-fmt = string.format
-function per(t,p) --> num; return the `p`th(=.5) item of sorted list `t`
-  p=math.floor(((p or .5)*#t)+.5); return t[math.max(1,math.min(#t,p))] end
-
-function any(t) --> any; return any item from `t`, picked at random
-  return t[rint(#t)] end
-
-function many(t,n) --> t; return `n` items from `t`, picked at random
-  local u={}; for i=1,n do push(u, any(t)) end; return u end 
-
-function copy(t,    u) --> t; deep copy
-  if type(t) ~= "table" then return t end 
-  u={}; for k,v in pairs(t) do u[k]=copy(v) end
-  return setmetatable(u,getmetatable(t)) end 
-
-function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
-  table.sort(t,fun); return t end
-
-function lt(x) --> fun;  return a function that sorts ascending on `x`
-  return function(a,b) return a[x] < b[x] end end
-
-function push(t, x) --> any; push `x` to end of list; return `x` 
-  table.insert(t,x); return x end
-
-function map(t, fun,     u) --> t; map a function `fun`(v) over list (skip nil results) 
-  u={}; for k,v in pairs(t) do v,k=fun(v); u[k or (1+#u)]=v end;  return u end
- 
-function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil results) 
-  u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
-
-function keys(t)
-  return sort(kap(t,function(k,_) return k end)) end
-
-Seed=937162211
-function rint(nlo,nhi)  return math.floor(0.5 + rand(nlo,nhi)) end
-function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
-  nlo, nhi = nlo or 0, nhi or 1
-  Seed = (16807 * Seed) % 2147483647
-  return nlo + (nhi-nlo) * Seed / 2147483647 end
-
-function rnd(n, nPlaces) --> num. return `n` rounded to `nPlaces`
-  local mult = 10^(nPlaces or 2)
-  return math.floor(n * mult + 0.5) / mult end
-
-function coerce(s,    fun) --> any; return int or float or bool or string from `s`
-  function fun(s1)
-    if s1=="true" then return true elseif s1=="false" then return false end
-    return s1 end
-  return math.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
-
-function cells(s,    t)
-  t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
-
-function lines(sFilename,fun,    src,s) --> nil; call `fun` on rows (after coercing cell text)
-  src = io.input(sFilename)
-  while true do
-    s = io.read(); if s then fun(s) else return io.close(src) end end end
-
-function csv(sFilename,fun)
-  lines(sFilename, function(line) fun(cells(line)) end) end
-
-function oo(t) print(o(t)); return t end
-
-function o(t,    fun) --> s; convert `t` to a string. sort named keys. 
-  if type(t)~="table" then return tostring(t) end
-  function fun (k,v) 
-    if tostring(k):sub(1,1)~="_" then return string.format(":%s %s",k,o(v)) end end
-  return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
-
-function settings(txt,t) --> t; update key,vals in `t` from command-line flags
-  txt:gsub("\n[%s]+-[%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",
-           function(k,v) t[k] = coerce(v) end)  end
-
-function cli(t)
-  for k,v in pairs(t) do
-    v = tostring(v)
-    for n,x in ipairs(arg) do
-      if x=="-"..(k:sub(1,1)) then
-        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end 
-    t[k] = coerce(v) end end
-
-function main(funs,settings,txt,    fails,saved)
-  cli(settings)
-  fails,saved = 0,copy(settings)
-  if   settings.help 
-  then print(txt)
-       print("ACTIONS:\n  -g  .  (runs all actions)") 
-       for _,name in pairs(keys(funs)) do print("  -g   "..name) end
-  else for _,name in pairs(keys(funs)) do
-        if name:find(".*"..settings.go..".*") then
-          for k,v in pairs(saved) do settings[k]=v end
-          Seed = settings.seed
-          if funs[name]()==false then print("❌ "..name); fails=fail+1
-                                 else print("✅ "..name) end end end end
-  find_rogue_locals()
-  os.exit(fails) end  
-
 -------------------------------------------------------------------------
 local egs={}
 function egs.alternatives() oo(the) end
@@ -579,7 +593,7 @@ function egs.stats_eg2()
   print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
   print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
 
- -------------------------------------------------------------------------
+-------------------------------------------------------------------------
 settings(help, the)
 
 if pcall(debug.getlocal,4,1) 
