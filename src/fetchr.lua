@@ -269,13 +269,21 @@ function DATA.diffs(data1,data2,  cols,     diff)
   end -------------------------------------
   return map(cols or data1.cols.y, diff) end
 
-function DATA:delta(rows1,rows2,     cols)
-  function update(rows,at,klass,out)
-    for _,row in pairs(rows) do XXX
-  function delta(col)
-    return update(rows1,col.at,"true",
-             update(rows2,col.at,"false",{})),col end
-  kap(cols or self.cols.x, delta) end
+function DATA:contrast(rows1,rows2,     delta)
+  function delta(col,    xys,update)
+    function update(rows,col,y,    x,k)
+      for _,row in pairs(rows) do 
+        x = row.cell[col.at]
+        if x ~= "?" then
+          k = col:bin(x) 
+          xys[k] = xys[k] or XY(col.at)
+          xys[k]:add(x,y) end end  
+    end ------------------
+    update(rows1,col,true)
+    update(rows2,col,false)
+    return col:merges(list(xys)),col 
+  end ------------------------------
+  return kap(cols or self.cols.x, delta) end
 
 -- ### XY
 function XY:new(col) 
@@ -299,10 +307,11 @@ function XY:merged(xy,     new)
 local _bridge,_merges, _lo
 function SYM:merges(xys) 
   return sort(xys,_lo) end
-function NUM:merges(xys) 
-  return _bridge(_merges(sort(xys,_lo))) end
 
-function _lo(a,b) return a.lo < b.lo end
+function NUM:merges(xys) 
+  return _bridge(_merges(sort(xys, _lo))) end
+
+function _lo(a,b) return a.x.lo < b.x.lo end
 
 function _merges(xys0)
   local xys1,j,a,b = {},1
@@ -402,6 +411,9 @@ function kap(t, fun,     u) --> t; map function `fun`(k,v) over list (skip nil r
 
 function keys(t)
   return sort(kap(t,function(k,_) return k end)) end
+
+function list(t) 
+  return map(t, function(x) return x end) end
 
 -- ### String to thing
 function coerce(s,    fun) --> any; return int or float or bool or string from `s`
