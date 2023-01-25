@@ -101,8 +101,9 @@ function SYM:clone() return SYM(self.at,self.txt) end
 
 function SYM:add(s,  inc)  
   if s~="?" then 
-    self.n = self.n + 1
-    self.seen[s] = (inc or 1) + (self.seen[s] or 0)  
+    inc = inc or 1
+    self.n = self.n + inc
+    self.seen[s] = inc + (self.seen[s] or 0)  
     if self.seen[s] > self.most then
       self.mode,self.most = s, self.seen[s] end  end end
 
@@ -269,21 +270,20 @@ function DATA.diffs(data1,data2,  cols,     diff)
   end -------------------------------------
   return map(cols or data1.cols.y, diff) end
 
-function DATA:contrast(rows1,rows2,     delta)
-  function delta(col,    xys,update)
-    function update(rows,col,y,    x,k)
-      for _,row in pairs(rows) do 
+function DATA:bins(rows1,rows2,   out,xys,x,k)
+  out = {}
+  for _,col in pairs(cols or self.cols.x) do
+    xys,x,k={}
+    for _,what in pairs({{rows=rows1, y=true}, {rows=rows2, y=false}}) do
+      for _,row in pairs(what.rows) do 
         x = row.cell[col.at]
         if x ~= "?" then
           k = col:bin(x) 
           xys[k] = xys[k] or XY(col.at)
-          xys[k]:add(x,y) end end  
-    end ------------------
-    update(rows1,col,true)
-    update(rows2,col,false)
-    return col:merges(list(xys)),col 
-  end ------------------------------
-  return kap(cols or self.cols.x, delta) end
+          xys[k]:add(x, what.y) end end end
+    out[col.at] = col:merges(sort(list(xys),
+                                  function(a,b) return a.x.lo < b.x.lo end)) end 
+  return out end
 
 -- ### XY
 function XY:new(col) 
@@ -304,14 +304,12 @@ function XY:merged(xy,     new)
   if new.y:div() <= 1.05*(self.y.n*self.y:div() + xy.y.n*xy.y:div())/new.y.n then
     return new end end
 
-local _bridge,_merges, _lo
-function SYM:merges(xys) 
-  return sort(xys,_lo) end
+local _bridge,_merges
+function SYM:merges(xys)  
+  return xys end
 
 function NUM:merges(xys) 
-  return _bridge(_merges(sort(xys, _lo))) end
-
-function _lo(a,b) return a.x.lo < b.x.lo end
+  return _bridge(_merges(xys)) end
 
 function _merges(xys0)
   local xys1,j,a,b = {},1
