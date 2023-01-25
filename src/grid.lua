@@ -236,7 +236,7 @@ function repPlace(data,    n,g,maxx,maxy,x,y,c)
   print""
   for y=1,maxy do oo(g[y]) end  end
 
-function repgrid(sFile,     t,rows)
+function repgrid(sFile,     t,rows,cols)
   t = dofile(sFile) 
   rows = repRows(t, transpose(t.cols)) 
   cols = repCols(t.cols)
@@ -390,7 +390,39 @@ eg("num", "check nums", function()
   for _,x in pairs{1,1,1,1,2,2,3} do num:add(x) end
   return 11/7 == num:mid() and 0.787 == rnd(num:div()) end )
 
-eg("rep","checking repgrid", function()
+eg("repcols","checking repcols", function(    t)
+  t=repCols( dofile(the.file).cols )
+  map(t.cols.all,oo) 
+  map(t.rows,oo) 
+end)
+
+eg("synonyms","checking repcols cluster", function(    t)
+  show(repCols( dofile(the.file).cols ):cluster())
+end)
+
+eg("reprows","checking reprows", function(    t,rows)
+  t=dofile(the.file)
+  rows = repRows(t, transpose(t.cols))
+  map(rows.cols.all,oo) 
+  map(rows.rows,oo) 
+end)
+
+eg("prototypes","checking reprows cluster", function(    t,rows)
+  t=dofile(the.file)
+  rows = repRows(t, transpose(t.cols))
+  show(rows:cluster())
+end)
+
+
+eg("position","where's wally", function(    t,rows)
+  t=dofile(the.file)
+  rows = repRows(t, transpose(t.cols))
+  rows:cluster()
+  repPlace(rows)
+end)
+
+
+eg("every","the whole enchilada", function()
     repgrid(the.file) end)
 
 main(the,help, egs)
