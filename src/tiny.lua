@@ -335,20 +335,20 @@ function egs.clone(    data1,data2)
   oo(stats(data2))
 end
 
-function egs.cliffs(   t1,t2)
-  print(false,cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
-  print(true,cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) 
+function egs.cliffs(   t1,t2,t3)
+  assert(false == cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
+  assert(true  == cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) 
   t1,t2={},{}
   for i=1,1000 do push(t1,rand()) end
   for i=1,1000 do push(t2,rand()^2) end
-  print(false,cliffsDelta(t1,t1)) 
-  print(true, cliffsDelta(t1,t2)) 
+  assert(false == cliffsDelta(t1,t1)) 
+  assert(true ==  cliffsDelta(t1,t2)) 
   local diff,j=false,1.0
   while not diff  do
-    j=j*1.025
     t3=map(t1,function(x) return x*j end)
     diff=cliffsDelta(t1,t3)
-    print(rnd(j),diff) end end
+    print(rnd(j),diff) 
+    j=j*1.025 end end
 
 function egs.dist(    data,num)
   data = read(the.file)
