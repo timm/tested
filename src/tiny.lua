@@ -6,6 +6,7 @@ local dist,div,egs,fmt,half,has,help,kap,keys,lines,lt
 local main,many,map,mid,norm,o,oo,per,push
 local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,the,tree
 local COL,COLS,DATA,NUM,SYM
+local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 the,help = {},[[
 
 tiny.lua
@@ -310,7 +311,5 @@ function egs.tree(   data,l,r)
   show(tree(read(the.file))) end
   
 -- ### Start-up
-help:gsub("\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)", function(k,v) 
-  the[k] = coerce(v) end)
-
-return pcall(debug.getlocal,4,1) and l or main(egs, cli(the), help) 
+help:gsub(magic, function(k,v) the[k] = coerce(v) end)
+os.exit( main(egs, cli(the), help) )
