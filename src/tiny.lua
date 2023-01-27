@@ -1,13 +1,6 @@
 -- vim: ts=2 sw=2 et :
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
-local m = math
-local adds,add,any,big,copy,cli,csv,cells,clone,coerce
-local dist,div,egs,fmt,half,has,help,kap,keys,lines,lt
-local main,many,map,mid,norm,o,oo,per,push
-local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,the,tree
-local COL,COLS,DATA,NUM,SYM
-local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
-the,help = {},[[
+local the,help = {}, [[
 
 tiny.lua
 
@@ -22,6 +15,13 @@ OPTIONS:
   -p  --p       dist coefficient            = 2
   -s  --seed    random number seed          = 10019
 ]]
+local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
+local adds,add,any,big,copy,cli,csv,cells,clone,coerce
+local dist,div,egs,fmt,half,has,kap,keys,lines,lt
+local main,many,map,mid,norm,o,oo,per,push
+local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,tree
+local COL,COLS,DATA,NUM,SYM
+local m = math
 
 -- ### Factories
 function COL(n,s,    col)
