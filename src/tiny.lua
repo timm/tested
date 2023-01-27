@@ -1,10 +1,10 @@
 -- vim: ts=2 sw=2 et :
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local m = math
-local adds,add,any,big,copy,cli,csv,cells,clone,coerce,dist,div
-local egs,fmt,half,has,help,kap,keys,lines,lt
+local adds,add,any,big,copy,cli,csv,cells,clone,coerce
+local dist,div,egs,fmt,half,has,help,kap,keys,lines,lt
 local main,many,map,mid,norm,o,oo,per,push
-local rint,rand,read,rnd,row,rogues,Seed,sort,stats,the
+local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,the,tree
 local COL,COLS,DATA,NUM,SYM
 the,help = {},[[
 
@@ -16,7 +16,8 @@ OPTIONS:
   -h  --help    show help                   = false
   -H  --Halves  search space for clustering = 512
   -g  --go      start-up action             = nothing
-  -m  --max     max kept numbers            = 512
+  -m  --min     size of smallest cluster    = .5
+  -M  --Max     numbers                     = 512
   -p  --p       dist coefficient            = 2
   -s  --seed    random number seed          = 10019
 ]]
@@ -32,7 +33,7 @@ function COL(n,s,    col)
 function NUM(n,s) 
   return {at= n or 0, txt= s or "", n=0,
           hi= -m.huge, lo= m.huge, 
-	  ok=true, has={},
+	        ok=true, has={},
           w= (s or ""):find"-$" and -1 or 1} end
 
 function SYM(n,s)
@@ -59,7 +60,7 @@ function add(col,x,  inc)
     then col.has[x] = inc + (col.has[x] or 0) 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
       local n = #col.has
-      local pos = n < the.max and n+1 or rand() < the.max/col.n and rand(n) 
+      local pos = n < the.Max and n+1 or rand() < the.Max/col.n and rand(n) 
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
@@ -90,8 +91,8 @@ function stats(data,  fun,cols,nPlaces,     tmp)
   return tmp end
 
 function clone(data,t,    data1)
-  data1 = DATA({data.cols.names})
-  for _,row in pairs(t or {}) do row(data,row) end
+  data1=row(DATA(), data.cols.names)
+  for _,t in pairs(t or {}) do row(data1,t) end
   return data1 end
 
 function read(sfile,    data) 
@@ -104,7 +105,8 @@ function row(data,t)
     for _,cols in pairs{data.cols.x, data.cols.y} do
       for _,col in pairs(cols) do 
 	     add(col, t[col.at]) end end 
-  else data.cols = COLS(t) end end
+  else data.cols = COLS(t) end 
+  return data end
        
 function dist(data,t1,t2,  cols,    d,n,dist1)
   function dist1(col,x,y)
@@ -126,21 +128,37 @@ function norm(num,x)
   return x=="?" and x or (x - num.lo)/(num.hi - num.lo + 1/big) end
 
 function half(data,  rows,cols,above)
-  local left,right,far,gap,some,proj,costmp,A,B,c
+  local left,right,far,gap,some,proj,x,tmp,A,B,c
   function gap(r1,r2) return dist(data, r1, r2, cols) end
-  function cos(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
-  function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
+  function x(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
+  function proj(r)    return {row=r, x=x(gap(r,A), gap(r,B),c)} end
   rows = rows or data.rows
   some = many(rows,the.Halves)
   A    = above or any(some)
-  tmp  = sort(map(some,function(r) return {row=r,d=gap(r,A)} end ),lt"d")
+  tmp  = sort(map(some,function(r) return {row=r, d=gap(r,A)} end ),lt"d")
   far  = tmp[(#tmp*the.Far)//1]
   B,c  = far.row, far.d
   left,right= {},{}
-  oo(proj(A))
-  for n,two in pairs(sort(map(rows,proj)),lt"x") do
-    push(n< (#row)//2 and left or right,two.row) end
+  for n,two in pairs(sort(map(rows,proj),lt"x")) do
+    push(n< (#rows)//2 and left or right,two.row) end
   return left,right,A,B,c end
+
+function tree(data,  rows,cols,above,    here)
+  rows = rows or data.rows
+  here = {rows=rows}
+  if #rows >= (#data.rows)^the.min  then
+    local l,r,a,b = half(data, rows, above, cols)
+    here.left = half(data, l, a, cols)
+    here.right= half(data, r, b, cols) end
+  return here end 
+
+function show(tree,  lvl)
+  if tree then 
+    lvl=lvl or 0
+    print(lvl)
+    print(fmt("%s[%s]","|.. "):rep(lvl), #tree.rows)
+    show(tree.left, lvl+1)
+    show(tree.right,lvl+1) end end
 
 -- ## Lib
 -- ### Maths
@@ -265,6 +283,13 @@ function egs.data(    data,col)
   print(col.lo,col.hi, mid(col),div(col))
   oo(stats(data, mid, data.cols.y)) end
 
+function egs.clone(    data1,data2)
+  data1=read(the.file)
+  data2=clone(data1,data1.rows) 
+  oo(stats(data1))
+  oo(stats(data2))
+end
+
 function egs.dist(    data,num)
   data = read(the.file)
   num  = NUM()
@@ -272,9 +297,17 @@ function egs.dist(    data,num)
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end 
 
-function egs.half()
+function egs.half(   data,l,r)
   data = read(the.file)
-  print(half(data)) end
+  local left,right,A,B,c = half(data) 
+  print(#left,#right)
+  l,r = clone(data,left), clone(data,right)
+  print("l",o(stats(l,mid,l.cols.y)))
+  print("r",o(stats(r,mid,r.cols.y)))
+end
+ 
+function egs.tree(   data,l,r)
+  show(tree(read(the.file))) end
   
 -- ### Start-up
 help:gsub("\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)", function(k,v) 
