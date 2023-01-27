@@ -27,13 +27,16 @@ local function find_rogue_locals()
   for k,v in pairs(_ENV) do -- LUA trivia. Looking for rogue locals
     if not b4[k] then print( string.format("#W ?%s %s",k,type(v)) ) end end end
 
-local function O(s,    t) --> t; create a klass and a constructor 
-  t={}; t.__index = t
-  return setmetatable(t, {__call=function(_,...) 
-    local i=setmetatable({a=s},t); return setmetatable(t.new(i,...) or i,t) end}) end
-
-local any,cells,cli,cliffsDelta,coerce,copy,critical,csv,fmt,kap,keys,lines,lt
+local any,cells,cli,cliffsDelta,coerce,copy,critical,csv,fmt,kap,keys,lines,list,lt
 local main,many,map,mwu,o,oo,per,push,settings,rand,rank,ranks,rint,rnd,sort,Seed
+
+local _id=0
+local function O(s,    t) --> t; create a klass and a constructor 
+  t={__tostring=function(s) return o(s) end}; t.__index = t
+  return setmetatable(t, {__tostring=o, __call=function(_,...) 
+    _id=_id+1;
+    local i=setmetatable({a=s,id=_id},t); return setmetatable(t.new(i,...) or i,t) end}) end
+
 --------------------------------------------------------------------------------------
 --[[
 About this code:
@@ -263,10 +266,10 @@ function DATA:evaled(  rows)
 
 function DATA.diffs(data1,data2,  cols,     diff)
   function diff(col,    x,num1,num2) 
-    num1,num2 = Num(),Num()
+    num1,num2 = NUM(),NUM()
     for _,row in pairs(data1.rows) do num1:add(row[col.at]) end
     for _,row in pairs(data2.rows) do num2:add(row[col.at]) end
-    return num1: diff(num2), col.txt 
+    return num1:diff(num2), col.txt 
   end -------------------------------------
   return map(cols or data1.cols.y, diff) end
 
@@ -339,13 +342,27 @@ function settings(txt,t) --> t; update key,vals in `t` from command-line flags
   txt:gsub("\n[%s]+-[%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)",
            function(k,v) t[k] = coerce(v) end)  end
 
-function cli(t)
-  for k,v in pairs(t) do
-    v = tostring(v)
-    for n,x in ipairs(arg) do
-      if x=="-"..(k:sub(1,1)) then
-        v = v=="false" and "true" or v=="true" and "false" or arg[n+1] end end 
-    t[k] = coerce(v) end end
+function cli(t,      i,flag,s,isOk)
+  i = 1
+  while i<=#arg do
+    flag,isOk = arg[i],false
+    for k,old in pairs(t) do
+      if flag=="-"..(k:sub(1,1)) or flag=="--"..k then
+        s = tostring(old)
+        if     s=="false" then s,isOk = "true", true -- flip 
+        elseif s=="true"  then s,isOk=  "false",true -- flip 
+        else   i=i+1              -- read next thing in arg
+               s,isOk = arg[i],true
+               assert(s ~= nil, "missing argument for "..flag) 
+        end 
+        t[k] = coerce(s)
+        assert(type(old) == type(t[k]), -- right type?
+               fmt("%s is not %s",t[k],type(old))) 
+      end  -- end if
+    end -- end for
+    i=i+1 
+    assert(isOk, flag.." unknown flag ") end 
+  return oo(t) end
 
 -- ### Unit Tests
 function main(funs,settings,txt,    fails,saved)
@@ -526,7 +543,7 @@ function ranks(ns1,ns2) -->t; numbers of both populations are jointly ranked
   return u end
 -------------------------------------------------------------------------
 local egs={}
-function egs.alternatives() oo(the) end
+function egs.aptions() oo(the) end
 function egs.COL()    oo(COL(2,"Asda+")) end
 
 function egs.NUM(     num)
@@ -578,7 +595,15 @@ function egs.row_split(    data)
   print("left",o(left:stats("mid",left.cols.y)))
   print("right",o(right:stats("mid",right.cols.y))) end
 
-function egs.row_sway(    data,a,b,c)
+function egs.stats_eg1()
+  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
+  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
+
+function egs.stats_eg2()
+  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
+  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
+
+function egs.sway(    data,a,b,c)
   local function p(s) return fmt("%-10s",s) end
   local function fun(s,d)
     print(p(s), o(d:stats("mid",d.cols.y)), o(d:stats("div",d.cols.y))) end
@@ -591,17 +616,10 @@ function egs.row_sway(    data,a,b,c)
   fun("\nr= rand", c)
   fun("b= best", a)
   fun("w= worst", b)
+  print(a)
   print(p"b vs w", o(a:diffs(b, b.cols.y)))
   print(p"b vs r", o(a:diffs(c, c.cols.y)))
 end
-
-function egs.stats_eg1()
-  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
-  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
-
-function egs.stats_eg2()
-  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
-  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
 
 -------------------------------------------------------------------------
 settings(help, the)

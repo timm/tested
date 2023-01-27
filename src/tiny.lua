@@ -5,6 +5,7 @@ local the,help = {}, [[
 tiny.lua
 
 OPTIONS:
+  -c --cliffs   cliff's delta threshold     = .2385
   -f  --file    data file                   = ../etc/data/auto93.csv
   -F  --Far     distance to distant         = .95
   -h  --help    show help                   = false
@@ -13,13 +14,14 @@ OPTIONS:
   -m  --min     size of smallest cluster    = .5
   -M  --Max     numbers                     = 512
   -p  --p       dist coefficient            = 2
+  -r  --rest    how many of rest to sample  = 4
   -s  --seed    random number seed          = 10019
 ]]
 local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
-local adds,add,any,big,copy,cli,csv,cells,clone,coerce
-local dist,div,egs,fmt,half,has,kap,keys,lines,lt
+local adds,add,any,better,big,copy,cli,csv,cells,cliffsDelta,clone,coerce
+local diffs,dist,div,egs,fmt,half,has,kap,keys,lines,lt
 local main,many,map,mid,norm,o,oo,per,push
-local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,tree
+local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,sway,tree
 local COL,COLS,DATA,NUM,SYM
 local m = math
 
@@ -83,10 +85,10 @@ function div(col,    e)
   else return (per(has(col),.9) - per(has(col), .1))/2.58 end end
 
 -- ### Data
-  function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
+function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
 
 function stats(data,  fun,cols,nPlaces,     tmp)
-  tmp = kap(cols or data.cols.all,
+  tmp = kap(cols or data.cols.y,
             function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end)
   tmp["N"] = #data.rows
   return tmp end
@@ -129,35 +131,56 @@ function norm(num,x)
   return x=="?" and x or (x - num.lo)/(num.hi - num.lo + 1/big) end
 
 function half(data,  rows,cols,above)
-  local left,right,far,gap,some,proj,x,tmp,A,B,c
+  local left,right,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
-  function x(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
-  function proj(r)    return {row=r, x=x(gap(r,A), gap(r,B),c)} end
+  function cos(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
+  function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
   rows = rows or data.rows
   some = many(rows,the.Halves)
   A    = above or any(some)
   tmp  = sort(map(some,function(r) return {row=r, d=gap(r,A)} end ),lt"d")
   far  = tmp[(#tmp*the.Far)//1]
   B,c  = far.row, far.d
-  left,right= {},{}
   for n,two in pairs(sort(map(rows,proj),lt"x")) do
-    push(n< (#rows)//2 and left or right,two.row) end
+    push(n <= #rows/2 and left or right, two.row) end
   return left,right,A,B,c end
 
-function tree(data,  rows,cols,above,    here)
+function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
-  here = {rows=rows}
-  if #rows >= (#data.rows)^the.min  then
-    local l,r,a,b = half(data, rows, above, cols)
-    here.left = half(data, l, a, cols)
-    here.right= half(data, r, b, cols) end
+  here = {data=clone(data,rows)}
+  if #rows >= 2*(#data.rows)^the.min then
+    local left,right,A,B = half(data, rows, cols, above)
+    here.left  = tree(data, left,  cols, A)
+    here.right = tree(data, right, cols, B) end
   return here end 
 
-function show(tree,  lvl)
+function sway(data,     worker,best,rest)
+  function worker(rows,worse,  above)
+    if   #rows <= (#data.rows)^the.min 
+    then return rows, many(worse, the.rest*#rows) 
+    else local l,r,A,B = half(data, rows, cols, above)
+         if better(data,B,A) then l,r,A,B = r,l,B,A end
+         map(r, function(row) push(worse,row) end) 
+         return worker(l,worse,A) end 
+  end ----------------------------------
+  best,rest = worker(data.rows,{})
+  return clone(data,best), clone(data,rest) end 
+
+function better(data,row1,row2,    s1,s2,ys,x,y) 
+  s1,s2,ys,x,y = 0,0,data.cols.y
+  for _,col in pairs(ys) do
+    x  = norm(col, row1[col.at] )
+    y  = norm(col, row2[col.at] )
+    s1 = s1 - m.exp(col.w * (x-y)/#ys)
+    s2 = s2 - m.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
+  
+function show(tree,  lvl,post)
   if tree then 
-    lvl=lvl or 0
-    print(lvl)
-    print(fmt("%s[%s]","|.. "):rep(lvl), #tree.rows)
+    lvl  = lvl or 0
+    if lvl==0 or not tree.left 
+    then post= o(stats(tree.data)) end
+    print(fmt("%s[%s] %s",("|.. "):rep(lvl), #(tree.data.rows),post or ""))
     show(tree.left, lvl+1)
     show(tree.right,lvl+1) end end
 
@@ -177,6 +200,27 @@ function rand(nlo,nhi) --> num; return float from `nlo`..`nhi` (default 0..1)
   nlo, nhi = nlo or 0, nhi or 1
   Seed = (16807 * Seed) % 2147483647
   return nlo + (nhi-nlo) * Seed / 2147483647 end
+
+--  M.Hess, J.Kromrey. 
+--  Robust Confidence Intervals for Effect Sizes: 
+--  A Comparative Study of Cohen's d and Cliff's Delta Under Non-normality and Heterogeneous Variances
+--  American Educational Research Association, San Diego, April 12 - 16, 2004
+--  0.147=  small, 0.33 =  medium, 0.474 = large; med --> small at .2385
+function cliffsDelta(ns1,ns2) 
+  if #ns1 > 256     then ns1 = many(ns1,256) end
+  if #ns2 > 256     then ns2 = many(ns2,256) end
+  if #ns1 > 10*#ns2 then ns1 = many(ns1,10*#ns2) end
+  if #ns2 > 10*#ns1 then ns2 = many(ns2,10*#ns1) end
+  local n,gt,lt = 0,0,0
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
+      n = n + 1
+      if x > y then gt = gt + 1 end
+      if x < y then lt = lt + 1 end end end
+  return m.abs(lt - gt)/n > the.cliffs end
+
+function diffs(nums1,nums2)
+  return kap(nums1,function(k,nums) return cliffsDelta(nums.has,nums2[k].has),nums.txt end) end
 
 -- ### String to thing
 function coerce(s,    fun) 
@@ -282,7 +326,7 @@ function egs.data(    data,col)
   data=read(the.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
-  oo(stats(data, mid, data.cols.y)) end
+  oo(stats(data)) end
 
 function egs.clone(    data1,data2)
   data1=read(the.file)
@@ -290,6 +334,21 @@ function egs.clone(    data1,data2)
   oo(stats(data1))
   oo(stats(data2))
 end
+
+function egs.cliffs(   t1,t2)
+  print(false,cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
+  print(true,cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) 
+  t1,t2={},{}
+  for i=1,1000 do push(t1,rand()) end
+  for i=1,1000 do push(t2,rand()^2) end
+  print(false,cliffsDelta(t1,t1)) 
+  print(true, cliffsDelta(t1,t2)) 
+  local diff,j=false,1.0
+  while not diff  do
+    j=j*1.025
+    t3=map(t1,function(x) return x*j end)
+    diff=cliffsDelta(t1,t3)
+    print(rnd(j),diff) end end
 
 function egs.dist(    data,num)
   data = read(the.file)
@@ -303,13 +362,24 @@ function egs.half(   data,l,r)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
   l,r = clone(data,left), clone(data,right)
-  print("l",o(stats(l,mid,l.cols.y)))
-  print("r",o(stats(r,mid,r.cols.y)))
-end
+  print("l",o(stats(l)))
+  print("r",o(stats(r))) end
  
 function egs.tree(   data,l,r)
   show(tree(read(the.file))) end
-  
+
+function egs.sway(    data,best,rest)
+  data = read(the.file)
+  best,rest = sway(data)
+  print("\nall ",o(stats(data))) 
+  print("    ",o(stats(data,div))) 
+  print("\nbest",o(stats(best))) 
+  print("    ",o(stats(best,div))) 
+  print("\nrest",o(stats(rest))) 
+  print("    ",o(stats(rest,div))) 
+  print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
+  print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
+
 -- ### Start-up
 help:gsub(magic, function(k,v) the[k] = coerce(v) end)
 os.exit( main(egs, cli(the), help) )
