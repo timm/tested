@@ -5,6 +5,7 @@ local the,help = {}, [[
 tiny.lua
 
 OPTIONS:
+  -b --bins     initial number of bins      = 16
   -c --cliffs   cliff's delta threshold     = .2385
   -f  --file    data file                   = ../etc/data/auto93.csv
   -F  --Far     distance to distant         = .95
@@ -18,10 +19,12 @@ OPTIONS:
   -s  --seed    random number seed          = 10019
 ]]
 local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
-local adds,add,any,better,big,copy,cli,csv,cells,cliffsDelta,clone,coerce
-local diffs,dist,div,egs,fmt,half,has,kap,keys,lines,lt
-local main,many,map,mid,norm,o,oo,per,push
-local rint,rand,read,rnd,row,rogues,Seed,show,sort,stats,sway,tree
+local adds,add,any,better,big,bin,bins
+local copy,cli,csv,cells,cliffsDelta,clone,coerce
+local diffs,dist,div,egs,fmt,half,has,itself,kap,keys,lines,lt
+local main,many,map,merge,merged,merges,mid,norm,o,oo,per,push
+local rint,rand,read,rnd,row,rogues
+local Seed,showXY,showTree,sort,stats,sway,tree,value
 local COL,COLS,DATA,NUM,SYM
 local m = math
 
@@ -83,6 +86,56 @@ function div(col,    e)
   if   col.isSym 
   then e=0; for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end; return e
   else return (per(has(col),.9) - per(has(col), .1))/2.58 end end
+
+function bin(col,x,      tmp)
+  if x=="?" or col.isSym then return x end
+  tmp = (col.hi - col.lo)/(the.bins - 1)
+  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
+
+function merge(col1,col2,    new)
+  new = copy(col1)
+  if   col1.isSym 
+  then for x,n in pairs(col2.has) do add(new,x,n) end
+  else for _,n in pairs(col2.has) do add(new,n)   end
+       new.lo = m.min(col1.lo, col2.lo)
+       new.hi = m.max(col1.hi, col2.hi) end 
+  return new end
+
+function merged(col1,col2,   new)
+  new = merge(col1,col2)
+  if div(new) <= 1.01*(div(col1)*col1.n + div(col2)*col2.n)/new.n then
+    return new end end
+
+function merges(xys0,     bridge)
+  function bridge(t)
+    for j = 2,#t do t[j].x.lo = t[j-1].x.hi end
+    t[1].x.lo  = -big
+    t[#t].x.hi =  big
+    return t 
+  end ------
+  local xys1,j,a,b,y = {},1
+  while j <= #xys0 do
+    a, b = xys0[j], xys0[j+1]
+    if b then
+      y = merged(a.y, b.y)
+      if y then
+        a = {x=merge(a.x, b.x), y=y}
+        j = j+1 end end
+    push(xys1,a)
+    j = j+1 
+  end
+  return #xys0==#xys1 and bridge(xys0) or merges(xys1) end
+
+function value(sym,    B,R,goal,b,r)
+  goal,B,R = goal or true, B or 1, R or 1
+  b,r = 0,0
+  for x,n in pairs(sym.has) do
+    if x==goal then b = b + n else r = r + n end end
+  b,r = b/(B+1/big), r/(R+1/big)
+  return b^2/(b+r) end
+
+function showXY(xy,B,R,goal)
+  print(xy.x.lo,xy.x.hi,value(xy.y,B,R,goal), o(xy.y.has)) end
 
 -- ### Data
 function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
@@ -175,16 +228,34 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
     s2 = s2 - m.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
   
-function show(tree,  lvl,post)
+function showTree(tree,  lvl,post)
   if tree then 
     lvl  = lvl or 0
-    if lvl==0 or not tree.left 
-    then post= o(stats(tree.data)) end
-    print(fmt("%s[%s] %s",("|.. "):rep(lvl), #(tree.data.rows),post or ""))
-    show(tree.left, lvl+1)
-    show(tree.right,lvl+1) end end
+    io.write(fmt("%s[%s] ",("|.. "):rep(lvl), #(tree.data.rows)))
+    print((lvl==0 or not tree.left) and o(stats(tree.data)) or "")
+    showTree(tree.left, lvl+1)
+    showTree(tree.right,lvl+1) end end
+
+function bins(data,rows1,rows2)
+  local out = {}
+  for _,col in pairs(cols or data.cols.x) do
+    local xys = {}
+    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
+      for _,row in pairs(what.rows) do
+        local x,k = row[col.at]
+        if x ~= "?" then
+          k = bin(col,x)
+          xys[k] = xys[k] or {x=NUM(col.at,col.txt), y=SYM()}
+          add(xys[k].x, x)
+          add(xys[k].y, what.y) 
+    end end end
+    xys = sort(map(xys,itself), function(a,b) return a.x.lo < b.x.lo end) 
+    out[col.txt] = col.isSym and xys or merges(xys) end
+  return out end
 
 -- ## Lib
+-- ### Meta
+function itself(x) return x end
 -- ### Maths
 big  = math.huge
 
@@ -366,20 +437,32 @@ function egs.half(   data,l,r)
   print("r",o(stats(r))) end
  
 function egs.tree(   data,l,r)
-  show(tree(read(the.file))) end
+  showTree(tree(read(the.file))) end
 
 function egs.sway(    data,best,rest)
   data = read(the.file)
   best,rest = sway(data)
-  print("\nall ",o(stats(data))) 
-  print("    ",o(stats(data,div))) 
-  print("\nbest",o(stats(best))) 
-  print("    ",o(stats(best,div))) 
-  print("\nrest",o(stats(rest))) 
-  print("    ",o(stats(rest,div))) 
+  print("\nall ", o(stats(data))) 
+  print("    ",   o(stats(data,div))) 
+  print("\nbest", o(stats(best))) 
+  print("    ",   o(stats(best,div))) 
+  print("\nrest", o(stats(rest))) 
+  print("    ",   o(stats(rest,div))) 
   print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
 
--- ### Start-up
+function egs.bins(    data,best,rest,all)
+  data = read(the.file)
+  best,rest = sway(data)
+  all = {}
+  for k,t in pairs(bins(data,best.rows, rest.rows)) do
+    print(k)
+    for _,xy in pairs(t) do
+      push(all, xy)
+      showXY(xy,#best.rows, #rest.rows, true) end end
+  all = sort(all,function(a,b) return v(a.y) > v(b.y) end)
+  end 
+ 
+ -- ### Start-up
 help:gsub(magic, function(k,v) the[k] = coerce(v) end)
 os.exit( main(egs, cli(the), help) )
