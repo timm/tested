@@ -40,6 +40,10 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 export PATH="$PWD:/opt/homebrew/bin:$PATH"
 export EDITOR=$(which pico)
 
+doc() {
+  docco -l classic -o ~/tmp $1
+  cp $here/etc/docco.css ~/tmp
+}
 here() { cd $1; basename `pwd`; }
 #!/usr/bin/env bash
 
