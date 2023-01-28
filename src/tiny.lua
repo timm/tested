@@ -9,9 +9,9 @@ OPTIONS:
   -c --cliffs   cliff's delta threshold     = .2385
   -f  --file    data file                   = ../etc/data/auto93.csv
   -F  --Far     distance to distant         = .95
+  -g  --go      start-up action             = nothing
   -h  --help    show help                   = false
   -H  --Halves  search space for clustering = 512
-  -g  --go      start-up action             = nothing
   -m  --min     size of smallest cluster    = .5
   -M  --Max     numbers                     = 512
   -p  --p       dist coefficient            = 2
@@ -33,7 +33,7 @@ local Seed,showXY,showTree,sort,stats,sway,tree,value
 local COL,COLS,DATA,NUM,SYM
 local m = math
 
--- ## Factories
+-- ## Creation
 
 -- Generate a `NUM` or a `SYM`. Column
 -- names are a little language that    
@@ -72,11 +72,30 @@ function COLS(ss,     col,cols)
 -- `DATA` contain `rows`, summarized in `cols`.
 function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
 
--- ## COL functions
+-- Read a csv file into a new `DATA`.
+function read(sfile,    data) 
+  data=DATA()
+  csv(sfile, function(t) row(data,t) end); return data end
 
--- Add items from `t` into `col`.
-function adds(col,t) 
-  for _,x in pairs(t or {}) do add(col,x) end; return col end
+-- Replicate structure of `data`.
+function clone(data,t,    data1)
+  data1=row(DATA(), data.cols.names)
+  for _,t in pairs(t or {}) do row(data1,t) end
+  return data1 end
+
+-- ## Update
+
+-- Update `data` with  row `t``. If `data.cols`
+-- does not exist, the use `t` to create `data.cols`.
+function row(data,t)
+  if data.cols  then
+    push(data.rows,t)
+    for _,cols in pairs{data.cols.x, data.cols.y} do
+      for _,col in pairs(cols) do 
+	     add(col, t[col.at]) end end 
+  else data.cols = COLS(t) end 
+  return data end
+
 
 -- Add one item `x` into `col`.  
 -- `SYM`s just increment a symbol counts.   
@@ -95,6 +114,12 @@ function add(col,x,  inc)
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
+
+-- Add items from `t` into `col`.
+function adds(col,t) 
+  for _,x in pairs(t or {}) do add(col,x) end; return col end
+
+-- ## Query
 
 -- Return contents of a column. If `col` is a `NUM` with
 -- unsorted contents, then sort before return the contents.
@@ -118,6 +143,13 @@ function div(col,    e)
   then e=0; for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end; return e
   else return (per(has(col),.9) - per(has(col), .1))/2.58 end end
 
+-- Report `mid` or `div` of `cols` (defaults to `data.cols.y`).
+function stats(data,  fun,cols,nPlaces,     tmp)
+  tmp = kap(cols or data.cols.y,
+            function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end)
+  tmp["N"] = #data.rows
+  return tmp end
+
 -- Normalize `n` 0..1.
 function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
@@ -132,6 +164,24 @@ function value(sym,    B,R,goal,b,r)
   return b^2/(b+r) end
 
 -- ## Discretization
+
+-- Return ranges that distinguish `rows1` from `rows2`.
+function bins(data,rows1,rows2)
+  local out = {}
+  for _,col in pairs(cols or data.cols.x) do
+    local xys = {}
+    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
+      for _,row in pairs(what.rows) do
+        local x,k = row[col.at]
+        if x ~= "?" then
+          k = bin(col,x)
+          xys[k] = xys[k] or {x=NUM(col.at,col.txt), y=SYM()}
+          add(xys[k].x, x)
+          add(xys[k].y, what.y) 
+    end end end
+    xys = sort(map(xys,itself), function(a,b) return a.x.lo < b.x.lo end) 
+    out[col.txt] = col.isSym and xys or merges(xys) end
+  return out end
 
 -- Map `x` into a small number of bins.
 function bin(col,x,      tmp)
@@ -177,60 +227,11 @@ function merges(xys0,     bridge)
   end
   return #xys0==#xys1 and bridge(xys0) or merges(xys1) end
 
--- Return ranges that distinguish `rows1` from `rows2`.
-function bins(data,rows1,rows2)
-  local out = {}
-  for _,col in pairs(cols or data.cols.x) do
-    local xys = {}
-    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
-      for _,row in pairs(what.rows) do
-        local x,k = row[col.at]
-        if x ~= "?" then
-          k = bin(col,x)
-          xys[k] = xys[k] or {x=NUM(col.at,col.txt), y=SYM()}
-          add(xys[k].x, x)
-          add(xys[k].y, what.y) 
-    end end end
-    xys = sort(map(xys,itself), function(a,b) return a.x.lo < b.x.lo end) 
-    out[col.txt] = col.isSym and xys or merges(xys) end
-  return out end
-
 -- Print an `XY`.
 function showXY(xy,B,R,goal)
   print(xy.x.lo,xy.x.hi,value(xy.y,B,R,goal), o(xy.y.has)) end
 
--- ## DATA functions
-
--- Read a csv file into a new `DATA`.
-function read(sfile,    data) 
-  data=DATA()
-  csv(sfile, function(t) row(data,t) end); return data end
-
--- Replicate structure of `data`.
-function clone(data,t,    data1)
-  data1=row(DATA(), data.cols.names)
-  for _,t in pairs(t or {}) do row(data1,t) end
-  return data1 end
-
--- Add a row `t` into `data`. If `data.cols`
--- does not exist, the use `t` to create `data.cols`.
-function row(data,t)
-  if data.cols  then
-    push(data.rows,t)
-    for _,cols in pairs{data.cols.x, data.cols.y} do
-      for _,col in pairs(cols) do 
-	     add(col, t[col.at]) end end 
-  else data.cols = COLS(t) end 
-  return data end
-
--- Report `mid` or `div` of `cols` (defaults to `data.cols.y`).
-function stats(data,  fun,cols,nPlaces,     tmp)
-  tmp = kap(cols or data.cols.y,
-            function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end)
-  tmp["N"] = #data.rows
-  return tmp end
-
--- ### Clustering
+-- ## Clustering
 
 -- Return distances 0..1 between rows `t1` and `t2`.   
 -- If any values are unknown, assume max distances.
@@ -276,6 +277,18 @@ function tree(data,  rows,cols,above,     here)
     here.right = tree(data, right, cols, B) end
   return here end 
 
+
+-- Display a tree.
+function showTree(tree,  lvl,post)
+  if tree then 
+    lvl  = lvl or 0
+    io.write(fmt("%s[%s] ",("|.. "):rep(lvl), #(tree.data.rows)))
+    print((lvl==0 or not tree.left) and o(stats(tree.data)) or "")
+    showTree(tree.left, lvl+1)
+    showTree(tree.right,lvl+1) end end
+
+-- ## Optimization
+
 -- Recursively prune the worst half the data.
 function sway(data,     worker,best,rest)
   function worker(rows,worse,  above)
@@ -298,15 +311,6 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
     s1 = s1 - m.exp(col.w * (x-y)/#ys)
     s2 = s2 - m.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
- 
--- Display a tree.
-function showTree(tree,  lvl,post)
-  if tree then 
-    lvl  = lvl or 0
-    io.write(fmt("%s[%s] ",("|.. "):rep(lvl), #(tree.data.rows)))
-    print((lvl==0 or not tree.left) and o(stats(tree.data)) or "")
-    showTree(tree.left, lvl+1)
-    showTree(tree.right,lvl+1) end end
 
 -- ## Lib
 -- ### Meta
