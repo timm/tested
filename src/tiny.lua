@@ -42,7 +42,7 @@ local m = math
 -- the maximize (`+`) or minimize (`-`) or klass (`!`) symbol.
 function COL(n,s,    col)
    col = s:find"^[A-Z]" and NUM(n,s) or SYM(n,s) 
-   col.isIngored  = col.txt:find"X$"
+   col.isIgnored  = col.txt:find"X$"
    col.isKlass    = col.txt:find"!$"
    col.isGoal     = col.txt:find"[!+-]$"
    return col end
@@ -277,7 +277,6 @@ function tree(data,  rows,cols,above,     here)
     here.right = tree(data, right, cols, B) end
   return here end 
 
-
 -- Display a tree.
 function showTree(tree,  lvl,post)
   if tree then 
@@ -334,7 +333,6 @@ function rand(nlo,nhi) -- random floats
   nlo, nhi = nlo or 0, nhi or 1
   Seed = (16807 * Seed) % 2147483647
   return nlo + (nhi-nlo) * Seed / 2147483647 end
-
 
 -- Non-parametric effect-size test
 --  M.Hess, J.Kromrey. 
@@ -556,10 +554,22 @@ function egs.bins(    data,best,rest,all)
       showXY(xy,#best.rows, #rest.rows, true) end end
   all = sort(all,function(a,b) return v(a.y) > v(b.y) end)
   end 
- 
+
 -- ## Start-up
 
+-- More LUA namespace trivia
+local _t,_i={},1
+while true do
+  local _name, _value = debug.getlocal(1, _i)
+  if not _name then break end
+  if _name:sub(1,1) ~= "_" then _t[_name]=_value end
+  _i = _i + 1 end
+
+for k,v in pairs(_t) do print(k,v) end
 --  Parse `help` to make the `the` config options.
 help:gsub(magic, function(k,v) the[k] = coerce(v) end)
 -- Return the failures to the operating systems.
-os.exit( main(egs, cli(the), help) )
+if     pcall(debug.getlocal,4,1) -- if loaded by other files
+then   return _t                 -- then just return this code
+else   os.exit( -- else, call `main` and return its results
+        main(egs,cli(the),help)) end
