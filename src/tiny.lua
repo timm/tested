@@ -1,4 +1,5 @@
 -- vim: ts=2 sw=2 et :
+-- how to score the ranges
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local the,help = {}, [[
 
