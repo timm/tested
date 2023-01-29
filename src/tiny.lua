@@ -1,17 +1,25 @@
 --<!-- vim: set ts=2 sw=2 et : -->
 -- <p style="text-align: left;">
--- Here, we play code golf with AI (most functionality, fewest lines).</p>
---    
--- ## How to read this code
+-- Here, we play code golf with AI (most functionality, fewest lines). 
+-- Specifically: optimization via data mining; i.e.  recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
+-- one or two points per cluster; generating rules from the delta between best cluster and the rest.<br>
+-- <center> <a href="https://github.com/timm/tested/blob/main/src/tiny.lua">src</a> |
+-- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">data</a> |
+-- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
+-- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
+-- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
+--  src="https://img.shields.io/badge/language-lua-orange"> <img 
+--  src="https://img.shields.io/badge/purpose-teaching-green"> </center></p>
+--         
 -- <p style="text-align: left;">
--- This code starts with a help string and ends with a library of examples 
--- (see "function egs.xyz()" at end of file). 
+-- To read this code, skim the `help` string (at top), then the library of examples at end
+-- (e.g. "function egs.xyz()" at end of file). 
 -- Any of the examples can be run from the command line; e.g. "-g show" runs
 -- all the actions that start with "show". 
 -- All the settings in the help string can
 -- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.</p>
 -- <p style="text-align: left;">
--- Vars are global by default unless marked with "local" or 
+-- In this language (LUA) vars are global by default unless marked with "local" or 
 -- defined in function argument lists.
 -- Also,  there is only one data structure called a "table".
 -- that can have numeric or symbolic keys.
@@ -21,7 +29,7 @@
 -- `for pos,x in pairs(t) do` is the same as python's 
 -- `for pos,x in enumerate(t) do`.</p>
 -- <p style="text-align: left;">
--- Global settings are stores in "the" table which is generated from
+-- In my code, global settings are stores in "the" table which is generated from
 -- "help". E.g. From the above the.budget =16.
 -- For all `key=value` in `the`, a command line flag `-k X` means `value`=X</p>
 -- <p style="text-align: left;">
@@ -44,8 +52,8 @@ tiny.lua : multi-objective semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
 
 OPTIONS:
-  -b --bins     initial number of bins      = 16
-  -c --cliffs   cliff's delta threshold     = .2385
+  -b  --bins    initial number of bins      = 16
+  -c  --cliffs  cliff's delta threshold     = .2385
   -f  --file    data file                   = ../etc/data/auto93.csv
   -F  --Far     distance to distant         = .95
   -g  --go      start-up action             = nothing
