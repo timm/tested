@@ -12,7 +12,7 @@
 -- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.</p>
 -- <p style="text-align: left;">
 -- Vars are global by default unless marked with "local" or 
--- defined in function argument lists.</p>
+-- defined in function argument lists.
 -- Also,  there is only one data structure called a "table".
 -- that can have numeric or symbolic keys.
 -- The tables start and end with {} and #t is length of a table
@@ -137,7 +137,7 @@ function clone(data,t,    data1)
 
 -- ## Update
 
--- Update `data` with  row `t``. If `data.cols`
+-- Update `data` with  row `t`. If `data.cols`
 -- does not exist, the use `t` to create `data.cols`.
 -- To avoid updating skipped columns, we only iterate
 -- over `cols.x` and `cols.y`.
@@ -151,7 +151,7 @@ function row(data,t)
   return data end
 
 -- Called by `row` to add one cells of data into a `col`.
--- `SYM`s just increment a symbol counts.   
+-- `SYM`s just increment a symbol counts.
 -- `NUM`s store `x` in a finite sized cache. When it
 -- fills to more than `the.Max`, then at probability 
 -- `the.Max/col.n` replace any existing item
@@ -318,14 +318,14 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
 
 -- ## Discretization
 
--- Return RANGEs that distinguish `rows1` from `rows2`.
+-- Return RANGEs that distinguish good rows from bad rows.
 -- To reduce the search space,
 -- values in `col` are mapped to small number of `bin`s.
-function bins(data,rows1,rows2)
+function bins(data,rowsGood,rowsBad)
   local out = {}
   for _,col in pairs(cols or data.cols.x) do
     local ranges = {}
-    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
+    for _,what in pairs({{rows=rowsGood,y=true},{rows=rowsBad,y=false}}) do
       for _,row in pairs(what.rows) do
         local x,k = row[col.at]
         if x ~= "?" then
