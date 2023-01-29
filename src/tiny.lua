@@ -16,7 +16,7 @@ OPTIONS:
   -M  --Max     numbers                     = 512
   -p  --p       dist coefficient            = 2
   -r  --rest    how many of rest to sample  = 4
-  -s  --seed    random number seed          = 10019
+  -s  --seed    random number seed          = 937162211
 ]]
 
 -- Magic expression to match keys and values from `help`
@@ -147,10 +147,11 @@ function div(col,    e)
 
 -- Report `mid` or `div` of `cols` (defaults to `data.cols.y`).
 function stats(data,  fun,cols,nPlaces,     tmp)
-  tmp = kap(cols or data.cols.y,
+  cols= cols or data.cols.y
+  tmp = kap(cols,
             function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end)
   tmp["N"] = #data.rows
-  return tmp end
+  return tmp,map(cols,mid)  end
 
 -- Normalize `n` 0..1.
 function norm(num,n)
@@ -280,7 +281,7 @@ function bins(data,rows1,rows2)
     end end end
     xys = sort(map(xys,itself), 
               function(a,b) return a.x.lo < b.x.lo end)
-    out[col.txt] = col.isSym and xys or merges(xys) end
+    out[#out+1] = col.isSym and xys or merges(xys) end
   return out end
 
 -- Map `x` into a small number of bins.
@@ -339,22 +340,27 @@ function showXY(xy,B,R,goal,     y)
 
 -- ## Contrast Sets
 
-function contrast(data,   best,rest,out,rule,tmp)
+function contrast(data,   best,rest,out,rule,tmp,data1,data2)
   best,rest = sway(data)
   out = {}
   for k,t in pairs(bins(data,best.rows, rest.rows)) do
     for _,xy in pairs(t) do
       push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,true)}) end end
   out = sort(out,gt"y")
-  stats0 = stats(data)
-  print(oo(stats0))
+  oo(stats(data))
+  oo(stats(data,div))
   for i=1,#out do
     rule = RULE(map(slice(out,1,i),function(xy) return xy.x end))
     tmp = accepts(rule, data.rows)
-    if tmp and #tmp>8 then 
+    if tmp and #tmp>#best.rows/2 then 
        data1  = clone(data,tmp) 
-       stats1 = stats(data1)
-       print(i,o(diffs(data.cols.y, data1.cols.y)))
+       print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
+       if data2 then
+         print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
+         print("","",o(stats(data1))) 
+         print("","",o(stats(data1,div)))
+       end
+       data2 = data1
 end end end
 
 function RULE(ranges,      t)
@@ -628,6 +634,7 @@ function egs.sway(    data,best,rest)
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
 
 function egs.bins(    data,best,rest)
+  print(rand())
   data = read(the.file)
   best,rest = sway(data)
   for k,t in pairs(bins(data,best.rows, rest.rows)) do
@@ -635,6 +642,7 @@ function egs.bins(    data,best,rest)
       print(xy.x.txt,xy.x.lo,xy.x.hi,rnd(value(xy.y, xy.B, xy.R))) end end end 
 
 function egs.contrast()
+  print(rand())
   contrast(read(the.file)) end
 
 -- ## Start-up
