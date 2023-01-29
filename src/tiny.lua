@@ -1,9 +1,49 @@
--- vim : ts=2 sw=2 et :
+--<!-- vim: set ts=2 sw=2 et : -->
+-- <p style="text-align: left;">
+-- Here, we play code golf with AI (most functionality, fewest lines).</p>
+--    
+-- ## How to read this code
+-- <p style="text-align: left;">
+-- This code starts with a help string and ends with a library of examples 
+-- (see "function egs.xyz()" at end of file). 
+-- Any of the examples can be run from the command line; e.g. "-g show" runs
+-- all the actions that start with "show". 
+-- All the settings in the help string can
+-- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
+-- Also,
+-- vars are global by default unless marked with "local" or 
+-- defined in function argument lists.</p>
+-- <p style="text-align: left;">
+-- Also,  there is only one data structure called a "table".
+-- that can have numeric or symbolic keys.
+-- The tables start and end with {} and #t is length of a table
+-- (and empty tables have #t==0).
+-- Tables can have numeric or symbolic fields. Note that
+-- `for pos,x in pairs(t) do` is the same as python's 
+-- `for pos,x in enumerate(t) do`.</p>
+-- <p style="text-align: left;">
+-- Global settings are stores in "the" table which is generated from
+-- "help". E.g. From the above the.budget =16.
+-- For all `key=value` in `the`, a command line flag `-k X` means `value`=X</p>
+-- <p style="text-align: left;">
+-- In the function arguments, the following conventions apply (usually):</p>
+--   
+-- -  n == number
+-- -  s == string
+-- -  t == table
+-- -  is == boolean
+-- -  x == anything
+-- -  fun == function
+-- -  UPPER = class (some factory for making similar things)
+-- -  lower = instance; e.g. sym is an instance of SYM
+-- -  xs == a table of "x"; e.g. "ns" is a list of numbers
+-- -  Two spaces denote start of optional args
+-- -  Four spaces denote start of local args. 
 local the,help = {}, [[
     
-tiny.lua : muli-objective semi-supervised explanation
+tiny.lua : multi-objective semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
-    
+
 OPTIONS:
   -b --bins     initial number of bins      = 16
   -c --cliffs   cliff's delta threshold     = .2385
@@ -18,28 +58,28 @@ OPTIONS:
   -r  --rest    how many of rest to sample  = 4
   -s  --seed    random number seed          = 937162211
 ]]
-
+-- -----------------------------------------------
 -- Magic expression to match keys and values from `help`
 local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
-
+  
  -- Name space trivia (so everything can call everything else).
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local accept,accepts,adds,add,any,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
-local diffs,dist,div,egs,fmt,gt,half,has,itself
+local diffs,dist,div,egs,extend,fmt,gt,half,has,itself
 local kap,keys,lines,locals,lt
 local main,many,map,merge,merged,merges,mid,norm,o,oo,per,push
 local rint,rand,read,rnd,row,rogues
-local Seed,showXY,showTree,sort,slice,stats,sway
+local Seed,showTree,sort,slice,stats,sway
 local tree,value
-local COL,COLS,DATA,NUM,RULE,SYM
+local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 local m = math
 
 -- ## Creation
 
 -- Generate a `NUM` or a `SYM`. Column
 -- names are a little language that    
--- e.g. makes `NUM`s if name starts in upper case;
+-- e.g. makes `NUM`s if name starts in upper case; or
 -- e.g. makes goals if the name is marked with
 -- the maximize (`+`) or minimize (`-`) or klass (`!`) symbol.
 function COL(n,s,    col)
@@ -61,7 +101,11 @@ function SYM(n,s)
   return {at=n or 0, txt=s or "", n=0, 
           isSym=true, has={}} end
 
--- Generate a set of `NUM`s or `SYM`s.
+-- Generate a set of `NUM`s or `SYM`s columns.
+-- Once created, all cols are stored in `all`
+-- while the non-skipped cols are also stored as
+-- either `cols.x` independent input variables or
+-- `cols.y` dependent goal variables.
 function COLS(ss,     col,cols)
   cols={names=ss, all={},x={},y={}}
   for n,s in pairs(ss) do  
@@ -74,7 +118,14 @@ function COLS(ss,     col,cols)
 -- `DATA` contain `rows`, summarized in `cols`.
 function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
 
--- Read a csv file into a new `DATA`.
+-- Given two columns `x,y`, `RANGE` tracks the y values seen in 
+-- `x` range `lo` to `hi`. Note that for symbolic columns, `lo` is
+-- always the same as `hi`.
+function RANGE(at,txt,lo,hi) 
+  return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
+
+-- Read a csv file into a new `DATA`. For each line,
+-- call `row` (defined below) to update the columns.
 function read(sfile,    data) 
   data=DATA()
   csv(sfile, function(t) row(data,t) end); return data end
@@ -89,6 +140,8 @@ function clone(data,t,    data1)
 
 -- Update `data` with  row `t``. If `data.cols`
 -- does not exist, the use `t` to create `data.cols`.
+-- To avoid updating skipped columns, we only iterate
+-- over `cols.x` and `cols.y`.
 function row(data,t)
   if data.cols  then
     push(data.rows,t)
@@ -98,12 +151,13 @@ function row(data,t)
   else data.cols = COLS(t) end 
   return data end
 
-
--- Add one item `x` into `col`.  
+-- Called by `row` to add one cells of data into a `col`.
 -- `SYM`s just increment a symbol counts.   
 -- `NUM`s store `x` in a finite sized cache. When it
--- fills up, then we probably replace any existing items
--- (selected at random).
+-- fills to more than `the.Max`, then at probability 
+-- `the.Max/col.n` replace any existing item
+-- (selected at random). If anything is added, the list
+-- may not longer be sorted so set `col.ok=false`.
 function add(col,x,  inc)
   if x ~= "?" then
     inc = inc or 1
@@ -117,9 +171,16 @@ function add(col,x,  inc)
         col.has[pos] = x
         col.ok = false end end end end 
 
--- Add items from `t` into `col`.
+-- Add multiple items from `t` into `col`. This is useful when `col` is being
+-- used outside of some DATA.
 function adds(col,t) 
   for _,x in pairs(t or {}) do add(col,x) end; return col end
+
+-- Extend a RANGE to cover `x` and `y`
+function extend(range,x,y)
+  range.lo = m.min(x, range.lo)
+  range.hi = m.max(x, range.hi)
+  add(range.y, y) end
 
 -- ## Query
 
@@ -258,30 +319,22 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
 
 -- ## Discretization
 
--- Return ranges that distinguish `rows1` from `rows2`.
--- Each range is a pair` (x=num,y=sym)` where `num` 
--- summarizes a column `col` and `sym` list the class labels 
--- see for each `num` value. To reduce the search space,
+-- Return RANGEs that distinguish `rows1` from `rows2`.
+-- To reduce the search space,
 -- values in `col` are mapped to small number of `bin`s.
 function bins(data,rows1,rows2)
   local out = {}
   for _,col in pairs(cols or data.cols.x) do
-    local xys = {}
+    local ranges = {}
     for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
       for _,row in pairs(what.rows) do
         local x,k = row[col.at]
         if x ~= "?" then
           k = bin(col,x)
-          xys[k] = xys[k] or {x= {at=col.at, txt=col.txt,lo=x, hi=x,
-                                  B= #rows1, R= #rows2},
-                              y= SYM()}
-          xys[k].x.lo = m.min(x, xys[k].x.lo)
-          xys[k].x.hi = m.max(x, xys[k].x.hi)
-          add(xys[k].y, what.y) 
-    end end end
-    xys = sort(map(xys,itself), 
-              function(a,b) return a.x.lo < b.x.lo end)
-    out[#out+1] = col.isSym and xys or merges(xys) end
+          ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
+          extend(ranges[k], x, what.y) end end end
+    ranges = sort(map(ranges,itself),lt"lo")
+    out[#out+1] = col.isSym and ranges or merges(ranges) end
   return out end
 
 -- Map `x` into a small number of bins.
@@ -290,32 +343,32 @@ function bin(col,x,      tmp)
   tmp = (col.hi - col.lo)/(the.bins - 1)
   return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
 
--- Given a list `{{num,sym},..}`, try fusing adjacent items.
--- Stop when no more fuse-ings can be found. When done,
+-- Given a sorted list of ranges, try fusing adjacent items
+-- (stopping when no more fuse-ings can be found). When done,
 -- make the ranges run from minus to plus infinity
--- (with no gaps in between each)
-function merges(xys0,     noGaps)
+-- (with no gaps in between).
+function merges(ranges0,     noGaps)
   function noGaps(t)
-    for j = 2,#t do t[j].x.lo = t[j-1].x.hi end
-    t[1].x.lo  = -m.huge
-    t[#t].x.hi =  m.huge
+    for j = 2,#t do t[j].lo = t[j-1].hi end
+    t[1].lo  = -m.huge
+    t[#t].hi =  m.huge
     return t 
   end ------
-  local xys1,j,a,b,y = {},1
-  while j <= #xys0 do
-    a, b = xys0[j], xys0[j+1]
+  local ranges1,j,a,b,y = {},1
+  while j <= #ranges0 do
+    a, b = ranges0[j], ranges0[j+1]
     if b then
       y = merged(a.y, b.y)
       if y then
-        a.x.hi, a.y = b.x.hi, y
+        a.hi, a.y = b.hi, y
         j = j+1 end end
-    push(xys1,a)
+    push(ranges1,a)
     j = j+1 
   end
-  return #xys0==#xys1 and noGaps(xys0) or merges(xys1) end
+  return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1) end
 
--- Return two cols combined, but only when    
--- the whole is simpler than the parts.
+-- If the whole is not more complex than the parts, return the
+-- combination of 2 `col`s.
 function merged(col1,col2,   new)
   new = merge(col1,col2)
   if div(new) <= 1.01*(div(col1)*col1.n + div(col2)*col2.n)/new.n then
@@ -330,13 +383,6 @@ function merge(col1,col2,    new)
        new.lo = m.min(col1.lo, col2.lo)
        new.hi = m.max(col1.hi, col2.hi) end 
   return new end
-
--- Print an `XY`.
-function showXY(xy,B,R,goal,     y)
-  y= fmt("%s\t%s",rnd(value(xy.y,B,R,goal)), o(xy.y.has)) 
-  if   xy.x.isSym 
-  then print(xy.x.txt,mid(xy.x),"",y)
-  else print(xy.x.txt,xy.x.lo,xy.x.hi,y) end end
 
 -- ## Contrast Sets
 
@@ -638,8 +684,9 @@ function egs.bins(    data,best,rest)
   data = read(the.file)
   best,rest = sway(data)
   for k,t in pairs(bins(data,best.rows, rest.rows)) do
-    for _,xy in pairs(t) do
-      print(xy.x.txt,xy.x.lo,xy.x.hi,rnd(value(xy.y, xy.B, xy.R))) end end end 
+    for _,range in pairs(t) do
+      print(range.txt,range.lo,range.hi,
+           rnd(value(range.y, #best.rows,#rest.rows))) end end end 
 
 function egs.contrast()
   print(rand())
