@@ -9,11 +9,10 @@
 -- Any of the examples can be run from the command line; e.g. "-g show" runs
 -- all the actions that start with "show". 
 -- All the settings in the help string can
--- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
--- Also,
--- vars are global by default unless marked with "local" or 
--- defined in function argument lists.</p>
+-- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.</p>
 -- <p style="text-align: left;">
+-- Vars are global by default unless marked with "local" or 
+-- defined in function argument lists.</p>
 -- Also,  there is only one data structure called a "table".
 -- that can have numeric or symbolic keys.
 -- The tables start and end with {} and #t is length of a table
