@@ -24,13 +24,15 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 
  -- Name space trivia (so everything can call everything else).
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
-local adds,add,any,better,bin,bins
-local copy,cli,csv,cells,cliffsDelta,clone,coerce
-local diffs,dist,div,egs,fmt,half,has,itself,kap,keys,lines,lt
+local accept,accepts,adds,add,any,better,bin,bins
+local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
+local diffs,dist,div,egs,fmt,gt,half,has,itself
+local kap,keys,lines,locals,lt
 local main,many,map,merge,merged,merges,mid,norm,o,oo,per,push
 local rint,rand,read,rnd,row,rogues
-local Seed,showXY,showTree,sort,stats,sway,tree,value
-local COL,COLS,DATA,NUM,SYM
+local Seed,showXY,showTree,sort,slice,stats,sway
+local tree,value
+local COL,COLS,DATA,NUM,RULE,SYM
 local m = math
 
 -- ## Creation
@@ -79,7 +81,7 @@ function read(sfile,    data)
 
 -- Replicate structure of `data`.
 function clone(data,t,    data1)
-  data1=row(DATA(), data.cols.names)
+  data1 = row(DATA(), data.cols.names)
   for _,t in pairs(t or {}) do row(data1,t) end
   return data1 end
 
@@ -155,7 +157,7 @@ function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
 -- Score a distribution.
-function value(sym,    B,R,goal,b,r)
+function value(sym,  B,R,goal,    b,r)
   goal,B,R = goal or true, B or 1, R or 1
   b,r = 0,0
   for x,n in pairs(sym.has) do
@@ -163,95 +165,13 @@ function value(sym,    B,R,goal,b,r)
   b,r = b/(B+1/m.huge), r/(R+1/m.huge)
   return b^2/(b+r) end
 
--- ## Discretization
-
--- Return ranges that distinguish `rows1` from `rows2`.
-function bins(data,rows1,rows2)
-  local out = {}
-  for _,col in pairs(cols or data.cols.x) do
-    local xys = {}
-    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
-      for _,row in pairs(what.rows) do
-        local x,k = row[col.at]
-        if x ~= "?" then
-          k = bin(col,x)
-          xys[k] = xys[k] or {x=NUM(col.at,col.txt), y=SYM()}
-          add(xys[k].x, x)
-          add(xys[k].y, what.y) 
-    end end end
-    xys = sort(map(xys,itself), function(a,b) return a.x.lo < b.x.lo end) 
-    out[col.txt] = col.isSym and xys or merges(xys) end
-  return out end
-
--- Map `x` into a small number of bins.
-function bin(col,x,      tmp)
-  if x=="?" or col.isSym then return x end
-  tmp = (col.hi - col.lo)/(the.bins - 1)
-  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
-
--- Combine two `cols`.
-function merge(col1,col2,    new)
-  new = copy(col1)
-  if   col1.isSym 
-  then for x,n in pairs(col2.has) do add(new,x,n) end
-  else for _,n in pairs(col2.has) do add(new,n)   end
-       new.lo = m.min(col1.lo, col2.lo)
-       new.hi = m.max(col1.hi, col2.hi) end 
-  return new end
-
--- Return two cols combined, but only when    
--- the whole is simpler than the parts.
-function merged(col1,col2,   new)
-  new = merge(col1,col2)
-  if div(new) <= 1.01*(div(col1)*col1.n + div(col2)*col2.n)/new.n then
-    return new end end
-
--- Given a list `{{num,sym},..}`, try fusing adjacent items.
-function merges(xys0,     bridge)
-  function bridge(t)
-    for j = 2,#t do t[j].x.lo = t[j-1].x.hi end
-    t[1].x.lo  = -m.huge
-    t[#t].x.hi =  m.huge
-    return t 
-  end ------
-  local xys1,j,a,b,y = {},1
-  while j <= #xys0 do
-    a, b = xys0[j], xys0[j+1]
-    if b then
-      y = merged(a.y, b.y)
-      if y then
-        a = {x=merge(a.x, b.x), y=y}
-        j = j+1 end end
-    push(xys1,a)
-    j = j+1 
-  end
-  return #xys0==#xys1 and bridge(xys0) or merges(xys1) end
-
--- Print an `XY`.
-function showXY(xy,B,R,goal)
-  print(xy.x.lo,xy.x.hi,value(xy.y,B,R,goal), o(xy.y.has)) end
-
 -- ## Clustering
 
--- Return distances 0..1 between rows `t1` and `t2`.   
--- If any values are unknown, assume max distances.
-function dist(data,t1,t2,  cols,    d,n,dist1)
-  function dist1(col,x,y)
-    if x=="?" and y=="?" then return 1 end
-    if   col.isSym
-    then return x==y and 0 or 1 
-    else x,y = norm(col,x), norm(col,y)
-         if x=="?" then x= y<.5 and 1 or 1 end	
-         if y=="?" then y= x<.5 and 1 or 1 end	
-         return m.abs(x-y) end 
-  end ---------
-  d, n = 0, 1/m.huge	
-  for _,col in pairs(cols or data.cols.x) do
-    n = n + 1
-    d = d + dist1(col, t1[col.at], t2[col.at])^the.p end 
-  return (d/n)^(1/the.p) end
- 
--- Divide `rows` in half (defaults to `data.rows`).
+-- Divide `rows` in half (defaults to `data.rows`) by
+-- dividing the data via their distance to two remote points.
+-- To speed up finding those remote points, only look at
+-- `some` of the data. Also, to avoid outliers, only look
+-- `the.Far` (say, 955) of the way across the space. 
 function half(data,  rows,cols,above)
   local left,right,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
@@ -267,7 +187,7 @@ function half(data,  rows,cols,above)
     push(n <= #rows/2 and left or right, two.row) end
   return left,right,A,B,c end
 
--- Recursively divide the `rows`.
+-- Recursively bi-divide the `rows`. 
 function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
   here = {data=clone(data,rows)}
@@ -277,7 +197,25 @@ function tree(data,  rows,cols,above,     here)
     here.right = tree(data, right, cols, B) end
   return here end 
 
--- Display a tree.
+-- Return distances 0..1 between rows `t1` and `t2`.   
+-- If any values are unknown, assume max distances.
+function dist(data,t1,t2,  cols,    d,n,dist1)
+  function dist1(col,x,y)
+    if x=="?" and y=="?" then return 1 end
+    if   col.isSym
+    then return x==y and 0 or 1 
+    else x,y = norm(col,x), norm(col,y)
+         if x=="?" then x= y<.5 and 1 or 1 end	
+         if y=="?" then y= x<.5 and 1 or 1 end	
+         return m.abs(x-y) end 
+  end --------------
+  d, n = 0, 1/m.huge	
+  for _,col in pairs(cols or data.cols.x) do
+    n = n + 1
+    d = d + dist1(col, t1[col.at], t2[col.at])^the.p end 
+  return (d/n)^(1/the.p) end
+
+-- Display a tree of clusters.
 function showTree(tree,  lvl,post)
   if tree then 
     lvl  = lvl or 0
@@ -288,7 +226,8 @@ function showTree(tree,  lvl,post)
 
 -- ## Optimization
 
--- Recursively prune the worst half the data.
+-- Recursively prune the worst half the data. Return
+-- the survivors and some sample of the rest.
 function sway(data,     worker,best,rest)
   function worker(rows,worse,  above)
     if   #rows <= (#data.rows)^the.min 
@@ -302,6 +241,11 @@ function sway(data,     worker,best,rest)
   return clone(data,best), clone(data,rest) end 
 
 -- When is one `row1` better than another?
+-- This is Zitzler's indicator predicate that
+-- judges the domination status 
+-- of pair of individuals by running a “what-if” query. 
+-- It checks what we lose when we jump from one 
+-- individual to another, and back again.
 function better(data,row1,row2,    s1,s2,ys,x,y) 
   s1,s2,ys,x,y = 0,0,data.cols.y
   for _,col in pairs(ys) do
@@ -311,6 +255,132 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
     s2 = s2 - m.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
 
+-- ## Discretization
+
+-- Return ranges that distinguish `rows1` from `rows2`.
+-- Each range is a pair` (x=num,y=sym)` where `num` 
+-- summarizes a column `col` and `sym` list the class labels 
+-- see for each `num` value. To reduce the search space,
+-- values in `col` are mapped to small number of `bin`s.
+function bins(data,rows1,rows2)
+  local out = {}
+  for _,col in pairs(cols or data.cols.x) do
+    local xys = {}
+    for _,what in pairs({{rows=rows1,y=true},{rows=rows2,y=false}}) do
+      for _,row in pairs(what.rows) do
+        local x,k = row[col.at]
+        if x ~= "?" then
+          k = bin(col,x)
+          xys[k] = xys[k] or {x= {at=col.at, txt=col.txt,lo=x, hi=x,
+                                  B= #rows1, R= #rows2},
+                              y= SYM()}
+          xys[k].x.lo = m.min(x, xys[k].x.lo)
+          xys[k].x.hi = m.max(x, xys[k].x.hi)
+          add(xys[k].y, what.y) 
+    end end end
+    xys = sort(map(xys,itself), 
+              function(a,b) return a.x.lo < b.x.lo end)
+    out[col.txt] = col.isSym and xys or merges(xys) end
+  return out end
+
+-- Map `x` into a small number of bins.
+function bin(col,x,      tmp)
+  if x=="?" or col.isSym then return x end
+  tmp = (col.hi - col.lo)/(the.bins - 1)
+  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
+
+-- Given a list `{{num,sym},..}`, try fusing adjacent items.
+-- Stop when no more fuse-ings can be found. When done,
+-- make the ranges run from minus to plus infinity
+-- (with no gaps in between each)
+function merges(xys0,     noGaps)
+  function noGaps(t)
+    for j = 2,#t do t[j].x.lo = t[j-1].x.hi end
+    t[1].x.lo  = -m.huge
+    t[#t].x.hi =  m.huge
+    return t 
+  end ------
+  local xys1,j,a,b,y = {},1
+  while j <= #xys0 do
+    a, b = xys0[j], xys0[j+1]
+    if b then
+      y = merged(a.y, b.y)
+      if y then
+        a.x.hi, a.y = b.x.hi, y
+        j = j+1 end end
+    push(xys1,a)
+    j = j+1 
+  end
+  return #xys0==#xys1 and noGaps(xys0) or merges(xys1) end
+
+-- Return two cols combined, but only when    
+-- the whole is simpler than the parts.
+function merged(col1,col2,   new)
+  new = merge(col1,col2)
+  if div(new) <= 1.01*(div(col1)*col1.n + div(col2)*col2.n)/new.n then
+    return new end end
+
+-- Combine two `cols`.
+function merge(col1,col2,    new)
+  new = copy(col1)
+  if   col1.isSym 
+  then for x,n in pairs(col2.has) do add(new,x,n) end
+  else for _,n in pairs(col2.has) do add(new,n)   end
+       new.lo = m.min(col1.lo, col2.lo)
+       new.hi = m.max(col1.hi, col2.hi) end 
+  return new end
+
+-- Print an `XY`.
+function showXY(xy,B,R,goal,     y)
+  y= fmt("%s\t%s",rnd(value(xy.y,B,R,goal)), o(xy.y.has)) 
+  if   xy.x.isSym 
+  then print(xy.x.txt,mid(xy.x),"",y)
+  else print(xy.x.txt,xy.x.lo,xy.x.hi,y) end end
+
+-- ## Contrast Sets
+
+function contrast(data,   best,rest,out,rule,tmp)
+  best,rest = sway(data)
+  out = {}
+  for k,t in pairs(bins(data,best.rows, rest.rows)) do
+    for _,xy in pairs(t) do
+      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,true)}) end end
+  out = sort(out,gt"y")
+  stats0 = stats(data)
+  print(oo(stats0))
+  for i=1,#out do
+    rule = RULE(map(slice(out,1,i),function(xy) return xy.x end))
+    tmp = accepts(rule, data.rows)
+    if tmp and #tmp>8 then 
+       data1  = clone(data,tmp) 
+       stats1 = stats(data1)
+       print(i,o(diffs(data.cols.y, data1.cols.y)))
+end end end
+
+function RULE(ranges,      t)
+  t={}
+  for _,range in pairs(ranges) do
+    t[range.txt] = t[range.txt] or {}
+    push(t[range.txt], range) end 
+  return t end
+
+function accepts(rule,rows,     t,fun)
+  fun = function(row) if accept(rule,row) then return row end end
+  t   = map(rows,fun)
+  if #t < #rows then return t end end
+
+function accept(rule,row,     ok,x)
+  for _,ranges in pairs(rule)  do
+    ok = false
+    for _,r in pairs(ranges) do
+      x = row[r.at]
+      if x == "?"               then ok=true;break end 
+      if r.lo==r.hi and r.lo==x then ok=true;break end
+      if r.lo<=x    and x< r.hi then ok=true;break end 
+    end
+    if not ok then return false end end 
+  return true end 
+      
 -- ## Lib
 -- ### Meta
 
@@ -385,23 +455,25 @@ function csv(sFilename,fun)
 
 -- Push an item `x` onto  a list.    
 -- Return a list, sorted on `fun`.   
--- Return a function that sorts on a field `x`.    
+-- Return a function sorting down on field `x`.    
+-- Return a function sorting up on field `x`.    
 -- Return one item at random.    
 -- Return many items, selected at random.   
 -- Map a function on  table (results in items 1,2,3...)    
 push = function(t,x) t[#t+1]=x; return x end
 sort = function(t,f) table.sort(t,f); return t end
 lt   = function(x)   return function(a,b) return a[x] < b[x] end end
+gt   = function(x)   return function(a,b) return a[x] > b[x] end end
 any  = function(t)   return t[rint(#t)] end
 many = function(t,n,    u) u={}; for i=1,n do push(u, any(t)) end; return u end 
 map  = function(t, fun) return kap(t, function(_,v) return fun(v) end) end
 keys = function(t)      return sort(kap(t,function(k,_) return k end)) end
 
--- Map a function  on  table (results in items key1,key2,...)
+-- Map a function on table (results in items key1,key2,...)
 function kap(t, fun,     u) 
   u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
 
--- Return the `p`-ratio item in `t`.
+-- Return the `p`-ratio item in `t`; e.g. `per(t,.5)` returns the medium.
 function per(t,p) 
   p=math.floor(((p or .5)*#t)+.5); return t[m.max(1,m.min(#t,p))] end
 
@@ -410,22 +482,31 @@ function copy(t,    u)
   if  type(t)~="table" then return t end
   u={}; for k,v in pairs(t) do u[k] = copy(v) end; return u end
 
+-- Return a portion of `t`; go,stop,inc defaults to 1,#t,1.
+-- Negative indexes are supported.
+function slice(t, go, stop, inc,    u) --> t; return `t` from `go`(=1) to `stop`(=#t), by `inc`(=1)
+  if go   and go   < 0 then go=#t+go     end
+  if stop and stop < 0 then stop=#t+stop end
+  u={}; for j=(go or 1)//1,(stop or #t)//1,(inc or 1)//1 do u[1+#u]=t[j] end; return u end
+
 -- ### Strings
 
 -- `fmt` means `string.format`.
 fmt  = string.format
 
--- Print a nested table.
+-- Print a nested table (sorted by the keys of the table).
 function oo(t) print(o(t)); return t end
 function o(t,    fun) 
   if type(t)~="table" then return tostring(t) end
   function fun (k,v) return fmt(":%s %s",k,o(v)) end 
   return "{"..table.concat(#t>0  and map(t,o) or sort(kap(t,fun))," ").."}" end
 
--- ### Test engine
+-- ### Main Control
 
--- Return to the operating system
--- the number of failures after running `funs`.
+-- Rune all the functions whose name matches
+-- the command-line flag `-g xx`. Show the help
+-- string if the `-h` flag is set. Return to the operating
+-- system the number of failing `funs`.
 function main(funs,the,help,    fails,saved,names)
   fails, saved, names = 0, copy(the), keys(funs)
   if   the.help 
@@ -441,12 +522,15 @@ function main(funs,the,help,    fails,saved,names)
   rogues()
   return fails end
 
--- Return any rogue locals.
+-- Return any rogue locals (i.e. all those we did not
+-- trap in the `b4` list at top of file).
 function rogues() 
   for k,v in pairs(_ENV) do 
     if not b4[k] then print(fmt("#W ?%s %s",k,type(v))) end end end
 
--- Update `t` using command-line options.
+-- Update `t` using command-line options. For boolean
+-- flags, just flip the default values. For others, read
+-- the new value from the command line.
 function cli(t)
   for k,v in pairs(t) do
     v = tostring(v)
@@ -543,33 +627,30 @@ function egs.sway(    data,best,rest)
   print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
 
-function egs.bins(    data,best,rest,all)
+function egs.bins(    data,best,rest)
   data = read(the.file)
   best,rest = sway(data)
-  all = {}
   for k,t in pairs(bins(data,best.rows, rest.rows)) do
-    print(k)
     for _,xy in pairs(t) do
-      push(all, xy)
-      showXY(xy,#best.rows, #rest.rows, true) end end
-  all = sort(all,function(a,b) return v(a.y) > v(b.y) end)
-  end 
+      print(xy.x.txt,xy.x.lo,xy.x.hi,rnd(value(xy.y, xy.B, xy.R))) end end end 
+
+function egs.contrast()
+  contrast(read(the.file)) end
 
 -- ## Start-up
 
--- More LUA namespace trivia
-local _t,_i={},1
+--  Parse the `help` string to make the `the` config variables.
+help:gsub(magic, function(k,v) the[k] = coerce(v) end)
+
+-- Bundle up the locals.
+local _locals,_i={},1 
 while true do
   local _name, _value = debug.getlocal(1, _i)
   if not _name then break end
-  if _name:sub(1,1) ~= "_" then _t[_name]=_value end
+  if _name:sub(1,1) ~= "_" then _locals[_name]=_value end
   _i = _i + 1 end
 
-for k,v in pairs(_t) do print(k,v) end
---  Parse `help` to make the `the` config options.
-help:gsub(magic, function(k,v) the[k] = coerce(v) end)
--- Return the failures to the operating systems.
-if     pcall(debug.getlocal,4,1) -- if loaded by other files
-then   return _t                 -- then just return this code
-else   os.exit( -- else, call `main` and return its results
-        main(egs,cli(the),help)) end
+-- If being loaded by other code, then return locals.
+if pcall(debug.getlocal,4,1) then return _locals end
+-- Else, return whatever `main` returns.
+os.exit( main(egs,cli(the),help) ) 
