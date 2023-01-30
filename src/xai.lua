@@ -511,7 +511,8 @@ function cliffsDelta(ns1,ns2)
 -- Given two tables with the same keys, report if their
 -- values are different.
 function diffs(nums1,nums2)
-  return kap(nums1,function(k,nums) return cliffsDelta(nums.has,nums2[k].has),nums.txt end) end
+  return kap(nums1, function(k,nums) 
+              return cliffsDelta(nums.has,nums2[k].has),nums.txt end) end
 
 -- ### String to thing
 
