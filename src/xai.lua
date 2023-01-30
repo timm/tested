@@ -3,22 +3,22 @@
 -- This code supports multi-goal semi-supervised explanation.  Here,  optimization is treated as a kind of data mining; i.e.
 -- we recursively bi-cluster (using the distance to two remote points), all the while pruning the  "worst" half of the data (as measured by a multi-goal domination predicate).
 -- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150>
--- During this, we  only label one or two points per cluster. Afterwards, we   generate rules from the delta between best cluster and the rest.</p>
+-- During this, we  only label one or two points per cluster. Afterwards, 
+-- the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
 -- <p style="text-align: left;">
 -- The aim here was to achieve as much functionality in as few lines as possible
 -- (to simplify teaching these ideas as well as any further experimentation).
 -- All the code for the above functionality comes in at just
 -- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
 -- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.
- -- </p>
+ -- </p><hr>
 -- <center> <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
 -- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
 -- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
 --  src="https://img.shields.io/badge/language-lua-orange"> <img 
---  src="https://img.shields.io/badge/purpose-teaching-brightgreen"> </center></p>
---         
+--  src="https://img.shields.io/badge/purpose-teaching-brightgreen"> </center></p><hr>
 -- <p style="text-align: left;">
 -- To read this code:   <br> 
 -- FIRST skim the `help` string (at top);  <br>   
@@ -35,6 +35,8 @@
 -- <p style="text-align: left;">
 -- In the function arguments, the following conventions apply (usually):</p>
 --     
+-- -  Two spaces denote start of optional args
+-- -  Four spaces denote start of local args. 
 -- -  n == number
 -- -  s == string
 -- -  t == table
@@ -44,8 +46,6 @@
 -- -  UPPER = class (some factory for making similar things)
 -- -  lower = instance; e.g. sym is an instance of SYM
 -- -  xs == a table of "x"; e.g. "ns" is a list of numbers
--- -  Two spaces denote start of optional args
--- -  Four spaces denote start of local args. 
 --     
 -- <p style="text-align: left;">
 -- In this language (LUA) vars are global by default unless marked with "local" or 
@@ -88,7 +88,7 @@ local accept,accepts,adds,add,any,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
 local diffs,dist,div,egs,extend,fmt,gt,half,has,itself
 local kap,keys,lines,locals,lt
-local main,many,map,merge,merged,merges,mid,norm,o,oo,per,push
+local main,many,map,merge,merge2,mergeAny,mid,norm,o,oo,per,push
 local rint,rand,read,rnd,row,rogues
 local Seed,showTree,sort,slice,stats,sway
 local tree,value
@@ -188,7 +188,7 @@ function row(data,t)
   return data end
 
 -- Update one COL with `x` (values from one cells of one row).
--- Called by the `row`.
+-- Used  by (e.g.) the `row` and `adds` function.
 -- `SYM`s just increment a symbol counts.
 -- `NUM`s store `x` in a finite sized cache. When it
 -- fills to more than `the.Max`, then at probability 
@@ -224,13 +224,14 @@ function extend(range,n,s)
 
 -- A query that returns contents of a column. If `col` is a `NUM` with
 -- unsorted contents, then sort before return the contents.
+-- Called by (e.g.) the `mid` and `div` functions.
 function has(col)
   if not col.isSym and not col.ok then sort(col.has) end 
   col.ok = true -- the invariant here is that "has" is ready to be shared.
   return col.has end
 
 -- A query that  returns a `cols`'s central tendency  
--- (mode for `SYM`s and median for `NUM`s).
+-- (mode for `SYM`s and median for `NUM`s). Called by (e.g.) the `stats` function.
 function mid(col,    mode,most)
   if   col.isSym 
   then most,mode = 0 
@@ -242,7 +243,9 @@ function mid(col,    mode,most)
 -- (entropy for `SYM`s and standard deviation for `NUM`s)..
 function div(col,    e)
   if   col.isSym 
-  then e=0; for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end; return e
+  then e=0
+       for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end
+       return e
   else return (per(has(col),.9) - per(has(col), .1))/2.58 end end
 
 -- A query that returns `mid` or `div` of `cols` (defaults to `data.cols.y`).
@@ -253,7 +256,7 @@ function stats(data,  fun,cols,nPlaces,     tmp)
   tmp["N"] = #data.rows
   return tmp,map(cols,mid)  end
 
--- A query that normalizes `n` 0..1.
+-- A query that normalizes `n` 0..1. Called by (e.g.) the `dist` function.
 function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
@@ -288,8 +291,9 @@ function dist(data,t1,t2,  cols,    d,n,dist1)
 -- This is Zitzler's indicator predicate that
 -- judges the domination status 
 -- of pair of individuals by running a “what-if” query. 
--- It checks what we lose when we jump from one 
--- individual to another, and back again.
+-- It checks what we lose if we (a) jump from one 
+-- individual to another (see `s1`), or if we (b) jump the other way (see `s2`).
+-- The jump that losses least indicates which is the best row.
 function better(data,row1,row2,    s1,s2,ys,x,y) 
   s1,s2,ys,x,y = 0,0,data.cols.y
   for _,col in pairs(ys) do
@@ -305,7 +309,7 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
 -- dividing the data via their distance to two remote points.
 -- To speed up finding those remote points, only look at
 -- `some` of the data. Also, to avoid outliers, only look
--- `the.Far` (say, 955) of the way across the space. 
+-- `the.Far=.95` (say) of the way across the space. 
 function half(data,  rows,cols,above)
   local left,right,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
@@ -361,6 +365,9 @@ function sway(data,     worker,best,rest)
 -- Return RANGEs that distinguish sets of rows (stored in `rowss`).
 -- To reduce the search space,
 -- values in `col` are mapped to small number of `bin`s.
+-- For NUMs, that number is `the.bins=16` (say) (and after dividing
+-- the column into, say, 16 bins, then we call `mergeAny` to see
+-- how many of them can be combined with their neighboring bin).
 function bins(cols,rowss)
   local out = {}
   for _,col in pairs(cols) do
@@ -373,11 +380,12 @@ function bins(cols,rowss)
           ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
           extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
-    out[1+#out] = col.isSym and ranges or merges(ranges) end
+    out[1+#out] = col.isSym and ranges or mergeAny(ranges) end
   return out end
 
 -- Map `x` into a small number of bins. `SYM`s just get mapped
 -- to themselves but `NUM`s get mapped to one of `the.bins` values.
+-- Called by function `bins`.
 function bin(col,x,      tmp)
   if x=="?" or col.isSym then return x end
   tmp = (col.hi - col.lo)/(the.bins - 1)
@@ -387,34 +395,37 @@ function bin(col,x,      tmp)
 -- (stopping when no more fuse-ings can be found). When done,
 -- make the ranges run from minus to plus infinity
 -- (with no gaps in between).
-function merges(ranges0,     noGaps)
+-- Called by function `bins`.
+function mergeAny(ranges0,     noGaps)
   function noGaps(t)
     for j = 2,#t do t[j].lo = t[j-1].hi end
     t[1].lo  = -m.huge
     t[#t].hi =  m.huge
     return t 
   end ------
-  local ranges1,j,a,b,y = {},1
+  local ranges1,j,left,right,y = {},1
   while j <= #ranges0 do
-    a, b = ranges0[j], ranges0[j+1]
-    if b then
-      y = merged(a.y, b.y)
+    left, right = ranges0[j], ranges0[j+1]
+    if right then
+      y = merge2(left.y, right.y)
       if y then
-        a.hi, a.y = b.hi, y
-        j = j+1 end end
-    push(ranges1,a)
+        j = j+1 -- next round, skip over right.
+        left.hi, left.y = right.hi, y end end
+    push(ranges1,left)
     j = j+1 
   end
-  return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1) end
+  return #ranges0==#ranges1 and noGaps(ranges0) or mergeAny(ranges1) end
 
--- If the parts are more complex than the whole, then return the 
+-- If the whole is as good (or simpler) than the parts,
+-- then return the 
 -- combination of 2 `col`s.
-function merged(col1,col2,   new)
+-- Called by function `mergeMany`.
+function merge2(col1,col2,   new)
   new = merge(col1,col2)
   if div(new) <= (div(col1)*col1.n + div(col2)*col2.n)/new.n then
     return new end end
 
--- Combine two `cols`.
+-- Merge two `cols`. Called by function `merge2`.
 function merge(col1,col2,    new)
   new = copy(col1)
   if   col1.isSym 
@@ -737,15 +748,15 @@ function egs.contrast()
 --  Parse the `help` string to make the `the` config variables.
 help:gsub(magic, function(k,v) the[k] = coerce(v) end)
 
--- Bundle up the locals into `_locals`.
+-- If not being loaded by other file, then return whatever `main` returns.
+if   not pcall(debug.getlocal,4,1) 
+then os.exit( main(egs, cli(the), help) ) end
+
+-- Else, bundle the locals (so the other file can use them), and return them.
 local _locals,_i={},1 
 while true do
   local _name, _value = debug.getlocal(1, _i)
   if not _name then break end
   if _name:sub(1,1) ~= "_" then _locals[_name]=_value end
   _i = _i + 1 end
-
--- If being loaded by other code, then return the `_locals`.
-if pcall(debug.getlocal,4,1) then return _locals end
--- Else, return whatever `main` returns.
-os.exit( main(egs,cli(the),help) ) 
+return _locals  

@@ -48,7 +48,6 @@ about:
 ~/tmp/%.html: %.lua  ## .lua ==> .html
 	 docco -l classic -o ~/tmp $^
 	 cp $R/etc/docco.css ~/tmp
-	 open $@
 
 # lib.md: ../4readme/readme.lua lib.lua  ## update lib.md
 # 	echo "# $@"
