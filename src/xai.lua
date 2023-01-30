@@ -1,4 +1,3 @@
-#!/usr/bin/env lua
 --<!-- vim: set syntax=lua ts=2 sw=2 et : -->
 -- <p style="text-align: left;">
 -- This code supports multi-goal semi-supervised explanation.  Here,  optimization is treated as a kind of data mining; i.e.
