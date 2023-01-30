@@ -3,15 +3,17 @@
 -- src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png"
 -- align=right width=150><p style="text-align: left;">
 -- <i class="fa-solid fa-align-left fa-golf-ball-tee fa-2x"></i>
--- Here, we play code golf with AI (most functionality, fewest lines). </p>
+-- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>.
+-- Here, we play code golf with AI (most functionality, fewest lines). 
+-- </p>
 -- <p style="text-align: left;">
 -- Specifically, this code implements optimization via data mining; i.e.
 -- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
 -- one or two points per cluster; generating rules from the delta between best cluster and the rest.<p>
 -- <p style="text-align: left;">
 -- All
- -- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
- -- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.</p>
+-- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
+ -- </p>
 -- <center> <a href="https://github.com/timm/tested/blob/main/src/tiny.lua">download</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
@@ -60,10 +62,10 @@
 -- `for pos,x in enumerate(t) do`.</p>
 local the,help = {}, [[
   
-brainless: a minimal tool for multi-goal semi-supervised explanation
+fittest: a minimal tool for multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
   
-USAGE: lua brainless.lua [OPTIONS] [-g ACTIONS]
+USAGE: lua fittest.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
@@ -151,8 +153,9 @@ function read(sfile,    data)
   data=DATA()
   csv(sfile, function(t) row(data,t) end); return data end
 
--- Replicate structure of `data`.
-function clone(data,t,    data1)
+-- Replicate structure of `data`. Optionally, load up the new
+-- `data1` with the rows inside `t`.
+function clone(data,  t,    data1)
   data1 = row(DATA(), data.cols.names)
   for _,t in pairs(t or {}) do row(data1,t) end
   return data1 end
@@ -161,6 +164,7 @@ function clone(data,t,    data1)
 
 -- Update `data` with  row `t`. If `data.cols`
 -- does not exist, the use `t` to create `data.cols`.
+-- Otherwise, add `t` to `data.rows` and update the summaries in `data.cols`.
 -- To avoid updating skipped columns, we only iterate
 -- over `cols.x` and `cols.y`.
 function row(data,t)
