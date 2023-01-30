@@ -1,42 +1,38 @@
 --<!-- vim: set ts=2 sw=2 et : -->
--- <img 
--- src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" 
--- align=right width=200><p style="text-align: left;">
+-- <a href="https://raw.githubusercontent.com/timm/tested/main/src/brainless.lua"
+-- class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#FD6C6C; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+-- <img style="padding:3px;"
+-- src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png"
+-- align=right width=130><p style="text-align: left;">
+-- <i class="fa-solid fa-align-left fa-golf-ball-tee fa-2x"></i>
 -- Here, we play code golf with AI (most functionality, fewest lines). 
--- Specifically: optimization via data mining; i.e.  recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
--- one or two points per cluster; generating rules from the delta between best cluster and the rest.<br>
+-- Specifically, this code implements optimization via data mining; i.e.
+-- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
+-- one or two points per cluster; generating rules from the delta between best cluster and the rest.</p>
 -- <center> <a href="https://github.com/timm/tested/blob/main/src/tiny.lua">src</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
 -- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
 -- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
 --  src="https://img.shields.io/badge/language-lua-orange"> <img 
---  src="https://img.shields.io/badge/purpose-teaching-green"> </center></p>
+--  src="https://img.shields.io/badge/purpose-teaching-brightgreen"> </center></p>
 --         
 -- <p style="text-align: left;">
--- To read this code, skim the `help` string (at top), then the library of examples at end
--- (e.g. "function egs.xyz()" at end of file). 
--- Any of the examples can be run from the command line; e.g. "-g show" runs
+-- To read this code:   <br> 
+-- FIRST skim the `help` string (at top);  <br>   
+-- SECOND browse the structs (see <a href="#create">Creation</a>");  <br> 
+-- THIRD read  the <a href="#egs">examples</a> at end (e.g. "function egs.xyz()")   </p>
+-- <p style="text-align: left;">
+-- Note that any of the examples can be run from the command line; 
+-- e.g. "-g show" runs
 -- all the actions that start with "show". 
--- All the settings in the help string can
--- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.</p>
--- <p style="text-align: left;">
--- In this language (LUA) vars are global by default unless marked with "local" or 
--- defined in function argument lists.
--- Also,  there is only one data structure called a "table".
--- that can have numeric or symbolic keys.
--- The tables start and end with {} and #t is length of a table
--- (and empty tables have #t==0).
--- Tables can have numeric or symbolic fields. Note that
--- `for pos,x in pairs(t) do` is the same as python's 
--- `for pos,x in enumerate(t) do`.</p>
--- <p style="text-align: left;">
--- In my code, global settings are stores in "the" table which is generated from
--- "help". E.g. From the above the.budget =16.
--- For all `key=value` in `the`, a command line flag `-k X` means `value`=X</p>
+-- Also, all the settings in the help string can
+-- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
+-- Those settings are stored in"the" table, which is generated from
+-- "help". </p>
 -- <p style="text-align: left;">
 -- In the function arguments, the following conventions apply (usually):</p>
---   
+--     
 -- -  n == number
 -- -  s == string
 -- -  t == table
@@ -48,24 +44,37 @@
 -- -  xs == a table of "x"; e.g. "ns" is a list of numbers
 -- -  Two spaces denote start of optional args
 -- -  Four spaces denote start of local args. 
+--     
+-- <p style="text-align: left;">
+-- In this language (LUA) vars are global by default unless marked with "local" or 
+-- defined in function argument lists.
+-- Also,  there is only one data structure called a "table".
+-- that can have numeric or symbolic keys.
+-- The tables start and end with {} and #t is length of a table
+-- (and empty tables have #t==0).
+-- Tables can have numeric or symbolic fields. Note that
+-- `for pos,x in pairs(t) do` is the same as python's 
+-- `for pos,x in enumerate(t) do`.</p>
 local the,help = {}, [[
-    
-tiny.lua : multi-objective semi-supervised explanation
+  
+brainless: a minimal tool for multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
-
+  
+USAGE: lua brainless.lua [OPTIONS] [-g ACTIONS]
+  
 OPTIONS:
-  -b  --bins    initial number of bins      = 16
-  -c  --cliffs  cliff's delta threshold     = .2385
-  -f  --file    data file                   = ../etc/data/auto93.csv
-  -F  --Far     distance to distant         = .95
-  -g  --go      start-up action             = nothing
-  -h  --help    show help                   = false
-  -H  --Halves  search space for clustering = 512
-  -m  --min     size of smallest cluster    = .5
-  -M  --Max     numbers                     = 512
-  -p  --p       dist coefficient            = 2
-  -r  --rest    how many of rest to sample  = 4
-  -s  --seed    random number seed          = 937162211
+  -b  --bins    initial number of bins       = 16
+  -c  --cliffs  cliff's delta threshold      = .2385
+  -f  --file    data file                    = ../etc/data/auto93.csv
+  -F  --Far     distance to distant          = .95
+  -g  --go      start-up action              = nothing
+  -h  --help    show help                    = false
+  -H  --Halves  search space for clustering  = 512
+  -m  --min     size of smallest cluster     = .5
+  -M  --Max     numbers                      = 512
+  -p  --p       dist coefficient             = 2
+  -r  --rest    how many of rest to sample   = 4
+  -s  --seed    random number seed           = 937162211
 ]]
 -- -----------------------------------------------
 -- Magic expression to match keys and values from `help`
@@ -84,7 +93,7 @@ local tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 local m = math
 
--- ## Creation
+-- ## <a name=create>Creation</a>
 
 -- Generate a `NUM` or a `SYM`. Column
 -- names are a little language that    
@@ -442,10 +451,10 @@ function accept(rule,row,     ok,x)
     if not ok then return false end end 
   return true end 
       
--- ## Lib
+-- ## Miscellaneous Support Code
 -- ### Meta
 
--- Return self.
+-- Return self
 function itself(x) return x end
 
 -- ### Maths
@@ -601,7 +610,7 @@ function cli(t)
     t[k] = coerce(v) end 
   return t end
 
--- ## Examples
+-- ## <a name=egs>Examples</a>
 
 -- Place to store examples.
 local egs = {}
@@ -706,7 +715,7 @@ function egs.contrast()
 --  Parse the `help` string to make the `the` config variables.
 help:gsub(magic, function(k,v) the[k] = coerce(v) end)
 
--- Bundle up the locals.
+-- Bundle up the locals into `_locals`.
 local _locals,_i={},1 
 while true do
   local _name, _value = debug.getlocal(1, _i)
@@ -714,7 +723,7 @@ while true do
   if _name:sub(1,1) ~= "_" then _locals[_name]=_value end
   _i = _i + 1 end
 
--- If being loaded by other code, then return locals.
+-- If being loaded by other code, then return the `_locals`.
 if pcall(debug.getlocal,4,1) then return _locals end
 -- Else, return whatever `main` returns.
 os.exit( main(egs,cli(the),help) ) 

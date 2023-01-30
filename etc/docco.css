@@ -1,4 +1,6 @@
 /*--------------------- Layout and Typography ----------------------------*/
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css";
+
 html { height: 100%; }
 body {
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
