@@ -135,9 +135,10 @@ function COLS(ss,     col,cols)
       push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 
--- Create a RANGE  that tracks the y values seen in 
--- `x` range `lo` to `hi`. Note that for symbolic columns, `lo` is
--- always the same as `hi`.
+-- Create a RANGE  that tracks the y dependent values seen in 
+-- the range `lo` to `hi` some independent variable in column number `at` whose name is `txt`. 
+-- Note that the way this is used (in the `bins` function, below)
+-- for  symbolic columns, `lo` is always the same as `hi`.
 function RANGE(at,txt,lo,hi) 
   return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
 
@@ -258,7 +259,7 @@ function norm(num,n)
 
 -- A query that returns the score a distribution of symbols inside a SYM.
 function value(sym,  nB,nR,sGoal,    b,r)
-  sGoal,nB,nR = goal or true, nB or 1, nR or 1
+  sGoal,nB,nR = sGoal or true, nB or 1, nR or 1
   b,r = 0,0
   for x,n in pairs(sym.has) do
     if x==sGoal then b = b + n else r = r + n end end
@@ -357,20 +358,20 @@ function sway(data,     worker,best,rest)
 
 -- ## Discretization
 
--- Return RANGEs that distinguish good rows from bad rows.
+-- Return RANGEs that distinguish sets of rows (stored in `rowss`).
 -- To reduce the search space,
 -- values in `col` are mapped to small number of `bin`s.
-function bins(data,rowsGood,rowsBad)
+function bins(cols,rowss)
   local out = {}
-  for _,col in pairs(cols or data.cols.x) do
+  for _,col in pairs(cols) do
     local ranges = {}
-    for _,what in pairs({{rows=rowsGood,y=true},{rows=rowsBad,y=false}}) do
-      for _,row in pairs(what.rows) do
+    for y,rows in pairs(rowss) do
+      for _,row in pairs(rows) do
         local x,k = row[col.at]
         if x ~= "?" then
           k = bin(col,x)
           ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
-          extend(ranges[k], x, what.y) end end end
+          extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
     out[1+#out] = col.isSym and ranges or merges(ranges) end
   return out end
@@ -428,9 +429,9 @@ function merge(col1,col2,    new)
 function contrast(data,   best,rest,out,rule,tmp,data1,data2)
   best,rest = sway(data)
   out = {}
-  for k,t in pairs(bins(data,best.rows, rest.rows)) do
+  for k,t in pairs(bins(data,{best=best.rows,rest=rest.rows})) do
     for _,xy in pairs(t) do
-      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,true)}) end end
+      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,"best")}) end end
   out = sort(out,gt"y")
   oo(stats(data))
   oo(stats(data,div))
@@ -718,12 +719,13 @@ function egs.sway(    data,best,rest)
 function egs.bins(    data,best,rest, b4)
   data = read(the.file)
   best,rest = sway(data)
-  for k,t in pairs(bins(data,best.rows, rest.rows)) do
+  print("all","","","",o{best=#best.rows, rest=#rest.rows})
+  for k,t in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
     for _,range in pairs(t) do
       if range.txt ~= b4 then print"" end
       b4 = range.txt
       print(range.txt,range.lo,range.hi,
-           rnd(value(range.y, #best.rows,#rest.rows)), 
+           rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end 
 
 function egs.contrast()
