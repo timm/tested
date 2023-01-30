@@ -1,18 +1,15 @@
 #!/usr/bin/env lua
 --<!-- vim: set syntax=lua ts=2 sw=2 et : -->
--- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150><p style="text-align: left;">
--- <i class="fa-solid fa-align-left fa-golf-ball-tee fa-2x"></i>
--- Here, we play code golf with AI (most functionality, fewest lines). 
--- </p>
 -- <p style="text-align: left;">
--- Specifically, this code is 
--- a minimal tool for multi-goal semi-supervised explanation.
--- Here,  optimization is treated as a kind of data mining; i.e.
--- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); then sampling only
--- one or two points per cluster; then generating rules from the delta between best cluster and the rest.<p>
+-- This code supports multi-goal semi-supervised explanation.  Here,  optimization is treated as a kind of data mining; i.e.
+-- we recursively bi-cluster (using the distance to two remote points), all the while pruning the  "worst" half of the data (as measured by a multi-goal domination predicate).
+-- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150>
+-- During this, we sampling only one or two points per cluster. Afterwards, we   generate rules from the delta between best cluster and the rest.</p>
 -- <p style="text-align: left;">
--- All
--- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
+-- The aim here was to achieve as much functionality in as few lines as possible
+-- (to simplify teaching these ideas as well as any further experimentation).
+-- All the code for the above functionality comes in at just
+-- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
 -- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.
  -- </p>
 -- <center> <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
@@ -66,7 +63,7 @@ local the,help = {}, [[
 xai: a minimal tool for multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
   
-USAGE: xai [OPTIONS] [-g ACTIONS]
+USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
@@ -101,7 +98,7 @@ local m = math
 
 -- ## <a name=create>Creation</a>
 
--- Generate a `NUM` or a `SYM`. Column
+-- Create a `NUM` or a `SYM`. Column
 -- names are a little language that    
 -- e.g. makes `NUM`s if name starts in upper case; or
 -- e.g. makes goals if the name ends with
@@ -113,19 +110,19 @@ function COL(n,s,    col)
    col.isGoal     = col.txt:find"[!+-]$"
    return col end
 
--- `NUM`s summarize a stream of numbers.
+-- Create a `NUM` to summarize a stream of numbers.
 function NUM(n,s) 
   return {at= n or 0, txt= s or "", n=0,
           hi= -m.huge, lo= m.huge, 
           ok=true, has={},
           w= (s or ""):find"-$" and -1 or 1} end
 
--- `SYM`s summarize a stream of symbols.
+-- Create a `SYM` to summarize a stream of symbols.
 function SYM(n,s)
   return {at=n or 0, txt=s or "", n=0, 
           isSym=true, has={}} end
 
--- Generate a set of `NUM`s or `SYM`s columns.
+-- Create a set of `NUM`s or `SYM`s columns.
 -- Once created, all cols are stored in `all`
 -- while the non-skipped cols are also stored as
 -- either `cols.x` independent input variables or
@@ -139,13 +136,13 @@ function COLS(ss,     col,cols)
       push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 
--- Given two columns `x,y`, `RANGE` tracks the y values seen in 
+-- Create a RANGE  that tracks the y values seen in 
 -- `x` range `lo` to `hi`. Note that for symbolic columns, `lo` is
 -- always the same as `hi`.
 function RANGE(at,txt,lo,hi) 
   return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
 
--- A RULE groups `ranges` by their column id. 
+-- Create a  RULE that groups `ranges` by their column id. 
 -- Each group is a disjunction of its contents (and
 -- sets of groups are conjunctions).
 function RULE(ranges,      t)
@@ -155,17 +152,20 @@ function RULE(ranges,      t)
     push(t[range.txt], range) end 
   return t end
 
--- `DATA` contain `rows`, summarized in `cols`.
+-- Create a `DATA` to contain `rows`, summarized in `cols`.
 function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
 
--- Read a csv file into a new `DATA`. For each line,
--- call `row` (defined below) to update the columns.
+-- Create a new DATA by reading  csv file whose first row 
+-- are the comma-separate names processed by `COLS` (above).
+-- into a new `DATA`. Every other row is stored in the DATA by
+-- calling the 
+-- `row` function (defined below).
 function read(sfile,    data) 
   data=DATA()
   csv(sfile, function(t) row(data,t) end); return data end
 
--- Replicate structure of `data`. Optionally, load up the new
--- `data1` with the rows inside `t`.
+-- Create a new DATA with the same columns as  `data`. Optionally, load up the new
+-- DATA with the rows inside `t`.
 function clone(data,  t,    data1)
   data1 = row(DATA(), data.cols.names)
   for _,t in pairs(t or {}) do row(data1,t) end
@@ -187,7 +187,8 @@ function row(data,t)
   else data.cols = COLS(t) end 
   return data end
 
--- Called by `row` to add one cells of data into a `col`.
+-- Update one COL with `x` (values from one cells of one row).
+-- Called by the `row`.
 -- `SYM`s just increment a symbol counts.
 -- `NUM`s store `x` in a finite sized cache. When it
 -- fills to more than `the.Max`, then at probability 
@@ -202,17 +203,18 @@ function add(col,x,  n)
     then col.has[x] = n + (col.has[x] or 0) 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
       local has = #col.has
-      local pos = has < the.Max and has+1 or rand() < the.Max/col.n and rand(has) 
+      local pos = (has   < the.Max       and has+1) or (
+                  rand() < the.Max/col.n and rand(has))
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
 
--- Add multiple items from `t` into `col`. This is useful when `col` is being
+-- Update a COL with multiple items from `t`. This is useful when `col` is being
 -- used outside of some DATA.
 function adds(col,t) 
   for _,x in pairs(t or {}) do add(col,x) end; return col end
 
--- Extend a RANGE to cover `x` and `y`
+-- Update a RANGE to cover `x` and `y`
 function extend(range,n,s)
   range.lo = m.min(n, range.lo)
   range.hi = m.max(n, range.hi)
@@ -220,13 +222,14 @@ function extend(range,n,s)
 
 -- ## Query
 
--- Return contents of a column. If `col` is a `NUM` with
+-- A query that returns contents of a column. If `col` is a `NUM` with
 -- unsorted contents, then sort before return the contents.
 function has(col)
-  if not col.isSym and not col.ok then sort(col.has); col.ok=true end
+  if not col.isSym and not col.ok then sort(col.has) end 
+  col.ok = true -- the invariant here is that "has" is ready to be shared.
   return col.has end
 
--- Return a `cols`'s central tendency  
+-- A query that  returns a `cols`'s central tendency  
 -- (mode for `SYM`s and median for `NUM`s).
 function mid(col,    mode,most)
   if   col.isSym 
@@ -235,14 +238,14 @@ function mid(col,    mode,most)
        return mode 
   else return per(has(col), .5) end end 
 
--- Return a `col`'s deviation from central tendency    
+-- A query that returns a `col`'s deviation from central tendency    
 -- (entropy for `SYM`s and standard deviation for `NUM`s)..
 function div(col,    e)
   if   col.isSym 
   then e=0; for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end; return e
   else return (per(has(col),.9) - per(has(col), .1))/2.58 end end
 
--- Report `mid` or `div` of `cols` (defaults to `data.cols.y`).
+-- A query that returns `mid` or `div` of `cols` (defaults to `data.cols.y`).
 function stats(data,  fun,cols,nPlaces,     tmp)
   cols= cols or data.cols.y
   tmp = kap(cols,
@@ -250,11 +253,11 @@ function stats(data,  fun,cols,nPlaces,     tmp)
   tmp["N"] = #data.rows
   return tmp,map(cols,mid)  end
 
--- Normalize `n` 0..1.
+-- A query that normalizes `n` 0..1.
 function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
--- Score a distribution.
+-- A query that returns the score a distribution of symbols inside a SYM.
 function value(sym,  nB,nR,sGoal,    b,r)
   sGoal,nB,nR = goal or true, nB or 1, nR or 1
   b,r = 0,0
@@ -263,9 +266,42 @@ function value(sym,  nB,nR,sGoal,    b,r)
   b,r = b/(nB+1/m.huge), r/(nR+1/m.huge)
   return b^2/(b+r) end
 
+-- A query that returns the distances 0..1 between rows `t1` and `t2`.   
+-- If any values are unknown, assume max distances.
+function dist(data,t1,t2,  cols,    d,n,dist1)
+  function dist1(col,x,y)
+    if x=="?" and y=="?" then return 1 end
+    if   col.isSym
+    then return x==y and 0 or 1 
+    else x,y = norm(col,x), norm(col,y)
+         if x=="?" then x= y<.5 and 1 or 1 end	
+         if y=="?" then y= x<.5 and 1 or 1 end	
+         return m.abs(x-y) end 
+  end --------------
+  d, n = 0, 1/m.huge	
+  for _,col in pairs(cols or data.cols.x) do
+    n = n + 1
+    d = d + dist1(col, t1[col.at], t2[col.at])^the.p end 
+  return (d/n)^(1/the.p) end
+
+-- A query that returns true if `row1` is better than another.
+-- This is Zitzler's indicator predicate that
+-- judges the domination status 
+-- of pair of individuals by running a “what-if” query. 
+-- It checks what we lose when we jump from one 
+-- individual to another, and back again.
+function better(data,row1,row2,    s1,s2,ys,x,y) 
+  s1,s2,ys,x,y = 0,0,data.cols.y
+  for _,col in pairs(ys) do
+    x  = norm(col, row1[col.at] )
+    y  = norm(col, row2[col.at] )
+    s1 = s1 - m.exp(col.w * (x-y)/#ys)
+    s2 = s2 - m.exp(col.w * (y-x)/#ys) end
+  return s1/#ys < s2/#ys end
+
 -- ## Clustering
 
--- Divide `rows` in half (defaults to `data.rows`) by
+-- Cluster `rows` into two sets by
 -- dividing the data via their distance to two remote points.
 -- To speed up finding those remote points, only look at
 -- `some` of the data. Also, to avoid outliers, only look
@@ -285,7 +321,7 @@ function half(data,  rows,cols,above)
     push(n <= #rows/2 and left or right, two.row) end
   return left,right,A,B,c end
 
--- Recursively bi-divide the `rows`. 
+-- Cluster, recursively, some `rows` by  dividing them in two, many times
 function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
   here = {data=clone(data,rows)}
@@ -295,25 +331,7 @@ function tree(data,  rows,cols,above,     here)
     here.right = tree(data, right, cols, B) end
   return here end 
 
--- Return distances 0..1 between rows `t1` and `t2`.   
--- If any values are unknown, assume max distances.
-function dist(data,t1,t2,  cols,    d,n,dist1)
-  function dist1(col,x,y)
-    if x=="?" and y=="?" then return 1 end
-    if   col.isSym
-    then return x==y and 0 or 1 
-    else x,y = norm(col,x), norm(col,y)
-         if x=="?" then x= y<.5 and 1 or 1 end	
-         if y=="?" then y= x<.5 and 1 or 1 end	
-         return m.abs(x-y) end 
-  end --------------
-  d, n = 0, 1/m.huge	
-  for _,col in pairs(cols or data.cols.x) do
-    n = n + 1
-    d = d + dist1(col, t1[col.at], t2[col.at])^the.p end 
-  return (d/n)^(1/the.p) end
-
--- Display a tree of clusters.
+-- Cluster can be displayed by this function.
 function showTree(tree,  lvl,post)
   if tree then 
     lvl  = lvl or 0
@@ -338,21 +356,6 @@ function sway(data,     worker,best,rest)
   best,rest = worker(data.rows,{})
   return clone(data,best), clone(data,rest) end 
 
--- When is one `row1` better than another?
--- This is Zitzler's indicator predicate that
--- judges the domination status 
--- of pair of individuals by running a “what-if” query. 
--- It checks what we lose when we jump from one 
--- individual to another, and back again.
-function better(data,row1,row2,    s1,s2,ys,x,y) 
-  s1,s2,ys,x,y = 0,0,data.cols.y
-  for _,col in pairs(ys) do
-    x  = norm(col, row1[col.at] )
-    y  = norm(col, row2[col.at] )
-    s1 = s1 - m.exp(col.w * (x-y)/#ys)
-    s2 = s2 - m.exp(col.w * (y-x)/#ys) end
-  return s1/#ys < s2/#ys end
-
 -- ## Discretization
 
 -- Return RANGEs that distinguish good rows from bad rows.
@@ -373,7 +376,8 @@ function bins(data,rowsGood,rowsBad)
     out[1+#out] = col.isSym and ranges or merges(ranges) end
   return out end
 
--- Map `x` into a small number of bins.
+-- Map `x` into a small number of bins. `SYM`s just get mapped
+-- to themselves but `NUM`s get mapped to one of `the.bins` values.
 function bin(col,x,      tmp)
   if x=="?" or col.isSym then return x end
   tmp = (col.hi - col.lo)/(the.bins - 1)
