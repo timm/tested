@@ -4,7 +4,7 @@
 -- This code supports multi-goal semi-supervised explanation.  Here,  optimization is treated as a kind of data mining; i.e.
 -- we recursively bi-cluster (using the distance to two remote points), all the while pruning the  "worst" half of the data (as measured by a multi-goal domination predicate).
 -- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150>
--- During this, we sampling only one or two points per cluster. Afterwards, we   generate rules from the delta between best cluster and the rest.</p>
+-- During this, we  only label one or two points per cluster. Afterwards, we   generate rules from the delta between best cluster and the rest.</p>
 -- <p style="text-align: left;">
 -- The aim here was to achieve as much functionality in as few lines as possible
 -- (to simplify teaching these ideas as well as any further experimentation).
@@ -60,7 +60,7 @@
 -- `for pos,x in enumerate(t) do`.</p>
 local the,help = {}, [[
   
-xai: a minimal tool for multi-goal semi-supervised explanation
+xai: multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
   
 USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
@@ -570,10 +570,12 @@ function copy(t,    u)
 
 -- Return a portion of `t`; go,stop,inc defaults to 1,#t,1.
 -- Negative indexes are supported.
-function slice(t, go, stop, inc,    u) --> t; return `t` from `go`(=1) to `stop`(=#t), by `inc`(=1)
+function slice(t, go, stop, inc,    u) 
   if go   and go   < 0 then go=#t+go     end
   if stop and stop < 0 then stop=#t+stop end
-  u={}; for j=(go or 1)//1,(stop or #t)//1,(inc or 1)//1 do u[1+#u]=t[j] end; return u end
+  u={}
+  for j=(go or 1)//1,(stop or #t)//1,(inc or 1)//1 do u[1+#u]=t[j] end
+  return u end
 
 -- ### Strings
 
