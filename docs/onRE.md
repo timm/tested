@@ -71,15 +71,18 @@ Possibility1: Experts are not expert.a
 
 Possibility2: Expertise is not symbolic
 - But some neural effect of brain juice washing around the cranium.
-- Impossible to a sentence describing "the knowledge" since "the knowledge" is a bunch of waves crashing around, not ideas frozen and static.
+- Impossible to a extract a chunk of knowledge since knowledge is not in solid chunks;
+  - rather it is a bunch of waves crashing around inside the brain.
 - Automated support: neural nets 
   - not good for explanation
   - data hungry (for training). On the other hand, can handle very large data spaces
   - CPU hungry (for initial training). On the other hand, there are fast local tunings:
-      - e.g. just tune the last layer of a deep learner
+      - e.g. just fine tune the last layer of a deep learner
       - e.g. prompt engineering [^wang].
 
-[^wang]: Chaozheng Wang, Yuanhang Yang, Cuiyun Gao, Yun Peng, Hongyu Zhang, and Michael R. Lyu. 2022. No more fine-tuning? an experimental evaluation of prompt tuning in code intelligence. In Proceedings of the 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2022). Association for Computing Machinery, New York, NY, USA, 382–394. https://doi.org/10.1145/3540250.3549113
+[^wang]: Chaozheng Wang, Yuanhang Yang, Cuiyun Gao, Yun Peng, Hongyu Zhang, and Michael R. Lyu. 2022. 
+         [No more fine-tuning? an experimental evaluation of prompt tuning in code intelligence](https://arxiv.org/pdf/2207.11680.pdf). 
+         In Proceedings of the 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2022). Association for Computing Machinery, New York, NY, USA, 382–394. https://doi.org/10.1145/3540250.3549113
 
 <img src="https://www.ask-flip.com/attachments/861563b5-37de-4898-abf3-076bea8edb22/thumbnail" align=right width=500>
 
