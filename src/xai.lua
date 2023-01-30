@@ -3,7 +3,6 @@
 -- src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png"
 -- align=right width=150><p style="text-align: left;">
 -- <i class="fa-solid fa-align-left fa-golf-ball-tee fa-2x"></i>
--- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>.
 -- Here, we play code golf with AI (most functionality, fewest lines). 
 -- </p>
 -- <p style="text-align: left;">
@@ -13,8 +12,9 @@
 -- <p style="text-align: left;">
 -- All
 -- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
+-- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.
  -- </p>
--- <center> <a href="https://github.com/timm/tested/blob/main/src/tiny.lua">download</a> |
+-- <center> <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
 -- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
@@ -62,10 +62,10 @@
 -- `for pos,x in enumerate(t) do`.</p>
 local the,help = {}, [[
   
-fittest: a minimal tool for multi-goal semi-supervised explanation
+xai: a minimal tool for multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
   
-USAGE: lua fittest.lua [OPTIONS] [-g ACTIONS]
+USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
@@ -103,7 +103,7 @@ local m = math
 -- Generate a `NUM` or a `SYM`. Column
 -- names are a little language that    
 -- e.g. makes `NUM`s if name starts in upper case; or
--- e.g. makes goals if the name is marked with
+-- e.g. makes goals if the name ends with
 -- the maximize (`+`) or minimize (`-`) or klass (`!`) symbol.
 function COL(n,s,    col)
    col = s:find"^[A-Z]" and NUM(n,s) or SYM(n,s) 
@@ -138,14 +138,24 @@ function COLS(ss,     col,cols)
       push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 
--- `DATA` contain `rows`, summarized in `cols`.
-function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
-
 -- Given two columns `x,y`, `RANGE` tracks the y values seen in 
 -- `x` range `lo` to `hi`. Note that for symbolic columns, `lo` is
 -- always the same as `hi`.
 function RANGE(at,txt,lo,hi) 
   return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
+
+-- A RULE groups `ranges` by their column id. 
+-- Each group is a disjunction of its contents (and
+-- sets of groups are conjunctions).
+function RULE(ranges,      t)
+  t={}
+  for _,range in pairs(ranges) do
+    t[range.at] = t[range.at] or {}
+    push(t[range.txt], range) end 
+  return t end
+
+-- `DATA` contain `rows`, summarized in `cols`.
+function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
 
 -- Read a csv file into a new `DATA`. For each line,
 -- call `row` (defined below) to update the columns.
@@ -183,15 +193,15 @@ function row(data,t)
 -- `the.Max/col.n` replace any existing item
 -- (selected at random). If anything is added, the list
 -- may not longer be sorted so set `col.ok=false`.
-function add(col,x,  inc)
+function add(col,x,  n)
   if x ~= "?" then
-    inc = inc or 1
-    col.n = col.n + inc
+    n = n or 1
+    col.n = col.n + n
     if   col.isSym
-    then col.has[x] = inc + (col.has[x] or 0) 
+    then col.has[x] = n + (col.has[x] or 0) 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
-      local n = #col.has
-      local pos = n < the.Max and n+1 or rand() < the.Max/col.n and rand(n) 
+      local has = #col.has
+      local pos = has < the.Max and has+1 or rand() < the.Max/col.n and rand(has) 
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
@@ -202,10 +212,10 @@ function adds(col,t)
   for _,x in pairs(t or {}) do add(col,x) end; return col end
 
 -- Extend a RANGE to cover `x` and `y`
-function extend(range,x,y)
-  range.lo = m.min(x, range.lo)
-  range.hi = m.max(x, range.hi)
-  add(range.y, y) end
+function extend(range,n,s)
+  range.lo = m.min(n, range.lo)
+  range.hi = m.max(n, range.hi)
+  add(range.y, s) end
 
 -- ## Query
 
@@ -244,12 +254,12 @@ function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
 -- Score a distribution.
-function value(sym,  B,R,goal,    b,r)
-  goal,B,R = goal or true, B or 1, R or 1
+function value(sym,  nB,nR,sGoal,    b,r)
+  sGoal,nB,nR = goal or true, nB or 1, nR or 1
   b,r = 0,0
   for x,n in pairs(sym.has) do
-    if x==goal then b = b + n else r = r + n end end
-  b,r = b/(B+1/m.huge), r/(R+1/m.huge)
+    if x==sGoal then b = b + n else r = r + n end end
+  b,r = b/(nB+1/m.huge), r/(nR+1/m.huge)
   return b^2/(b+r) end
 
 -- ## Clustering
@@ -359,7 +369,7 @@ function bins(data,rowsGood,rowsBad)
           ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
           extend(ranges[k], x, what.y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
-    out[#out+1] = col.isSym and ranges or merges(ranges) end
+    out[1+#out] = col.isSym and ranges or merges(ranges) end
   return out end
 
 -- Map `x` into a small number of bins.
@@ -392,11 +402,11 @@ function merges(ranges0,     noGaps)
   end
   return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1) end
 
--- If the whole is not more complex than the parts, return the
+-- If the parts are more complex than the whole, then return the 
 -- combination of 2 `col`s.
 function merged(col1,col2,   new)
   new = merge(col1,col2)
-  if div(new) <= 1.01*(div(col1)*col1.n + div(col2)*col2.n)/new.n then
+  if div(new) <= (div(col1)*col1.n + div(col2)*col2.n)/new.n then
     return new end end
 
 -- Combine two `cols`.
@@ -433,13 +443,6 @@ function contrast(data,   best,rest,out,rule,tmp,data1,data2)
        end
        data2 = data1
 end end end
-
-function RULE(ranges,      t)
-  t={}
-  for _,range in pairs(ranges) do
-    t[range.txt] = t[range.txt] or {}
-    push(t[range.txt], range) end 
-  return t end
 
 function accepts(rule,rows,     t,fun)
   fun = function(row) if accept(rule,row) then return row end end
@@ -594,6 +597,7 @@ function main(funs,the,help,    fails,saved,names)
     if name:find(".*"..the.go..".*") then
       for k,v in pairs(saved) do the[k]=v end
         Seed = the.seed
+        math.randomseed(Seed)
         if funs[name]()==false then print("❌ "..name); fails=fail+1
                                else print("✅ "..name) end end end  
   rogues()
@@ -704,14 +708,16 @@ function egs.sway(    data,best,rest)
   print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
 
-function egs.bins(    data,best,rest)
-  print(rand())
+function egs.bins(    data,best,rest, b4)
   data = read(the.file)
   best,rest = sway(data)
   for k,t in pairs(bins(data,best.rows, rest.rows)) do
     for _,range in pairs(t) do
+      if range.txt ~= b4 then print"" end
+      b4 = range.txt
       print(range.txt,range.lo,range.hi,
-           rnd(value(range.y, #best.rows,#rest.rows))) end end end 
+           rnd(value(range.y, #best.rows,#rest.rows)), 
+           o(range.y.has)) end end end 
 
 function egs.contrast()
   print(rand())
