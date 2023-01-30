@@ -1,4 +1,11 @@
+cat $1 | gawk '/^--/ {next} 1' | gawk '
 BEGIN {FS="\n"; RS=""}
-/Creation/,/Examples/ && $1 ~/^function/ { print $1; F++}
-/Creation/,/Examples/ && $1~/^function/{ lines=0; for(i=1;i<=NF;i++) {if ($i !~ /^--/) {lines++}}; sum=sum+lines; n++}
-END {print sum, n, sum/n,F}
+sub(/^[ \t]*$/,"") 
+$1 !~ /^function/ {next}
+/function COL\(/,/function accept\(/{ fun1++; lines1+= NF;next}
+{ fun2++; lines2+= NF}
+END {
+   print "ai",fun1, line1s, lines1/fun1
+   print "misc",fun2, lines2, lines2/fun2
+
+ }'

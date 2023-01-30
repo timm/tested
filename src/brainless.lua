@@ -7,8 +7,11 @@
 -- <p style="text-align: left;">
 -- Specifically, this code implements optimization via data mining; i.e.
 -- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
--- one or two points per cluster; generating rules from the delta between best cluster and the rest. All
--- in 400 lines of code (plus some misc support routines).</p>
+-- one or two points per cluster; generating rules from the delta between best cluster and the rest.<p>
+-- <p style="text-align: left;">
+-- All
+ -- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
+ -- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.</p>
 -- <center> <a href="https://github.com/timm/tested/blob/main/src/tiny.lua">download</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
