@@ -6,9 +6,11 @@
 -- Here, we play code golf with AI (most functionality, fewest lines). 
 -- </p>
 -- <p style="text-align: left;">
--- Specifically, this code implements optimization via data mining; i.e.
--- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
--- one or two points per cluster; generating rules from the delta between best cluster and the rest.<p>
+-- Specifically, this code is 
+-- a minimal tool for multi-goal semi-supervised explanation.
+-- Here,  optimization is treated as a kind of data mining; i.e.
+-- recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); then sampling only
+-- one or two points per cluster; then generating rules from the delta between best cluster and the rest.<p>
 -- <p style="text-align: left;">
 -- All
 -- in under 300 lines of AI code, plus another 200 lines of  misc support routines. 
