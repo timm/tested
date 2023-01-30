@@ -1,5 +1,5 @@
 --<!-- vim: set ts=2 sw=2 et : -->
--- <p style="text-align: left;">
+-- <img src="../etc/img/script.png" align=right width=200><p style="text-align: left;">
 -- Here, we play code golf with AI (most functionality, fewest lines). 
 -- Specifically: optimization via data mining; i.e.  recursively clustering then pruning "worse" half (as measured by a multi-goal domination predicate); sampling only
 -- one or two points per cluster; generating rules from the delta between best cluster and the rest.<br>
