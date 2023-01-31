@@ -110,8 +110,8 @@ Welcome to instance-based reasoning.
       <br clear=all>
 <img width=400 align=right src="/etc/img/shank.png">
 
-Stop press: Roger Shank, father of instance-based reasoning, died earlier this week.
-You can't really talk about IBR without talking about Shank, who passed away just this month. 
+Stop press: Roger Schank, father of instance-based reasoning, died earlier this week.
+You can't really talk about IBR without talking about Schank, who passed away just this month. 
 He really [inspired and pissed off](https://educationoutrage.blogspot.com/)  a lot of people.
 
 ### Automated support for IBR
@@ -225,7 +225,10 @@ i  memory. Nature neuroscience 17, 3 (2014), 347–356.
    mental representations of novice and expert programmers: an empirical study.
    International Journal of Man-Machine Studies 39, 5 (1993), 793–812.
 
-Automated support:
+### Automated support for LTM+STM
+
+- Anything that directs the user from  a large amount of data to a small part 
+  - i.e. finding the important stuff to put into STM such that the LTM can work.
 - Divide the thinking into _feature extraction_ and _rules_
 - Don't show people everything, just show them the most important features (for an example of feature selection, see below "rep grids").
 - As to the rules, keep them small (so humans can easily process them). e.g. fast and frugal trees [^frugal].
@@ -260,18 +263,25 @@ $$ \mathit{rule}_2: \neg (t \wedge a \vdash \bot)$$
 ($\bot$ means 
 "the oposite of truth" and is shown as "T" drawn upside down.)
 
+
+<img align=left width=400 src="https://user-images.githubusercontent.com/29195/192363104-7234e507-b622-4953-ac05-74982fb948b7.png">
+
 - Rule1 is saying "do something" and rule2 is saying "don't mess up".
   - Rule1, by itself, is crazy fast (just dash forward) and do not care about the consequences.
   - But Rule2 means we have to check for errors as we goes. 
     -  Much slower.
     - In fact, after running these rules for away, you might realize that what you have is zero globally
       consistent solutions
-      - E.g. you can decide to drive east or west, but not both
+      - E.g. students want private data while parents (who pay the student fees) might want access
+        to student grades 
+      - E.g. security and availability are usually contradictory. 
         - so the solutions fork, every time you face mutually incompatible choices.
-      - But rather, multiple separate _worlds of belief_ that are internally _consistent_ but mutually _incompatible_.
-      - What beliefs are incompatable in this _soft goal graph_
+    - But rather, multiple separate _worlds of belief_ that are internally _consistent_ but mutually _incompatible_.
+  - What beliefs are incompatible in this _soft goal graph_ <br clear=all>
 
 <img src="https://www.researchgate.net/profile/Janne-Merilinna/publication/38289214/figure/fig1/AS:394371724791809@1471036954535/Softgoal-Interdependency-Graph-with-a-legend-of-symbols.png">
+
+<img src="https://user-images.githubusercontent.com/29195/192589531-be8abcb9-2a2a-4980-8ccb-c0ace4ef471d.png">
 
 - In the general case, we cannot use all the assumptions $A$ or all the theory $T$ or reach all the goals $G$
   - so really, $a \subseteq A$;
@@ -288,6 +298,8 @@ Returning now to explanations
 
 So experts find it hard to explain themselves BECAUSE explanation is fundamentally hard.
 - Think about that next time you are staring at a blank sheet of paper, with a headache, cause you cannot work out how to say what you want to say.
+
+### Automated Support for NP-Hard Reasonong
 
 But wait, there's a loophole.
 
@@ -370,121 +382,7 @@ polynomial time.
   Intelligence (Vol. 2), Menlo Park, CA, USA, 1994, pp. 1092–1097.
 [^kohavi]: R. Kohavi and G. H. John, “Wrappers for feature subset
 
-<small><p>&nbsp;
-<a name=top></a>
-<table><tr> 
-<td><a href="/README.md#top">home</a>
-<td><a href="/ROADMAP.md">roadmap</a>
-<td><a href="http:github.com/timm/tested/issues">issues</a>
-<td> <a href="/LICENSE.md">&copy;2022,2023</a> by <a href="http://menzies.us">tim menzies</a>
-</tr></table></small>
-<img  align=center width=600 src="/docs/img/banner.png"></p>
-<p> <img src="https://img.shields.io/badge/task-ai-blueviolet"><a
-href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img 
- src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a> <img 
- src="https://img.shields.io/badge/language-lua-orange"> <img 
- src="https://img.shields.io/badge/purpose-teaching-yellow"> <a 
- href="https://zenodo.org/badge/latestdoi/569981645"> <img 
- src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
-
-# onGrid.lua
-
-## Your task this week
-
-As a team, implement the [grid.lua](/src/grid.lua) repgrid
-processor.
-
-Then, as a team, use it on 3 people (see Task5, below).
-
-What to hand-in
-- all the code in a GH repo
-- the Task5  report, somewhere in that code, in some prominent place.
-
-## About the code
-
-grid.lua implements an requirements engineering tool for finding tacit knowledge.
-Why is that important?
-
-A common theme in many reports of algorithmic discrimination is that the developers of "it" are not sensitive (enough)
-to the concerns of the people that use it.
-
-Chapter six of Safiya Noble’s book Algorithms of Oppression [^1]  tells the sad tale of  how a design quirk of  Yelp ruined a small business. 
-- As one of Noble’s interviewees put it “ Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). i
-  They already feel like they are being hunted;  they aren’t going to tell the Man where they are”. Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button.  There are many  other examples where software engineers fielded AI models, without noticing biases in those models:
-- Amazon had to scrap an automated recruiting tool as it was found to be biased against women [^2].
-- A widely used face recognition software was found to be biased against dark-skinned women [^3] and dark-skinned men  [^4].
-- Google Translate, the most popular translation engine in the world, shows gender bias. 
-  “She is an engineer, He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [^5].  
-- For our purposes, the  important point of the first Noble example is this: if software designers had been more intentional about soliciting feedback from 
-    the Black community, then they could have changed how check-ins are weighted in the overall Yelp rating system.  
-- As to the other examples, in each case there was some discriminatory effect which was easy to detect and repair [^6], but developers just failed to test for those biases.  
-
-[^1]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
-[^2]: https://reut.rs/2Od9fPr
-[^3]: https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212
-[^4]: https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html
-[^5]: https://science.sciencemag.org/content/356/ 6334/183
-[^6]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
-
-There is a solution to all these problems:
-- if a small group of people build software for the larger community, 
-- that smaller group needs to listen more to the  concerns of the larger community. 
-
-For that to work, the smaller group of developers have to admit the larger group into their design processes– either via
-
--  changing the reward structures such that there are inducements for the few to listen to the many (e.g. by better government legislation or  professional standards); 
-- or (b) inclusion practices that admits the broader community into the developer community;
-- or by (c) review practices where the developers can take better and faster feedback from the community.  
-
-## Tool Support
-
-How can we look outside our current tools? Find out what people really want? Without those questions being distorted by a 100 existing design decisions.
-
-- Optimizers, thoerem provers, data miners all explore the space of ideas in some data set or some program.
-- But how do we break out of that myopic view?
-- Look for the thing that we do not know, yet, but should?
-- How do we find the tacid knowledge that lays around us, invisible to our current gaze?
-
-Let's go ask George Kelly (1905–1967), American psychologist, therapist, educator and personality theorist. 
-
-
-> "Who can say what nature is? Is it what now exists about us, including all the tiny hidden
-things that wait so patiently to be discovered? Or is it the vista of all that is destined to occur,
-whether tomorrow or in some distant eon of time? Or is nature, infinitely more varied than this,
-the myriad trains of events that might ensue if we were to be so bold, ingenious, and irreverent
-as to take a hand in its management?"<br>&nbsp;<br>
-"Personal construct theory neither offers nor demands a firm answer to any of these questions, and in this respect it is unique. Rather than depending upon bedrock assumptions about
-the inherent nature of the universe, or upon fragments of truth believed to have been accumulated, it is a notion about how man (sic) may launch out from a position of admitted ignorance, and
-how he (sic)  may aspire from one day to the next to transcend his  (sic) own dogmatisms. It is, then, a
-theory of man’s  (sic) personal inquiry—a psychology of the human quest. It does not say what has
-or will be found, but proposes rather how we might go about looking for it."    
--- George Kelly
-
-<img src="/etc/img/repgrid.png">
-
-Repertory grids are a tool proposed by the  cognitive psychologist George Kelly as a method for eliciting  tacit knowledge. From [Wikipedia](https://en.wikipedia.org/wiki/George_Kelly_(psychologist)):
-
-- Kelly believed in a non-invasive or non-directive approach to psychotherapy.
-- Rather than having the therapist interpret the person's psyche (which would amount to imposing the doctor's constructs on the patient)
-- The therapist should just act as a facilitator of the patient finding his or her own constructs. 
-- The patient's behavior is then mainly explained as ways to selectively observe the world, act upon it and update the construct system in such a way as to increase predictability. 
-To help the patient find his or her constructs, Kelly developed the repertory grid interview technique.
-
-Kelly explicitly stated that each individual's task in understanding their personal psychology is to put in order the facts of his or her own experience. 
-
-- Then the individual, like the scientist, is to test the accuracy of that constructed knowledge by performing those actions the constructs suggest.
-- If the results of their actions are in line with what the knowledge predicted, then they have done a good job of finding the order in their personal experience.
-- If not, then they can modify the construct: their interpretations or their predictions or both.
-- This method of discovering and correcting constructs is roughly analogous to the general scientific method that is applied in various ways by 
-   modern sciences to discover truths about the universe.
-
-
-Nui and Easterbrook comment that repertory grids are widely recognized as a domain-independent method for externalizing individuals’ personal constructs. 
-
-Interviewees are invited to offer their own examples from their own domain. 
-- Then they are asked: “Given 3 examples (picked at random), on what dimension is one example most different to the other two?”   
-
-[^easter07]: N. Niu and S. Easterbrook, 
+<[^easter07]: N. Niu and S. Easterbrook, 
   ["So, You Think You Know Others' Goals? A Repertory Grid Study,"](https://homepages.uc.edu/~niunn/papers/SW07.pdf)
    in IEEE Software, vol. 24, no. 2, pp. 53-61, March-April 2007, doi: 10.1109/MS.2007.52.
 
@@ -496,13 +394,13 @@ Interviewees are invited to offer their own examples from their own domain.
 
 Long story short:
 - to tame complex non-deterministic problems, work backwards
-  - don't do a lot of stiff, then look for the keys
+  - do nott do a lot of stiff, then look for the keys
   - find the keys first, then reason within those contexts/
 - Here I am proposing some random stagger followed by some data mining.
 
 A standard method, used by many are _aquisition  functions_ in [onOPtimize](onOptimize.md) (which we will discuss next week).
 
-But I've had much success in cheating, as follows:
+But I have had much success in cheating, as follows:
 
 - As soon as possible, find the fewest variables that separate the data
   - i.e. cluster and look for the deltas between clusters.
@@ -513,6 +411,8 @@ But I've had much success in cheating, as follows:
 - Then for consistent combinations of the keys
   - run the inference, restricted to that combination
 - Can be crazy fast [^mathew]
+
+<img src="/etc/img/cs.png">
 
 <img src="/etc/img/shorter.png">
 
