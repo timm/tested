@@ -240,7 +240,7 @@ Consider the mathematics of explanation (abduction):
 
 $$ t \wedge a \vdash g $$
 
-$$ t \wedge a \vdash \neg{\bot}$$
+$$ t \wedge a \vdash \not{\bot}$$
 
 
 ripple down rules
