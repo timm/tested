@@ -413,6 +413,7 @@ But I've had much success in cheating, as follows:
   Pages 25-60,
 
 
-[^easter07] N. Niu and S. Easterbrook, 
+
+[^easter07]: N. Niu and S. Easterbrook, 
 ["So, You Think You Know Others' Goals? A Repertory Grid Study,"](https://homepages.uc.edu/~niunn/papers/SW07.pdf)
 in IEEE Software, vol. 24, no. 2, pp. 53-61, March-April 2007, doi: 10.1109/MS.2007.52.
