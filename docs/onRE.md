@@ -125,8 +125,11 @@ Welcome to instance-based reasoning.
     - Run new cases $C_2,C_3,..$ etc over the rules
     - If any old rule $R_i$ makes the wrong conclusion for a new case $C_j$
       - the repair must be in the difference between the current case and the old case $C_i$ from the old rule $\Delta=C_j - C_i$.
-      - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion $\epsilon \subseteq \Delta$.
-      - patch $R_i$ with the "except" clause $\epsilon$ so it $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
+      - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion
+        - We call this the "except" clause $\epsilon \subseteq \Delta$.
+        - It can be found very quickly: pop up $\epsilon$ in a list and let them go click-click and to pick a few items.
+      - patch $R_i$ with the "except" clause $\epsilon$ 
+        - now of  $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
     - Overtime, this grows into a patch tree of nested "except" clauses
     - Historically, kind of offended a lot of people
       - very little initial domain structuring
