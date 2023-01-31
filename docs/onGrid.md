@@ -52,7 +52,7 @@ For that to work, the smaller group of developers have to admit the larger group
 - or (b) inclusion practices that admits the broader community into the developer community;
 - or by (c) review practices where the developers can take better and faster feedback from the community.  
 
-### Tool Support
+## Tool Support
 
 How can we look outside our current tools? Find out what people really want? Without those questions being distorted by a 100 existing design decisions.
 
@@ -86,9 +86,10 @@ Repertory grids are a tool proposed by the  cognitive psychologist George Kelly 
 To help the patient find his or her constructs, Kelly developed the repertory grid interview technique.
 
 Kelly explicitly stated that each individual's task in understanding their personal psychology is to put in order the facts of his or her own experience. 
-- Then the individual, like the scientist, is to test the accuracy of that constructed knowledge by performing those actions the constructs suggest. 
-- If the results of their actions are in line with what the knowledge predicted, then they have done a good job of finding the order in their personal experience. 
-- If not, then they can modify the construct: their interpretations or their predictions or both. 
+
+- Then the individual, like the scientist, is to test the accuracy of that constructed knowledge by performing those actions the constructs suggest.
+- If the results of their actions are in line with what the knowledge predicted, then they have done a good job of finding the order in their personal experience.
+- If not, then they can modify the construct: their interpretations or their predictions or both.
 - This method of discovering and correcting constructs is roughly analogous to the general scientific method that is applied in various ways by 
    modern sciences to discover truths about the universe.
 
