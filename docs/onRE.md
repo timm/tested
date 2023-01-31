@@ -260,11 +260,11 @@ $$ \mathit{rule}_1: t \wedge a \vdash g $$
 
 $$ \mathit{rule}_2: \neg (t \wedge a \vdash \bot)$$
 
-($\bot$ means 
-"the oposite of truth" and is shown as "T" drawn upside down.)
+where  $\bot$ means 
+"the oposite of truth" and is shown as "T" drawn upside down.
 
 
-<img align=left width=400 src="https://user-images.githubusercontent.com/29195/192363104-7234e507-b622-4953-ac05-74982fb948b7.png">
+<img align=right width=400 src="https://user-images.githubusercontent.com/29195/192363104-7234e507-b622-4953-ac05-74982fb948b7.png">
 
 - Rule1 is saying "do something" and rule2 is saying "don't mess up".
   - Rule1, by itself, is crazy fast (just dash forward) and do not care about the consequences.
@@ -279,7 +279,7 @@ $$ \mathit{rule}_2: \neg (t \wedge a \vdash \bot)$$
     - But rather, multiple separate _worlds of belief_ that are internally _consistent_ but mutually _incompatible_.
   - What beliefs are incompatible in this _soft goal graph_ <br clear=all>
 
-<img src="https://www.researchgate.net/profile/Janne-Merilinna/publication/38289214/figure/fig1/AS:394371724791809@1471036954535/Softgoal-Interdependency-Graph-with-a-legend-of-symbols.png">
+<img src="/etc/img/softgoal.png">
 
 <img src="https://user-images.githubusercontent.com/29195/192589531-be8abcb9-2a2a-4980-8ccb-c0ace4ef471d.png">
 
