@@ -313,13 +313,13 @@ data.
     “iterative sampler” makes random choices within a model
     until it gets “stuck”; i.e. until further choices do not
     satisfy expectations.
-  -  When “stuck”, ISAMP does not waste
-    time fiddling with current choices (as was done by older
-    chronological backtracking algorithms). 
-  - Instead, ISAMP
-    logs what decisions were made before getting “stuck”. It
-    then performs a “retry”; i.e. resets and starts again, this
-    time making other random choices to explore.
+     -  When “stuck”, ISAMP does not waste
+        time fiddling with current choices (as was done by older
+       chronological backtracking algorithms). 
+     - Instead, ISAMP
+       logs what decisions were made before getting “stuck”. It
+       then performs a “retry”; i.e. resets and starts again, this
+       time making other random choices to explore.
   - Crawford and Baker explain the success of this strange
 approach by assuming models contain a small set of _master
 variables_ that set the remaining variables (and  we might
@@ -333,9 +333,9 @@ variables are spread thinly over the entire model, it makes
 no sense to carefully explore all parts of the model since
 much time will be wasted “walking” between the far-flung
 master variables. 
-  - For such models, if the reasoning gets
-stuck in one region, then the best thing to do is to leap at
-random to some distant part of the model.
+     - For such models, if the reasoning gets
+       stuck in one region, then the best thing to do is to leap at
+       random to some distant part of the model.
 - A similar conclusion comes from the work of Williams et
   al. [^will]. 
   - They found that if a randomized search is repeated
@@ -360,7 +360,16 @@ polynomial time.
   typical case complexity,” in Proceedings of the International
   Joint Conference on Artificial Intelligence, 2003.
 
-ripple down rules
+Long story short:
+- to tame complex non-deterministic problems, work backwards
+  - don't do a lot of stiff, then look for the keys
+  - find the keys first, then reason within those contexts/
+- so stagger around some (e.g. with ISAMP)
+- then cluster what you get
+- then find the attribute ranges that are most different in different clusters (these are the _keys_)
+- then for consistent combinations of the keys
+  - run the inference, restricted to that combination
+
 instance based reasonng
 lab life
 
