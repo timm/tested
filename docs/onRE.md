@@ -220,11 +220,27 @@ i  memory. Nature neuroscience 17, 3 (2014), 347–356.
    mental representations of novice and expert programmers: an empirical study.
    International Journal of Man-Machine Studies 39, 5 (1993), 793–812.
 
-XXXX
+Automated support:
+- Divide the thinking into _feature extraction_ and _rules_
+- Don't show people everything, just show them the most important features (for an example of feature selection, see below "rep grids").
+- As to the rules, keep them small (so humans can easily process them). e.g. fast and frugal trees [^frugal].
+  - Despite being simple, remarkably effective [^chenfse].
 
+<img src="https://github.com/ndphillips/FFTrees/raw/master/man/figures/README-example-heart-plot-1.png">
+
+[^frugal]: Phillips, N. D., Neth, H., Woike, J. K. & Gaissmaier, W. (2017). FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees. Judgment and Decision Making, 12 (4), 344–368. Retrieved from https://journal.sjdm.org/17/17217/jdm17217.pdf
+[^chenfse]: Chen, D., Fu, W., Krishna, R., & Menzies, T. (2018, October). 
+         [Applications of psychological science for actionable analytics](https://dl.acm.org/doi/pdf/10.1145/3236024.3236050?casa_token=5Wp-MiwBHoAAAAAA:VL646H96bnTZMUqn5A74kdB12DSWE8d3iRvuEOAMUa52scR90n741HOxKkjJPsDAaFRnvWJAX0ub). 
+         In Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (pp. 456-467).
 
 ### Possibility5: Generating Explanations is NP-Hard
 
+Consider the mathematics of explanation (abduction):
+- Given a theory $t$ and goals $g$ and assumptuons $a$, can you get to the goals without causing problems?
+
+$$ t \wedge a \vdash g $$
+
+$$ t \wedge a \vdash \not{\bottom}$$
 backdoors
 
 ripple down rules
