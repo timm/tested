@@ -114,28 +114,29 @@ Stop press: Roger Shank, father of instance-based reasoning, died earlier this w
 You can't really talk about IBR without talking about Shank, who passed away just this month. 
 He really [inspired and pissed off](https://educationoutrage.blogspot.com/)  a lot of people.
 
-- Automated support for IBR clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
-    repair mechanisms to patch current or prior conclusions
-  - e.g. partial match are repair
-    - partial match = distance to cluster centroids to select a near cluster
-    - repair =  a minimal change to a  case such that it enters the space of known examples (in the near cluster)
-  - e.g. ripple down rules [^comp]
-    - e.g. Interpretation of biochemical assays (someone staring at 100s of lab results per day saying "ok,ok,ok,ok,ok,ok,whoops-better fix that one"
-    - write down a rule  $R_1$ and its conclusions (initially, this will just be "if true then happy" (say).
-      - tag this rule with the case $C_1$ that lead to $R_1$.
-    - Run new cases $C_2,C_3,..$ etc over the rules
-    - If any old rule $R_i$ makes the wrong conclusion for a new case $C_j$
-      - the repair must be in the difference between the current case and the old case $C_i$ from the old rule $\Delta=C_j - C_i$.
-      - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion
-        - We call this the "except" clause $\epsilon \subseteq \Delta$.
-        - It can be found very quickly: pop up $\epsilon$ in a list and let them go click-click and to pick a few items.
-      - patch $R_i$ with the "except" clause $\epsilon$ 
-        - now of  $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
-    - Overtime, this grows into a patch tree of nested "except" clauses
-    - Historically, the work kind of offended a lot of people
-      - very little initial domain structuring
-      - then just make it up as you go along, bumbling through the world, stumbling on cases.
-    - Surprisingly effective: can maintain 1000s of rules in just a few minutes each day [^comp]
+### Automated support for IBR
+- clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
+  repair mechanisms to patch current or prior conclusions
+- e.g. partial match are repair
+  - partial match = distance to cluster centroids to select a near cluster
+  - repair =  a minimal change to a  case such that it enters the space of known examples (in the near cluster)
+- e.g. ripple down rules [^comp]
+  - e.g. Interpretation of biochemical assays (someone staring at 100s of lab results per day saying "ok,ok,ok,ok,ok,ok,whoops-better fix that one"
+  - write down a rule  $R_1$ and its conclusions (initially, this will just be "if true then happy" (say).
+    - tag this rule with the case $C_1$ that lead to $R_1$.
+  - Run new cases $C_2,C_3,..$ etc over the rules
+  - If any old rule $R_i$ makes the wrong conclusion for a new case $C_j$
+    - the repair must be in the difference between the current case and the old case $C_i$ from the old rule $\Delta=C_j - C_i$.
+    - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion
+      - We call this the "except" clause $\epsilon \subseteq \Delta$.
+      - It can be found very quickly: pop up $\epsilon$ in a list and let them go click-click and to pick a few items.
+    - patch $R_i$ with the "except" clause $\epsilon$ 
+      - now of  $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
+  - Overtime, this grows into a patch tree of nested "except" clauses
+  - Historically, the work kind of offended a lot of people
+    - very little initial domain structuring
+    - then just make it up as you go along, bumbling through the world, stumbling on cases.
+  - Surprisingly effective: can maintain 1000s of rules in just a few minutes each day [^comp]
 
 <img src="https://static.cambridge.org/binary/version/id/urn:cambridge.org:id:binary-alt:20160714021723-30702-mediumThumb-S0269888909000241_fig4g.jpg?pub-status=live">
 
