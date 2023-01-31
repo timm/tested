@@ -64,7 +64,7 @@ Knowledge is a often myth, a social construct.
 Whoa! you say, that cannot be right! There are experts in the world, right, who do better than other people
 - Survivor bias
   - concentrating on entities that passed a selection process while overlooking those that did not
-- Are they "expert"? or in a population of 8 billion people, and "luck" a probability 0.5,  
+- Are they "expert"? or in a population of 8 billion people, and "luck" at probability 0.5,  
   20 people might get the 20 breaks (at odds $.5^{20}$) to select the 1000 "best" people in the world.
 
 
@@ -107,7 +107,7 @@ Welcome to instance-based reasoning.
 - Often cited as how legal reasoning works
   - Lawyers often argue via precedence; i.e. apply old rulings to current cases
 
-      <br>
+      <br clear=all>
 <img width=400 align=right src="/etc/img/shank.png">
 
 Stop press: Roger Shank, father of instance-based reasoning, died earlier this week.
