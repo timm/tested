@@ -43,7 +43,7 @@ Ever asked an expert for their opinion? Ever been surprised how hard it can be f
 
 Note that unless we can address _that_ problem, then we can never expect to ask people "what is needed in this software?" and expect a straight answer.
 
-### Possibility1: Experts are not expert.
+## Possibility1: Experts are not expert.
 
 <img width=400 align=right src="https://flcan.org/wp-content/uploads/2019/09/emperor-no-clothes.jpg">
 
@@ -68,7 +68,7 @@ Whoa! you say, that cannot be right! There are experts in the world, right, who 
   20 people might get the 20 breaks (at odds $.5^{20}$) to select the 1000 "best" people in the world.
 
 
-### Possibility2: Too Hard to Explain the World
+## Possibility2: Too Hard to Explain the World
 
 You can ask for simple descriptions of a complex world
 
@@ -78,7 +78,7 @@ Yeah... maybe not. Long history of cool simple rules that proved to be useful. E
 
 <br clear=all>
 
-### Possibility3: Expertise not be expressed in words since it is not symbolic
+## Possibility3: Expertise not be expressed in words since it is not symbolic
 
 Rather it is some neural effect of brain juice washing around the cranium.
 
@@ -99,7 +99,7 @@ Neural nets
          In Proceedings of the 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2022). Association for Computing Machinery, New York, NY, USA, 382–394. https://doi.org/10.1145/3540250.3549113
 
 
-### Possibility4: People don't think, they remember 
+## Possibility4: People don't think, they remember 
 
 <img src="https://www.ask-flip.com/attachments/861563b5-37de-4898-abf3-076bea8edb22/thumbnail" align=right width=500>
 
@@ -158,7 +158,7 @@ He really [inspired and pissed off](https://educationoutrage.blogspot.com/)  a l
   arXiv:http://science.sciencemag.org/content/208/4450/1335.full.pdf
 
 
-### Possibilitys5: Experts are experts because of "compiled knowledge"
+## Possibilitys5: Experts are experts because of "compiled knowledge"
 The more you know something, the harder it is to articulate.
 
 - Larkin et al. [^36] characterize human expertise in terms of
@@ -245,7 +245,7 @@ i  memory. Nature neuroscience 17, 3 (2014), 347–356.
          [Applications of psychological science for actionable analytics](https://dl.acm.org/doi/pdf/10.1145/3236024.3236050?casa_token=5Wp-MiwBHoAAAAAA:VL646H96bnTZMUqn5A74kdB12DSWE8d3iRvuEOAMUa52scR90n741HOxKkjJPsDAaFRnvWJAX0ub). 
          In Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (pp. 456-467).
 
-### Possibility5: Generating Explanations is Hard (actually, NP-Hard)
+## Possibility5: Generating Explanations is Hard (actually, NP-Hard)
 
 Explanations are not "one size fits all"
 - they must be tuned to the task at hand
