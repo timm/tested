@@ -131,7 +131,7 @@ Welcome to instance-based reasoning.
       - patch $R_i$ with the "except" clause $\epsilon$ 
         - now of  $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
     - Overtime, this grows into a patch tree of nested "except" clauses
-    - Historically, kind of offended a lot of people
+    - Historically, the work kind of offended a lot of people
       - very little initial domain structuring
       - then just make it up as you go along, bumbling through the world, stumbling on cases.
     - Surprisingly effective: can maintain 1000s of rules in just a few minutes each day [^comp]
@@ -280,8 +280,8 @@ But wait, there's a loophole.
 - Just because your are theoretically NP-hard,
   - Does not necessarily mean you are slow in practice.
 - Numerous AI researchers studying NP-hard tasks
-report the existence of a small number of _key_ variables (also known as  Variable subset selection, narrows,
-master variables, and backdoors)
+report the existence of a small number of _key_ variables (also known as  _variable subset selection, narrows,
+master variables_, and _backdoors_)
 that
 determine the behavior of the rest of the model. 
 - When
@@ -290,7 +290,7 @@ entire model simplifies to just the problem of controlling
 the keys.
 - In the 1960s, Amarel
 observed that search problems contain narrows; i.e. tiny sets
-of variable settings that must be used in any solution [^all].
+of variable settings that must be used in any solution [^a11].
  - Amarel’s work defined macros that encode paths between
    the narrows in the search space, effectively permitting a
   search engine to leap quickly from one narrow to another.
