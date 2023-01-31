@@ -25,7 +25,7 @@ Also, in the following, where possible, we will talk about automated tools that 
 
 (Aside: for a thorough survey of RE methods, but perhaps not as deep diving as the following, see Carla 2018 [^carla18]).
 
-[^carla18] [Requirements elicitation techniques: a
+[^carla18]: [Requirements elicitation techniques: a
 systematic literature review based on the
 maturity of the techniques](https://www.evernote.com/shard/s14/sh/ca43b13b-9399-49a6-b709-22d42be41949/6d9cabfe33843c64a9be8d6d3273269f)
 Carla Pacheco,
