@@ -241,7 +241,7 @@ Consider the mathematics of explanation (abduction):
 $$ t \wedge a \vdash g $$
 
 $$ t \wedge a \vdash \not{\bottom}$$
-backdoors
+
 
 ripple down rules
 instance based reasonng
