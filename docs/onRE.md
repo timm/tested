@@ -82,7 +82,7 @@ Knowledge is a often myth, a social construct.
 
 You can ask for simple descriptions of a complex world
 
-<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fstats.stackexchange.com%2Fquestions%2F438759%2Fcan-logistic-regression-output-a-non-linear-curve&psig=AOvVaw3FOBAfjy_dA9qBALdGo7vj&ust=1675211497567000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCLCLl7LH8PwCFQAAAAAdAAAAABAQ">
+<img width=400 src="/etc/ing/boundary.png">
 
 Yeah... maybe not. Long history of cool simple rules that proved to be useful.
 
