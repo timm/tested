@@ -23,7 +23,6 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 A common theme in many reports of algorithmic discrimination is that the developers of "it" are not sensitive (enough)
 to the concerns of the people that use it.
 
-
 Chapter six of Safiya Noble’s book Algorithms of Oppression [^1]  tells the sad tale of  how a design quirk of  Yelp ruined a small business. 
 - As one of Noble’s interviewees put it “ Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). i
   They already feel like they are being hunted;  they aren’t going to tell the Man where they are”. Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button.  There are many  other examples where software engineers fielded AI models, without noticing biases in those models:
@@ -57,11 +56,16 @@ is so difficult.
 
 ## Requirements Engineering
 
-Ever asked an expert for their opinion? Ever been surprised how hard it can be for them to offer that opinion, clearly and succinctly? Ever wonder one?
+Ever asked an expert for their opinion? Ever been surprised how hard it can be for them to offer that opinion, clearly and succinctly? Ever wonder why?
+
+Note that unless we can address _that_ problem, then we can never expect to ask people "what is needed in this software?" and expect a straight answer.
 
 ### Possibility1: Experts are not expert.
 
-Knowledge is a social construct. 
+<img width=400 align=right src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fflcan.org%2Fthe-emperor-wears-no-clothes%2F&psig=AOvVaw0ovLrSHebhb-nbpfdPXG7M&ust=1675211846031000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCLiyqNPI8PwCFQAAAAAdAAAAABAQ">
+The emperor  has no clothes. Experts can't say what they know since they don't know anything (more than anyone else).
+
+Knowledge is a often myth, a social construct. 
 - The initial methodology of Laboratory Life [^latour] involves an "anthropological strangeness" (40) in which the laboratory is a tribe foreign to the researcher. 
 - As observers, they  describes the laboratory as "strange tribe" of "compulsive and manic writers ... 
   who spend the greatest part of their day coding, marking, altering, correcting, reading, and writing".
@@ -71,7 +75,15 @@ Knowledge is a social construct.
 -  Instead of attempting to do their studies more carefully to be sure they get the right answer, 
    - scientists appear to only use as much care as they think will be necessary to defeat the counterarguments of their detractors and get the acclamation they desire for their work.
 
-### Possibility2: Expertise not be expressed in words since it is not symbolic
+### Possibility2: Too Hard to Explain the World
+
+You can ask for simple descriptions of a complex world
+
+<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fstats.stackexchange.com%2Fquestions%2F438759%2Fcan-logistic-regression-output-a-non-linear-curve&psig=AOvVaw3FOBAfjy_dA9qBALdGo7vj&ust=1675211497567000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCLCLl7LH8PwCFQAAAAAdAAAAABAQ">
+
+Yeah... maybe not. Long history of cool simple rules that proved to be useful.
+
+### Possibility3: Expertise not be expressed in words since it is not symbolic
 Rather it is some neural effect of brain juice washing around the cranium.
 
 - Impossible to a extract a chunk of knowledge since knowledge is not in solid chunks;
@@ -89,7 +101,7 @@ Rather it is some neural effect of brain juice washing around the cranium.
 
 <img src="https://www.ask-flip.com/attachments/861563b5-37de-4898-abf3-076bea8edb22/thumbnail" align=right width=500>
 
-### Possibility3: People don't think, they remember 
+### Possibility4: People don't think, they remember 
 
 Welcome to instance-based reasoning.
 
@@ -130,8 +142,8 @@ Welcome to instance-based reasoning.
   4450 (1980), 1335–1342. DOI:http://dx.doi.org/10.1126/science.208.4450.1335
   arXiv:http://science.sciencemag.org/content/208/4450/1335.full.pdf
 
-### Possibility4: Experts are experts because of "compiled knowledge"
 
+### Possibilitys54: Experts are experts because of "compiled knowledge"
 The more you know something, the harder it is to articulate.
 
 - Larkin et al. [^36] characterize human expertise in terms of
@@ -196,6 +208,12 @@ While first proposed in 1981,
 
 Other practical examples of LTM/STM theory. Patterns of expertise:
 
+XXXX
+
+
+### Possibility5: Generating Explanations is NP-Hard
+
+backdoors
 
 ripple down rules
 instance based reasonng
