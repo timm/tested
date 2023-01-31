@@ -282,7 +282,7 @@ you could pick any one of these leaf nearest neighbors..
 |.. |.. |.. |.. InformationHighway
 ```
 
-## Task5: Use it
+## Task5: Use this tool on 3 people
 
 
 As a team, go find 3 people who all know something about some topic (cars, what to watch on Netflix, best cafes in Hillsborough street, football) and
@@ -294,6 +294,9 @@ As a team, go find 3 people who all know something about some topic (cars, what 
 - Wrote at most 500 words (ascii text .md file) on the similarities, differences in what was found
 - Important note:
   - you interview the 3 people separately and the 3 people do not communicate with each other
+  - do not assume that the attributes from person1 will apply to person2,person3
+    - in fact, never tell person2,person3 about the attributes found by the people before them.
+      - so NAME the examples but let your people DESCRIBE them.
 
 Recall the interview process.
 - Place a blank sheet of paper on the table
