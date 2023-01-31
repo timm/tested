@@ -84,9 +84,12 @@ You can ask for simple descriptions of a complex world
 
 <img width=400 src="/etc/img/boundary.png">
 
-Yeah... maybe not. Long history of cool simple rules that proved to be useful.
+Yeah... maybe not. Long history of cool simple rules that proved to be useful. E.g. recall the row/column selection example seen in past weeks (for privacy).
+
+<br clear=all>
 
 ### Possibility3: Expertise not be expressed in words since it is not symbolic
+
 Rather it is some neural effect of brain juice washing around the cranium.
 
 - Impossible to a extract a chunk of knowledge since knowledge is not in solid chunks;
@@ -112,7 +115,7 @@ Welcome to instance-based reasoning.
 - Rather it is a set of remembered situations which we match, then adapt to the current context
 - Often cited as how legal reasoning works
   - Lawyers often argue via precedence; i.e. apply old rulings to current cases
-- Automated support: partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
+- Automated support: clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
     repair mechanisms to patch current or prior conclusions
   - e.g. ripple down rules [^comp]
     - e.g. Interpretation of biochemical assays (someone staring at 100s of lab results per day saying "ok,ok,ok,ok,ok,ok,whoops-better fix that one"
@@ -160,32 +163,49 @@ The more you know something, the harder it is to articulate.
   - When
     an LTM rule triggers, its consequence can rewrite STM contents
     which, in turn, can trigger other rules.
-- Short term memory is very small, perhaps even as small as four
-    to seven items [^12] [^52]
--  Experts are experts, says Larkin et al. [^36]
-    because the patterns in their LTM patterns dictate what to do,
-    without needing to pause for reflection. 
-  - Experts become experts by packing in rules into the LTM
-  - maybe 5-10 new LTM rules per day. As Wong [^wong]:
-    - In his book _Outliers: The Story of Succeess_,  Gladwell introduces the concept of the “10 000-Hour Rule” and how it helped the Beatles become world 
-      famous musicians by having the opportunity to perform live as a group in Hamburg, Germany over 1200 times between 1960 and 1964. 
-    - Although they initially started at strip clubs, they accumulated more than 10 000 hours by playing nonstop. 
-    -  Throughout his book, Gladwell repeatedly refers to the “10 000-hour rule,” asserting that a pre-condition achieving true expertise in any skill is a matter of practicing, 
-        albeit in the correct way, for at least 10 000 hours.
-    - e.g. surgical residents,  spend roughly 70+ hours a week working, learning and breathing their craft.
-      - With a 5-year residency program that runs 48 weeks a year, that is 16 800 hours of experience 
-      - Ever wonder why its called a medical "practice"? Cause they are practicing their task.
-- Novices perform worse
-    than experts, says Larkin et al., when they fill up their STM with
-    too many to-do’s where they plan to pause and reflect on what to
-    do next. 
-- Since, experts post far fewer to-do’s in their STMs, they
-    complete their tasks faster because (a) they are less encumbered
-    by excessive reflection and (b) there is more space in their STM
-    to reason about new information. 
-- But the LTM rules are heavily cross-index to map STM contents to an action. 
-  - The more they are used, the faster we use them to skip to the next action
-  - So they less we can talk about them.
+
+Example for SE: software design. Layers architectures are a common patterns:
+
+![](https://user-images.githubusercontent.com/29195/132731131-093cceaf-582f-4fd4-82d7-6c9c34850845.png)
+
+Patterns have review heursitics:
+- Implementation complexity
+- Slow (messages have to navigate many layers)
+- Internal barriers to change
+
+So cognitively speaking, when we glance at a design and see a layered pattern, that fills our sTM with significant features,
+which in turns triggers our LTM design riles.
+
+Short term memory is very small, perhaps even as small as four
+  to seven items [^12] [^52]
+  -  Aside: Ma et al. [^40] used evidence from neuroscience and functional magnetic resonance imaging to
+      argue that STM capacity might be better measured using other factors than “number of
+      items”. But even they conceded that “the concept of a limited (STM) has considerable
+      explanatory power for behavioral data”. 
+ Experts are experts, says Larkin et al. [^36]
+  because the patterns in their LTM patterns dictate what to do,
+  without needing to pause for reflection. 
+- Experts become experts by packing in rules into the LTM
+- maybe 5-10 new LTM rules per day. As Wong [^wong]:
+  - In his book _Outliers: The Story of Succeess_,  Gladwell introduces the concept of the “10 000-Hour Rule” and how it helped the Beatles become world 
+    famous musicians by having the opportunity to perform live as a group in Hamburg, Germany over 1200 times between 1960 and 1964. 
+  - Although they initially started at strip clubs, they accumulated more than 10 000 hours by playing nonstop. 
+  -  Throughout his book, Gladwell repeatedly refers to the “10 000-hour rule,” asserting that a pre-condition achieving true expertise in any skill is a matter of practicing, 
+      albeit in the correct way, for at least 10 000 hours.
+  - e.g. surgical residents,  spend roughly 70+ hours a week working, learning and breathing their craft.
+    - With a 5-year residency program that runs 48 weeks a year, that is 16 800 hours of experience 
+    - Ever wonder why its called a medical "practice"? Cause they are practicing their task.
+Novices perform worse
+  than experts, says Larkin et al., when they fill up their STM with
+  too many to-do’s where they plan to pause and reflect on what to
+  do next. 
+Since, experts post far fewer to-do’s in their STMs, they
+  complete their tasks faster because (a) they are less encumbered
+  by excessive reflection and (b) there is more space in their STM
+  to reason about new information. 
+But the LTM rules are heavily cross-index to map STM contents to an action. 
+- The more they are used, the faster we use them to skip to the next action
+- So they less we can talk about them.
 
 [^wong]: Wong NC. The 10 000-hour rule. Can Urol Assoc J. 2015 Sep-Oct;9(9-10):299. doi: 10.5489/cuaj.3267. PMID: 26644801; PMCID: PMC4662388.
 
@@ -198,6 +218,8 @@ While first proposed in 1981,
   to a tiny part of it
   - They are proposing methods to reduce how much stuff we are trying to pack into our STM.
 
+[^40]: Wei Ji Ma, Masud Husain, and Paul M Bays. 2014. Changing concepts of working
+i  memory. Nature neuroscience 17, 3 (2014), 347–356.
 [^12]: N. Cowan. 2001. The magical number 4 in short-term memory: a reconsideration
    of mental storage capacity. Behav Brain Sci 24, 1 (Feb 2001), 87–114.
 [^52]: George A Miller. 1956. The magical number seven, plus or minus two: some
@@ -208,8 +230,6 @@ While first proposed in 1981,
 [^69]: Susan Wiedenbeck, Vikki Fix, and Jean Scholtz. 1993. Characteristics of the
    mental representations of novice and expert programmers: an empirical study.
    International Journal of Man-Machine Studies 39, 5 (1993), 793–812.
-
-Other practical examples of LTM/STM theory. Patterns of expertise:
 
 XXXX
 
