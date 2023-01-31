@@ -16,7 +16,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
-Hang on your hats oh students of AA cause in the next hour our study on automated SE will spend  time talking abut _people_ than _algorithms_.
+Hang on your hats oh students of AA cause in the next hour our 
+study on automated SE will spend  more time talking abut _people_ than _algorithms_.
 
 Also, in the following, where possible, we will talk about automated tools that can assist in the requirements collection process.
 - Sometimes we will be taking about additional early lifecycle modeling to build a throw-away requirements model
@@ -60,6 +61,13 @@ Knowledge is a often myth, a social construct.
 -  Instead of attempting to do their studies more carefully to be sure they get the right answer, 
    - scientists appear to only use as much care as they think will be necessary to defeat the counterarguments of their detractors and get the acclamation they desire for their work.
 
+Whoa! you say, that cannot be right! There are experts in the world, right, who do better than other people
+- Survivor bias
+  - concentrating on entities that passed a selection process while overlooking those that did not
+- Are they "expert"? or in a population of 8 billion people, and "luck" a probability 0.5,  
+  20 people might get the 20 breaks (at odds $.5^{20}$) to select the 1000 "best" people in the world.
+
+
 ### Possibility2: Too Hard to Explain the World
 
 You can ask for simple descriptions of a complex world
@@ -99,12 +107,18 @@ Welcome to instance-based reasoning.
 - Often cited as how legal reasoning works
   - Lawyers often argue via precedence; i.e. apply old rulings to current cases
 
+      <br>
 <img width=400 align=right src="/etc/img/shank.png">
 
-We can't really talk about IBR without talking about Roger Shank, who passed away just this month. He really inspired and pissed off a lot of people.
+Stop press: Roger Shank, father of instance-based reasoning, died earlier this week.
+You can't really talk about IBR without talking about Shank, who passed away just this month. 
+He really [inspired and pissed off](https://educationoutrage.blogspot.com/)  a lot of people.
 
-- Automated support: clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
+- Automated support for IBR clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
     repair mechanisms to patch current or prior conclusions
+  - e.g. partial match are repair
+    - partial match = distance to cluster centroids to select a near cluster
+    - repair =  a minimal change to a  case such that it enters the space of known examples (in the near cluster)
   - e.g. ripple down rules [^comp]
     - e.g. Interpretation of biochemical assays (someone staring at 100s of lab results per day saying "ok,ok,ok,ok,ok,ok,whoops-better fix that one"
     - write down a rule  $R_1$ and its conclusions (initially, this will just be "if true then happy" (say).
