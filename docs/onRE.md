@@ -84,7 +84,10 @@ Rather it is some neural effect of brain juice washing around the cranium.
 
 - Impossible to a extract a chunk of knowledge since knowledge is not in solid chunks;
   - rather it is a bunch of waves crashing around inside the brain.
-- Automated support: neural nets 
+
+### Automated support for non-symbolic reasoning
+
+Neural nets 
   - not good for explanation
   - data hungry (for training). On the other hand, can handle very large data spaces
   - CPU hungry (for initial training). On the other hand, there are fast local tunings:
@@ -280,6 +283,8 @@ where  $\bot$ means
   - What beliefs are incompatible in this _soft goal graph_ <br clear=all>
 
 <img src="/etc/img/softgoal.png">
+
+And the above softgoal is just one example of how contradictory are requirements:
 
 <img src="https://user-images.githubusercontent.com/29195/192589531-be8abcb9-2a2a-4980-8ccb-c0ace4ef471d.png">
 
