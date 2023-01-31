@@ -105,9 +105,10 @@ Rather it is some neural effect of brain juice washing around the cranium.
          [No more fine-tuning? an experimental evaluation of prompt tuning in code intelligence](https://arxiv.org/pdf/2207.11680.pdf). 
          In Proceedings of the 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2022). Association for Computing Machinery, New York, NY, USA, 382–394. https://doi.org/10.1145/3540250.3549113
 
-<img src="https://www.ask-flip.com/attachments/861563b5-37de-4898-abf3-076bea8edb22/thumbnail" align=right width=500>
 
 ### Possibility4: People don't think, they remember 
+
+<img src="https://www.ask-flip.com/attachments/861563b5-37de-4898-abf3-076bea8edb22/thumbnail" align=right width=500>
 
 Welcome to instance-based reasoning.
 
@@ -149,7 +150,7 @@ Welcome to instance-based reasoning.
   arXiv:http://science.sciencemag.org/content/208/4450/1335.full.pdf
 
 
-### Possibilitys54: Experts are experts because of "compiled knowledge"
+### Possibilitys5: Experts are experts because of "compiled knowledge"
 The more you know something, the harder it is to articulate.
 
 - Larkin et al. [^36] characterize human expertise in terms of
@@ -164,25 +165,13 @@ The more you know something, the harder it is to articulate.
     an LTM rule triggers, its consequence can rewrite STM contents
     which, in turn, can trigger other rules.
 
-Example for SE: software design. Layers architectures are a common patterns:
-
-![](https://user-images.githubusercontent.com/29195/132731131-093cceaf-582f-4fd4-82d7-6c9c34850845.png)
-
-Patterns have review heursitics:
-- Implementation complexity
-- Slow (messages have to navigate many layers)
-- Internal barriers to change
-
-So cognitively speaking, when we glance at a design and see a layered pattern, that fills our sTM with significant features,
-which in turns triggers our LTM design riles.
-
 Short term memory is very small, perhaps even as small as four
   to seven items [^12] [^52]
   -  Aside: Ma et al. [^40] used evidence from neuroscience and functional magnetic resonance imaging to
       argue that STM capacity might be better measured using other factors than “number of
       items”. But even they conceded that “the concept of a limited (STM) has considerable
       explanatory power for behavioral data”. 
- Experts are experts, says Larkin et al. [^36]
+Experts are experts, says Larkin et al. [^36]
   because the patterns in their LTM patterns dictate what to do,
   without needing to pause for reflection. 
 - Experts become experts by packing in rules into the LTM
