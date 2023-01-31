@@ -62,7 +62,7 @@ Note that unless we can address _that_ problem, then we can never expect to ask 
 
 ### Possibility1: Experts are not expert.
 
-<img width=400 align=right src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fflcan.org%2Fthe-emperor-wears-no-clothes%2F&psig=AOvVaw0ovLrSHebhb-nbpfdPXG7M&ust=1675211846031000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCLiyqNPI8PwCFQAAAAAdAAAAABAQ">
+<img width=400 align=right src="https%3A%2F%2Fflcan.org%2Fthe-emperor-wears-no-clothes%2F">
 The emperor  has no clothes. Experts can't say what they know since they don't know anything (more than anyone else).
 
 Knowledge is a often myth, a social construct. 
