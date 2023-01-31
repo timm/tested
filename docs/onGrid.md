@@ -20,10 +20,10 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 grid.lua implements an requirements engineering tool for finding tacit knowledge.
 
-Repertory grids are a tool proposed by the  cognitive psychologist George Kelly as a method for eliciting  tacit knowledge. From Wikipedia:
+Repertory grids are a tool proposed by the  cognitive psychologist George Kelly as a method for eliciting  tacit knowledge. From [Wikipedia](https://en.wikipedia.org/wiki/George_Kelly_(psychologist)):
 
 - Kelly believed in a non-invasive or non-directive approach to psychotherapy.
-- Rather than having the therapist interpret the person's psyche (which would amount to imposing the doctor's constructs on the patient)l
+- Rather than having the therapist interpret the person's psyche (which would amount to imposing the doctor's constructs on the patient)
 - The therapist should just act as a facilitator of the patient finding his or her own constructs. 
 - The patient's behavior is then mainly explained as ways to selectively observe the world, act upon it and update the construct system in such a way as to increase predictability. 
 To help the patient find his or her constructs, Kelly developed the repertory grid interview technique.
