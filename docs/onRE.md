@@ -98,6 +98,11 @@ Welcome to instance-based reasoning.
 - Rather it is a set of remembered situations which we match, then adapt to the current context
 - Often cited as how legal reasoning works
   - Lawyers often argue via precedence; i.e. apply old rulings to current cases
+
+<img width=400 align=right src="/etc/img/shank.png">
+
+We can't really talk about IBR without talking about Roger Shank, who passed away just this month. He really inspired and pissed off a lot of people.
+
 - Automated support: clustering, partial match functions, distance functions that can handle many missing values, machine learning to build theories in the retain case,
     repair mechanisms to patch current or prior conclusions
   - e.g. ripple down rules [^comp]
