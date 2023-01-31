@@ -232,6 +232,7 @@ i  memory. Nature neuroscience 17, 3 (2014), 347–356.
 
 - Anything that directs the user from  a large amount of data to a small part 
   - i.e. finding the important stuff to put into STM such that the LTM can work.
+- Tools for discovering tacit knowledge (see [repertory grids](onGrid.md);
 - Divide the thinking into _feature extraction_ and _rules_
 - Don't show people everything, just show them the most important features (for an example of feature selection, see below "rep grids").
 - As to the rules, keep them small (so humans can easily process them). e.g. fast and frugal trees [^frugal].
