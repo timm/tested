@@ -406,6 +406,11 @@ But I have had much success in cheating, as follows:
   - i.e. cluster and look for the deltas between clusters.
 - e.g. Stagger around a little (e.g. with ISAMP or some other thing that runs around making random choices)
   - E.g. in  a state machine, take any out-arc at random.
+  - If theory can deduce inconsistencies
+    - check the next stagger is consistent with prior steps
+    - if not then either backtrack OR  (ISAMP) just give up and go back to the start
+      - but weight the next stager with good steps seen from the last stagger
+      - for an example of this, see week11 (theorem provers).
 - Then cluster what you get
 - Then find the attribute ranges that are most different in different clusters (these are the _keys_)
 - Then for consistent combinations of the keys
