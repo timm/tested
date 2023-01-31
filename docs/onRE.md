@@ -38,45 +38,6 @@ doi: 10.1049/iet-sen.2017.0144
 
 # Automated SE and Requirements Engineering
 
-A common theme in many reports of algorithmic discrimination is that the developers of "it" are not sensitive (enough)
-to the concerns of the people that use it.
-
-Chapter six of Safiya Noble’s book Algorithms of Oppression [^1]  tells the sad tale of  how a design quirk of  Yelp ruined a small business. 
-- As one of Noble’s interviewees put it “ Black people don’t ‘check in’ and let people know where they’re at when they sit in my (hair dressing salon). i
-  They already feel like they are being hunted;  they aren’t going to tell the Man where they are”. Hence, that salon fell in the Yelp ratings (losing customers) since its patrons rarely  pressed the   “checked-in”  button.  There are many  other examples where software engineers fielded AI models, without noticing biases in those models:
-- Amazon had to scrap an automated recruiting tool as it was found to be biased against women [^2].
-- A widely used face recognition software was found to be biased against dark-skinned women [^3] and dark-skinned men  [^4].
-- Google Translate, the most popular translation engine in the world, shows gender bias. 
-  “She is an engineer, He is a nurse” is translated into Turkish and then again into English becomes “He is an engineer, She is a nurse” [^5].  
-- For our purposes, the  important point of the first Noble example is this: if software designers had been more intentional about soliciting feedback from 
-    the Black community, then they could have changed how check-ins are weighted in the overall Yelp rating system.  
-- As to the other examples, in each case there was some discriminatory effect which was easy to detect and repair [^6], but developers just failed to test for those biases.  
-
-[^1]: Noble, Safiya Umoja. "Algorithms of oppression." Algorithms of Oppression. New York University Press, 2018.
-[^2]: https://reut.rs/2Od9fPr
-[^3]: https://news.mit.edu/2018/study-finds-gender-skin-type-bias-artificial-intelligence-systems-0212
-[^4]: https://www.nytimes.com/2020/06/24/technology/facial-recognition-arrest.html
-[^5]: https://science.sciencemag.org/content/356/ 6334/183
-[^6]: Chakraborty, Joymallya, Suvodeep Majumder, and Tim Menzies. "Bias in machine learning software: why? how? what to do?." Foundations of Software Engineering, 2021
-
-There is a solution to all these problems:
-- if a small group of people build software for the larger community, 
-- that smaller group needs to listen more to the  concerns of the larger community. 
-
-For that to work, the smaller group of developers have to admit the larger group into their design processes– either via
-
--  changing the reward structures such that there are inducements for the few to listen to the many (e.g. by better government legislation or  professional standards); 
-- or (b) inclusion practices that admits the broader community into the developer community;
-- or by (c) review practices where the developers can take better and faster feedback from the community.  
-
-This brings us to the issue of requirements engineering. 
-- And it should be noted that RE is hard.
-- So it is hardly surprising that developers often miss important requirements
-- Nevertheless, just because it is difficulty, does not mean it is optional.
-
-
-## Requirements Engineering
-
 Ever asked an expert for their opinion? Ever been surprised how hard it can be for them to offer that opinion, clearly and succinctly? Ever wonder why?
 
 Note that unless we can address _that_ problem, then we can never expect to ask people "what is needed in this software?" and expect a straight answer.
