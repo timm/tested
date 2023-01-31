@@ -62,8 +62,11 @@ Note that unless we can address _that_ problem, then we can never expect to ask 
 
 ### Possibility1: Experts are not expert.
 
-<img width=400 align=right src="https%3A%2F%2Fflcan.org%2Fthe-emperor-wears-no-clothes%2F">
+<img width=400 align=right src="https://flcan.org/wp-content/uploads/2019/09/emperor-no-clothes.jpg">
+
 The emperor  has no clothes. Experts can't say what they know since they don't know anything (more than anyone else).
+- But the psychology of the people we all "experts" is such that their social standing depends on their ability to sound smart
+- So ask them anything, they will tell you anything (even it if is sooo dumb).
 
 Knowledge is a often myth, a social construct. 
 - The initial methodology of Laboratory Life [^latour] involves an "anthropological strangeness" (40) in which the laboratory is a tribe foreign to the researcher. 
