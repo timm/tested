@@ -16,7 +16,25 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
 
-(Hang on your hats oh students of AA cause in the next hour our study on automated SE will spend more time talking abut _people_ than _algorithms_.)
+Hang on your hats oh students of AA cause in the next hour our study on automated SE will spend  time talking abut _people_ than _algorithms_.
+
+Also, in the following, where possible, we will talk about automated tools that can assist in the requirements collection process.
+- Sometimes we will be taking about additional early lifecycle modeling to build a throw-away requirements model
+  - From which we can derive the real systems's requirements
+- Sometimes we will the talking about an RE process that _replaces_ the entire rest of the development (e.g. ripple down rules).
+
+(Aside: for a thorough survey of RE methods, but perhaps not as deep diving as the following, see Carla 2018 [^carla18]).
+
+[^carla18] [Requirements elicitation techniques: a
+systematic literature review based on the
+maturity of the techniques](https://www.evernote.com/shard/s14/sh/ca43b13b-9399-49a6-b709-22d42be41949/6d9cabfe33843c64a9be8d6d3273269f)
+Carla Pacheco,
+Ivan García,
+Miryam Reyes.
+IET Software,
+2018, Vol. 12 Iss. 4, pp. 365-378
+doi: 10.1049/iet-sen.2017.0144
+
 
 # Automated SE and Requirements Engineering
 
@@ -51,8 +69,11 @@ For that to work, the smaller group of developers have to admit the larger group
 - or (b) inclusion practices that admits the broader community into the developer community;
 - or by (c) review practices where the developers can take better and faster feedback from the community.  
 
-This brings us to the issue of requirements engineering. And before we can talk about automated tools for requirements engineering, lets talk about why RE
-is so difficult.
+This brings us to the issue of requirements engineering. 
+- And it should be noted that RE is hard.
+- So it is hardly surprising that developers often miss important requirements
+- Nevertheless, just because it is difficulty, does not mean it is optional.
+
 
 ## Requirements Engineering
 
@@ -364,14 +385,25 @@ Long story short:
 - to tame complex non-deterministic problems, work backwards
   - don't do a lot of stiff, then look for the keys
   - find the keys first, then reason within those contexts/
-- so stagger around some (e.g. with ISAMP)
-- then cluster what you get
-- then find the attribute ranges that are most different in different clusters (these are the _keys_)
-- then for consistent combinations of the keys
-  - run the inference, restricted to that combination
+- Here I am proposing some random stagger followed by some data mining.
 
-instance based reasonng
-lab life
+A standard method, used by many are _aquisition  functions_ in [onOPtimize](onOptimize.md) (which we will discuss next week).
+
+But I've had much success in cheating, as follows:
+
+- Stagger around some (e.g. with ISAMP or some other thing that runs around making random choices)
+  - E.g. in  a statemachine, take any out-arc at random.
+- Then cluster what you get
+- Then find the attribute ranges that are most different in different clusters (these are the _keys_)
+- Then for consistent combinations of the keys
+  - run the inference, restricted to that combination
+- Can be crazy fast [^mathew]
+
+<img src="/etc/img/shorter.png">
+
+[^mathew]: George Mathew, Tim Menzies, Neil A. Ernst, John Klein:
+   "SHORT"er Reasoning About Larger Requirements Models. RE 2017: 154-163
+
 
 [^by]: Tom Bylander, Dean Allemang, Michael C. Tanner, John R. Josephson,
   The computational complexity of abduction,
@@ -379,22 +411,6 @@ lab life
   Volume 49, Issues 1–3,
   1991,
   Pages 25-60,
-
-Readings: 
-- [^malt21], 
-- [^easter07]: case study, repgrids
-- [^carla19]: many methods 
-
-
-[^carla18] [Requirements elicitation techniques: a
-systematic literature review based on the
-maturity of the techniques](https://www.evernote.com/shard/s14/sh/ca43b13b-9399-49a6-b709-22d42be41949/6d9cabfe33843c64a9be8d6d3273269f)
-Carla Pacheco,
-Ivan García,
-Miryam Reyes.
-IET Software,
-2018, Vol. 12 Iss. 4, pp. 365-378
-doi: 10.1049/iet-sen.2017.0144
 
 
 [^easter07] N. Niu and S. Easterbrook, 
