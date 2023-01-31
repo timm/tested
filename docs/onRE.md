@@ -235,17 +235,138 @@ Automated support:
 
 ### Possibility5: Generating Explanations is NP-Hard
 
-Consider the mathematics of explanation (abduction):
-- Given a theory $t$ and goals $g$ and assumptuons $a$, can you get to the goals without causing problems?
+Explanations are not "one size fits all"
+- they must be tuned to the task at hand
+- and the person you are talking to (i.e. you have to express the explanation in terms of things they might understand).
 
-$$ t \wedge a \vdash g $$
+Can we write that down formally? Well, yes we can. Welcome to logical  abduction [^poole] [^me]
 
-$$ t \wedge a \vdash \not{\bot}$$
+[^poole]: Poole, David. ["Who chooses the assumptions?."](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=4c948fd3f0e0090abc75c3b3ef16aa1c1558f077) (1994).
+[^me]: T.J. Menzies. 
+    [Applications of Abduction: Knowledge Level Modeling. International Journal of Human Computer Studies](https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ce6cd441bc9a041a4ead96a91a531cace094f698),
+     45:305–355, September, 1996. Available from
 
+Given a theory $t$ and goals $g$ and assumptions $a$, can you get to the goals without causing problems?
+
+$$ \mathit{rule}_1:\; t \wedge a \vdash g $$
+
+$$ \mathit{rule}_2:\; \neg (\wedge a \vdash \bot$$
+
+
+-Rule1 is saying "do something" and rule2 is saying "do not make mistakes". 
+  - Rule1, by itself, is crazy fast (just dash forward)
+  - But Rule2 means we have to check for errors as we goes. Much slower.
+- In the general case, we cannot use all the assumptions $A$ or all the theory $T$ or reach all the goals $G$
+  - so really, $a \subseteq A$;
+  - so really, $g \subseteq G$;
+  - so really, $t \subseteq T$;
+  - Searching through all those subsets is also ssssssllllloooooowwwww.
+- But wait, we are not finished:
+  - Given we are exploring different subsets, they are multiple ways to solve this equation, so multiple _worlds_ of beliefs (different assumptions)
+  - So if ever we generate any solution, we need to keep going to see what other worlds are out there.
+
+Returning now to explanations
+- given a set of things we known about $K \subseteq T$ then an explanation is world of belief with maximal overlap with $G$ and $K$.
+- And guess what, expressed in this manner, it is intractably hard [^by] (i.e. it belongs to a class of problems for which there is no known complete and efficient solution).
+
+So experts find it hard to explain themselves BECAUSE explanation is fundamentally hard.
+- Think about that next time you are staring at a blank sheet of paper, with a headache, cause you cannot work out how to say what you want to say.
+
+But wait, there's a loophole.
+
+- Just because your are theoretically NP-hard,
+  - Does not necessarily mean you are slow in practice.
+- Numerous AI researchers studying NP-hard tasks
+report the existence of a small number of _key_ variables (also known as  Variable subset selection, narrows,
+master variables, and backdoors)
+that
+determine the behavior of the rest of the model. 
+- When
+such keys are present, then the problem of controlling an
+entire model simplifies to just the problem of controlling
+the keys.
+- In the 1960s, Amarel
+observed that search problems contain narrows; i.e. tiny sets
+of variable settings that must be used in any solution [^all].
+ - Amarel’s work defined macros that encode paths between
+   the narrows in the search space, effectively permitting a
+  search engine to leap quickly from one narrow to another.
+- In later work, data mining researchers in the 1990s
+explored and examined what happens when a data miner
+deliberately ignores some of the variables in the training
+data. 
+  - Kohavi and John report trials of data sets where up
+    to 80% of the variables can be ignored without degrading classification accuracy [^kohavi]. 
+  - Note the similarity with
+    Amarel’s work: it is more important to reason about a small
+    set of important variables than about all the variables
+- At the same time, researchers in constraint satisfaction
+   found “random search with retries” was a very effective
+  strategy. 
+  - Crawford and Baker reported that such searches
+    took less time than a complete search to find more solutions
+   using just a small number of retries [^craw].
+  - Their ISAMP
+    “iterative sampler” makes random choices within a model
+    until it gets “stuck”; i.e. until further choices do not
+    satisfy expectations.
+  -  When “stuck”, ISAMP does not waste
+    time fiddling with current choices (as was done by older
+    chronological backtracking algorithms). 
+  - Instead, ISAMP
+    logs what decisions were made before getting “stuck”. It
+    then performs a “retry”; i.e. resets and starts again, this
+    time making other random choices to explore.
+  - Crawford and Baker explain the success of this strange
+approach by assuming models contain a small set of _master
+variables_ that set the remaining variables (and  we might
+call such master variables _keys_). 
+  - Rigorously searching
+through all variable settings is not recommended when
+master variables are present, since only a small number of
+those settings actually matter. 
+  - Further, when the master
+variables are spread thinly over the entire model, it makes
+no sense to carefully explore all parts of the model since
+much time will be wasted “walking” between the far-flung
+master variables. 
+  - For such models, if the reasoning gets
+stuck in one region, then the best thing to do is to leap at
+random to some distant part of the model.
+- A similar conclusion comes from the work of Williams et
+  al. [^will]. 
+  - They found that if a randomized search is repeated
+     many times, that a small number of variable settings were
+     shared by all solutions. 
+  - They also found that if they set
+those variables before conducting the rest of the search,
+then formerly exponential runtimes collapsed to low-order
+polynomial time. 
+  - They called these shared variables the
+   _backdoor_ to reducing computational complexity
+
+[^a11]: S. Amarel, “Program synthesis as a theory formation task: problem representations and solution methods,” in Machine Learning:
+  An Artificial Intelligence Approach. Morgan Kaufmann, 1986.
+[^craw]: J. M. Crawford and A. B. Baker, “Experimental results on the
+  application of satisfiability algorithms to scheduling problems,”
+  in Proceedings of the Twelfth National Conference on Artificial
+  Intelligence (Vol. 2), Menlo Park, CA, USA, 1994, pp. 1092–1097.
+[^kohavi]: R. Kohavi and G. H. John, “Wrappers for feature subset
+  selection,” Artif. Intell., vol. 97, no. 1-2, pp. 273–324, Dec. 1997.
+[^will]: R. Williams, C. P. Gomes, and B. Selman, “Backdoors to
+  typical case complexity,” in Proceedings of the International
+  Joint Conference on Artificial Intelligence, 2003.
 
 ripple down rules
 instance based reasonng
 lab life
+
+[^by]: Tom Bylander, Dean Allemang, Michael C. Tanner, John R. Josephson,
+  The computational complexity of abduction,
+  Artificial Intelligence,
+  Volume 49, Issues 1–3,
+  1991,
+  Pages 25-60,
 
 Readings: 
 - [^malt21], 
