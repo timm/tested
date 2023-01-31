@@ -32,7 +32,7 @@ What to hand-in
 ## About the code
 
 grid.lua implements an requirements engineering tool for finding tacit knowledge.
-Why is that impr1z=otant?
+Why is that important?
 
 A common theme in many reports of algorithmic discrimination is that the developers of "it" are not sensitive (enough)
 to the concerns of the people that use it.
