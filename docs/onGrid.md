@@ -20,21 +20,14 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 ## Your task this week
 
-As a team, implement repgrids (example and attribute clustering, plus example positioning).
+As a team, implement the [grid.lua](/src/grid.lua) repgrid
+processor.
 
-Then, as a team, go find 3 people who all know something about some topic (cars, what to watch on Netflix, best cafes in Hillsborough street, football) and
-
-- From person1, run a  repgrid session to get 6 to 10 examples
-- Collect their attributes
-- Then for person2, person3, for the same 6 to 10 examples
-  - build separate repgrids
-- Wrote at most 500 words (ascii text .md file) on the similarities, differences in what was found
-- Important note:
-  - you interview the 3 people separately and the 3 people do not communicate with each other
+Then, as a team, use it on 3 people (see Task5, below).
 
 What to hand-in
 - all the code in a GH repo
-- your report, in that code, in some prominent place.
+- the Task5  report, somewhere in that code, in some prominent place.
 
 ## About the code
 
@@ -289,4 +282,26 @@ you could pick any one of these leaf nearest neighbors..
 |.. |.. |.. |.. InformationHighway
 ```
 
+## Task5: Use it
 
+
+As a team, go find 3 people who all know something about some topic (cars, what to watch on Netflix, best cafes in Hillsborough street, football) and
+
+- From person1, run a  repgrid session to get 6 to 10 examples
+- Collect their attributes
+- Then for person2, person3, for the same 6 to 10 examples
+  - build separate repgrids
+- Wrote at most 500 words (ascii text .md file) on the similarities, differences in what was found
+- Important note:
+  - you interview the 3 people separately and the 3 people do not communicate with each other
+
+Recall the interview process.
+- Place a blank sheet of paper on the table
+- Ask them for 3 examples then some attribute along which one example is very different 
+  to the other two.
+  - ask for two "ends" of the attribute
+  - score the examples 1,2,3,4,5 between those poles.
+- Repeat
+  - and for each new set of 3, fill in all the older attributes 1..5
+
+Expect that it will take an hour to get (say) 10 examples and 10 attributes from one person.
