@@ -82,7 +82,7 @@ Knowledge is a often myth, a social construct.
 
 You can ask for simple descriptions of a complex world
 
-<img width=400 src="/etc/ing/boundary.png">
+<img width=400 src="/etc/img/boundary.png">
 
 Yeah... maybe not. Long history of cool simple rules that proved to be useful.
 
