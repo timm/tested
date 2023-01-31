@@ -312,9 +312,9 @@ the keys.
 - In the 1960s, Amarel
 observed that search problems contain narrows; i.e. tiny sets
 of variable settings that must be used in any solution [^a11].
- - Amarel’s work defined macros that encode paths between
-   the narrows in the search space, effectively permitting a
-  search engine to leap quickly from one narrow to another.
+    - Amarel’s work defined macros that encode paths between
+      the narrows in the search space, effectively permitting a
+      search engine to leap quickly from one narrow to another.
 - In later work, data mining researchers in the 1990s
 explored and examined what happens when a data miner
 deliberately ignores some of the variables in the training
