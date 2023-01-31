@@ -125,8 +125,8 @@ Welcome to instance-based reasoning.
     - Run new cases $C_2,C_3,..$ etc over the rules
     - If any old rule $R_i$ makes the wrong conclusion for a new case $C_j$
       - the repair must be in the difference between the current case and the old case $C_i$ from the old rule $\Delta=C_j - C_i$.
-      - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion $\Epsilon \subseteq \Delta$.
-      - patch $R_i$ with the "except" clause $\Epsilon$ so it $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
+      - ask an oracle (humans) to say what parts of $\delta$ explain why $C_j$ needs a different conclusion $\epsilon \subseteq \Delta$.
+      - patch $R_i$ with the "except" clause $\epsilon$ so it $R_i$ is triggered **AND** the unless clause is true, then return the conclusion of $C_j$.
     - Overtime, this grows into a patch tree of nested "except" clauses
     - Historically, kind of offended a lot of people
       - very little initial domain structuring
@@ -248,12 +248,12 @@ Can we write that down formally? Well, yes we can. Welcome to logical  abduction
 
 Given a theory $t$ and goals $g$ and assumptions $a$, can you get to the goals without causing problems?
 
-$$ \mathit{rule}_1:\; t \wedge a \vdash g $$
+$$ \mathit{rule}_1: t \wedge a \vdash g $$
 
-$$ \mathit{rule}_2:\; \neg (\wedge a \vdash \bot$$
+$$ \mathit{rule}_2: \neg (t \wedge a \vdash \bot)$$
 
 
--Rule1 is saying "do something" and rule2 is saying "do not make mistakes". 
+- Rule1 is saying "do something" and rule2 is saying "do not make mistakes". 
   - Rule1, by itself, is crazy fast (just dash forward)
   - But Rule2 means we have to check for errors as we goes. Much slower.
 - In the general case, we cannot use all the assumptions $A$ or all the theory $T$ or reach all the goals $G$
