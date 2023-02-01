@@ -62,7 +62,7 @@ Knowledge is a often myth, a social construct.
    - scientists appear to only use as much care as they think will be necessary to defeat the counterarguments of their detractors and get the acclamation they desire for their work.
 
 Whoa! you say, that cannot be right! There are experts in the world, right, who do better than other people
-- Survivor bias
+- Survivor bias?
   - concentrating on entities that passed a selection process while overlooking those that did not
 - Are they "expert"? or in a population of 8 billion people, and "luck" at probability 0.5,  
   20 people might get the 20 breaks (at odds $.5^{20}$) to select the 1000 "best" people in the world.
@@ -245,7 +245,7 @@ i  memory. Nature neuroscience 17, 3 (2014), 347–356.
          [Applications of psychological science for actionable analytics](https://dl.acm.org/doi/pdf/10.1145/3236024.3236050?casa_token=5Wp-MiwBHoAAAAAA:VL646H96bnTZMUqn5A74kdB12DSWE8d3iRvuEOAMUa52scR90n741HOxKkjJPsDAaFRnvWJAX0ub). 
          In Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (pp. 456-467).
 
-## Possibility5: Generating Explanations is Hard (actually, NP-Hard)
+## Possibility5: Experts Can't Explain Themselves since  Explanations is Hard (actually, NP-Hard)
 
 Explanations are not "one size fits all"
 - they must be tuned to the task at hand
