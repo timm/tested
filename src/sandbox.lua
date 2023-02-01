@@ -1,6 +1,15 @@
-l={}
+egs={}
 
+help=""
 
-debug.setlocal (0, "aa", 1)
+fmt=string.format
 
-print(aa)
+help=help.."\nACTIONS:"
+function eg(key,help1,fun)
+  help = help..fmt("\n  -g  %s %s",key,help1)
+  egs[1+#egs] = {key=key,fun=fun}  end 
+
+eg("adas","asd asda sdas asd",function(x) 
+  return x end)
+
+print(help)

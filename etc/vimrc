@@ -130,10 +130,10 @@ hi NonText ctermbg=NONE
 colorscheme jellybeans
 colorscheme lunaperche
 
-"if has("mouse_sgr")
-"      set ttymouse=sgr
-"else
-"      set ttymouse=xterm2
-"end
+if has("mouse_sgr")
+      set ttymouse=sgr
+else
+      set ttymouse=xterm2
+end
 
 "hi Normal guibg=NONE ctermbg=NONE

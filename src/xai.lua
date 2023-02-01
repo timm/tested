@@ -1,7 +1,9 @@
 --<!-- vim: set syntax=lua ts=2 sw=2 et : -->
 -- <p style="text-align: left;">
--- This code supports multi-goal semi-supervised explanation.  Here,  optimization is treated as a kind of data mining; i.e.
--- we recursively bi-cluster (using the distance to two remote points), all the while pruning the  "worst" half of the data (as measured by a multi-goal domination predicate).
+-- This code supports multi-goal semi-supervised explanation.  Here,  optimization 
+-- is treated as a kind of data mining; i.e.  we recursively bi-cluster (using the 
+-- distance to two remote points), all the while pruning the  "worst" half of the 
+-- data (as measured by a multi-goal domination predicate).
 -- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150>
 -- During this, we  only label one or two points per cluster. Afterwards, 
 -- the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
@@ -10,53 +12,14 @@
 -- (to simplify teaching these ideas as well as any further experimentation).
 -- All the code for the above functionality comes in at just
 -- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
--- <a href="https://www.jimcarrollsblog.com/blog/2019/10/10/less-but-better-dieter-rams-thinking-inside-out">Less, but better</a>? You decide.
- -- </p><hr>
--- <center> <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
+-- For help on this code, see comments at the end of this file.</p>
+-- <center><hr><a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
 -- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
 -- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
 -- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
 --  src="https://img.shields.io/badge/language-lua-orange"> <img 
---  src="https://img.shields.io/badge/purpose-teaching-brightgreen"> </center></p><hr>
--- <p style="text-align: left;">
--- To read this code:   <br> 
--- FIRST skim the `help` string (at top);  <br>   
--- SECOND browse the structs (see "<a href="#create">Creation</a>");  <br> 
--- THIRD read  the <a href="#egs">examples</a> at end (e.g. "function egs.xyz()")   </p>
--- <p style="text-align: left;">
--- Note that any of the examples can be run from the command line; 
--- e.g. "-g show" runs
--- all the actions that start with "show". 
--- Also, all the settings in the help string can
--- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
--- Those settings are stored in"the" table, which is generated from
--- "help". </p>
--- <p style="text-align: left;">
--- In the function arguments, the following conventions apply (usually):</p>
---     
--- -  Two spaces denote start of optional args
--- -  Four spaces denote start of local args. 
--- -  n == number
--- -  s == string
--- -  t == table
--- -  is == boolean
--- -  x == anything
--- -  fun == function
--- -  UPPER = class (some factory for making similar things)
--- -  lower = instance; e.g. sym is an instance of SYM
--- -  xs == a table of "x"; e.g. "ns" is a list of numbers
---     
--- <p style="text-align: left;">
--- In this language (LUA) vars are global by default unless marked with "local" or 
--- defined in function argument lists.
--- Also,  there is only one data structure called a "table".
--- that can have numeric or symbolic keys.
--- The tables start and end with {} and #t is length of a table
--- (and empty tables have #t==0).
--- Tables can have numeric or symbolic fields. Note that
--- `for pos,x in pairs(t) do` is the same as python's 
--- `for pos,x in enumerate(t) do`.</p>
+--  src="https://img.shields.io/badge/purpose-teaching-brightgreen"><hr></center>
 local the,help = {}, [[
   
 xai: multi-goal semi-supervised explanation
@@ -66,7 +29,7 @@ USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
-  -c  --cliffs  cliff's delta threshold      = .2385
+  -c  --cliffs  cliff's delta threshold      = .147
   -f  --file    data file                    = ../etc/data/auto93.csv
   -F  --Far     distance to distant          = .95
   -g  --go      start-up action              = nothing
@@ -78,7 +41,6 @@ OPTIONS:
   -r  --rest    how many of rest to sample   = 4
   -s  --seed    random number seed           = 937162211
 ]]
--- -----------------------------------------------
 -- Magic expression to match keys and values from `help`
 local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
   
@@ -86,12 +48,10 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local accept,accepts,adds,add,any,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
-local diffs,dist,div,egs,extend,fmt,gt,half,has,itself
-local kap,keys,lines,locals,lt
-local main,many,map,merge,merge2,mergeAny,mid,norm,o,oo,per,push
-local rint,rand,read,rnd,row,rogues
-local Seed,showTree,sort,slice,stats,sway
-local tree,value
+local diffs,dist,div,eg,egs,extend,fmt,gt,half,has,itself
+local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
+local norm,o,oo,per,push,rint,rand,read,rnd,row,rogues
+local Seed,showTree,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 local m = math
 
@@ -119,6 +79,7 @@ function NUM(n,s)
 -- Create a `SYM` to summarize a stream of symbols.
 function SYM(n,s)
   return {at=n or 0, txt=s or "", n=0, 
+          mode=nil,  most=0,
           isSym=true, has={}} end
 
 -- Create a set of `NUM`s or `SYM`s columns.
@@ -201,10 +162,12 @@ function add(col,x,  n)
     col.n = col.n + n
     if   col.isSym
     then col.has[x] = n + (col.has[x] or 0) 
+         if col.has[x] > col.most then
+           col.most, col.mode = col.has[x],x end 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
       local has = #col.has
       local pos = (has   < the.Max       and has+1) or (
-                  rand() < the.Max/col.n and rand(has))
+                  rand() < the.Max/col.n and rint(1,has))
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
@@ -233,11 +196,7 @@ function has(col)
 -- A query that  returns a `cols`'s central tendency  
 -- (mode for `SYM`s and median for `NUM`s). Called by (e.g.) the `stats` function.
 function mid(col,    mode,most)
-  if   col.isSym 
-  then most,mode = 0 
-       for x,n in pairs(col.has) do if n>most then most,mode=n,x end end
-       return mode 
-  else return per(has(col), .5) end end 
+  return col.isSym and col.mode or per(has(col), .5) end 
 
 -- A query that returns a `col`'s deviation from central tendency    
 -- (entropy for `SYM`s and standard deviation for `NUM`s)..
@@ -509,14 +468,15 @@ function rand(nlo,nhi) -- random floats
 function cliffsDelta(ns1,ns2) 
   if #ns1 > 256     then ns1 = many(ns1,256) end
   if #ns2 > 256     then ns2 = many(ns2,256) end
-  if #ns1 > 10*#ns2 then ns1 = many(ns1,10*#ns2) end
-  if #ns2 > 10*#ns1 then ns2 = many(ns2,10*#ns1) end
+  --if #ns1 > 10*#ns2 then ns1 = many(ns1,10*#ns2) end
+  --if #ns2 > 10*#ns1 then ns2 = many(ns2,10*#ns1) end
   local n,gt,lt = 0,0,0
   for _,x in pairs(ns1) do
     for _,y in pairs(ns2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
+  print(n,lt,gt,the.cliffs)
   return m.abs(lt - gt)/n > the.cliffs end
 
 -- Given two tables with the same keys, report if their
@@ -606,19 +566,19 @@ function o(t,    fun)
 -- the command-line flag `-g xx`. Show the help
 -- string if the `-h` flag is set. Return to the operating
 -- system the number of failing `funs`.
-function main(funs,the,help,    fails,saved,names)
-  fails, saved, names = 0, copy(the), keys(funs)
+function main(funs,the,help,    fails,saved,name)
+  fails, saved = 0, copy(the)
   if   the.help 
-  then print(help)
-       print("ACTIONS:\n  -g  .  (runs all actions)") 
-       for _,name in pairs(names) do print("  -g   "..name) end end
-  for _,name in pairs(names) do
+  then print(help) end
+  for _,pair in pairs(funs) do
+    name = pair.key
     if name:find(".*"..the.go..".*") then
       for k,v in pairs(saved) do the[k]=v end
-        Seed = the.seed
-        math.randomseed(Seed)
-        if funs[name]()==false then print("❌ "..name); fails=fail+1
-                               else print("✅ "..name) end end end  
+      oo(the)
+      Seed = the.seed
+      math.randomseed(Seed)
+      if pair.fun()==false then print("❌ "..name); fails=fail+1
+                           else print("✅ "..name) end end end  
   rogues()
   return fails end
 
@@ -644,78 +604,88 @@ function cli(t)
 
 -- Place to store examples.
 local egs = {}
+help = help .. "\nACTIONS:\n"
 
-function egs.the() oo(the) end
+function eg(key,xplain,fun)
+  help =  help ..fmt("  -g  %s\t%s\n",key,xplain)
+  egs[1+#egs] = {key=key,fun=fun} end
 
-function egs.rand(      t,u)
+eg("the","show options",function() oo(the) end)
+
+eg("rand","demo random number generation", function(     t,u)
   Seed=1; t={}; for i=1,1000 do push(t,rint(100)) end
   Seed=1; u={}; for i=1,1000 do push(u,rint(100)) end
-  for k,v in pairs(t) do assert(v==u[k]) end end
+  for k,v in pairs(t) do assert(v==u[k]) end end)
 
-function egs.nums(     num1,num2)
+eg("some","demo of reservoir sampling", function(     num1)
+  the.Max = 32
+  num1 = NUM()
+  for i=1,10000 do add(num1,i) end
+  oo(has(num1)) end)
+
+eg("nums","demo of NUM", function(     num1,num2)
   num1,num2 = NUM(), NUM()
   for i=1,10000 do add(num1, rand()) end
   for i=1,10000 do add(num2, rand()^2) end
   print(1,rnd(mid(num1)), rnd(div(num1)))
   print(2,rnd(mid(num2)), rnd(div(num2))) 
-  return .5 == rnd(mid(num1)) and mid(num1)> mid(num2) end
+  return .5 == rnd(mid(num1)) and mid(num1)> mid(num2) end)
 
-function egs.syms(     sym)
+eg("syms","demo SYMS", function(    sym)
   sym=adds(SYM(), {"a","a","a","a","b","b","c"})
   print (mid(sym), rnd(div(sym))) 
-  return 1.38 == rnd(div(sym)) end
+  return 1.38 == rnd(div(sym)) end)
 
-function egs.csv(    n) 
+eg("csv","reading csv files", function(     n)
   n=0; csv(the.file, function(t) n=n+#t end) 
-  return 3192 == n end
+  return 3192 == n end)
 
-function egs.data(    data,col) 
+eg("data", "showing data sets", function(    data,col) 
   data=read(the.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
-  oo(stats(data)) end
+  oo(stats(data)) end)
 
-function egs.clone(    data1,data2)
+eg("clone","replicate structure of a DATA",function(    data1,data2)
   data1=read(the.file)
   data2=clone(data1,data1.rows) 
   oo(stats(data1))
-  oo(stats(data2))
-end
+  oo(stats(data2)) end)
 
-function egs.cliffs(   t1,t2,t3)
-  assert(false == cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
-  assert(true  == cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) 
+eg("cliffs","stats tests", function(   t1,t2,t3)
+  assert(false == cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}),"1")
+  assert(true  == cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6}),"2") 
   t1,t2={},{}
-  for i=1,1000 do push(t1,rand()) end
-  for i=1,1000 do push(t2,rand()^2) end
-  assert(false == cliffsDelta(t1,t1)) 
-  assert(true ==  cliffsDelta(t1,t2)) 
+  for i=1,1000 do push(t1,1) end --rand()/10) end
+  for i=1,1000 do push(t2,1000) end --rand()*10) end
+  assert(false == cliffsDelta(t1,t1),"3") 
+  assert(true  == cliffsDelta(t1,t2),"4") 
   local diff,j=false,1.0
   while not diff  do
     t3=map(t1,function(x) return x*j end)
     diff=cliffsDelta(t1,t3)
     print(rnd(j),diff) 
-    j=j*1.025 end end
+    j=j*1.025 end end)
 
-function egs.dist(    data,num)
+eg("dist","distance test", function(    data,num)
   data = read(the.file)
   num  = NUM()
   for _,row in pairs(data.rows) do
     add(num,dist(data, row, data.rows[1])) end
-  oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end 
+  oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
-function egs.half(   data,l,r)
+eg("half","divide data in halg", function(   data,l,r)
   data = read(the.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
   l,r = clone(data,left), clone(data,right)
   print("l",o(stats(l)))
-  print("r",o(stats(r))) end
+  print("r",o(stats(r))) end)
  
-function egs.tree(   data,l,r)
-  showTree(tree(read(the.file))) end
+eg("tree","make snd show tree of clusters", function(   data,l,r)
+  showTree(tree(read(the.file))) end)
 
-function egs.sway(    data,best,rest)
+eg("sway","optimizing", function(    data,best,rest)
   data = read(the.file)
   best,rest = sway(data)
   print("\nall ", o(stats(data))) 
@@ -725,9 +695,9 @@ function egs.sway(    data,best,rest)
   print("\nrest", o(stats(rest))) 
   print("    ",   o(stats(rest,div))) 
   print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
-  print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end
+  print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end)
 
-function egs.bins(    data,best,rest, b4)
+eg("bins", "find deltas between best and rest", function(    data,best,rest, b4)
   data = read(the.file)
   best,rest = sway(data)
   print("all","","","",o{best=#best.rows, rest=#rest.rows})
@@ -737,11 +707,11 @@ function egs.bins(    data,best,rest, b4)
       b4 = range.txt
       print(range.txt,range.lo,range.hi,
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
-           o(range.y.has)) end end end 
+           o(range.y.has)) end end end)
 
-function egs.contrast()
+eg("contrast","explore contrast sets", function()
   print(rand())
-  contrast(read(the.file)) end
+  contrast(read(the.file)) end)
 
 -- ## Start-up
 
@@ -760,3 +730,71 @@ while true do
   if _name:sub(1,1) ~= "_" then _locals[_name]=_value end
   _i = _i + 1 end
 return _locals  
+
+-- ## To Read This Code
+-- <p style="text-align: left;">
+-- FIRST skim the `help` string (at top);  <br>   
+-- SECOND browse the structs (see "<a href="#create">Creation</a>");  <br> 
+-- THIRD read  the <a href="#egs">examples</a> at end.  </p>
+-- <p style="text-align: left;">
+-- Note that any of the examples can be run from the command line; 
+-- e.g. "-g show" runs
+-- all the actions that start with "show". 
+-- Also, all the settings in the help string can
+-- be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
+-- Those settings are stored in"the" table, which is generated from
+-- "help". </p>
+-- <p style="text-align: left;">
+-- In the function arguments, the following conventions apply (usually):</p>
+--     
+-- -  Two spaces denote start of optional args
+-- -  Four spaces denote start of local args. 
+-- -  n == number
+-- -  s == string
+-- -  t == table
+-- -  is == boolean
+-- -  x == anything
+-- -  fun == function
+-- -  UPPER = class (some factory for making similar things)
+-- -  lower = instance; e.g. sym is an instance of SYM
+-- -  xs == a table of "x"; e.g. "ns" is a list of numbers
+--     
+-- <p style="text-align: left;">
+-- In this language (LUA) vars are global by default unless marked with "local" or 
+-- defined in function argument lists.
+-- Also,  there is only one data structure called a "table".
+-- that can have numeric or symbolic keys.
+-- The tables start and end with {} and #t is length of a table
+-- (and empty tables have #t==0).
+-- Tables can have numeric or symbolic fields. Note that
+-- `for pos,x in pairs(t) do` is the same as python's 
+-- `for pos,x in enumerate(t) do`.</p>
+--
+-- ## BSD 2-Clause License
+--    
+-- <p style="text-align: left;">
+-- Copyright (c) 2022, Tim Menzies
+-- All rights reserved.
+--     
+-- <p style="text-align: left;">
+-- Redistribution and use in source and binary forms, with or without
+-- modification, are permitted provided that the following conditions are met:
+-- <p style="text-align: left;">
+-- 1. Redistributions of source code must retain the above copyright notice, this
+-- list of conditions and the following disclaimer.
+-- <p style="text-align: left;">
+-- 2. Redistributions in binary form must reproduce the above copyright notice,
+-- this list of conditions and the following disclaimer in the documentation
+--  and/or other materials provided with the distribution.
+--   
+-- <p style="text-align: left;">
+-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+-- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+-- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+-- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+-- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+-- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+-- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+-- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+-- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+-- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
