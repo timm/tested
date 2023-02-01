@@ -428,7 +428,7 @@ But I have had much success in cheating, as follows:
 <img src="/etc/img/shorter.png">
 
 [^mathew]: George Mathew, Tim Menzies, Neil A. Ernst, John Klein:
-   "SHORT"er Reasoning About Larger Requirements Models. RE 2017: 154-163
+   ["SHORT"er Reasoning About Larger Requirements Models](https://arxiv.org/pdf/1702.05568.pdf). RE 2017: 154-163
 
 
 [^by]: Tom Bylander, Dean Allemang, Michael C. Tanner, John R. Josephson,
