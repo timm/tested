@@ -568,7 +568,7 @@ function o(t,    fun)
 function main(funs,the,help,    y,n,saved,k,val,ok)
   y,n,saved = 0,0,copy(the)
   if   the.help 
-  then print(help) end
+  then os.exit(print(help)) end
   for _,pair in pairs(funs) do
     k = pair.key
     if k:find(".*"..the.go..".*") then
