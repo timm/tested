@@ -221,6 +221,8 @@ you could pick any one of these leaf synonyms.
 |.. |.. |.. OnlyActAsProgrammed:Semi-autonomous
 ```
 
+**Improtant point**:
+
 ## Task3: flip the matrix (lua grid.lua -g reprows)
 
 Here, we load the data as in Task1, then we build a new DATA on the transposed information
