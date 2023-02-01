@@ -388,7 +388,7 @@ polynomial time.
   Intelligence (Vol. 2), Menlo Park, CA, USA, 1994, pp. 1092–1097.
 [^kohavi]: R. Kohavi and G. H. John, “Wrappers for feature subset
 
-<[^easter07]: N. Niu and S. Easterbrook, 
+[^easter07]: N. Niu and S. Easterbrook, 
   ["So, You Think You Know Others' Goals? A Repertory Grid Study,"](https://homepages.uc.edu/~niunn/papers/SW07.pdf)
    in IEEE Software, vol. 24, no. 2, pp. 53-61, March-April 2007, doi: 10.1109/MS.2007.52.
 
