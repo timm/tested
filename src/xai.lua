@@ -48,9 +48,9 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local accept,accepts,adds,add,any,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
-local diffs,dist,div,eg,egs,extend,fmt,gt,half,has,itself
+local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
-local norm,o,oo,per,push,rint,rand,read,rnd,row,rogues
+local no,norm,o,oo,per,push,rint,rand,read,rnd,row,rogues
 local Seed,showTree,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 local m = math
@@ -468,15 +468,14 @@ function rand(nlo,nhi) -- random floats
 function cliffsDelta(ns1,ns2) 
   if #ns1 > 256     then ns1 = many(ns1,256) end
   if #ns2 > 256     then ns2 = many(ns2,256) end
-  --if #ns1 > 10*#ns2 then ns1 = many(ns1,10*#ns2) end
-  --if #ns2 > 10*#ns1 then ns2 = many(ns2,10*#ns1) end
+  if #ns1 > 10*#ns2 then ns1 = many(ns1,10*#ns2) end
+  if #ns2 > 10*#ns1 then ns2 = many(ns2,10*#ns1) end
   local n,gt,lt = 0,0,0
   for _,x in pairs(ns1) do
     for _,y in pairs(ns2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  print(n,lt,gt,the.cliffs)
   return m.abs(lt - gt)/n > the.cliffs end
 
 -- Given two tables with the same keys, report if their
@@ -566,19 +565,22 @@ function o(t,    fun)
 -- the command-line flag `-g xx`. Show the help
 -- string if the `-h` flag is set. Return to the operating
 -- system the number of failing `funs`.
-function main(funs,the,help,    fails,saved,name)
-  fails, saved = 0, copy(the)
+function main(funs,the,help,    y,n,saved,k,val,ok)
+  y,n,saved = 0,0,copy(the)
   if   the.help 
-  then print(help) end
+  then os.exit(print(help)) end
   for _,pair in pairs(funs) do
-    name = pair.key
-    if name:find(".*"..the.go..".*") then
+    k = pair.key
+    if k:find(".*"..the.go..".*") then
       for k,v in pairs(saved) do the[k]=v end
-      oo(the)
       Seed = the.seed
       math.randomseed(Seed)
-      if pair.fun()==false then print("❌ "..name); fails=fail+1
-                           else print("✅ "..name) end end end  
+      ok,val = pcall(pair.fun)
+      if not ok         then n=n+1; print("❌ "..k.." "..val)
+                                    print(debug.traceback()) 
+      elseif val==false then n=n+1; print("❌ "..k,"failed")  
+      else                   y=y+1; print("✅ "..k) end end end
+  print("\n🔆 "..o({pass=y, fail=n, success=100*y/(y+n)//1}))
   rogues()
   return fails end
 
@@ -606,24 +608,28 @@ function cli(t)
 local egs = {}
 help = help .. "\nACTIONS:\n"
 
-function eg(key,xplain,fun)
+-- Used `go` to define an example
+function go(key,xplain,fun)
   help =  help ..fmt("  -g  %s\t%s\n",key,xplain)
   egs[1+#egs] = {key=key,fun=fun} end
 
-eg("the","show options",function() oo(the) end)
+-- Disable an example by renaming it `no`. 
+function no(_,__,___) return true end
 
-eg("rand","demo random number generation", function(     t,u)
+go("the","show options",function() oo(the) end)
+
+go("rand","demo random number generation", function(     t,u)
   Seed=1; t={}; for i=1,1000 do push(t,rint(100)) end
   Seed=1; u={}; for i=1,1000 do push(u,rint(100)) end
   for k,v in pairs(t) do assert(v==u[k]) end end)
 
-eg("some","demo of reservoir sampling", function(     num1)
+go("some","demo of reservoir sampling", function(     num1)
   the.Max = 32
   num1 = NUM()
   for i=1,10000 do add(num1,i) end
   oo(has(num1)) end)
 
-eg("nums","demo of NUM", function(     num1,num2)
+go("nums","demo of NUM", function(     num1,num2)
   num1,num2 = NUM(), NUM()
   for i=1,10000 do add(num1, rand()) end
   for i=1,10000 do add(num2, rand()^2) end
@@ -631,50 +637,50 @@ eg("nums","demo of NUM", function(     num1,num2)
   print(2,rnd(mid(num2)), rnd(div(num2))) 
   return .5 == rnd(mid(num1)) and mid(num1)> mid(num2) end)
 
-eg("syms","demo SYMS", function(    sym)
+go("syms","demo SYMS", function(    sym)
   sym=adds(SYM(), {"a","a","a","a","b","b","c"})
   print (mid(sym), rnd(div(sym))) 
   return 1.38 == rnd(div(sym)) end)
 
-eg("csv","reading csv files", function(     n)
+go("csv","reading csv files", function(     n)
   n=0; csv(the.file, function(t) n=n+#t end) 
   return 3192 == n end)
 
-eg("data", "showing data sets", function(    data,col) 
+go("data", "showing data sets", function(    data,col) 
   data=read(the.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
   oo(stats(data)) end)
 
-eg("clone","replicate structure of a DATA",function(    data1,data2)
+go("clone","replicate structure of a DATA",function(    data1,data2)
   data1=read(the.file)
   data2=clone(data1,data1.rows) 
   oo(stats(data1))
   oo(stats(data2)) end)
 
-eg("cliffs","stats tests", function(   t1,t2,t3)
+go("cliffs","stats tests", function(   t1,t2,t3)
   assert(false == cliffsDelta( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}),"1")
   assert(true  == cliffsDelta( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6}),"2") 
   t1,t2={},{}
-  for i=1,1000 do push(t1,1) end --rand()/10) end
-  for i=1,1000 do push(t2,1000) end --rand()*10) end
+  for i=1,1000 do push(t1,rand()) end --rand()/10) end
+  for i=1,1000 do push(t2,rand()^.5) end --rand()*10) end
   assert(false == cliffsDelta(t1,t1),"3") 
   assert(true  == cliffsDelta(t1,t2),"4") 
   local diff,j=false,1.0
   while not diff  do
     t3=map(t1,function(x) return x*j end)
     diff=cliffsDelta(t1,t3)
-    print(rnd(j),diff) 
+    print(">",rnd(j),diff) 
     j=j*1.025 end end)
 
-eg("dist","distance test", function(    data,num)
+go("dist","distance test", function(    data,num)
   data = read(the.file)
   num  = NUM()
   for _,row in pairs(data.rows) do
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
-eg("half","divide data in halg", function(   data,l,r)
+go("half","divide data in halg", function(   data,l,r)
   data = read(the.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
@@ -682,10 +688,10 @@ eg("half","divide data in halg", function(   data,l,r)
   print("l",o(stats(l)))
   print("r",o(stats(r))) end)
  
-eg("tree","make snd show tree of clusters", function(   data,l,r)
+go("tree","make snd show tree of clusters", function(   data,l,r)
   showTree(tree(read(the.file))) end)
 
-eg("sway","optimizing", function(    data,best,rest)
+go("sway","optimizing", function(    data,best,rest)
   data = read(the.file)
   best,rest = sway(data)
   print("\nall ", o(stats(data))) 
@@ -697,7 +703,7 @@ eg("sway","optimizing", function(    data,best,rest)
   print("\nall ~= best?", o(diffs(best.cols.y, data.cols.y)))
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end)
 
-eg("bins", "find deltas between best and rest", function(    data,best,rest, b4)
+go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
   data = read(the.file)
   best,rest = sway(data)
   print("all","","","",o{best=#best.rows, rest=#rest.rows})
@@ -709,7 +715,7 @@ eg("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-eg("contrast","explore contrast sets", function()
+go("contrast","explore contrast sets", function()
   print(rand())
   contrast(read(the.file)) end)
 
