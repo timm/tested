@@ -1,5 +1,12 @@
 --<!-- vim: set syntax=lua ts=2 sw=2 et : -->
+-- <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> <br>
+-- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> <br>
+-- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> <br>
+-- <a href="https://github.com/timm/tested/issues">issues</a>
 -- <p style="text-align: left;">
+-- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
+--  src="https://img.shields.io/badge/language-lua-orange"> <img 
+--  src="https://img.shields.io/badge/purpose-teaching-brightgreen">
 -- This code supports multi-goal semi-supervised explanation.  Here,  optimization 
 -- is treated as a kind of data mining; i.e.  we recursively bi-cluster (using the 
 -- distance to two remote points), all the while pruning the  "worst" half of the 
@@ -12,14 +19,7 @@
 -- (to simplify teaching these ideas as well as any further experimentation).
 -- All the code for the above functionality comes in at just
 -- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
--- For help on this code, see comments at the end of this file.</p>
--- <center><hr><a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> |
--- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> |
--- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> |
--- <a href="https://github.com/timm/tested/issues">issues</a></p></center><p><center>
--- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
---  src="https://img.shields.io/badge/language-lua-orange"> <img 
---  src="https://img.shields.io/badge/purpose-teaching-brightgreen"><hr></center>
+-- For help on this code, see comments at the end of this file.</p><hr>
 local the,help = {}, [[
   
 xai: multi-goal semi-supervised explanation
@@ -505,7 +505,8 @@ function lines(sFilename,fun,    src,s)
 
 -- Run `fun` on the cells  in each row of a csv file.
 function csv(sFilename,fun)
-  lines(sFilename, function(line) fun(cells(line)) end) end
+  lines(sFi:1
+  lename, function(line) fun(cells(line)) end) end
 
 -- ### Lists
 
