@@ -4,9 +4,12 @@
 --  <a 
 --   href="https://zenodo.org/badge/latestdoi/569981645"> <img 
 --    src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
--- <img src="https://img.shields.io/badge/task-ai-yellow"> <img 
---  src="https://img.shields.io/badge/language-lua-orange"><br><img 
---  src="https://img.shields.io/badge/purpose-teaching-brightgreen"><br>
+-- <img src="https://img.shields.io/badge/task-ai-purple"> <img 
+--  src="https://img.shields.io/badge/language-lua5.4-orange"><br><img 
+--  src="https://img.shields.io/badge/purpose-teaching-yellow">
+--<a href="https://github.com/timm/tested/actions/workflows/tests.yml"><br><img 
+--   src="https://github.com/timm/tested/actions/workflows/tests.yml/badge.svg"></a>
+--  <br>
 -- <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> <br>
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> <br>
 -- <a href="#license">license</a> <br>
@@ -19,7 +22,7 @@
 -- data (as measured by a multi-goal domination predicate).
 -- During this, we  only label one or two points per cluster. Afterwards, 
 -- the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
--- For help on this code, see comments at the <a href="#about">end of this file</a>.</p>
+-- For help with code, see comments at the <a href="#about">end of this file</a>.</p>
 local the,help = {}, [[
   
 xai: multi-goal semi-supervised explanation
@@ -49,7 +52,7 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 -- Trick for finding rogue names,  escaped into the global space.
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 -- Trick that lets us define everything in any order.
-local accept,accepts,adds,add,any,better,bin,bins
+local accept,accepts,adds,add,any,at,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
@@ -114,7 +117,7 @@ function RULE(ranges,      t)
   t={}
   for _,range in pairs(ranges) do
     t[range.at] = t[range.at] or {}
-    push(t[range.txt], range) end 
+    push(t[range.at], range) end 
   return t end
 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
@@ -131,10 +134,10 @@ function DATA.read(sfile,    data)
   csv(sfile, function(t) row(data,t) end); return data end
 
 -- Create a new DATA with the same columns as  `data`. Optionally, load up the new
--- DATA with the rows inside `t`.
-function DATA.clone(data,  t,    data1)
+-- DATA with the rows inside `ts`.
+function DATA.clone(data,  ts,    data1)
   data1 = row(DATA.new(), data.cols.names)
-  for _,t in pairs(t or {}) do row(data1,t) end
+  for _,t in pairs(ts or {}) do row(data1,t) end
   return data1 end
 
 -- ## Update
@@ -402,27 +405,35 @@ function merge(col1,col2,    new)
 -- ## Contrast Sets
 
 function contrast(data,   best,rest,out,rule,tmp,data1,data2)
-  best,rest = sway(data)
-  out = {}
-  for k,t in pairs(bins(data,{best=best.rows,rest=rest.rows})) do
-    for _,xy in pairs(t) do
-      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,"best")}) end end
-  out = sort(out,gt"y")
   oo(stats(data))
   oo(stats(data,div))
+  best,rest = sway(data)
+  out = {}
+  for k,t in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
+    for _,range in pairs(t) do
+      push(out, {x=range, y=value(range.y,#best.rows,#rest.rows,"best")}) end end
+  out = sort(out,gt"y")
+  local first,here 
   for i=1,#out do
-    rule = RULE(map(slice(out,1,i),function(xy) return xy.x end))
-    tmp = accepts(rule, data.rows)
-    if tmp and #tmp>#best.rows/2 then 
-       data1  = DATA.clone(data,tmp) 
-       print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
-       if data2 then
-         print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
-         print("","",o(stats(data1))) 
-         print("","",o(stats(data1,div)))
-       end
-       data2 = data1
+      here = out[i]
+      first = first or here
+      if here.y > .05 and here.y > first/10 then 
+        rule = RULE(map(slice(out,1,i),at"x"))
+        print(here.x.txt,here.x.lo, here.x.hi)
+        tmp = accepts(rule, rest.rows)
+        print(#tmp)
+--     if tmp and #tmp>#best.rows/2 then 
+--        data1  = DATA.clone(data,tmp) 
+--        print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
+--        if data2 then
+--          print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
+--          print("","",o(stats(data1))) 
+--          print("","",o(stats(data1,div)))
+--        end
+--        data2 = data1
+-- end end 
 end end end
+
 
 function accepts(rule,rows,     t,fun)
   fun = function(row) if accept(rule,row) then return row end end
@@ -523,6 +534,7 @@ function csv(sFilename,fun)
 -- Map a function on  table (results in items 1,2,3...)    
 push = function(t,x) t[#t+1]=x; return x end
 sort = function(t,f) table.sort(t,f); return t end
+at   = function(x)   return function(t) return t[x] end end
 lt   = function(x)   return function(a,b) return a[x] < b[x] end end
 gt   = function(x)   return function(a,b) return a[x] > b[x] end end
 any  = function(t)   return t[rint(#t)] end
@@ -580,11 +592,12 @@ function main(funs,the,help,    y,n,saved,k,val,ok)
       for k,v in pairs(saved) do the[k]=v end
       Seed = the.seed
       math.randomseed(Seed)
+      print("\n▶️  "..k.." "..(("-"):rep(60)))
       ok,val = pcall(pair.fun)
-      if not ok         then n=n+1; print("❌ "..k.." "..val)
+      if not ok         then n=n+1; print("❌ FAIL "..k.." "..val)
                                     print(debug.traceback()) 
-      elseif val==false then n=n+1; print("❌ "..k,"failed")  
-      else                   y=y+1; print("✅ "..k) end end end
+      elseif val==false then n=n+1; print("❌ FAIL "..k,"failed")  
+      else                   y=y+1; print("✅ PASS "..k) end end end
   print("\n🔆 "..o({pass=y, fail=n, success=100*y/(y+n)//1}))
   rogues()
   return fails end
