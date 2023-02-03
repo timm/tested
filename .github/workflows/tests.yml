@@ -10,12 +10,6 @@ jobs:
         luaVersion: "5.4.4"   
     - name: test
       run: |
-        npm install -g docco
-        cd ./src
-        docco -l classic -o ../docs xai.lua
-        cp ../etc/docco.css ../docs;
-        git add ../docs/xai.html; 
-        git commit -am as; git push;
-        lua xai.lua -g . ;
+        cd ./src; lua xai.lua -g . ;
     - run: echo "🍏 This job's status is ${{ job.status }}."
      
