@@ -109,7 +109,7 @@ function RANGE(at,txt,lo,hi)
 function RULE(ranges,      t)
   t={}
   for _,range in pairs(ranges) do
-    t[range.at] = t[range.at] or {}
+    t[range.txt] = t[range.txt] or {}
     push(t[range.txt], range) end 
   return t end
 
@@ -399,33 +399,32 @@ function merge(col1,col2,    new)
 function contrast(data,     best,rest,out,rule,tmp,data1,data2)
   best,rest = sway(data)
   tmp = {}
-  for k,ranges in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
-    for _,range in pairs(ranges) do
+  for k,t in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
+    for _,range in pairs(t) do
       push(tmp, {range=range, val=value(range.y,
                                         #best.rows,#rest.rows,"best")}) end end
   out = sort(tmp,gt"val")
   oo(stats(data))
   oo(stats(data,div))
+  print(#out)
   for i=1,#out do
     print(i)
-    rule = RULE(map(slice(out,1,i), function(pair) return range.range end))
+    print(#best.rows, #rest.rows)
+    rule = RULE(map(slice(out,1,i), function(pair) return pair.range end))
     best1 = accepts(rule, best.rows)
     rest1 = accepts(rule, rest.rows)
-    print(#best1,#rest1)
-end end 
+    print(">",#best1,#rest1)
+  end 
+end 
 
-function accepts(rule,rows,     t,fun)
-  fun = function(row) if accept(rule,row) then return row end end
-  t   = map(rows,fun)
-  print(100,#rows, #t)
-  if #t < #rows then return t end end
+function accepts(rule,rows)
+  return map(rows,function(row) if accept(rule,row) then return row end end) end
 
 function accept(rule,row,     ok,x)
   for _,ranges in pairs(rule)  do
     ok = false
     for _,r in pairs(ranges) do
       x = row[r.at]
-      print(x,r.lo,r.hi)
       if x == "?"               then ok=true;break end 
       if r.lo==r.hi and r.lo==x then ok=true;break end
       if r.lo<=x    and x< r.hi then ok=true;break end 
@@ -436,8 +435,8 @@ function accept(rule,row,     ok,x)
 -- ## Miscellaneous Support Code
 -- ### Meta
 
--- Return self
-function itself(x) return x end
+-- Accept any number of arguments, return the first one
+function itself(x,...) return x end
 
 -- ### Maths
 
@@ -712,7 +711,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-no("contrast","explore contrast sets", function()
+go("contrast","explore contrast sets", function()
   print(rand())
   contrast(read(the.file)) end)
 
