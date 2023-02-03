@@ -12,6 +12,6 @@ jobs:
       run: |
         npm install -g docco
         cd ./src; docco -l classic -o ../docs xai.lua; cp ../etc/docco.css ../docs
-        cd ./src; docco lua xia.lua -g .)
+        cd ./src; docco lua xia.lua -g .
     - run: echo "🍏 This job's status is ${{ job.status }}."
      
