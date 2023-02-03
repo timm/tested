@@ -1,25 +1,25 @@
 --<!-- vim: set syntax=lua ts=2 sw=2 et : -->
+-- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=left width=135>
+-- <p style="text-align: right;">
+--  <a 
+--   href="https://zenodo.org/badge/latestdoi/569981645"> <img 
+--    src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a><br>
+-- <img src="https://img.shields.io/badge/task-ai-yellow"> <img 
+--  src="https://img.shields.io/badge/language-lua-orange"><br><img 
+--  src="https://img.shields.io/badge/purpose-teaching-brightgreen"><br>
 -- <a href="https://github.com/timm/tested/blob/main/src/xai.lua">download</a> <br>
 -- <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> <br>
--- <a href="https://github.com/timm/tested/blob/main/LICENSE.md">license</a> <br>
--- <a href="https://github.com/timm/tested/issues">issues</a>
+-- <a href="#license">license</a> <br>
+-- <a href="https://github.com/timm/tested/issues">issues</a><br clear=all>
+--        
 -- <p style="text-align: left;">
--- <img src="https://img.shields.io/badge/task-ai-blue"> <img 
---  src="https://img.shields.io/badge/language-lua-orange"> <img 
---  src="https://img.shields.io/badge/purpose-teaching-brightgreen">
 -- This code supports multi-goal semi-supervised explanation.  Here,  optimization 
 -- is treated as a kind of data mining; i.e.  we recursively bi-cluster (using the 
 -- distance to two remote points), all the while pruning the  "worst" half of the 
 -- data (as measured by a multi-goal domination predicate).
--- <img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=right width=150>
 -- During this, we  only label one or two points per cluster. Afterwards, 
 -- the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
--- <p style="text-align: left;">
--- The aim here was to achieve as much functionality in as few lines as possible
--- (to simplify teaching these ideas as well as any further experimentation).
--- All the code for the above functionality comes in at just
--- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
--- For help on this code, see comments at the end of this file.</p><hr>
+-- For help on this code, see comments at the <a href="#about">end of this file</a>.</p>
 local the,help = {}, [[
   
 xai: multi-goal semi-supervised explanation
@@ -29,7 +29,7 @@ USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
-  -c  --cliffs  cliff's delta threshold      = .2385
+  -c  --cliffs  cliff's delta threshold      = .147
   -f  --file    data file                    = ../etc/data/auto93.csv
   -F  --Far     distance to distant          = .95
   -g  --go      start-up action              = nothing
@@ -41,18 +41,22 @@ OPTIONS:
   -r  --rest    how many of rest to sample   = 4
   -s  --seed    random number seed           = 937162211
 ]]
--- Magic expression to match keys and values from `help`
+-- ## Tricks 
+
+-- Magic regex trick to match keys and values from `help`
 local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
   
- -- Name space trivia (so everything can call everything else).
+-- Trick for finding rogue names,  escaped into the global space.
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
+-- Trick that lets us define everything in any order.
 local accept,accepts,adds,add,any,better,bin,bins
-local contrast,copy,cli,csv,cells,cliffsDelta,clone,coerce
+local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
-local no,norm,o,oo,per,push,rint,rand,read,rnd,row,rogues
+local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
 local Seed,showTree,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
+-- Trick to  shorten call to maths functions
 local m = math
 
 -- ## <a name=create>Creation</a>
@@ -109,26 +113,27 @@ function RANGE(at,txt,lo,hi)
 function RULE(ranges,      t)
   t={}
   for _,range in pairs(ranges) do
-    t[range.txt] = t[range.txt] or {}
+    t[range.at] = t[range.at] or {}
     push(t[range.txt], range) end 
   return t end
 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
-function DATA() return {rows={},cols=nil} end  -- initially, no `cols`
+DATA={}
+function DATA.new() return {rows={},cols=nil} end  -- initially, no `cols`
 
--- Create a new DATA by reading  csv file whose first row 
+-- Create a new DATA by reading csv file whose first row 
 -- are the comma-separate names processed by `COLS` (above).
 -- into a new `DATA`. Every other row is stored in the DATA by
 -- calling the 
 -- `row` function (defined below).
-function read(sfile,    data) 
-  data=DATA()
+function DATA.read(sfile,    data) 
+  data=DATA.new()
   csv(sfile, function(t) row(data,t) end); return data end
 
 -- Create a new DATA with the same columns as  `data`. Optionally, load up the new
 -- DATA with the rows inside `t`.
-function clone(data,  t,    data1)
-  data1 = row(DATA(), data.cols.names)
+function DATA.clone(data,  t,    data1)
+  data1 = row(DATA.new(), data.cols.names)
   for _,t in pairs(t or {}) do row(data1,t) end
   return data1 end
 
@@ -287,7 +292,7 @@ function half(data,  rows,cols,above)
 -- Cluster, recursively, some `rows` by  dividing them in two, many times
 function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
-  here = {data=clone(data,rows)}
+  here = {data=DATA.clone(data,rows)}
   if #rows >= 2*(#data.rows)^the.min then
     local left,right,A,B = half(data, rows, cols, above)
     here.left  = tree(data, left,  cols, A)
@@ -317,7 +322,7 @@ function sway(data,     worker,best,rest)
          return worker(l,worse,A) end 
   end ----------------------------------
   best,rest = worker(data.rows,{})
-  return clone(data,best), clone(data,rest) end 
+  return DATA.clone(data,best), DATA.clone(data,rest) end 
 
 -- ## Discretization
 
@@ -336,7 +341,7 @@ function bins(cols,rowss)
         local x,k = row[col.at]
         if x ~= "?" then
           k = bin(col,x)
-          ranges[k] = ranges[k] or RANGE(col.at, col.txt, x)
+          ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
           extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
     out[1+#out] = col.isSym and ranges or mergeAny(ranges) end
@@ -396,29 +401,33 @@ function merge(col1,col2,    new)
 
 -- ## Contrast Sets
 
-function contrast(data,     best,rest,out,rule,tmp,data1,data2)
+function contrast(data,   best,rest,out,rule,tmp,data1,data2)
   best,rest = sway(data)
-  tmp = {}
-  for k,t in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
-    for _,range in pairs(t) do
-      push(tmp, {range=range, val=value(range.y,
-                                        #best.rows,#rest.rows,"best")}) end end
-  out = sort(tmp,gt"val")
+  out = {}
+  for k,t in pairs(bins(data,{best=best.rows,rest=rest.rows})) do
+    for _,xy in pairs(t) do
+      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,"best")}) end end
+  out = sort(out,gt"y")
   oo(stats(data))
   oo(stats(data,div))
-  print(#out)
   for i=1,#out do
-    print(i)
-    print(#best.rows, #rest.rows)
-    rule = RULE(map(slice(out,1,i), function(pair) return pair.range end))
-    best1 = accepts(rule, best.rows)
-    rest1 = accepts(rule, rest.rows)
-    print(">",#best1,#rest1)
-  end 
-end 
+    rule = RULE(map(slice(out,1,i),function(xy) return xy.x end))
+    tmp = accepts(rule, data.rows)
+    if tmp and #tmp>#best.rows/2 then 
+       data1  = DATA.clone(data,tmp) 
+       print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
+       if data2 then
+         print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
+         print("","",o(stats(data1))) 
+         print("","",o(stats(data1,div)))
+       end
+       data2 = data1
+end end end
 
-function accepts(rule,rows)
-  return map(rows,function(row) if accept(rule,row) then return row end end) end
+function accepts(rule,rows,     t,fun)
+  fun = function(row) if accept(rule,row) then return row end end
+  t   = map(rows,fun)
+  if #t < #rows then return t end end
 
 function accept(rule,row,     ok,x)
   for _,ranges in pairs(rule)  do
@@ -435,8 +444,8 @@ function accept(rule,row,     ok,x)
 -- ## Miscellaneous Support Code
 -- ### Meta
 
--- Accept any number of arguments, return the first one
-function itself(x,...) return x end
+-- Return self
+function itself(x) return x end
 
 -- ### Maths
 
@@ -643,14 +652,14 @@ go("csv","reading csv files", function(     n)
   return 3192 == n end)
 
 go("data", "showing data sets", function(    data,col) 
-  data=read(the.file)
+  data=DATA.read(the.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
   oo(stats(data)) end)
 
 go("clone","replicate structure of a DATA",function(    data1,data2)
-  data1=read(the.file)
-  data2=clone(data1,data1.rows) 
+  data1=DATA.read(the.file)
+  data2=DATA.clone(data1,data1.rows) 
   oo(stats(data1))
   oo(stats(data2)) end)
 
@@ -670,25 +679,25 @@ go("cliffs","stats tests", function(   t1,t2,t3)
     j=j*1.025 end end)
 
 go("dist","distance test", function(    data,num)
-  data = read(the.file)
+  data = DATA.read(the.file)
   num  = NUM()
   for _,row in pairs(data.rows) do
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
 go("half","divide data in halg", function(   data,l,r)
-  data = read(the.file)
+  data = DATA.read(the.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
-  l,r = clone(data,left), clone(data,right)
+  l,r = DATA.clone(data,left), DATA.clone(data,right)
   print("l",o(stats(l)))
   print("r",o(stats(r))) end)
  
 go("tree","make snd show tree of clusters", function(   data,l,r)
-  showTree(tree(read(the.file))) end)
+  showTree(tree(DATA.read(the.file))) end)
 
 go("sway","optimizing", function(    data,best,rest)
-  data = read(the.file)
+  data = DATA.read(the.file)
   best,rest = sway(data)
   print("\nall ", o(stats(data))) 
   print("    ",   o(stats(data,div))) 
@@ -700,7 +709,7 @@ go("sway","optimizing", function(    data,best,rest)
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end)
 
 go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
-  data = read(the.file)
+  data = DATA.read(the.file)
   best,rest = sway(data)
   print("all","","","",o{best=#best.rows, rest=#rest.rows})
   for k,t in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
@@ -711,9 +720,9 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("contrast","explore contrast sets", function()
+no("contrast","explore contrast sets", function()
   print(rand())
-  contrast(read(the.file)) end)
+  contrast(DATA.read(the.file)) end)
 
 -- ## Start-up
 
@@ -733,8 +742,14 @@ while true do
   _i = _i + 1 end
 return _locals  
 
--- ## To Read This Code
+-- ## <a name=about>About this code</a>
 -- <p style="text-align: left;">
+-- The aim here was to achieve as much functionality in as few lines as possible
+-- (to simplify teaching these ideas as well as any further experimentation).
+-- All the code for the above functionality comes in at just
+-- under 300 lines of AI code (plus another 200 lines of  misc support routines). 
+-- <p style="text-align: left;">
+-- To read this, code:<br>
 -- FIRST skim the `help` string (at top);  <br>   
 -- SECOND browse the structs (see "<a href="#create">Creation</a>");  <br> 
 -- THIRD read  the <a href="#egs">examples</a> at end.  </p>
@@ -772,6 +787,8 @@ return _locals
 -- `for pos,x in pairs(t) do` is the same as python's 
 -- `for pos,x in enumerate(t) do`.</p>
 --
+-- <a name=license>
+--    
 -- ## BSD 2-Clause License
 --    
 -- <p style="text-align: left;">
