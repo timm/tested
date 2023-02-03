@@ -29,7 +29,7 @@ USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
-  -c  --cliffs  cliff's delta threshold      = .147
+  -c  --cliffs  cliff's delta threshold      = .2385
   -f  --file    data file                    = ../etc/data/auto93.csv
   -F  --Far     distance to distant          = .95
   -g  --go      start-up action              = nothing
@@ -336,7 +336,7 @@ function bins(cols,rowss)
         local x,k = row[col.at]
         if x ~= "?" then
           k = bin(col,x)
-          ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
+          ranges[k] = ranges[k] or RANGE(col.at, col.txt, x)
           extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
     out[1+#out] = col.isSym and ranges or mergeAny(ranges) end
@@ -396,32 +396,28 @@ function merge(col1,col2,    new)
 
 -- ## Contrast Sets
 
-function contrast(data,   best,rest,out,rule,tmp,data1,data2)
+function contrast(data,     best,rest,out,rule,tmp,data1,data2)
   best,rest = sway(data)
-  out = {}
-  for k,t in pairs(bins(data,{best=best.rows,rest=rest.rows})) do
-    for _,xy in pairs(t) do
-      push(out, {x=xy.x, y=value(xy.y,xy.B,xy.R,"best")}) end end
-  out = sort(out,gt"y")
+  tmp = {}
+  for k,ranges in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
+    for _,range in pairs(ranges) do
+      push(tmp, {range=range, val=value(range.y,
+                                        #best.rows,#rest.rows,"best")}) end end
+  out = sort(tmp,gt"val")
   oo(stats(data))
   oo(stats(data,div))
   for i=1,#out do
-    rule = RULE(map(slice(out,1,i),function(xy) return xy.x end))
-    tmp = accepts(rule, data.rows)
-    if tmp and #tmp>#best.rows/2 then 
-       data1  = clone(data,tmp) 
-       print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
-       if data2 then
-         print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
-         print("","",o(stats(data1))) 
-         print("","",o(stats(data1,div)))
-       end
-       data2 = data1
-end end end
+    print(i)
+    rule = RULE(map(slice(out,1,i), function(pair) return range.range end))
+    best1 = accepts(rule, best.rows)
+    rest1 = accepts(rule, rest.rows)
+    print(#best1,#rest1)
+end end 
 
 function accepts(rule,rows,     t,fun)
   fun = function(row) if accept(rule,row) then return row end end
   t   = map(rows,fun)
+  print(100,#rows, #t)
   if #t < #rows then return t end end
 
 function accept(rule,row,     ok,x)
@@ -429,6 +425,7 @@ function accept(rule,row,     ok,x)
     ok = false
     for _,r in pairs(ranges) do
       x = row[r.at]
+      print(x,r.lo,r.hi)
       if x == "?"               then ok=true;break end 
       if r.lo==r.hi and r.lo==x then ok=true;break end
       if r.lo<=x    and x< r.hi then ok=true;break end 
@@ -505,8 +502,7 @@ function lines(sFilename,fun,    src,s)
 
 -- Run `fun` on the cells  in each row of a csv file.
 function csv(sFilename,fun)
-  lines(sFi:1
-  lename, function(line) fun(cells(line)) end) end
+  lines(sFilename, function(line) fun(cells(line)) end) end
 
 -- ### Lists
 
@@ -716,7 +712,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("contrast","explore contrast sets", function()
+no("contrast","explore contrast sets", function()
   print(rand())
   contrast(read(the.file)) end)
 
