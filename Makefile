@@ -45,6 +45,10 @@ $R/docs/%.md: %.lua  ## make one markdown
 about:
 	echo "lua 101"
 
+../docs/%.html: %.lua  ## .lua ==> .html
+	 docco -l classic -o ../docs $^
+	 cp $R/etc/docco.css ../docs
+
 ~/tmp/%.html: %.lua  ## .lua ==> .html
 	 docco -l classic -o ~/tmp $^
 	 cp $R/etc/docco.css ~/tmp
