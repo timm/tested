@@ -173,9 +173,9 @@ function add(col,x,  n)
          if col.has[x] > col.most then
            col.most, col.mode = col.has[x],x end 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
-      local has = #col.has
-      local pos = (has   < the.Max       and has+1) or (
-                  rand() < the.Max/col.n and rint(1,has))
+      local all,pos
+      all = #col.has
+      pos = (all < the.Max and all+1) or (rand() < the.Max/col.n and rint(1,all))
       if pos then
         col.has[pos] = x
         col.ok = false end end end end 
@@ -426,8 +426,8 @@ function contrast(data,   best,rest,out,effect)
       if tmp then print(tmp.B, tmp.R, tmp.value) end
   end end end
 
-function selects(rule,rows,    OR,AND)
-  function any1(ranges,row) 
+function selects(rule,rows,    oneOfThem,allOfThem)
+  function oneOfThem(ranges,row) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
@@ -435,11 +435,11 @@ function selects(rule,rows,    OR,AND)
       if lo==hi and lo==x then return true end
       if lo<=x  and x< hi then return true end end 
     return false end 
-  function all(row)
+  function allOfThem(row)
     for _,ranges in pairs(rule) do 
-      if not any1(ranges,row) then return false end end
+      if not oneOfThem(ranges,row) then return false end end
     return true end 
-  return map(rows, function(r) if all(r) then return r end end) end
+  return map(rows, function(r) if allOfThem(r) then return r end end) end
       
 -- ## Miscellaneous Support Code
 -- ### Meta
@@ -559,7 +559,7 @@ function slice(t, go, stop, inc,    u)
 fmt  = string.format
 
 -- print to standard error
-function say(...) io.stderr:write(fmt(...)) end
+function say(...)   io.stderr:write(fmt(...)) end
 function sayln(...) io.stderr:write(fmt(...).."\n") end
 
 -- Print a nested table (sorted by the keys of the table).

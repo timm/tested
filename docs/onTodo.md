@@ -389,6 +389,9 @@ Prob
 # On Coding
 Idioms for useful code
 
+## Env
+- tweak your ide
+- split your screen (connects to tdd)
 
 ## NM: numerical methods
 
