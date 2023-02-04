@@ -57,7 +57,7 @@ local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
 local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
-local Seed,selects,showTree,sort,slice,stats,sway,tree,value
+local say,sayln,Seed,selects,showTree,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 -- Trick to  shorten call to maths functions
 local m = math
@@ -558,6 +558,10 @@ function slice(t, go, stop, inc,    u)
 -- `fmt` means `string.format`.
 fmt  = string.format
 
+-- print to standard error
+function say(...) io.stderr:write(fmt(...)) end
+function sayln(...) io.stderr:write(fmt(...).."\n") end
+
 -- Print a nested table (sorted by the keys of the table).
 function oo(t) print(o(t)); return t end
 function o(t,    fun) 
@@ -581,13 +585,13 @@ function main(funs,the,help,    y,n,saved,k,val,ok)
       for k,v in pairs(saved) do the[k]=v end
       Seed = the.seed
       math.randomseed(Seed)
-      print("\n▶️  "..k.." "..(("-"):rep(60)))
+      print(fmt("\n▶️  %s %s",k,("-"):rep(60)))
       ok,val = pcall(pair.fun)
-      if not ok         then n=n+1; print("❌ FAIL "..k.." "..val)
-                                    print(debug.traceback()) 
-      elseif val==false then n=n+1; print("❌ FAIL "..k,"failed")  
-      else                   y=y+1; print("✅ PASS "..k) end end end
-  print("\n🔆 "..o({pass=y, fail=n, success=100*y/(y+n)//1}))
+      if not ok         then n=n+1; sayln("❌ FAIL %s %s",k,val); 
+                                    sayln(debug.traceback()) 
+      elseif val==false then n=n+1; sayln("❌ FAIL %s",k)
+      else                   y=y+1; sayln("✅ PASS %s",k) end end end
+  sayln("\n🔆 %s\n",o({pass=y, fail=n, success=100*y/(y+n)//1}))
   rogues()
   return fails end
 
