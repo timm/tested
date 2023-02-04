@@ -404,53 +404,42 @@ function merge(col1,col2,    new)
 
 -- ## Contrast Sets
 
-function contrast(data,   best,rest,out,rule,tmp,data1,data2)
-  oo(stats(data))
-  oo(stats(data,div))
+function contrast(data,   best,rest,out,effect)
+  function effect(ranges,bestRows,restRows,     rule,b,r,B,R)
+    rule = RULE(ranges)
+    B = #accepts(rule, bestRows) 
+    R = #accepts(rule, restRows) 
+    b = B / #bestRows
+    r = R / #restRows
+    if (b+r) > 0 then return {value=b^2/(b+r), B=B, R=R, rule=rule} end
+  end -----------
   best,rest = sway(data)
   out = {}
   for k,t in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
     for _,range in pairs(t) do
       push(out, {x=range, y=value(range.y,#best.rows,#rest.rows,"best")}) end end
-  out = sort(out,gt"y")
-  local first,here 
+  out = sort(out, gt"y")
+  local first = out[1].y
   for i=1,#out do
-      here = out[i]
-      first = first or here
-      if here.y > .05 and here.y > first/10 then 
-        rule = RULE(map(slice(out,1,i),at"x"))
-        print(here.x.txt,here.x.lo, here.x.hi)
-        tmp = accepts(rule, rest.rows)
-        print(#tmp)
---     if tmp and #tmp>#best.rows/2 then 
---        data1  = DATA.clone(data,tmp) 
---        print("\nall",i,o(diffs(data.cols.y, data1.cols.y)))
---        if data2 then
---          print("gt?",i,o(diffs(data2.cols.y, data1.cols.y))) 
---          print("","",o(stats(data1))) 
---          print("","",o(stats(data1,div)))
---        end
---        data2 = data1
--- end end 
-end end end
+    if out[i].y > .05 and out[i].y > first/10 then 
+      local tmp = effect( map(slice(out,1,i),at"x"), best.rows, rest.rows)
+      if tmp then print(tmp.B, tmp.R, tmp.value) end
+  end end end
 
-
-function accepts(rule,rows,     t,fun)
-  fun = function(row) if accept(rule,row) then return row end end
-  t   = map(rows,fun)
-  if #t < #rows then return t end end
-
-function accept(rule,row,     ok,x)
-  for _,ranges in pairs(rule)  do
-    ok = false
-    for _,r in pairs(ranges) do
-      x = row[r.at]
-      if x == "?"               then ok=true;break end 
-      if r.lo==r.hi and r.lo==x then ok=true;break end
-      if r.lo<=x    and x< r.hi then ok=true;break end 
-    end
-    if not ok then return false end end 
-  return true end 
+function accepts(rule,rows,    OR,AND)
+  function OR(ranges,row) 
+    for _,range in pairs(ranges) do
+      local lo, hi, at = range.lo, range.hi, range.at
+      x = row[at]
+      if x == "?"         then return true end
+      if lo==hi and lo==x then return true end
+      if lo<=x  and x< hi then return true end end 
+    return false end 
+  function AND(row)
+    for _,ranges in pairs(rule) do 
+      if not OR(ranges,row) then return false end end
+    return true end 
+  return map(rows, function(r) if AND(r) then return r end end) end
       
 -- ## Miscellaneous Support Code
 -- ### Meta
@@ -733,7 +722,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-no("contrast","explore contrast sets", function()
+go("contrast","explore contrast sets", function()
   print(rand())
   contrast(DATA.read(the.file)) end)
 

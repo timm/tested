@@ -128,7 +128,7 @@ hi NonText ctermbg=NONE
 "set termguicolors     " enable true colors support
 "let ayucolor="dark"   " for dark version of theme
 colorscheme jellybeans
-colorscheme lunaperche
+colorscheme habamax
 
 if has("mouse_sgr")
       set ttymouse=sgr
