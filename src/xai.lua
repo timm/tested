@@ -52,12 +52,12 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 -- Trick for finding rogue names,  escaped into the global space.
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 -- Trick that lets us define everything in any order.
-local accept,accepts,adds,add,any,at,better,bin,bins
+local adds,add,any,at,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
 local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
-local Seed,showTree,sort,slice,stats,sway,tree,value
+local Seed,selects,showTree,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 -- Trick to  shorten call to maths functions
 local m = math
@@ -407,8 +407,8 @@ function merge(col1,col2,    new)
 function contrast(data,   best,rest,out,effect)
   function effect(ranges,bestRows,restRows,     rule,b,r,B,R)
     rule = RULE(ranges)
-    B = #accepts(rule, bestRows) 
-    R = #accepts(rule, restRows) 
+    B = #selects(rule, bestRows) 
+    R = #selects(rule, restRows) 
     b = B / #bestRows
     r = R / #restRows
     if (b+r) > 0 then return {value=b^2/(b+r), B=B, R=R, rule=rule} end
@@ -426,7 +426,7 @@ function contrast(data,   best,rest,out,effect)
       if tmp then print(tmp.B, tmp.R, tmp.value) end
   end end end
 
-function accepts(rule,rows,    OR,AND)
+function selects(rule,rows,    OR,AND)
   function OR(ranges,row) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
