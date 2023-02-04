@@ -427,7 +427,7 @@ function contrast(data,   best,rest,out,effect)
   end end end
 
 function selects(rule,rows,    OR,AND)
-  function OR(ranges,row) 
+  function any1(ranges,row) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
@@ -435,11 +435,11 @@ function selects(rule,rows,    OR,AND)
       if lo==hi and lo==x then return true end
       if lo<=x  and x< hi then return true end end 
     return false end 
-  function AND(row)
+  function all(row)
     for _,ranges in pairs(rule) do 
-      if not OR(ranges,row) then return false end end
+      if not any1(ranges,row) then return false end end
     return true end 
-  return map(rows, function(r) if AND(r) then return r end end) end
+  return map(rows, function(r) if all(r) then return r end end) end
       
 -- ## Miscellaneous Support Code
 -- ### Meta
