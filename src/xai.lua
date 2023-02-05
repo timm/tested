@@ -426,12 +426,15 @@ function contrast(data)
   return pick(sort(all,gt"val")) end
 
 function showRule(rule,      finalize,merge)
-  function finalize(t)
-    if not (t[1].lo == -m.huge and t[#t].hi == m.huge) then
-      t= map(t, function(r) 
-                  return r.lo==r.hi and fmt("%s", r.lo) or fmt("[%s .. %s)") end) 
-      return table.concat(t," or ") end 
-  end -------------- 
+  function silly(t)
+    if not t[1].lo  == -m.huge then return false end
+    if not t[#t].hi ==  m.huge then return false end
+    for i=2,#t do if not t[i].lo == t[i-1].hi then return false end end
+    return true  end
+  function show1(range) 
+    return r.lo==r.hi and r.lo  or {lo=r.lo, hi=r.hi} end
+  function show(t)
+    if not silly(t) then return map(t, show1)  end end
   function merge(t0)
     local j,t,left,right = 1,{}
     while j <= #t do
@@ -440,9 +443,9 @@ function showRule(rule,      finalize,merge)
       push(t,left)
       j = j + 1 
     end
-    return #t0 == #t and finalize(t0)  or merge(t) 
-  end ------------------------------------------------------------------
-  return kap(rule, function(attr,t) return merge(sort(t,lt"lo")),attr end) 
+    return #t0 == #t and t0 or merge(t) 
+  end -----------------------------------------
+  return kap(rule, function(attr,t) return show(merge(sort(t,lt"lo"))),attr end) 
 end
 
 function selects(rule,rows,    oneOfThem,allOfThem)
