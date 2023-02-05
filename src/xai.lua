@@ -116,8 +116,8 @@ function RANGE(at,txt,lo,hi)
 function RULE(ranges,      t)
   t={}
   for _,range in pairs(ranges) do
-    t[range.at] = t[range.at] or {}
-    push(t[range.at], range) end 
+    t[range.txt] = t[range.txt] or {}
+    push(t[range.txt], range) end 
   return t end
 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
@@ -228,10 +228,10 @@ function norm(num,n)
   return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
 -- A query that returns the score a distribution of symbols inside a SYM.
-function value(sym,  nB,nR,sGoal,    b,r)
+function value(has,  nB,nR,sGoal,    b,r)
   sGoal,nB,nR = sGoal or true, nB or 1, nR or 1
   b,r = 0,0
-  for x,n in pairs(sym.has) do
+  for x,n in pairs(has) do
     if x==sGoal then b = b + n else r = r + n end end
   b,r = b/(nB+1/m.huge), r/(nR+1/m.huge)
   return b^2/(b+r) end
@@ -404,27 +404,46 @@ function merge(col1,col2,    new)
 
 -- ## Contrast Sets
 
-function contrast(data,   best,rest,out,effect)
-  function effect(ranges,bestRows,restRows,     rule,b,r,B,R)
-    rule = RULE(ranges)
-    B = #selects(rule, bestRows) 
-    R = #selects(rule, restRows) 
-    b = B / #bestRows
-    r = R / #restRows
-    if (b+r) > 0 then return {value=b^2/(b+r), B=B, R=R, rule=rule} end
-  end -----------
-  best,rest = sway(data)
-  out = {}
-  for k,t in pairs(bins(data.cols.x,{best=best.rows,rest=rest.rows})) do
-    for _,range in pairs(t) do
-      push(out, {x=range, y=value(range.y,#best.rows,#rest.rows,"best")}) end end
-  out = sort(out, gt"y")
-  local first = out[1].y
-  for i=1,#out do
-    if out[i].y > .05 and out[i].y > first/10 then 
-      local tmp = effect( map(slice(out,1,i),at"x"), best.rows, rest.rows)
-      if tmp then print(tmp.B, tmp.R, tmp.value) end
-  end end end
+function contrast(data)
+  local best,rest = sway(data)
+  local all,v,pick = {}
+  function v(has) return value(has, #best.rows, #rest.rows, "best") end
+  function pick(t)
+    local most,first,rule = -1,t[1].val
+    for i=1,#t do
+      if t[i].val > .05 and t[i].val > first/10 then 
+        local ranges,one,tmp
+        ranges= map(slice(t,1,i),at"range")
+        one=    RULE(ranges)
+        tmp=    v({best= #selects(one,best.rows), 
+                   rest= #selects(one,rest.rows)})
+        if tmp > most then most,rule = tmp,one end end end 
+    return rule,most
+  end ---------
+  for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
+    for _,range in pairs(ranges) do
+      push(all, {range=range, val= v(range.y.has)})  end end
+  return pick(sort(all,gt"val")) end
+
+function showRule(rule,      finalize,merge)
+  function finalize(t)
+    if not (t[1].lo == -m.huge and t[#t].hi == m.huge) then
+      t= map(t, function(r) 
+                  return r.lo==r.hi and fmt("%s", r.lo) or fmt("[%s .. %s)") end) 
+      return table.concat(t," or ") end 
+  end -------------- 
+  function merge(t0)
+    local j,t,left,right = 1,{}
+    while j <= #t do
+      left, right = t[j], t[j+1]
+      if right and left.hi==right.lo then left.hi=right.hi; j=j+1 end 
+      push(t,left)
+      j = j + 1 
+    end
+    return #t0 == #t and finalize(t0)  or merge(t) 
+  end ------------------------------------------------------------------
+  return kap(rule, function(attr,t) return merge(sort(t,lt"lo")),attr end) 
+end
 
 function selects(rule,rows,    oneOfThem,allOfThem)
   function oneOfThem(ranges,row) 
@@ -591,7 +610,7 @@ function main(funs,the,help,    y,n,saved,k,val,ok)
                                     sayln(debug.traceback()) 
       elseif val==false then n=n+1; sayln("❌ FAIL %s",k)
       else                   y=y+1; sayln("✅ PASS %s",k) end end end
-  sayln("\n🔆 %s\n",o({pass=y, fail=n, success=100*y/(y+n)//1}))
+  if y+n>0 then sayln("\n🔆 %s\n",o({pass=y, fail=n, success=100*y/(y+n)//1})) end
   rogues()
   return fails end
 
@@ -726,9 +745,10 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("contrast","explore contrast sets", function()
-  print(rand())
-  contrast(DATA.read(the.file)) end)
+no("contrast","explore contrast sets", function(     rule,most)
+  rule,most= contrast(DATA.read(the.file)) 
+  print(most,rule) end)
+
 
 -- ## Start-up
 
