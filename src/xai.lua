@@ -42,6 +42,7 @@ OPTIONS:
   -M  --Max     numbers                      = 512
   -p  --p       dist coefficient             = 2
   -r  --rest    how many of rest to sample   = 4
+  -R  --Reuse   child splits reuse a parent pole = true
   -s  --seed    random number seed           = 937162211
 ]]
 -- ## Tricks 
@@ -57,7 +58,7 @@ local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
 local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
-local say,sayln,Seed,selects,showTree,sort,slice,stats,sway,tree,value
+local say,sayln,Seed,selects,showTree,showRule,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 -- Trick to  shorten call to maths functions
 local m = math
@@ -284,7 +285,7 @@ function half(data,  rows,cols,above)
   function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
   rows = rows or data.rows
   some = many(rows,the.Halves)
-  A    = above or any(some)
+  A    = (the.Reuse and above) or any(some)
   tmp  = sort(map(some,function(r) return {row=r, d=gap(r,A)} end ),lt"d")
   far  = tmp[(#tmp*the.Far)//1]
   B,c  = far.row, far.d
@@ -407,7 +408,7 @@ function merge(col1,col2,    new)
 function contrast(data)
   local best,rest = sway(data)
   local all,v,pick = {}
-  function v(has) return value(has, #best.rows, #rest.rows, "best") end
+  function v(has) oo{has=has}; return value(has, #best.rows, #rest.rows, "best") end
   function pick(t)
     local most,first,rule = -1,t[1].val
     for i=1,#t do
@@ -745,7 +746,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
       if range.txt ~= b4 then print"" end
       b4 = range.txt
       print(range.txt,range.lo,range.hi,
-           rnd(value(range.y, #best.rows,#rest.rows,"best")), 
+           rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
 no("contrast","explore contrast sets", function(     rule,most)
