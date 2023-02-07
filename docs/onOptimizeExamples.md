@@ -155,7 +155,7 @@ def WALKSATsortof(problem,p)
 
 (Where "same place" means "within $\epsilon$ of other solutions").
 
-<img src="/etc/img/epsilon.png">
+<img src="/etc/img/epsdom.png">
 
 <img src="/etc/img/roc2.png">
 
@@ -163,7 +163,7 @@ def WALKSATsortof(problem,p)
 
 
 
-- Control $N_1=N_2=15, $\epsilon=0.2$
+- Control $N_1=N_2=15,\epsilon=0.2$
 - generate, say, 10,000 options at random 
 - Assign weights w = 0 to configuration options.
 - $N_1$ times repeat: 
