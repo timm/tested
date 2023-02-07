@@ -132,7 +132,7 @@ def WALKSAT(clauses, p, max_flips)
    return failure
 ```
 
-Here's a pimplier version that often does better than simulated annealing:
+Here's WALKSAT applied to simulated annealing:
 
 ```python
 def WALKSATsortof(problem,p)
