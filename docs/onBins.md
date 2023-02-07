@@ -18,12 +18,16 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Discretization
 
-Here's a magic trick:
+Here's a magic trick to make inference simpler, and to generate tiny theories:
 
 - Take some data
-- Find what values are diffreent in different classes
+- Find what values are different in different classes
 - Divide numeric ranges to emphasis those differences
 - Only reason about the most interesting ranges
+
+This is called  _discretizaion_: 
+
+> <em> the transformation a set of continuous attributes into discrete ones, by associating categorical values to intervals and thus transforming quantitative data into qualitative data.</em.
 
 For example, here the magic applied to diabetes data. Note that:
 - No useful divisions were found for Pres,and skin (and attributes whose ranges have the same distributions in all classes are boring)
@@ -85,31 +89,47 @@ Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
 the others, picked at random (aside: why not use them all?)
 
 Now we are going to divide all the numeric ranges into 16 buckets, then recursively
-merge ranges with the same distribution in _best_ and _rest_:
+merge ranges with the same distribution in _best_ and _rest_. Here's what we get
+(and on the RHS, we score how much of each class is selected by that range). Note that
+- strongly associated with `best` are `volume=[90..115)` and `Cylinders=3` and `origin=3`  
+- most associated with `rest` is `volume >= 115` 
 
 
 ```
+all				                       {:best 12 :rest 48}
 
-all				                   {:best 12 :rest 48}
+        [lo<=x< hi)
+        ===========
+Clndrs	-inf	  3	     | 0.08	 | {:best 1}
+Clndrs	3	      4   	 | 0.64	 | {:best 11 :rest 19}
+Clndrs	4	    inf   	 | 0.0	 | {         :rest 29}
 
-Clndrs	-inf	  3	 | 0.08	 | {:best 1}
-Clndrs	3	      4	 | 0.64	 | {:best 11 :rest 19}
-Clndrs	4	    inf	 | 0.0	 | {         :rest 29}
+Volume	-inf	 90	     | 0.69	 | {:best 9  :rest 3}
+Volume	90	  115	     | 0.17	 | {:best 3  :rest 6}
+Volume	115	  inf	     | 0.0	 | {         :rest 39}
 
-Volume	-inf	 90	 | 0.69	 | {:best 9  :rest 3}
-Volume	90	  115	 | 0.17	 | {:best 3  :rest 6}
-Volume	115	  inf	 | 0.0	 | {         :rest 39}
+Model	-inf	   77	     | 0.0	 | {         :rest 30}
+Model	77	     78	     | 0.28	 | {:best 4  :rest 3}
+Model	78	     79	     | 0.12	 | {:best 2  :rest 3}
+Model	79	     80	     | 0.43	 | {:best 6  :rest 4}
+Model	80	    inf	     | 0.0	 | {         :rest 8}
 
-Model	-inf	   77	 | 0.0	 | {         :rest 30}
-Model	77	     78	 | 0.28	 | {:best 4  :rest 3}
-Model	78	     79	 | 0.12	 | {:best 2  :rest 3}
-Model	79	     80	 | 0.43	 | {:best 6  :rest 4}
-Model	80	    inf	 | 0.0	 | {         :rest 8}
-
-origin	1	      1	 | 0.0	 | {         :rest 33}
-origin	2	      2	 | 0.0	 | {         :rest 8}
-origin	3	      3	 |0.87	 | {:best 12 :rest 7}
+origin	1	      1	     | 0.0	 | {         :rest 33}
+origin	2	      2	     | 0.0	 | {         :rest 8}
+origin	3	      3	     |0.87	 | {:best 12 :rest 7}
 ```
+
+Note that there are very few most powerful ranges
+- This is a common result (i.e. a few things matter and the rest can go to he\*ck).
+- Once we know the above, then all subsequent inference is just a search through a couple of ranges. Ezy,pezy.
+
+## How to Discretize
+
+There are so many ways to implement discretization [^garcia]:
+
+[^garcia]: Salvador Garcia, Julian Luengo, Jose A. Saez, Victoria Lopez, and Francisco Herrera. 2013. 
+  [A Survey of Discretization Techniques: Taxonomy and Empirical Analysis in Supervised Learning](/etc/pdf/discretization.pdf). 
+  IEEE Trans. on Knowl. and Data Eng. 25, 4 (April 2013), 734–750. https://doi.org/10.1109/TKDE.2012.35
 
 
 ![](/etc/pdf/dischow.png)
