@@ -134,12 +134,18 @@ There are so many ways to implement discretization [^garcia]:
 
 ![](/etc/pdf/dischow.png)
 
+<img align=right src="/etc/img/ewdefd.png" width=500>
+
 Lets just list some simple ones:
 
-- EDW: equal width discretization:  `(max-min)/the.bins`
-- EFD: equal frequency discretization: sort numbers, divide into (say) 10% chunks
-
-<img src="/etc/img/ewdefd.png" width=600>
+- Unsupervised (make no reference to $x$ attributes):
+  - EWD: equal width discretization:  `(max-min)/the.bins`
+  - EFD: equal frequency discretization: sort numbers, divide into (say) 10% chunks
+- Supervised (divide $x$ by reflecting on $y$)
+  - bottom-up entropy discretization 
+    - post-processor to EWD
+      - divide into (say) 16 bins
+      - recursively combine adjacent bins (if the parts are less informative than the combination)
 
 feature reduction is good
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
