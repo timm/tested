@@ -134,6 +134,13 @@ There are so many ways to implement discretization [^garcia]:
 
 ![](/etc/pdf/dischow.png)
 
+Lets just list some simple ones:
+
+- EDW: equal width discretization:  `(max-min)/the.bins`
+- EFD: equal frequency discretization: sort numbers, divide into (say) 10% chunks
+
+<img src="/etc/img/ewdefd.png" width=600>
+
 feature reduction is good
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
 - In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
