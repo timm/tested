@@ -75,16 +75,16 @@ def RECOMBINE(x, y) 
   - $\text{CR} \in [0,1]$ =  called the ''crossover probability'' 
   - $F \in [0,2]$ =  ''differential weight''.
   - Typical settings are $F = 0.8$ and $CR = 0.9$. 
-- Create $\text{Gen}=\text{NP}$ individuals at random
+- Create  a population of $\text{Pop}=\text{NP}$ individuals at random
 - Repeat until a termination criterion is met (e.g. number of iterations performed, or adequate fitness reached):
-  - For ${x}\in\text{Gen}$:
-    - Pick any  ${a},{b},{c}\in\text{NP}$
+  - For ${x}\in\text{Pop}$:
+    - Pick any  ${a},{b},{c}\in\text{Pop}$
     - Pick one attribute index $R$ at random (good idea that at least one part of the old survives to new)
     - $y= \text{copy}(x)$
     - For each independent input attribute $i \in \{1,\ldots,n\}$
       - If $\text{rand}(0,1)<\text{CR}$ or $i=R$ then 
         - $y_i = a_i + F \times (b_i-c_i)$ 
-    -  If $y$ better than $x$,  replace ${x}$ in the population with $y$
+    -  If $y$ better than $x$,  replace ${x}$ in $\text{Pop}$ with $y$
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
 
 ### Notes
