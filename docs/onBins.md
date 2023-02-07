@@ -18,14 +18,14 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Discretization
 
-here's a magiv trick:
+Here's a magic trick:
 
 - Take some data
 - Find what values are diffreent in different classes
 - Divide numeric ranges to emphasis those differences
 - Only reason about the most interesting ranges
 
-![](~/etc/img/diabetes.png)
+![](/etc/img/diabetes.png)
 
 For example, suppose we can clustered some data:
 
