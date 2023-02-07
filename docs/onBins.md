@@ -30,7 +30,7 @@ This is called  _discretizaion_:
 > <em> the transformation a set of continuous attributes into discrete ones, by associating categorical values to intervals and thus transforming quantitative data into qualitative data.</em>.
 
 For example, here the magic applied to diabetes data. Note that:
-- No useful divisions were found for Pres,and skin (and attributes whose ranges have the same distributions in all classes are boring)
+- No useful divisions were found for `pres`,and `skin` (and attributes whose ranges have the same distributions in all classes are boring)
 - Most ranges make very little change to the default class distribution shown bottom right (blue:red = `not`:`diabetic` = 5:3).
   - But there are some beauties e,g, 
     - `plas=hi` is strongly associated with  for `diabetic`
