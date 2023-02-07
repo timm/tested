@@ -153,31 +153,36 @@ def WALKSATsortof(problem,p)
 (Don't go to the "same place" twice.)
 
 
-(Where "same place" means "within $\epsilon$ of other solutions").
+(Where "same place" means "within d$\epsilon$ of other solutions").
 
 <img src="/etc/img/epsdom.png">
 
+$\epsilon$ can be surprisingly large:
+
 <img src="/etc/img/roc2.png">
+
+So lets try that for some text mining, classification tasks
 
 <img src="/etc/img/options.png">
 
-
-
 - Control $N_1=N_2=15,\epsilon=0.2$
-- generate, say, 10,000 options at random 
 - Assign weights w = 0 to configuration options.
-- $N_1$ times repeat: 
-  - Randomly pick options, favoring those with most weight;      
-  - Configuring and executing data pre-processors and learners using those options;   
+- Stagger: $N_1$ times repeat: 
+  - Randomly pick an options, favoring those with most weight;
+  - Configure and executing data pre-processors and learners using that option;   
   - Dividing output scores into regions of width $\epsilon$;
   - if some configuration has scores within $\epsilon$  of prior configurations then...
     - reduce the weight of those configuration options w = w − 1; 
     - Else, add to their weight with w = w + 1. 
-- $N_2$ time repeat:
-  - Run an option, selected by weight,,,
+- Chop: $N_2$ time repeat:
+  - Find best and worst options $a,z$ ever seen so far
+  - Let $x_i$ be anything  between
+    - anything between $a_i$ and $(a_i ... z_i)/2$ (for numerics)
+    - $a_i$ (for symbols)
+  - Configure and executing data pre-processors and learners using $x$
 - Return the best option found in the above.
 
-## Gradient Decent
+## Gradient Descent
 
 
 (Please note that this page uses materials from Joel Gruz's excellent book 
@@ -187,16 +192,15 @@ Also, if there is anything missing from the following code, please see the
 
 
 <img src="https://github.com/txt/ase19/raw/master/etc/img/grad101.png" align=right width=400>
-Here's the code the `minimize_stochastic`  function shown above. We won't go into detail for the following except to say that
-gradient descent is a first-order iterative optimization algorithm for finding the minimum of a function. The
+Gradient descent is a first-order iterative optimization algorithm for finding the minimum of a function. The
 algorithm take a  step proportional to the negative of the gradient (or approximate gradient) of the function at the current point (and if we took the positive gradient, we'd be ascending to the maximum).
 
 - One  thing to note about the following is that is shows an optimizer  in the middle of a data miner. 
-- Gradient descent (gradient ascent) methods can get trapped by _local optima_ .  In most real-world situations, we have many peaks and many valleys, which causes such methods to fail, as they suffer from an inherent tendency of getting stuck at the local optima:
 - Another thing to note is that this optimizer makes many assumptions about the kind of function it is exploring. 
   - The benefit of making those assumptions is that, using those assumptions, certain calculations are fast to compute;
   - But if the data does not correspond to those assumptions, then the resulting core fit will be very poor.
   - All the above learners do not make these assumptions
+- Gradient descent (gradient ascent) methods can get trapped by _local optima_ .  In most real-world situations, we have many peaks and many valleys, which causes such methods to fail, as they suffer from an inherent tendency of getting stuck at the local optima:
 
 <img src="https://www.tutorialspoint.com/genetic_algorithms/images/ga_motivation.jpg" width=600>
 
@@ -249,7 +253,7 @@ def scalar_multiply(c, v):
     return [c * v_i for v_i in v]
 ```
 
-### Applications: Multi-regression
+### Applications: Regression
 
 One of the most basic data mining algorithms is least squares
 regression.  This algorithm tries to fit a straight line to a set
@@ -259,7 +263,10 @@ distance between the predicted and actual values.
 ![](https://github.com/txt/ase19/blob/master/etc/img/lsr101.png)
 
 The above  stochastic gradient descent (SDG)  method will be used to optimize the &beta; parameters of equations like
-_y=&alpha;+&beta;<sub>1</sub>x<sub>1</sub>+&beta;<sub>2</sub>x<sub>2</sub>+&beta;<sub>3</sub>x<sub>3</sub>+ ..._ (and in this case "optimize"
+
+_y=&alpha;+&beta;<sub>1</sub>x<sub>1</sub>+&beta;<sub>2</sub>x<sub>2</sub>+&beta;<sub>3</sub>x<sub>3</sub>+ ..._ 
+
+(and in this case "optimize"
 means "guess &beta; values in order to reduce the prediction error".
 SDG is a perfect illustration of how  "optimize" and "data mine" and really very tightly connected.
 

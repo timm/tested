@@ -18,6 +18,99 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Discretization
 
+here's a magiv trick:
+
+- Take some data
+- Find what values are diffreent in different classes
+- Divide numeric ranges to emphasis those differences
+- Only reason about the most interesting ranges
+
+![](~/etc/img/diabetes.png)
+
+For example, suppose we can clustered some data:
+
+```
+398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
+| 199
+| | 99
+| | | 49
+| | | | 24  {:Acc+ 17.3 :Lbs- 2623.5 :Mpg+ 30.4}
+| | | | 25  {:Acc+ 16.3 :Lbs- 2693.4 :Mpg+ 29.2}
+| | | 50
+| | | | 25  {:Acc+ 15.8 :Lbs- 2446.1 :Mpg+ 27.2}
+| | | | 25  {:Acc+ 16.7 :Lbs- 2309.2 :Mpg+ 26.0}
+| | 100
+| | | 50
+| | | | 25  {:Acc+ 16.2 :Lbs- 2362.5 :Mpg+ 32.0}
+| | | | 25  {:Acc+ 16.4 :Lbs- 2184.1 :Mpg+ 34.8}
+| | | 50
+| | | | 25  {:Acc+ 16.2 :Lbs- 2185.8 :Mpg+ 29.6} <== best?
+| | | | 25  {:Acc+ 16.3 :Lbs- 2179.4 :Mpg+ 26.4}
+| 199
+| | 99
+| | | 49
+| | | | 24  {:Acc+ 16.6 :Lbs- 2716.9 :Mpg+ 22.5}
+| | | | 25  {:Acc+ 16.1 :Lbs- 3063.5 :Mpg+ 20.4}
+| | | 50
+| | | | 25  {:Acc+ 17.4 :Lbs- 3104.6 :Mpg+ 21.6}
+| | | | 25  {:Acc+ 16.3 :Lbs- 3145.6 :Mpg+ 22.0}
+| | 100
+| | | 50
+| | | | 25  {:Acc+ 12.4 :Lbs- 4320.5 :Mpg+ 12.4}
+| | | | 25  {:Acc+ 11.3 :Lbs- 4194.2 :Mpg+ 12.8} <== worst
+| | | 50
+| | | | 25  {:Acc+ 13.7 :Lbs- 4143.1 :Mpg+ 18.0}
+| | | | 25  {:Acc+ 14.4 :Lbs- 3830.2 :Mpg+ 16.4}
+```
+
+And then we use the same algorithm to wind our way down to the best leaf cluster:
+
+```
+398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
+| 199
+| | 100
+| | | 50
+| | | | 25  
+| | | |   12 {:Acc+ 17.2 :Lbs- 2001.0 :Mpg+ 33.2}
+```
+
+Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
+the others, picked at random (aside: why not use them all?)
+
+Now we are going to divide all the numeric ranges into 16 buckets, then recursively
+merge ranges with the same distribution in best and rest:
+
+
+```
+
+all				                   {:best 12 :rest 48}
+
+Clndrs	-inf	  3	 | 0.08	 | {:best 1}
+Clndrs	3	      4	 | 0.64	 | {:best 11 :rest 19}
+Clndrs	4	    inf	 | 0.0	 | {         :rest 29}
+
+Volume	-inf	 90	 | 0.69	 | {:best 9  :rest 3}
+Volume	90	  115	 | 0.17	 | {:best 3  :rest 6}
+Volume	115	  inf	 | 0.0	 | {         :rest 39}
+
+Model	-inf	   77	 | 0.0	 | {         :rest 30}
+Model	77	     78	 | 0.28	 | {:best 4  :rest 3}
+Model	78	     79	 | 0.12	 | {:best 2  :rest 3}
+Model	79	     80	 | 0.43	 | {:best 6  :rest 4}
+Model	80	    inf	 | 0.0	 | {         :rest 8}
+
+origin	1	      1	 | 0.0	 | {         :rest 33}
+origin	2	      2	 | 0.0	 | {         :rest 8}
+origin	3	      3	 |0.87	 | {:best 12 :rest 7}
+```
+
+clustereed the data and finding the best leaf cluster
+- Set class1= best
+- Set class2= rest (or, actuallym a random sample of some of the rest)
+
+good
+
+![](~/etc/pdf/dischow.png)
 
 feature reduction is good
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
