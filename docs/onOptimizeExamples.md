@@ -87,11 +87,45 @@ def RECOMBINE(x, y) 
     -  If $y$ better than $x$,  replace ${x}$ in the population with $y$
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
 
-Notes:
+### Notes
 - Traditional DE uses _bdom_ which means often many new things $x$ seem to be the same as old things $y$
   - ye olde DE would add such similar things to $\text{Gen}$, which lead to overgrowth of the generation
   - so some pruning operator was required
   - But why do that? just use Zitzler instead
 - Note that DE's mutator (approximately) preserves associations across  attributes
+  - Why?
 - DE was defined in 1997
   - For a more modern version of the above see http://metahack.org/CEC2014-Tanabe-Fukunaga.pdf.
+
+[^storn:] Differential Evolution - A Simple and Efficient Heuristic for Global Optimization over Continuous Spaces
+  Rainer Martin StornRainer Martin StornKenneth Price
+  Journal of Global Optimization 11(4):341-359, 1997
+  DOI: 10.1023/A:1008202821328
+
+## WalkSat (late 1990s)
+(We have all this extra CPU, let's us it.)
+
+<img src="/etc/img/phone.jpg">
+
+
+| english | logic | diagram |
+|---------|-------|---------|
+|a implies b | not a or b  |  ![](https://sites.millersville.edu/bikenaga/math-proof/truth-tables/truth-tables18.png) |
+| a excludes b |  not a or not b | ![](/etc/img/nota.png) |
+
+<img src="/etc/img/phonecnf.jpg">
+
+```python
+def WALKSAT(clauses, p, max_flips)
+  returns:a satisfying model or failure
+   inputs: clauses, a set of clauses in propositional logic     
+           p, the probability of choosing to do a "random walk" move, typically around 0.5     
+          max_flips, number of flips allowed before giving up
+   model ← a random assignment of true/false to the symbols in clauses
+   for i = 1 to max_flips do  
+      if model satisfies clauses then return model
+      clause ← a randomly selected clause from clauses that is false in model  
+       with probability p flip the value in model of a randomly selected symbol from clause  
+       else flip whichever symbol in clause maximizes the number of satisfied clauses 
+   return failure
+```
