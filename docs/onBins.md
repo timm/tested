@@ -252,7 +252,9 @@ age | alive | combined bins
 
 OK, lets code that up.
 
-Note: in the above we did EMD as a port-processor to EFD. It turns out that it is much easier to use EWD instead (see below).
+Note: in the above we did EMD as a port-processor to EFD (equal frequency discretization). 
+It turns out that it is much easier to use EWD (equal width discretization)
+instead (see below).
 
 
 
