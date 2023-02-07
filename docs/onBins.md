@@ -27,7 +27,7 @@ Here's a magic trick to make inference simpler, and to generate tiny theories:
 
 This is called  _discretizaion_: 
 
-> <em> the transformation a set of continuous attributes into discrete ones, by associating categorical values to intervals and thus transforming quantitative data into qualitative data.</em>.
+> <em> the transformation a set of continuous attributes into discrete ones, by associating categorical values to intervals and thus transforming quantitative data into qualitative data[^garcia].</em>
 
 For example, here the magic applied to diabetes data. Note that:
 - No useful divisions were found for `pres`,and `skin` (and attributes whose ranges have the same distributions in all classes are boring)
