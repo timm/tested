@@ -32,7 +32,7 @@ For example, here the magic applied to diabetes data. Note that:
     - `plas=hi` is strongly associated with  for `diabetic`
     - `mass=lo` or `plas=lo` is strongly associated with `not`
 
-<img src="/etc/img/diabetes.png width=400>
+<img src="/etc/img/diabetes.png" width=400>
 
 For another example, suppose we can clustered some data:
 
