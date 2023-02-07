@@ -25,9 +25,16 @@ Here's a magic trick:
 - Divide numeric ranges to emphasis those differences
 - Only reason about the most interesting ranges
 
+For example, here the magic applied to diabetes data. Note that:
+- No useful divisions were found for Pres,and skin (and attributes whose ranges have the same distributions in all classes are boring)
+- Most ranges make very little change to the default class distribution shown bottom right (blue:red = `not`:`diabetic` = 5:3).
+  - But there are some beauties e,g, 
+    - `plas=hi` is strongly associated with  for `diabetic`
+    - `mass=lo` or `plas=lo` is strongly associated with `not`
+
 ![](/etc/img/diabetes.png)
 
-For example, suppose we can clustered some data:
+For another example, suppose we can clustered some data:
 
 ```
 398  {:Acc+ 15.6 :Lbs- 2970.4 :Mpg+ 23.8}
@@ -105,7 +112,7 @@ origin	3	      3	 |0.87	 | {:best 12 :rest 7}
 ```
 
 
-![](~/etc/pdf/dischow.png)
+![](/etc/pdf/dischow.png)
 
 feature reduction is good
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
