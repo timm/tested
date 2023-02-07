@@ -201,18 +201,25 @@ age | alive | bins
 ----|-------|-----
   5 | y     | one
  10 | y     | one
+ ------------------
  33 | y     | two
  40 | y     | two
+ ------------------
  50 | y     | three
  60 | y     | three
+ ------------------
  90 | n     | four
  99 | y     | four
+ ------------------
 100 | n     | five
 120 | n     | five
+ ------------------
 130 | n     | six
 200 | n     | six
+ ------------------
 500 | y     | seven
 700 | y     | seven
+ ------------------
 800 | y     | eight
 900 | y     | eight
 ```
@@ -229,12 +236,14 @@ age | alive | combined bins
  40 | y     | one
  50 | y     | one
  60 | y     | one
+ ------------------
  90 | n     | two
  99 | y     | two
 100 | n     | two
 120 | n     | two
 130 | n     | two
 200 | n     | two
+ ------------------
 500 | y     | three
 700 | y     | three
 800 | y     | three
