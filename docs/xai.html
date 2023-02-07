@@ -292,8 +292,8 @@ sets of groups are conjunctions).</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">RULE</span><span class="hljs-params">(ranges,      t)</span></span>
   t={}
   <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(ranges) <span class="hljs-keyword">do</span>
-    t[range.at] = t[range.at] <span class="hljs-keyword">or</span> {}
-    push(t[range.at], range) <span class="hljs-keyword">end</span> 
+    t[range.txt] = t[range.txt] <span class="hljs-keyword">or</span> {}
+    push(t[range.txt], range) <span class="hljs-keyword">end</span> 
   <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -580,10 +580,10 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">value</span><span class="hljs-params">(sym,  nB,nR,sGoal,    b,r)</span></span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">value</span><span class="hljs-params">(has,  nB,nR,sGoal,    b,r)</span></span>
   sGoal,nB,nR = sGoal <span class="hljs-keyword">or</span> <span class="hljs-literal">true</span>, nB <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>, nR <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>
   b,r = <span class="hljs-number">0</span>,<span class="hljs-number">0</span>
-  <span class="hljs-keyword">for</span> x,n <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(sym.has) <span class="hljs-keyword">do</span>
+  <span class="hljs-keyword">for</span> x,n <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(has) <span class="hljs-keyword">do</span>
     <span class="hljs-keyword">if</span> x==sGoal <span class="hljs-keyword">then</span> b = b + n <span class="hljs-keyword">else</span> r = r + n <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
   b,r = b/(nB+<span class="hljs-number">1</span>/m.<span class="hljs-built_in">huge</span>), r/(nR+<span class="hljs-number">1</span>/m.<span class="hljs-built_in">huge</span>)
   <span class="hljs-keyword">return</span> b^<span class="hljs-number">2</span>/(b+r) <span class="hljs-keyword">end</span></pre></div></div>
@@ -932,27 +932,49 @@ Called by function <code>mergeMany</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">contrast</span><span class="hljs-params">(data,   best,rest,out,effect)</span></span>
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">effect</span><span class="hljs-params">(ranges,bestRows,restRows,     rule,b,r,B,R)</span></span>
-    rule = RULE(ranges)
-    B = #selects(rule, bestRows) 
-    R = #selects(rule, restRows) 
-    b = B / #bestRows
-    r = R / #restRows
-    <span class="hljs-keyword">if</span> (b+r) &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> {value=b^<span class="hljs-number">2</span>/(b+r), B=B, R=R, rule=rule} <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">end</span> <span class="hljs-comment">-----------</span>
-  best,rest = sway(data)
-  out = {}
-  <span class="hljs-keyword">for</span> k,t <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(bins(data.cols.x,{best=best.rows,rest=rest.rows})) <span class="hljs-keyword">do</span>
-    <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(t) <span class="hljs-keyword">do</span>
-      push(out, {x=range, y=value(range.y,#best.rows,#rest.rows,<span class="hljs-string">&quot;best&quot;</span>)}) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
-  out = <span class="hljs-built_in">sort</span>(out, gt<span class="hljs-string">&quot;y&quot;</span>)
-  <span class="hljs-keyword">local</span> first = out[<span class="hljs-number">1</span>].y
-  <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,#out <span class="hljs-keyword">do</span>
-    <span class="hljs-keyword">if</span> out[i].y &gt; <span class="hljs-number">.05</span> <span class="hljs-keyword">and</span> out[i].y &gt; first/<span class="hljs-number">10</span> <span class="hljs-keyword">then</span> 
-      <span class="hljs-keyword">local</span> tmp = effect( map(slice(out,<span class="hljs-number">1</span>,i),at<span class="hljs-string">&quot;x&quot;</span>), best.rows, rest.rows)
-      <span class="hljs-keyword">if</span> tmp <span class="hljs-keyword">then</span> <span class="hljs-built_in">print</span>(tmp.B, tmp.R, tmp.value) <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">contrast</span><span class="hljs-params">(data)</span></span>
+  <span class="hljs-keyword">local</span> best,rest = sway(data)
+  <span class="hljs-keyword">local</span> all,v,pick = {}
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">v</span><span class="hljs-params">(has)</span></span> <span class="hljs-keyword">return</span> value(has, #best.rows, #rest.rows, <span class="hljs-string">&quot;best&quot;</span>) <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pick</span><span class="hljs-params">(t)</span></span>
+    <span class="hljs-keyword">local</span> most,first,rule = <span class="hljs-number">-1</span>,t[<span class="hljs-number">1</span>].val
+    <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,#t <span class="hljs-keyword">do</span>
+      <span class="hljs-keyword">if</span> t[i].val &gt; <span class="hljs-number">.05</span> <span class="hljs-keyword">and</span> t[i].val &gt; first/<span class="hljs-number">10</span> <span class="hljs-keyword">then</span> 
+        <span class="hljs-keyword">local</span> ranges,one,tmp
+        ranges= map(slice(t,<span class="hljs-number">1</span>,i),at<span class="hljs-string">&quot;range&quot;</span>)
+        one=    RULE(ranges)
+        tmp=    v({best= #selects(one,best.rows), 
+                   rest= #selects(one,rest.rows)})
+        <span class="hljs-keyword">if</span> tmp &gt; most <span class="hljs-keyword">then</span> most,rule = tmp,one <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> 
+    <span class="hljs-keyword">return</span> rule,most
+  <span class="hljs-keyword">end</span> <span class="hljs-comment">---------</span>
+  <span class="hljs-keyword">for</span> _,ranges <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(bins(data.cols.x,{best=best.rows, rest=rest.rows})) <span class="hljs-keyword">do</span>
+    <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(ranges) <span class="hljs-keyword">do</span>
+      push(all, {range=range, val= v(range.y.has)})  <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">return</span> pick(<span class="hljs-built_in">sort</span>(all,gt<span class="hljs-string">&quot;val&quot;</span>)) <span class="hljs-keyword">end</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showRule</span><span class="hljs-params">(rule,      finalize,merge)</span></span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">silly</span><span class="hljs-params">(t)</span></span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> t[<span class="hljs-number">1</span>].lo  == -m.<span class="hljs-built_in">huge</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> t[#t].hi ==  m.<span class="hljs-built_in">huge</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">for</span> i=<span class="hljs-number">2</span>,#t <span class="hljs-keyword">do</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> t[i].lo == t[i<span class="hljs-number">-1</span>].hi <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>  <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">show1</span><span class="hljs-params">(range)</span></span> 
+    <span class="hljs-keyword">return</span> r.lo==r.hi <span class="hljs-keyword">and</span> r.lo  <span class="hljs-keyword">or</span> {lo=r.lo, hi=r.hi} <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">show</span><span class="hljs-params">(t)</span></span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> silly(t) <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> map(t, show1)  <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">merge</span><span class="hljs-params">(t0)</span></span>
+    <span class="hljs-keyword">local</span> j,t,left,right = <span class="hljs-number">1</span>,{}
+    <span class="hljs-keyword">while</span> j &lt;= #t <span class="hljs-keyword">do</span>
+      left, right = t[j], t[j+<span class="hljs-number">1</span>]
+      <span class="hljs-keyword">if</span> right <span class="hljs-keyword">and</span> left.hi==right.lo <span class="hljs-keyword">then</span> left.hi=right.hi; j=j+<span class="hljs-number">1</span> <span class="hljs-keyword">end</span> 
+      push(t,left)
+      j = j + <span class="hljs-number">1</span> 
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">return</span> #t0 == #t <span class="hljs-keyword">and</span> t0 <span class="hljs-keyword">or</span> merge(t) 
+  <span class="hljs-keyword">end</span> <span class="hljs-comment">-----------------------------------------</span>
+  <span class="hljs-keyword">return</span> kap(rule, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attr,t)</span></span> <span class="hljs-keyword">return</span> show(merge(<span class="hljs-built_in">sort</span>(t,lt<span class="hljs-string">&quot;lo&quot;</span>))),attr <span class="hljs-keyword">end</span>) 
+<span class="hljs-keyword">end</span>
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">selects</span><span class="hljs-params">(rule,rows,    oneOfThem,allOfThem)</span></span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">oneOfThem</span><span class="hljs-params">(ranges,row)</span></span> 
@@ -1394,7 +1416,7 @@ system the number of failing <code>funs</code>.</p>
                                     sayln(<span class="hljs-built_in">debug</span>.<span class="hljs-built_in">traceback</span>()) 
       <span class="hljs-keyword">elseif</span> val==<span class="hljs-literal">false</span> <span class="hljs-keyword">then</span> n=n+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">&quot;❌ FAIL %s&quot;</span>,k)
       <span class="hljs-keyword">else</span>                   y=y+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">&quot;✅ PASS %s&quot;</span>,k) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
-  sayln(<span class="hljs-string">&quot;\n🔆 %s\n&quot;</span>,o({pass=y, fail=n, success=<span class="hljs-number">100</span>*y/(y+n)//<span class="hljs-number">1</span>}))
+  <span class="hljs-keyword">if</span> y+n&gt;<span class="hljs-number">0</span> <span class="hljs-keyword">then</span> sayln(<span class="hljs-string">&quot;\n🔆 %s\n&quot;</span>,o({pass=y, fail=n, success=<span class="hljs-number">100</span>*y/(y+n)//<span class="hljs-number">1</span>})) <span class="hljs-keyword">end</span>
   rogues()
   <span class="hljs-keyword">return</span> fails <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -1600,9 +1622,9 @@ go(<span class="hljs-string">&quot;bins&quot;</span>, <span class="hljs-string">
            rnd(value(range.y, #best.rows,#rest.rows,<span class="hljs-string">&quot;best&quot;</span>)), 
            o(range.y.has)) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">&quot;contrast&quot;</span>,<span class="hljs-string">&quot;explore contrast sets&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>
-  <span class="hljs-built_in">print</span>(rand())
-  contrast(DATA.<span class="hljs-built_in">read</span>(the.file)) <span class="hljs-keyword">end</span>)</pre></div></div>
+no(<span class="hljs-string">&quot;contrast&quot;</span>,<span class="hljs-string">&quot;explore contrast sets&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     rule,most)</span></span>
+  rule,most= contrast(DATA.<span class="hljs-built_in">read</span>(the.file)) 
+  <span class="hljs-built_in">print</span>(most,rule) <span class="hljs-keyword">end</span>)</pre></div></div>
             
         </li>
         

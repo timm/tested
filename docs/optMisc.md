@@ -1,0 +1,15 @@
+- Choose the parameters $\text{NP} \geq 4$, $\text{CR} \in [0,1]$, and $F \in [0,2]$. 
+  -- $\text{NP} $ is the population size, i.e. the number of candidate agents or "parents"; a typical setting is 10$n$. 
+  -- The parameter $\text{CR} \in [0,1]$ is called the ''crossover probability'' and the parameter $F \in [0,2]$ is called the ''differential weight''. Typical settings are $F = 0.8$ and $CR = 0.9$. 
+  -- Optimization performance may be greatly impacted by these choices; see below. 
+- Initialize all agents $\mathbf{x}$ with random positions in the search-space.
+- Until a termination criterion is met (e.g. number of iterations performed, or adequate fitness reached), repeat the following:
+  - For each agent $\mathbf{x}$ in the population do:
+    - Pick three agents $\mathbf{a},\mathbf{b}$, and $\mathbf{c}$ from the population at random, they must be distinct from each other as well as from agent $\mathbf{x}$. ($\mathbf{a}$ is called the "base" vector.)
+    - Pick a random index $R \in \{1, \ldots, n\}$ where $n$ is the dimensionality of the problem being optimized.
+    - Compute the agent's potentially new position $\mathbf{y} = [y_1, \ldots, y_n]$ as follows:
+      - For each $i \in \{1,\ldots,n\}$, pick a uniformly distributed random number $r_i \sim U(0,1)$
+      - If $r_i < CR $ or $i = R$ then set $y_i = a_i + F \times (b_i-c_i)$ otherwise set $y_i = x_i$. (Index position $R$ is replaced for certain.)
+    -  If $f(\mathbf{y}) \leq f(\mathbf{x})$ then replace the agent $\mathbf{x}$ in the population with the improved or equal candidate solution $\mathbf{y}$.
+-  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
+

@@ -422,3 +422,12 @@ eg4(); eg10()
 -- then return sk
 -- else the=cli(help,the)
 --      for _,rx in pairs(sk(the.file)) do print(rx.rank,rx.name,rx.show) end end
+--
+--
+--      -- Returns the p-value for the given U value and sample sizes
+-- local function get_p_value(U, n1, n2)
+--   local m = n1 * n2
+--   local s = math.sqrt(m * (n1 + n2 + 1) / 12)
+--   local z = (U - n1 * n2 / 2) / s
+--   return math.exp(-z^2/2) / math.sqrt(2 * math.pi)
+-- end
