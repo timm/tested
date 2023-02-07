@@ -105,7 +105,7 @@ def RECOMBINE(x, y) 
 ## WalkSat (late 1990s)
 (We have all this extra CPU, let's us it.)
 
-<img src="/etc/img/phone.jpg">
+<img src="/etc/img/phone.png">
 
 
 | english | logic | diagram |
@@ -113,7 +113,7 @@ def RECOMBINE(x, y) 
 |a implies b | not a or b  |  ![](https://sites.millersville.edu/bikenaga/math-proof/truth-tables/truth-tables18.png) |
 | a excludes b |  not a or not b | ![](/etc/img/nota.png) |
 
-<img src="/etc/img/phonecnf.jpg">
+<img src="/etc/img/phonecnf.png">
 
 ```python
 def WALKSAT(clauses, p, max_flips)
