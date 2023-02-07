@@ -89,7 +89,7 @@ def RECOMBINE(x, y) 
 
 ### Notes
 - When working with symbolic attributes
-  - $y_i = a_i or (\text{rand}()<\text{CR} abd b_i or c_i)$
+  - $y_i = a_i \vee (\text{rand}()<\text{CR} \wedge b_i \vee c_i)$
 - Traditional DE uses _bdom_ which means often many new things $x$ seem to be the same as old things $y$
   - ye olde DE would add such similar things to $\text{Gen}$, which lead to overgrowth of the generation
   - so some pruning operator was required
