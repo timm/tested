@@ -78,7 +78,7 @@ Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
 the others, picked at random (aside: why not use them all?)
 
 Now we are going to divide all the numeric ranges into 16 buckets, then recursively
-merge ranges with the same distribution in best and rest:
+merge ranges with the same distribution in _best_ and _rest_:
 
 
 ```
@@ -104,11 +104,6 @@ origin	2	      2	 | 0.0	 | {         :rest 8}
 origin	3	      3	 |0.87	 | {:best 12 :rest 7}
 ```
 
-clustereed the data and finding the best leaf cluster
-- Set class1= best
-- Set class2= rest (or, actuallym a random sample of some of the rest)
-
-good
 
 ![](~/etc/pdf/dischow.png)
 

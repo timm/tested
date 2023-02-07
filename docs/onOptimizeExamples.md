@@ -178,17 +178,17 @@ So lets try that for some text mining, classification tasks
 - Assign weights w = 0 to configuration options.
 - Stagger: $N_1$ times repeat: 
   - Randomly pick an options, favoring those with most weight;
-  - Configure and executing data pre-processors and learners using that option;   
-  - Dividing output scores into regions of width $\epsilon$;
-  - if some configuration has scores within $\epsilon$  of prior configurations then...
-    - reduce the weight of those configuration options w = w − 1; 
-    - Else, add to their weight with w = w + 1. 
+  - Run and reweigh:
+    - Configure and executing data pre-processors and learners using that option;   
+    - Let $\Delta$ be min distance of `config.score` to any other score.
+    - `config.options-- if Delta < .2 else config.options++`
 - Chop: $N_2$ time repeat:
-  - Find best and worst options $a,z$ ever seen so far
-  - Let $x_i$ be anything  between
+  - Find lowest and highest weight  $a,z$ ever seen so far
+  - Let $x_i$ be 
     - anything between $a_i$ and $(a_i ... z_i)/2$ (for numerics)
     - $a_i$ (for symbols)
   - Configure and executing data pre-processors and learners using $x$
+  - Run and reweigh 
 - Return the best option found in the above.
 
 ## Gradient Descent
