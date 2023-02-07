@@ -96,27 +96,27 @@ merge ranges with the same distribution in _best_ and _rest_. Here's what we get
 
 
 ```
-all				                       {:best 12 :rest 48}
+all                                       {:best 12 :rest 48}
 
-        [lo<=x< hi)
-        ===========
-Clndrs	-inf	  3	     | 0.08	 | {:best 1}
-Clndrs	3	      4   	 | 0.64	 | {:best 11 :rest 19}
-Clndrs	4	    inf   	 | 0.0	 | {         :rest 29}
+          [lo<=x< hi)
+          ===========
+Clndrs    -inf       3        | 0.08     | {:best 1}
+Clndrs    3          4        | 0.64     | {:best 11 :rest 19}
+Clndrs    4        inf        | 0.0      | {         :rest 29}
 
-Volume	-inf	 90	     | 0.69	 | {:best 9  :rest 3}
-Volume	90	  115	     | 0.17	 | {:best 3  :rest 6}
-Volume	115	  inf	     | 0.0	 | {         :rest 39}
+Volume    -inf     90         | 0.69     | {:best 9  :rest 3}
+Volume    90      115         | 0.17     | {:best 3  :rest 6}
+Volume    115     inf         | 0.0      | {         :rest 39}
 
-Model	-inf	   77	     | 0.0	 | {         :rest 30}
-Model	77	     78	     | 0.28	 | {:best 4  :rest 3}
-Model	78	     79	     | 0.12	 | {:best 2  :rest 3}
-Model	79	     80	     | 0.43	 | {:best 6  :rest 4}
-Model	80	    inf	     | 0.0	 | {         :rest 8}
+Model    -inf      77         | 0.0     | {         :rest 30}
+Model    77        78         | 0.28    | {:best 4  :rest 3}
+Model    78        79         | 0.12    | {:best 2  :rest 3}
+Model    79        80         | 0.43    | {:best 6  :rest 4}
+Model    80       inf         | 0.0     | {         :rest 8}
 
-origin	1	      1	     | 0.0	 | {         :rest 33}
-origin	2	      2	     | 0.0	 | {         :rest 8}
-origin	3	      3	     |0.87	 | {:best 12 :rest 7}
+origin    1         1         | 0.0     | {         :rest 33}
+origin    2         2         | 0.0     | {         :rest 8}
+origin    3         3         |0.87     | {:best 12 :rest 7}
 ```
 
 Note that there are very few most powerful ranges
