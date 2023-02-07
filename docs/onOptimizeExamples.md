@@ -70,8 +70,8 @@ def RECOMBINE(x, y) 
 
 <img src="https://esa.github.io/pagmo2/_images/de.png">
 
-- Choose the parameters $\text{NP} \geq 4$, $\text{CR} \in [0,1]$, and $F \in [0,2]$. 
-  - $\text{NP}$ =  population size, i.e. the number of candidate agents or "parents"; a typical setting is 10$n$. 
+- Choose the parameters:
+  - $\text{NP}$ =  population size, i.e. the number of candidate agents or "parents"; for $n$ attributes, a typical setting is $10*n$. 
   - $\text{CR} \in [0,1]$ =  called the ''crossover probability'' 
   - $F \in [0,2]$ =  ''differential weight''.
   - Typical settings are $F = 0.8$ and $CR = 0.9$. 
@@ -86,7 +86,12 @@ def RECOMBINE(x, y) 
         - $y_i = a_i + F \times (b_i-c_i)$ 
     -  If $y$ better than $x$,  replace ${x}$ in the population with $y$
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
+
+Notes:
 - Traditional DE uses _bdom_ which means often many new things $x$ seem to be the same as old things $y$
   - ye olde DE would add such similar things to $\text{Gen}$, which lead to overgrowth of the generation
   - so some pruning operator was required
   - But why do that? just use Zitzler instead
+- Note that DE's mutator (approximately) preserves associations across  attributes
+- DE was defined in 1997
+  - For a more modern version of the above see http://metahack.org/CEC2014-Tanabe-Fukunaga.pdf.
