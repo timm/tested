@@ -88,6 +88,8 @@ def RECOMBINE(x, y) 
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
 
 ### Notes
+- When working with symbolic attributes
+  - $y_i = a_i or (\text{rand}()<\text{CR} abd b_i or c_i)$
 - Traditional DE uses _bdom_ which means often many new things $x$ seem to be the same as old things $y$
   - ye olde DE would add such similar things to $\text{Gen}$, which lead to overgrowth of the generation
   - so some pruning operator was required
@@ -129,3 +131,6 @@ def WALKSAT(clauses, p, max_flips)
        else flip whichever symbol in clause maximizes the number of satisfied clauses 
    return failure
 ```
+
+
+
