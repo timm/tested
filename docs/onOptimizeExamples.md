@@ -3,15 +3,15 @@
   - $\text{CR} \in [0,1]$ =  called the ''crossover probability'' 
   - $F \in [0,2]$ =  ''differential weight''.
   - Typical settings are $F = 0.8$ and $CR = 0.9$. 
-  - Optimization performance may be greatly impacted by these choices; see below. 
-- Initialize all agents $\mathbf{x}$ with random positions in the search-space.
+- Create $\text{Gen}=\text{NP}$ individuals at random
 - Until a termination criterion is met (e.g. number of iterations performed, or adequate fitness reached), repeat the following:
-  - For each agent $\mathbf{x}$ in the population do:
-    - Pick three agents $\mathbf{a},\mathbf{b}$, and $\mathbf{c}$ from the population at random, they must be distinct from each other as well as from agent $\mathbf{x}$. ($\mathbf{a}$ is called the "base" vector.)
-    - Pick a random index $R \in \{1, \ldots, n\}$ where $n$ is the dimensionality of the problem being optimized.
-    - Compute the agent's potentially new position $\mathbf{y} = [y_1, \ldots, y_n]$ as follows:
-      - For each $i \in \{1,\ldots,n\}$, pick a uniformly distributed random number $r_i \sim U(0,1)$
-      - If $r_i < CR $ or $i = R$ then set $y_i = a_i + F \times (b_i-c_i)$ otherwise set $y_i = x_i$. (Index position $R$ is replaced for certain.)
-    -  If $f(\mathbf{y}) \leq f(\mathbf{x})$ then replace the agent $\mathbf{x}$ in the population with the improved or equal candidate solution $\mathbf{y}$.
+  - For each agent ${x} in \text{Gen}$ in the population do:
+    - Pick any  ${a},{b},{c}\in\text{NP}$
+    - Pick one attribute index $R$ at random
+    - $y= \text{copy}(x)$
+    - For each attribute $i \in \{1,\ldots,n\}$
+      - If $\text{rand}(0,1)<\text{CR}$ or $i=R$ then 
+        - $y_i = a_i + F \times (b_i-c_i)$ 
+    -  If $f({y}) \leq f({x})$ then replace ${x}$ in the population with $y$
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
 
