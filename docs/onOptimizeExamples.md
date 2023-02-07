@@ -14,6 +14,9 @@ In Proceedings of the 22nd IEEE/ACM International Conference on Automated Softwa
   - This is not how I would do this in 2023
 
 ## Simulated Annealing  (1950s)
+(To avoid traps, before you sober up, get a little drunk and take some risks.)
+
+<img src="https://ars.els-cdn.com/content/image/3-s2.0-B9780128157152000099-gr007.jpg">
 
 ```python
 def SIMULATED-ANNEALING(problem,schedule)
@@ -31,6 +34,8 @@ def SIMULATED-ANNEALING(problem,schedule)
 
 ## Gentic Algorithms (1980s)
 (Why just mutate on example?)
+
+<img src="https://production-media.paperswithcode.com/methods/gadiagram-300x196_jThbitI.png">
 
 ```python
 def GENETIC-ALGORITHM(population, FITNESS-FN) 
