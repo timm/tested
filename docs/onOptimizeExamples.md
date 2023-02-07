@@ -30,6 +30,8 @@ def SIMULATED-ANNEALING(problem,schedule)
 ```
 
 ## Gentic Algorithms (1980s)
+(Why just mutate on example?)
+
 ```python
 def GENETIC-ALGORITHM(population, FITNESS-FN) 
  returns: an individual  
@@ -40,12 +42,16 @@ def GENETIC-ALGORITHM(population, FITNESS-FN) 
                  for i in population]  
   until some individual is fit enough, or enough time has elapsed
   return the best individual in population, according to FITNESS-FN
+```
 
+```python
 def SELECT(ρ, population, FITNESS-FN) 
   returns: a set of ρ individuals  
   election ← a uniform random sample of 2 * ρ individuals from population
   return the top ρ individuals in selection, ranked by FITNESS-FN
+```
 
+```python
 def RECOMBINE(x, y)  
   returns:an individual  
   inputs: x,y, parent individuals
@@ -53,7 +59,9 @@ def RECOMBINE(x, y) 
   crossover ← random integer from 0 to n 
   return APPEND(x[0:crossover], y[crossover: n])
 ```
-## Differential Evolution
+## Differential Evolution (1990s)
+
+(Base mutation on an archive of successful candidates.)
 
 <img src="https://esa.github.io/pagmo2/_images/de.png">
 
