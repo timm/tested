@@ -1,6 +1,8 @@
 - Choose the parameters $\text{NP} \geq 4$, $\text{CR} \in [0,1]$, and $F \in [0,2]$. 
-  - $\text{NP} $ is the population size, i.e. the number of candidate agents or "parents"; a typical setting is 10$n$. 
-  - The parameter $\text{CR} \in [0,1]$ is called the ''crossover probability'' and the parameter $F \in [0,2]$ is called the ''differential weight''. Typical settings are $F = 0.8$ and $CR = 0.9$. 
+  - $\text{NP}$ =  population size, i.e. the number of candidate agents or "parents"; a typical setting is 10$n$. 
+  - $\text{CR} \in [0,1]$ =  called the ''crossover probability'' 
+  - $F \in [0,2]$ =  ''differential weight''.
+  - Typical settings are $F = 0.8$ and $CR = 0.9$. 
   - Optimization performance may be greatly impacted by these choices; see below. 
 - Initialize all agents $\mathbf{x}$ with random positions in the search-space.
 - Until a termination criterion is met (e.g. number of iterations performed, or adequate fitness reached), repeat the following:
