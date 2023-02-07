@@ -165,9 +165,10 @@ This is DODGE[^dodge]
 
 <img src="/etc/img/epsdom.png">
 
-$\epsilon$ can be surprisingly large:
+$\epsilon$ can be surprisingly large as shown here in 12 evals of training data
+(purple line) and 12 evals of test data (orange line)
 
-<img src="/etc/img/roc2.png">
+<img width=500 src="/etc/img/roc2.png">
 
 So lets try that for some text mining, classification tasks
 
