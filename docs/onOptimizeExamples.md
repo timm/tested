@@ -150,10 +150,18 @@ def WALKSATsortof(problem,p)
 
 ## Tabu Search 
 
+This is DODGE[^dodge]
+
+[^dodge]: Amritanshu Agrawal, Xueqi Yang, Rishabh Agrawal, Rahul Yedida, Xipeng Shen, 
+         and Tim Menzies. 2022. 
+         [Simpler Hyperparameter Optimization for Software Analytics: Why, How, When?](https://arxiv.org/pdf/1912.04061.pdf)
+         IEEE Trans. Softw. Eng. 48, 8 (Aug. 2022), 2939–2954. https://doi.org/10.1109/TSE.2021.3073242
+
+
 (Don't go to the "same place" twice.)
 
 
-(Where "same place" means "within d$\epsilon$ of other solutions").
+(Where "same place" means "within $\epsilon$ of other solutions").
 
 <img src="/etc/img/epsdom.png">
 
