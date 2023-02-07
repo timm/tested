@@ -5,13 +5,16 @@
   - Typical settings are $F = 0.8$ and $CR = 0.9$. 
 - Create $\text{Gen}=\text{NP}$ individuals at random
 - Until a termination criterion is met (e.g. number of iterations performed, or adequate fitness reached), repeat the following:
-  - For each agent ${x} in \text{Gen}$ in the population do:
+  - For each agent ${x}\in\text{Gen}$ in the population do:
     - Pick any  ${a},{b},{c}\in\text{NP}$
     - Pick one attribute index $R$ at random
     - $y= \text{copy}(x)$
     - For each attribute $i \in \{1,\ldots,n\}$
       - If $\text{rand}(0,1)<\text{CR}$ or $i=R$ then 
         - $y_i = a_i + F \times (b_i-c_i)$ 
-    -  If $f({y}) \leq f({x})$ then replace ${x}$ in the population with $y$
+    -  If $y$ better than $x$,  replace ${x}$ in the population with $y$
 -  Pick the agent from the population that has the best fitness and return it as the best found candidate solution.
-
+- Traditional DE uses _bdom_ which means often many new things $x$ seem to be the same as old things $y$
+  - ye olde DE would add such similar things to $\text{Gen}$, which lead to overgrowth of the generation
+  - so some pruning operator was required
+  - But why do that? just use Zitzler instead
