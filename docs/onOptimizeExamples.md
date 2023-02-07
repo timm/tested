@@ -104,8 +104,8 @@ def RECOMBINE(x, y) 
   Journal of Global Optimization 11(4):341-359, 1997
   DOI: 10.1023/A:1008202821328
 
-## WalkSat (late 1990s)
-(We have all this extra CPU, let's us it.)
+## Local Search (late 1990s)
+(We have all this extra CPU, let's us it for a little "local search")
 
 <img src="/etc/img/phone.png">
 
@@ -132,5 +132,47 @@ def WALKSAT(clauses, p, max_flips)
    return failure
 ```
 
+Here's a pimplier version that often does better than simulated annealing:
+
+```python
+def WALKSATsortof(problem,p)
+  returns: a solution state
+  input: probability p of "local seaarch"
+  current ← problem.INITIAL-STATE
+  for t = 1 to Tmax do
+     next ← copy(curret)
+     pick an attribute at random
+     if rand() < p then change attrtibute at random
+     else search across attribute's range for the value that most improves VALUE(next)
+     if next is better than current then current ← next  
+  return current
+```
+
+## Tabu Search 
+
+(Don't go to the "same place" twice.)
 
 
+(Where "same place" means "within $\epsilon$ of other solutions").
+
+<img src="/etc/img/epsilon.png">
+
+<img src="/etc/img/roc2.png">
+
+<img src="/etc/img/options.png">
+
+
+
+- Control $N_1=N_2=15, $\epsilon=0.2$
+- generate, say, 10,000 options at random 
+- Assign weights w = 0 to configuration options.
+- $N_1$ times repeat: 
+  - Randomly pick options, favoring those with most weight;      
+  - Configuring and executing data pre-processors and learners using those options;   
+  - Dividing output scores into regions of width $\epsilon$;
+  - if some configuration has scores within $\epsilon$  of prior configurations then...
+    - reduce the weight of those configuration options w = w − 1; 
+    - Else, add to their weight with w = w + 1. 
+- $N_2$ time repeat:
+  - Run an option, selected by weight,,,
+- Return the best option found in the above.
