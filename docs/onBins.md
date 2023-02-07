@@ -142,10 +142,112 @@ Lets just list some simple ones:
   - EWD: equal width discretization:  `(max-min)/the.bins`
   - EFD: equal frequency discretization: sort numbers, divide into (say) 10% chunks
 - Supervised (divide $x$ by reflecting on $y$)
-  - bottom-up entropy discretization 
-    - post-processor to EWD
-      - divide into (say) 16 bins
+  - EMD: entropy merge discretization
+    - post-processor to unsupervised discretization:
+      - divide into (say) 16 bins, then remove uninformative bins
       - recursively combine adjacent bins (if the parts are less informative than the combination)
+
+eg. can `alive` supervise our discretization of `age`?
+
+```
+age | alive
+----|------
+  5 | y
+500 | y
+ 33 | y
+100 | n
+ 60 | y
+800 | y
+ 10 | y
+120 | n
+ 40 | y
+200 | n  
+ 90 | n
+700 | y
+ 99 | y
+ 50 | y
+130 | n
+999 | y
+```
+Step1, sort on `age`:
+
+```
+age | alive
+----|------
+  5 | y
+ 10 | y
+ 33 | y
+ 40 | y
+ 50 | y
+ 60 | y
+ 90 | n
+ 99 | y
+100 | n
+120 | n
+130 | n
+200 | n  
+500 | y
+700 | y
+800 | y
+900 | y
+```
+So we seem to have some long lived  aliens amongst us. 
+
+Now one way to find our bins is to first divide the day into (say) five bins of size two,
+then look for adjacent bins that are so similar that we can merge them:
+
+```
+age | alive | bins
+----|-------|-----
+  5 | y     | one
+ 10 | y     | one
+ 33 | y     | two
+ 40 | y     | two
+ 50 | y     | three
+ 60 | y     | three
+ 90 | n     | four
+ 99 | y     | four
+100 | n     | five
+120 | n     | five
+130 | n     | six
+200 | n     | six
+500 | y     | seven
+700 | y     | seven
+800 | y     | eight
+900 | y     | eight
+```
+
+See note the numbers of "alive=y" and "alive=n" are the same in bins one+two+three and five+six and seven+eight. And a similar pattern happens in the middle (but that 99 messes things up a little).
+But accommodating a little bit of noise then we get three bins.
+
+```
+age | alive | combined bins
+----|-------|-----
+  5 | y     | one
+ 10 | y     | one
+ 33 | y     | one
+ 40 | y     | one
+ 50 | y     | one
+ 60 | y     | one
+ 90 | n     | two
+ 99 | y     | two
+100 | n     | two
+120 | n     | two
+130 | n     | two
+200 | n     | two
+500 | y     | three
+700 | y     | three
+800 | y     | three
+900 | y     | three
+```
+
+OK, lets code that up.
+
+Note: in the above we did EMD as a port-processor to EFD. It turns out that it is much easier to use EWD instead (see below).
+
+
+
+bins is size (900-5)/16=56
 
 feature reduction is good
 More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
