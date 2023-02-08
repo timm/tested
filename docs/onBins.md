@@ -143,7 +143,7 @@ Note that there are very few most powerful ranges
 
 ## How to Discretize
 
-There are so many ways to implement discretization [^garcia]:
+There are so many ways to implement discretization [^garcia][^liu]:
 
 [^garcia]: Salvador Garcia, Julian Luengo, Jose A. Saez, Victoria Lopez, and Francisco Herrera. 2013. 
   [A Survey of Discretization Techniques: Taxonomy and Empirical Analysis in Supervised Learning](/etc/pdf/discretization.pdf). 
@@ -444,6 +444,8 @@ function mergeAny(ranges0,     noGaps)
 In the above, the function `noGaps` makes sure the resulting ranges run from minus infinity
 to plus infinity with no gaps.
 
+## Initializing the RANGEs
+
 Nearly done. All the above assumes we have the columsn divided into, say `the.bins=16`
 RANGEs. To generate them, we use the following code.
 Note that this code is called per `col` and `rowss` is a dictionary of rows where the keys
@@ -452,7 +454,7 @@ of the dictionary are the class names. So if we have two classes `best` and `res
 
 ```
 {best={row1,row2...row12}
- rest={otherRow1, otherRow2... otherrow48}
+ rest={otherRow1, otherRow2... otherRow48}
 }
 ```
 
@@ -474,7 +476,6 @@ function bins(cols,rowss)
   end  
   return out end
 
-
 -- Map `x` into a small number of bins. `SYM`s just get mapped
 -- to themselves but `NUM`s get mapped to one of `the.bins` values.
 -- Called by function `bins`.
@@ -484,63 +485,12 @@ function bin(col,x,      tmp)
   return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
 ```
 
-range 
-he 10th percentile is 1.28 times the standard deviation below the mean, so in your example (100 - 50) = 50 is 1.28
 
-First things, first-- here's code to merge two `SYM`sEntropy
-will do.
-
-Suppose we count how often we seen best rest in some bin. 
-bins is size (900-5)/16=56
-
-feature reduction is good
-More generally, this process is based on the manifold assumption (used extensively in semi-supervised learning) that higher-dimensional data can be mapped to a lower dimensional space without loss of signal.
-- In the following examples, the first attributes already occurring in the domain and the second uses an attribute synthesized from the data (the direction of greatest spread of the data)
+[^Liu]: [Discretization: An Enabling Technique](https://sci2s.ugr.es/keel/pdf/algorithm/articulo/liu1-2.pdf)
+  Huan Liu
+  Farhad Hussain 
+  Chew Lim Tan 
+  Manoranjan Dash
+  Data Mining and Knowledge Discovery, 6, 393–423, 2002
 
 
-<img width=500 src="https://user-images.githubusercontent.com/29195/131709651-2b8f6932-023a-479f-9505-0fffa1921ba0.png">
-
-
-volumnes not points
-
-
-explain things
-
-
-show where things change
-
-
-Decision tree learning is just recursive discretiztion
-
-
-James Dougherty, Ron Kohavi, Mehran Sahami
-[Supervised and Unsupervised Discretization of Continuous Features](/etc/pdg/dou95.pdf)
-Twelfth International Conference, 1995, Morgan Kaufmann Publishers, San Francisco, CA.
-
-
- From: AAAI-92 Proceedings. Copyright ©1992, AAAI (www.aaai.org). All rights reserved.
-[ChiMerge: Discretization of Numeric Attributes](/etc/pdf/chiMerge92.pdf)
-Randy Kerber
-
-
-[Discretization: An Enabling Technique](https://sci2s.ugr.es/keel/pdf/algorithm/articulo/liu1-2.pdf)
-Huan Liu
-Farhad Hussain 
-Chew Lim Tan 
-Manoranjan Dash
-Data Mining and Knowledge Discovery, 6, 393–423, 2002
-
-
-Ramírez-Gallego, Sergio & García, Salvador & Mouriño-Talín, Héctor & Martinez, David 
-and Bolón-Canedo, Verónica & Alonso-Betanzos, Amparo & Benítez, José & Herrera, Francisco. (2015). 
-[Data discretization: Taxonomy and big data challenge](https://www.researchgate.net/publication/284786447_Data_discretization_Taxonomy_and_big_data_challenge)
-Discovery. 6. n/a-n/a. 10.1002/widm.1173. 
-
-
-Equal-Width Discretization
-
-
-Equal-Frequency Discretization
-
-
- Discretization with Decision Trees
