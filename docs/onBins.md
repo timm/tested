@@ -91,6 +91,23 @@ And then we use the same algorithm to wind our way down to the best leaf cluster
 Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
 the others, picked at random (aside: why not use them all?)
 
+```
+-- Minoe  change here.
+-- Function `sway` now returns all the best rows 
+-- and "the.rest=4" times that number of other.
+function sway(data,     worker,best,rest)
+  function worker(rows,worse,  above)
+    if   #rows <= (#data.rows)^the.min 
+    then return rows, many(worse, the.rest*#rows)  -- <== note change here
+    else local l,r,A,B = half(data, rows, cols, above)
+         if better(data,B,A) then l,r,A,B = r,l,B,A end
+         map(r, function(row) push(worse,row) end) 
+         return worker(l,worse,A) end 
+  end ----------------------------------
+  best,rest = worker(data.rows,{})
+  return DATA.clone(data,best), DATA.clone(data,rest) end 
+```
+
 Now we are going to divide all the numeric ranges into 16 buckets, then recursively
 merge ranges with the same distribution in _best_ and _rest_. Here's what we get
 (and on the RHS, we score how much of each class is selected by that range). Note that
@@ -296,9 +313,6 @@ Now I write (e.g.) one `add` for both  `NUM`s and `SYM`.
 - and this NUM implements _reservoior sampling_
   - if the cache of seen numbers is full, replace anything at random
   - else just add to cache
-  - If anything is added, the cache may no longer be sorted
-    - so before we return the cache of seen numbers, check if we need to do a resort
-
 
  ```lua
 function add(col,x,  n)
@@ -321,7 +335,81 @@ function add(col,x,  n)
            col.ok = false  -- remember we have to do a resort
 end end end end 
 ```
+If anything is added, the cache may no longer be sorted
+- so before we return the cache of seen numbers, check if we need to do a resort
 
+```lua
+function has(col)
+  if not col.isSym and not col.ok then sort(col.has) end 
+  col.ok = true      -- the invariant here is that "has" is ready to be shared.
+  return col.has end
+```
+
+Here's another change (that you can ignore for this week's homework).
+A `SYM`'s diversity is worked out as per usual (entropy) but for `NUM` we use the 90-10 trick
+(the standard deviation is the (90th-10th) percentile/2.56. (Why?
+since the 90th and 10th percentiles are &pm;1.28\*&sigma; of a z-curve,
+then (90th-10th)/(2*1.28) is the standard deviation.)
+
+```lua
+function div(col,    e)
+  if   col.isSym 
+  then e=0
+       for _,n in pairs(col.has) do e= e-n/col.n*m.log(n/col.n,2) end
+       return e
+  else return (per(has(col),.9) - per(has(col), .1))/2.56 end end
+```
+
+## RANGES
+
+Since we  are doing _supervised_ discretization, when we define a range,
+we need to track the `lo` and `hi` of that  range _and_ the class symbols seen in that range.
+
+```lua
+function RANGE(at,txt,lo,hi) 
+  return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
+
+-- RANGEs can be extended 
+function extend(range,n,s)
+  range.lo = m.min(n, range.lo)
+  range.hi = m.max(n, range.hi)
+  add(range.y, s) end
+```
+
+Note some hacks in the above (which you might want to change):
+- `hi` defaults to to `lo` (which is a nice way to initialize a RANGE when you have only
+  seen one value yet)
+- LUA's `min` and `max` functions will sort strings as well as numerics so our `extend`
+  function does not have to consider them as separate cases
+- We never define `a range of numerics` and `a range of symbols` since the following hack
+  will do
+  - if `lo==hi` then we saying we are looking at a symbolic range.
+
+## Information Content
+
+We need some way to look at adjacent ranges  and decide they need to be merged. 
+Here, entropy will be useful. If we see similar distributions of `best` and `rest`
+class symbols in a range, then we will combine them
+
+First things first, what is the primitive for combining the ferquency counts
+of systems seen in two adjancent Ranges.
+```lua
+-- To combine two SYMs, jsut combine the frequency counts in `has`.
+-- For NUMs, do nearly the same but also extend the lo..hi range.
+function merge(col1,col2,    new)
+  new = copy(col1)
+  if   col1.isSym 
+  then for x,n in pairs(col2.has) do add(new,x,n) end  -- handle SYMs
+  else for _,n in pairs(col2.has) do add(new,n)   end  -- handle NUMs
+       new.lo = m.min(col1.lo, col2.lo)
+       new.hi = m.max(col1.hi, col2.hi) end 
+  return new end
+```
+
+First things, first-- here's code to merge two `SYM`sEntropy
+will do.
+
+Suppose we count how often we seen best rest in some bin. 
 bins is size (900-5)/16=56
 
 feature reduction is good
