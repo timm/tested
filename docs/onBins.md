@@ -255,11 +255,69 @@ age | alive | combined bins
 
 OK, lets code that up.
 
-Note: in the above we did EMD as a port-processor to EFD (equal frequency discretization). 
-It turns out that it is much easier to use EWD (equal width discretization)
-instead (see below).
+## Preambles (2)
+
+1. In the above we did EMD as a port-processor to EFD (equal frequency discretization). 
+   It turns out that it is much easier to use EWD (equal width discretization)
+   instead (see below).
+2. In this code base, I tried a technology change that seemed to make things simpler:
+   - No objects, all procedural
+   - Feel free _not_ to do things this way and stick with your old objects
+
+The switch to procedure changed some details
+- e.g.  For polymorphism, had to add `isSym=true` to all `Sym`s:
+  - so `aNum.isSym` return nil
+  - and `aSym.isSym` return true
+
+```lua
+-- factory for making NUM,SYM
+function COL(n,s,    col)
+   col = s:find"^[A-Z]" and NUM(n,s) or SYM(n,s) 
+   col.isIgnored  = col.txt:find"X$"
+   col.isKlass    = col.txt:find"!$"
+   col.isGoal     = col.txt:find"[!+-]$"
+   return col end
+
+-- Create a `NUM` to summarize a stream of numbers.
+function NUM(n,s) 
+  return {at= n or 0, txt= s or "", n=0,
+          hi= -m.huge, lo= m.huge, 
+          ok=true, has={},
+          w= (s or ""):find"-$" and -1 or 1} end
+
+-- Create a `SYM` to summarize a stream of symbols.
+function SYM(n,s)
+  return {at=n or 0, txt=s or "", n=0, 
+          mode=nil,  most=0,
+          isSym=true, has={}} end
+```
+
+Now I write (e.g.) one `add` for both  `NUM`s and `SYM`.
+- and this NUM implements _reservoior sampling_
+  - if the cache of seen numbers is full, replace anything at random
+  - else just add to cache
+  - If anything is added, the cache may no longer be sorted
+    - so before we return the cache of seen numbers, check if we need to do a resort
 
 
+ ```lua
+function add(col,x,  n)
+  if x ~= "?" then
+    n = n or 1
+    col.n = col.n + n
+    if   col.isSym
+    then col.has[x] = n + (col.has[x] or 0) 
+         if col.has[x] > col.most then
+           col.most, col.mode = col.has[x],x end 
+    else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
+      local all,pos
+      all = #col.has
+      pos = (all < the.Max and all+1) or (rand() < the.Max/col.n and rint(1,all))
+      if pos then
+        col.has[pos] = x
+        col.ok = false  -- remember we have to do a resort
+end end end end 
+```
 
 bins is size (900-5)/16=56
 
