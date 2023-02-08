@@ -162,7 +162,7 @@ There are so many ways to implement discretization [^garcia][^liu]:
 
 Lets just list some simple ones:
 
-- Unsupervised (make no reference to $x$ attributes):
+- Unsupervised (make no reference to $y$ attributes):
   - EWD: equal width discretization:  `(max-min)/the.bins`
   - EFD: equal frequency discretization: sort numbers, divide into (say) 10% chunks
 - Supervised (divide $x$ by reflecting on $y$)
