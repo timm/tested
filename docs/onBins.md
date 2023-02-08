@@ -18,6 +18,12 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Discretization
 
+## ASE23 Homework
+
+[ [code](/src/bins.lua) | [required output](/etc/out/bins.out) ]
+
+## Overview
+
 Here's a magic trick to make inference simpler, and to generate tiny theories:
 
 - Take some data
@@ -270,7 +276,7 @@ age | alive | combined bins
 
 OK, lets code that up.
 
-## Preambles (2)
+## Preambles 
 
 1. In the above we did EMD as a port-processor to EFD (equal frequency discretization). 
    It turns out that it is much easier to use EWD (equal width discretization)

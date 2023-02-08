@@ -39,7 +39,7 @@ local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
 local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
 local say,sayln,Seed,showTree,sort,slice,stats,sway,tree,value
-local COL,COLS,DATA,NUM,RANGE,RULE,SYM
+local COL,COLS,DATA,NUM,RANGE,SYM
 -- Trick to  shorten call to maths functions
 local m = math
 
@@ -90,16 +90,6 @@ function COLS(ss,     col,cols)
 -- for  symbolic columns, `lo` is always the same as `hi`.
 function RANGE(at,txt,lo,hi) 
   return {at=at,txt=txt,lo=lo,hi=lo or hi or lo,y=SYM()} end
-
--- Create a  RULE that groups `ranges` by their column id. 
--- Each group is a disjunction of its contents (and
--- sets of groups are conjunctions).
-function RULE(ranges,      t)
-  t={}
-  for _,range in pairs(ranges) do
-    t[range.txt] = t[range.txt] or {}
-    push(t[range.txt], range) end 
-  return t end
 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
 DATA={}
