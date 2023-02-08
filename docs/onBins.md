@@ -92,9 +92,7 @@ Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
 the others, picked at random (aside: why not use them all?)
 
 ```lua
--- Minor  change here.
--- Function `sway` now returns all the best rows 
--- and "the.rest=4" times that number of other.
+-- Minor  change:`sway` now returns the best rows and "the.rest=4" of other
 function sway(data,     worker,best,rest)
   function worker(rows,worse,  above)
     if   #rows <= (#data.rows)^the.min 
@@ -387,12 +385,13 @@ Note some hacks in the above (which you might want to change):
 
 ## Information Content
 
-We need some way to look at adjacent ranges  and decide they need to be merged. 
-Here, entropy will be useful. If we see similar distributions of `best` and `rest`
-class symbols in a range, then we will combine them
+We need some way to look at adjacent RANGEs  and decide they need to be merged. 
+Well, if the merged bins have _less_ information than the parts
+then the merge contains fewer classes (i.e. it predicts better for one
+class or another).
 
-First things first, what is the primitive for combining the ferquency counts
-of systems seen in two adjancent Ranges.
+First things first, what is the primitive for combining the frequency counts
+of systems seen in two adjacent RANGEs.
 ```lua
 -- To combine two SYMs, jsut combine the frequency counts in `has`.
 -- For NUMs, do nearly the same but also extend the lo..hi range.
@@ -405,6 +404,88 @@ function merge(col1,col2,    new)
        new.hi = m.max(col1.hi, col2.hi) end 
   return new end
 ```
+
+So now we _can_ merge ranges, but when do we want to? Well, as above,
+we prefer the whole if it is simpler than the expected values of the parts:
+```lua
+function merge2(col1,col2,   new)
+  new = merge(col1,col2)
+  if div(new) <= (div(col1)*col1.n + div(col2)*col2.n)/new.n then
+    return new end end
+```
+
+Ok, that is how is we merge two RANGEs. How do we merge many RANGEs?
+The following bottom-up clustering routines expects a set of RANGEs sorted on their `lo`
+value. If it can find two neighbors that can be merged, it does the merge then jumps
+over 2 spaces to look for anything else. If the result is a smaller set of ranges,
+then it loops back to look for other merges.
+
+```lua
+function mergeAny(ranges0,     noGaps)
+  function noGaps(t)
+    for j = 2,#t do t[j].lo = t[j-1].hi end
+    t[1].lo  = -m.huge
+    t[#t].hi =  m.huge
+    return t 
+  end ------
+  local ranges1,j,left,right,y = {},1
+  while j <= #ranges0 do
+    left, right = ranges0[j], ranges0[j+1]
+    if right then
+      y = merge2(left.y, right.y)
+      if y then
+        j = j+1 -- next round, skip over right.
+        left.hi, left.y = right.hi, y end end
+    push(ranges1,left)
+    j = j+1 
+  end
+  return #ranges0==#ranges1 and noGaps(ranges0) or mergeAny(ranges1) end
+```
+In the above, the function `noGaps` makes sure the resulting ranges run from minus infinity
+to plus infinity with no gaps.
+
+Nearly done. All the above assumes we have the columsn divided into, say `the.bins=16`
+RANGEs. To generate them, we use the following code.
+Note that this code is called per `col` and `rowss` is a dictionary of rows where the keys
+of the dictionary are the class names. So if we have two classes `best` and `rest` containing
+12 and 48s then
+
+```
+{best={row1,row2...row12}
+ rest={otherRow1, otherRow2... otherrow48}
+}
+```
+
+```lua
+function bins(cols,rowss)
+  local out = {}
+  for _,col in pairs(cols) do
+    local ranges = {}
+    for y,rows in pairs(rowss) do -- the "rows" in class "y"
+      for _,row in pairs(rows) do
+        local x,k = row[col.at]   -- find an "x" value
+        if x ~= "?" then 
+          k = bin(col,x)                                   -- that is not nil
+          ranges[k] = ranges[k] or RANGE(col.at,col.txt,x) -- find or make x's RANGE
+          extend(ranges[k], x, y)                          -- extend that RANGE with x and y
+    end end end         
+    ranges = sort(map(ranges,itself),lt"lo") -- Sort the ranges
+    out[1+#out] = col.isSym and ranges or mergeAny(ranges) -- In col is a num, use "mergeAny"
+  end  
+  return out end
+
+
+-- Map `x` into a small number of bins. `SYM`s just get mapped
+-- to themselves but `NUM`s get mapped to one of `the.bins` values.
+-- Called by function `bins`.
+function bin(col,x,      tmp)
+  if x=="?" or col.isSym then return x end
+  tmp = (col.hi - col.lo)/(the.bins - 1)
+  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
+```
+
+range 
+he 10th percentile is 1.28 times the standard deviation below the mean, so in your example (100 - 50) = 50 is 1.28
 
 First things, first-- here's code to merge two `SYM`sEntropy
 will do.
