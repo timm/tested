@@ -91,8 +91,8 @@ And then we use the same algorithm to wind our way down to the best leaf cluster
 Let _best_ be the 12 examples in best cluster and _rest_ be $|\text{best}|*4$ of
 the others, picked at random (aside: why not use them all?)
 
-```
--- Minoe  change here.
+```lua
+-- Minor  change here.
 -- Function `sway` now returns all the best rows 
 -- and "the.rest=4" times that number of other.
 function sway(data,     worker,best,rest)
