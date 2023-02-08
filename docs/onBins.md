@@ -485,6 +485,7 @@ function bin(col,x,      tmp)
   return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
 ```
 
+### References
 
 [^Liu]: [Discretization: An Enabling Technique](https://sci2s.ugr.es/keel/pdf/algorithm/articulo/liu1-2.pdf)
   Huan Liu
