@@ -265,7 +265,7 @@ OK, lets code that up.
    - Feel free _not_ to do things this way and stick with your old objects
 
 The switch to procedure changed some details
-- e.g.  For polymorphism, had to add `isSym=true` to all `Sym`s:
+- e.g.  For polymorphism, I had to add `isSym=true` to all `Sym`s:
   - so `aNum.isSym` return nil
   - and `aSym.isSym` return true
 
@@ -305,14 +305,15 @@ function add(col,x,  n)
   if x ~= "?" then
     n = n or 1
     col.n = col.n + n
-    if   col.isSym
+    if   col.isSym -- here's the caseing on type
     then col.has[x] = n + (col.has[x] or 0) 
          if col.has[x] > col.most then
            col.most, col.mode = col.has[x],x end 
     else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
       local all,pos
       all = #col.has
-      pos = (all < the.Max and all+1) or (rand() < the.Max/col.n and rint(1,all))
+      pos = (all < the.Max and all+1) or (          -- cache not full, add to end
+            rand() < the.Max/col.n and rint(1,all)) -- cache full, replace at random
       if pos then
         col.has[pos] = x
         col.ok = false  -- remember we have to do a resort
