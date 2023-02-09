@@ -809,6 +809,16 @@ make conclusions based on a small sample of the total data space
 
 Data Num Sym COLS, ROW
 
+### The Rule patther
+RANGE, RULE
+
+### clustering = class
+
+when u dont know what is going on, cluster then use those clsters for class
+
+### imbalance
+
+resample to balance
 
 ### Explanation
 
