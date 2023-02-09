@@ -451,6 +451,17 @@ with the same rights as conventional values like numbers and strings.
 4. Do you have an automated build system (Make, Ant, Maven, Cargo, Flutter, Elm, etc etc etc) for all the tedious details.
 5. Is the build system included in the documentation?
 
+## Config is code
+- add config files to version control
+    e.g. etc/h
+- downside: everyone has to use the same cofnig
+    - upside: everyone has to use the same config (standards, no local boundaries)
+    - fix: end of shared config does `[ -f "$HOME/.mylocalsettings" ] && . $HOME/.mylocalsettings`
+        - i.e. allow local patches
+        - but how do individuals do version control on their own config?
+          - private repo "mystuff" then `ln -sf FULLPATHtoMYSTUFF/etc/.mylocalsettings`  (for auto updates each time you check our :mystuff")
+            or `cp ME .localsettings` for manual updates whenever you thinka but it
+        - try to keep local setting much smaller than shared (exception: anythi to do with themese, color, font choice in your ide)
 
 ## DI: Data Independence
 1. Your internal model is isolated from I/O operations 
