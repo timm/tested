@@ -56,7 +56,7 @@ local b4={}; for k,v in pairs(_ENV) do b4[k]=v end
 local adds,add,any,at,better,bin,bins
 local contrast,copy,cli,csv,cells,cliffsDelta,coerce
 local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
-local kap,keys,lines,locals,lt,main,many,map,merge,merge2,mergeAny,mid
+local kap,keys,lines,locals,lt,main,many,map,merge,merged,merges,mid
 local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
 local say,sayln,Seed,selects,showTree,showRule,sort,slice,stats,sway,tree,value
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
@@ -122,24 +122,21 @@ function RULE(ranges,      t)
   return t end
 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
-DATA={}
-function DATA.new() return {rows={},cols=nil} end  -- initially, no `cols`
-
--- Create a new DATA by reading csv file whose first row 
+-- Optionally, is any `rows` are supplied, load those in.   
+-- Case [1]: `src` is a filename of a csv file
+-- whose first row 
 -- are the comma-separate names processed by `COLS` (above).
 -- into a new `DATA`. Every other row is stored in the DATA by
 -- calling the 
--- `row` function (defined below).
-function DATA.read(sfile,    data) 
-  data=DATA.new()
-  csv(sfile, function(t) row(data,t) end); return data end
-
--- Create a new DATA with the same columns as  `data`. Optionally, load up the new
--- DATA with the rows inside `ts`.
-function DATA.clone(data,  ts,    data1)
-  data1 = row(DATA.new(), data.cols.names)
-  for _,t in pairs(ts or {}) do row(data1,t) end
-  return data1 end
+-- `row` function (defined below).   
+-- Case [2]: `src` is another data in which case we minic its
+-- column structure.
+function DATA(src,  rows,     data,add)
+  data= {rows={},cols=nil} -- initially, no cols
+  add = function(t) row(data,t) end
+  if type(src)=="string" then csv(src,add) else data.cols=COLS(src.cols.names) end 
+  map(rows or {}, add)
+  return data end
 
 -- ## Update
 
@@ -165,21 +162,19 @@ function row(data,t)
 -- `the.Max/col.n` replace any existing item
 -- (selected at random). If anything is added, the list
 -- may not longer be sorted so set `col.ok=false`.
-function add(col,x,  n)
+function add(col,x,  n,       sym,num)
+  function sym(t) 
+    t[x] = n + (t[x] or 0) 
+    if t[x] > col.most then col.most,col.mode = t[x],x end end 
+  function num(t)
+    col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
+    if     #t < the.Max           then col.ok=false; t[#t + 1]=x 
+    elseif rand() < the.Max/col.n then col.ok=false; t[rint(1, #t)]=x end 
+  end ------------ 
   if x ~= "?" then
     n = n or 1
     col.n = col.n + n
-    if   col.isSym
-    then col.has[x] = n + (col.has[x] or 0) 
-         if col.has[x] > col.most then
-           col.most, col.mode = col.has[x],x end 
-    else col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
-      local all,pos
-      all = #col.has
-      pos = (all < the.Max and all+1) or (rand() < the.Max/col.n and rint(1,all))
-      if pos then
-        col.has[pos] = x
-        col.ok = false end end end end 
+    if col.isSym then sym(col.has) else num(col.has) end end end
 
 -- Update a COL with multiple items from `t`. This is useful when `col` is being
 -- used outside of some DATA.
@@ -296,7 +291,7 @@ function half(data,  rows,cols,above)
 -- Cluster, recursively, some `rows` by  dividing them in two, many times
 function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
-  here = {data=DATA.clone(data,rows)}
+  here = {data=DATA(data,rows)}
   if #rows >= 2*(#data.rows)^the.min then
     local left,right,A,B = half(data, rows, cols, above)
     here.left  = tree(data, left,  cols, A)
@@ -326,7 +321,7 @@ function sway(data,     worker,best,rest)
          return worker(l,worse,A) end 
   end ----------------------------------
   best,rest = worker(data.rows,{})
-  return DATA.clone(data,best), DATA.clone(data,rest) end 
+  return DATA(data,best), DATA(data,rest) end 
 
 -- ## Discretization
 
@@ -339,16 +334,17 @@ function sway(data,     worker,best,rest)
 function bins(cols,rowss)
   local out = {}
   for _,col in pairs(cols) do
-    local ranges = {}
+    local n,ranges = 0,{}
     for y,rows in pairs(rowss) do
       for _,row in pairs(rows) do
         local x,k = row[col.at]
         if x ~= "?" then
+          n = n + 1
           k = bin(col,x)
           ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
           extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
-    out[1+#out] = col.isSym and ranges or mergeAny(ranges) end
+    out[1+#out] = col.isSym and ranges or merges(ranges,n/the.bins) end
   return out end
 
 -- Map `x` into a small number of bins. `SYM`s just get mapped
@@ -363,8 +359,7 @@ function bin(col,x,      tmp)
 -- (stopping when no more fuse-ings can be found). When done,
 -- make the ranges run from minus to plus infinity
 -- (with no gaps in between).
--- Called by function `bins`.
-function mergeAny(ranges0,     noGaps)
+function merges(ranges0,min,     noGaps)
   function noGaps(t)
     for j = 2,#t do t[j].lo = t[j-1].hi end
     t[1].lo  = -m.huge
@@ -375,25 +370,25 @@ function mergeAny(ranges0,     noGaps)
   while j <= #ranges0 do
     left, right = ranges0[j], ranges0[j+1]
     if right then
-      y = merge2(left.y, right.y)
+      y = merged(left.y, right.y, min)
       if y then
         j = j+1 -- next round, skip over right.
         left.hi, left.y = right.hi, y end end
     push(ranges1,left)
     j = j+1 
   end
-  return #ranges0==#ranges1 and noGaps(ranges0) or mergeAny(ranges1) end
+  return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1,min) end
 
--- If the whole is as good (or simpler) than the parts,
--- then return the 
--- combination of 2 `col`s.
--- Called by function `mergeMany`.
-function merge2(col1,col2,   new)
+-- If (1) the parts are too small or
+-- (2) the whole is as good (or simpler) than the parts,
+-- then return the merge.
+function merged(col1,col2,min,  new)
   new = merge(col1,col2)
+  if col1.n < min or col2.n < min then return new end
   if div(new) <= (div(col1)*col1.n + div(col2)*col2.n)/new.n then
     return new end end
 
--- Merge two `cols`. Called by function `merge2`.
+-- Merge two `cols`. Called by function `merged`.
 function merge(col1,col2,    new)
   new = copy(col1)
   if   col1.isSym 
@@ -681,14 +676,14 @@ go("csv","reading csv files", function(     n)
   return 3192 == n end)
 
 go("data", "showing data sets", function(    data,col) 
-  data=DATA.read(the.file)
+  data=DATA(the.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
   oo(stats(data)) end)
 
 go("clone","replicate structure of a DATA",function(    data1,data2)
-  data1=DATA.read(the.file)
-  data2=DATA.clone(data1,data1.rows) 
+  data1=DATA(the.file)
+  data2=DATA(data1,data1.rows) 
   oo(stats(data1))
   oo(stats(data2)) end)
 
@@ -708,25 +703,25 @@ go("cliffs","stats tests", function(   t1,t2,t3)
     j=j*1.025 end end)
 
 go("dist","distance test", function(    data,num)
-  data = DATA.read(the.file)
+  data = DATA(the.file)
   num  = NUM()
   for _,row in pairs(data.rows) do
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
 go("half","divide data in halg", function(   data,l,r)
-  data = DATA.read(the.file)
+  data = DATA(the.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
-  l,r = DATA.clone(data,left), DATA.clone(data,right)
+  l,r = DATA(data,left), DATA(data,right)
   print("l",o(stats(l)))
   print("r",o(stats(r))) end)
  
 go("tree","make snd show tree of clusters", function(   data,l,r)
-  showTree(tree(DATA.read(the.file))) end)
+  showTree(tree(DATA(the.file))) end)
 
 go("sway","optimizing", function(    data,best,rest)
-  data = DATA.read(the.file)
+  data = DATA(the.file)
   best,rest = sway(data)
   print("\nall ", o(stats(data))) 
   print("    ",   o(stats(data,div))) 
@@ -738,7 +733,7 @@ go("sway","optimizing", function(    data,best,rest)
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end)
 
 go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
-  data = DATA.read(the.file)
+  data = DATA(the.file)
   best,rest = sway(data)
   print("all","","","",o{best=#best.rows, rest=#rest.rows})
   for k,t in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
@@ -750,7 +745,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            o(range.y.has)) end end end)
 
 no("contrast","explore contrast sets", function(     rule,most)
-  rule,most= contrast(DATA.read(the.file)) 
+  rule,most= contrast(DATA(the.file)) 
   print(most,rule) end)
 
 
