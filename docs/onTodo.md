@@ -15,6 +15,15 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
+# using code genratorswithout checking the results
+
+"whtntnehy are sworn,g are so confiently wrong you can never tell"
+
+# wating too much time checking code
+
+not low level. high level
+
+bugs are soclail.  traciking down one highlivel issue can uncover dozens more.
 
 # Random notes, discarded text
 
