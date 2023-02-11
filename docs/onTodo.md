@@ -385,6 +385,15 @@ Prob
   http://doi.acm.org/10.1145/363347.363387 <a href="https://www.oilshell.org/archive/Thompson-1968.pdf">(PDF)</a>
 [^Welford62]:  Welford, B. P. (1962). "Note on a method for calculating corrected sums of squares and products". Technometrics. 4 (3): 419–420. doi:10.2307/1266577. JSTOR 1266577.
 
+# bad smells1
+code too long: using 1000 lines when 100 will do
+
+not having a high-level api
+
+not documentiong a high-level api
+
+not having acommand line
+
 
 # On Coding
 Idioms for useful code
