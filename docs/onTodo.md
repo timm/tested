@@ -15,6 +15,8 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
+# not enough OO
+# too much OO
 # not chekcing code
 
 using code genratorswithout checking the results
