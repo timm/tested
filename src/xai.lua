@@ -33,6 +33,7 @@ USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
 OPTIONS:
   -b  --bins    initial number of bins       = 16
   -c  --cliffs  cliff's delta threshold      = .147
+  -d  --d       different is over sd*d       = .35
   -f  --file    data file                    = ../etc/data/auto93.csv
   -F  --Far     distance to distant          = .95
   -g  --go      start-up action              = nothing
@@ -344,7 +345,8 @@ function bins(cols,rowss)
           ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
           extend(ranges[k], x, y) end end end
     ranges = sort(map(ranges,itself),lt"lo")
-    out[1+#out] = col.isSym and ranges or merges(ranges,n/the.bins) end
+    out[1+#out] = (col.isSym and ranges) or 
+                  merges(ranges,n/the.bins, the.d*div(col)) end
   return out end
 
 -- Map `x` into a small number of bins. `SYM`s just get mapped
@@ -359,7 +361,7 @@ function bin(col,x,      tmp)
 -- (stopping when no more fuse-ings can be found). When done,
 -- make the ranges run from minus to plus infinity
 -- (with no gaps in between).
-function merges(ranges0,min,     noGaps)
+function merges(ranges0,nSmall,nFar,     noGaps)
   function noGaps(t)
     for j = 2,#t do t[j].lo = t[j-1].hi end
     t[1].lo  = -m.huge
@@ -370,21 +372,22 @@ function merges(ranges0,min,     noGaps)
   while j <= #ranges0 do
     left, right = ranges0[j], ranges0[j+1]
     if right then
-      y = merged(left.y, right.y, min)
+      y = merged(left.y, right.y, nSmall,nFar)
       if y then
         j = j+1 -- next round, skip over right.
         left.hi, left.y = right.hi, y end end
     push(ranges1,left)
     j = j+1 
   end
-  return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1,min) end
+  return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1,nSmall,nFar) end
 
 -- If (1) the parts are too small or
 -- (2) the whole is as good (or simpler) than the parts,
 -- then return the merge.
-function merged(col1,col2,min,  new)
+function merged(col1,col2,nSmall, nFar,  new)
   new = merge(col1,col2)
-  if col1.n < min or col2.n < min then return new end
+  if nSmall and col1.n < nSmall or col2.n < nSmall                     then return new end
+  if nFar   and not col1.isSym and m.abs(mid(col1) - mid(col2)) < nFar then return new end
   if div(new) <= (div(col1)*col1.n + div(col2)*col2.n)/new.n then
     return new end end
 
@@ -744,9 +747,9 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-no("contrast","explore contrast sets", function(     rule,most)
+go("contrast","explore contrast sets", function(     rule,most)
   rule,most= contrast(DATA(the.file)) 
-  print(most,rule) end)
+  print(most,o(rule)) end)
 
 
 -- ## Start-up
