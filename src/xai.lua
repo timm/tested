@@ -234,7 +234,7 @@ function value(has,  nB,nR,sGoal,    b,r)
 
 -- A query that returns the distances 0..1 between rows `t1` and `t2`.   
 -- If any values are unknown, assume max distances.
-function dist(data,t1,t2,  cols,    d,n,dist1,sym,num)
+function dist(data,t1,t2,  cols,    d,dist1,sym,num)
   function sym(x,y) 
     return x==y and 0 or 1 end
   function num(x,y) 
@@ -245,11 +245,10 @@ function dist(data,t1,t2,  cols,    d,n,dist1,sym,num)
     if x=="?" and y=="?" then return 1 end
     return col.isSym and sym(x,y) or num(norm(col,x), norm(col,y)) 
   end -------------
-  d, n = 0, 1/m.huge	
-  for _,col in pairs(cols or data.cols.x) do
-    n = n + 1
+  d, cols = 0, (cols or data.cols.x)	
+  for _,col in pairs(cols) do
     d = d + dist1(col, t1[col.at], t2[col.at])^is.p end 
-  return (d/n)^(1/is.p) end
+  return (d/#cols)^(1/is.p) end
 
 -- A query that returns true if `row1` is better than another.
 -- This is Zitzler's indicator predicate that

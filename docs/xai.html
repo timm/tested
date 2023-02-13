@@ -571,7 +571,7 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dist</span><span class="hljs-params">(data,t1,t2,  cols,    d,n,dist1,sym,num)</span></span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dist</span><span class="hljs-params">(data,t1,t2,  cols,    d,dist1,sym,num)</span></span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sym</span><span class="hljs-params">(x,y)</span></span> 
     <span class="hljs-keyword">return</span> x==y <span class="hljs-keyword">and</span> <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">num</span><span class="hljs-params">(x,y)</span></span> 
@@ -582,11 +582,10 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
     <span class="hljs-keyword">if</span> x==<span class="hljs-string">"?"</span> <span class="hljs-keyword">and</span> y==<span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
     <span class="hljs-keyword">return</span> col.isSym <span class="hljs-keyword">and</span> sym(x,y) <span class="hljs-keyword">or</span> num(norm(col,x), norm(col,y)) 
   <span class="hljs-keyword">end</span> <span class="hljs-comment">-------------</span>
-  d, n = <span class="hljs-number">0</span>, <span class="hljs-number">1</span>/m.<span class="hljs-built_in">huge</span>	
-  <span class="hljs-keyword">for</span> _,col <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(cols <span class="hljs-keyword">or</span> data.cols.x) <span class="hljs-keyword">do</span>
-    n = n + <span class="hljs-number">1</span>
+  d, cols = <span class="hljs-number">0</span>, (cols <span class="hljs-keyword">or</span> data.cols.x)	
+  <span class="hljs-keyword">for</span> _,col <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(cols) <span class="hljs-keyword">do</span>
     d = d + dist1(col, t1[col.at], t2[col.at])^is.p <span class="hljs-keyword">end</span> 
-  <span class="hljs-keyword">return</span> (d/n)^(<span class="hljs-number">1</span>/is.p) <span class="hljs-keyword">end</span></pre></div></div>
+  <span class="hljs-keyword">return</span> (d/#cols)^(<span class="hljs-number">1</span>/is.p) <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
