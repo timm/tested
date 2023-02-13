@@ -100,9 +100,8 @@ function COLS(ss,     col,cols)
   cols={names=ss, all={},x={},y={}}
   for n,s in pairs(ss) do  
     col = push(cols.all, COL(n,s))
-    if not col.isIgnored then
-      if col.isKlass then cols.klass = col end
-      push(col.isGoal and cols.y or cols.x, col) end end 
+    if not col.isIgnored and col.isKlass then cols.klass = col end
+    if not col.isIgnored then push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 
 -- Create a RANGE  that tracks the y dependent values seen in 
@@ -412,18 +411,20 @@ function merge(col1,col2,    new)
 function contrast(data)
   local best,rest = sway(data)
   local all,v,pick = {}
-  function v(has) oo{has=has}; return value(has, #best.rows, #rest.rows, "best") end
+  function v(has) return value(has, #best.rows, #rest.rows, "best") end
   function pick(t)
     local most,first,rule = -1,t[1].val
     for i=1,#t do
       if t[i].val > .05 and t[i].val > first/10 then 
-        local ranges,one,tmp
+        local ranges,one,tmp, bestr,restr
         ranges= map(slice(t,1,i),at"range")
         one=    RULE(ranges)
-        showRule(one)
-        tmp=    v({best= #selects(one,best.rows), 
-                   rest= #selects(one,rest.rows)})
-        if tmp > most then most,rule = tmp,one end end end 
+        bestr= selects(one,best.rows)
+        restr= selects(one,rest.rows)
+        tmp=    v({best= #bestr, rest=#restr})
+           print(i,100,tmp, o(showRule(one)))
+        if #bestr + #restr > 0 and tmp > most then 
+           most,rule = tmp,one end end end 
     return rule,most
   end ---------
   for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
@@ -438,14 +439,17 @@ function showRule(rule,      silly,show1,show,mergefinalize,merge)
     for i=2,#t do if not t[i].lo == t[i-1].hi then return false end end
     return true  end
   function show1(range) 
-    return r.lo==r.hi and r.lo  or {lo=r.lo, hi=r.hi} end
+    return range.lo==range.hi and range.lo  or {lo=range.lo, hi=range.hi} end
   function show(t)
-    if not silly(t) then return map(t, show1)  end end
+    return map(t, show1)  end 
+    --if not silly(t) then return map(t, show1)  end end
   function merge(t0)
     local j,t,left,right = 1,{}
-    while j <= #t do
-      left, right = t[j], t[j+1]
-      if right and left.hi==right.lo then left.hi=right.hi; j=j+1 end 
+    while j <= #t0 do
+      left, right = t0[j], t0[j+1]
+      if right then
+        print(left.txt,left.hi,right.lo,right.hi)
+        if left.hi==right.lo then left.hi=right.hi; j=j+1 end  end
       push(t,left)
       j = j + 1 
     end
