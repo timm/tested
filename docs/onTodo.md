@@ -15,6 +15,30 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
+Lua
+- confusing keys arrays with num arrays
+#t returns 0 for keys and you can't sort them
+
+- escaped globals
+Context Outline
+The context outline describes the set of contexts in which the pattern is effective in responding to what the user needs. It may also indicate situations where the pattern is not a useful guide for the creation of designs.
+
+Problem Statement
+The problem statement is an expression of what the user needs to do, perceive, or understand.
+
+Solution
+The solution statement explains how the user's problem is solved through a clear and understandable set of steps and perceptions. Solutions are often expressed through strong visual metaphors which help the user understand the process taking place.
+
+Illustrations and Examples
+
+References
+
+Perfection is achieved, not when there is nothing left to add, but when there is nothing left to take away.
+-- Antoine de Saint-Exupery
+
+Ingnore this rule at your peril. every line of code is something that needs to be mantane,d may introduce errors
+(including security errors) intot eh ode). 
+
 # not enough OO
 # too much OO
 # not chekcing code

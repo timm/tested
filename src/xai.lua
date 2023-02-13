@@ -23,7 +23,7 @@
 -- During this, we  only label one or two points per cluster. Afterwards, 
 -- the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
 -- For help with code, see comments at the <a href="#about">end of this file</a>.</p>
-local the,help = {}, [[
+local is,help = {}, [[
   
 xai: multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
@@ -159,8 +159,8 @@ function row(data,t)
 -- Used  by (e.g.) the `row` and `adds` function.
 -- `SYM`s just increment a symbol counts.
 -- `NUM`s store `x` in a finite sized cache. When it
--- fills to more than `the.Max`, then at probability 
--- `the.Max/col.n` replace any existing item
+-- fills to more than `is.Max`, then at probability 
+-- `is.Max/col.n` replace any existing item
 -- (selected at random). If anything is added, the list
 -- may not longer be sorted so set `col.ok=false`.
 function add(col,x,  n,       sym,num)
@@ -169,8 +169,8 @@ function add(col,x,  n,       sym,num)
     if t[x] > col.most then col.most,col.mode = t[x],x end end 
   function num(t)
     col.lo, col.hi = m.min(x,col.lo), m.max(x,col.hi) 
-    if     #t < the.Max           then col.ok=false; t[#t + 1]=x 
-    elseif rand() < the.Max/col.n then col.ok=false; t[rint(1, #t)]=x end 
+    if     #t < is.Max           then col.ok=false; t[#t + 1]=x 
+    elseif rand() < is.Max/col.n then col.ok=false; t[rint(1, #t)]=x end 
   end ------------ 
   if x ~= "?" then
     n = n or 1
@@ -222,7 +222,7 @@ function stats(data,  fun,cols,nPlaces,     tmp)
 
 -- A query that normalizes `n` 0..1. Called by (e.g.) the `dist` function.
 function norm(num,n)
-  return x=="?" and x or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
+  return n=="?" and n or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
 -- A query that returns the score a distribution of symbols inside a SYM.
 function value(has,  nB,nR,sGoal,    b,r)
@@ -235,21 +235,22 @@ function value(has,  nB,nR,sGoal,    b,r)
 
 -- A query that returns the distances 0..1 between rows `t1` and `t2`.   
 -- If any values are unknown, assume max distances.
-function dist(data,t1,t2,  cols,    d,n,dist1)
+function dist(data,t1,t2,  cols,    d,n,dist1,sym,num)
+  function sym(x,y) 
+    return x==y and 0 or 1 end
+  function num(x,y) 
+    if x=="?" then x= y<.5 and 1 or 1 end	
+    if y=="?" then y= x<.5 and 1 or 1 end	
+    return m.abs(x-y) end 
   function dist1(col,x,y)
     if x=="?" and y=="?" then return 1 end
-    if   col.isSym
-    then return x==y and 0 or 1 
-    else x,y = norm(col,x), norm(col,y)
-         if x=="?" then x= y<.5 and 1 or 1 end	
-         if y=="?" then y= x<.5 and 1 or 1 end	
-         return m.abs(x-y) end 
-  end --------------
+    return col.isSym and sym(x,y) or num(norm(col,x), norm(col,y)) 
+  end -------------
   d, n = 0, 1/m.huge	
   for _,col in pairs(cols or data.cols.x) do
     n = n + 1
-    d = d + dist1(col, t1[col.at], t2[col.at])^the.p end 
-  return (d/n)^(1/the.p) end
+    d = d + dist1(col, t1[col.at], t2[col.at])^is.p end 
+  return (d/n)^(1/is.p) end
 
 -- A query that returns true if `row1` is better than another.
 -- This is Zitzler's indicator predicate that
@@ -273,17 +274,17 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
 -- dividing the data via their distance to two remote points.
 -- To speed up finding those remote points, only look at
 -- `some` of the data. Also, to avoid outliers, only look
--- `the.Far=.95` (say) of the way across the space. 
+-- `is.Far=.95` (say) of the way across the space. 
 function half(data,  rows,cols,above)
   local left,right,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
   function cos(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
   function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
   rows = rows or data.rows
-  some = many(rows,the.Halves)
-  A    = (the.Reuse and above) or any(some)
+  some = many(rows,is.Halves)
+  A    = (is.Reuse and above) or any(some)
   tmp  = sort(map(some,function(r) return {row=r, d=gap(r,A)} end ),lt"d")
-  far  = tmp[(#tmp*the.Far)//1]
+  far  = tmp[(#tmp*is.Far)//1]
   B,c  = far.row, far.d
   for n,two in pairs(sort(map(rows,proj),lt"x")) do
     push(n <= #rows/2 and left or right, two.row) end
@@ -293,7 +294,7 @@ function half(data,  rows,cols,above)
 function tree(data,  rows,cols,above,     here)
   rows = rows or data.rows
   here = {data=DATA(data,rows)}
-  if #rows >= 2*(#data.rows)^the.min then
+  if #rows >= 2*(#data.rows)^is.min then
     local left,right,A,B = half(data, rows, cols, above)
     here.left  = tree(data, left,  cols, A)
     here.right = tree(data, right, cols, B) end
@@ -314,8 +315,8 @@ function showTree(tree,  lvl,post)
 -- the survivors and some sample of the rest.
 function sway(data,     worker,best,rest)
   function worker(rows,worse,  above)
-    if   #rows <= (#data.rows)^the.min 
-    then return rows, many(worse, the.rest*#rows) 
+    if   #rows <= (#data.rows)^is.min 
+    then return rows, many(worse, is.rest*#rows) 
     else local l,r,A,B = half(data, rows, cols, above)
          if better(data,B,A) then l,r,A,B = r,l,B,A end
          map(r, function(row) push(worse,row) end) 
@@ -329,56 +330,61 @@ function sway(data,     worker,best,rest)
 -- Return RANGEs that distinguish sets of rows (stored in `rowss`).
 -- To reduce the search space,
 -- values in `col` are mapped to small number of `bin`s.
--- For NUMs, that number is `the.bins=16` (say) (and after dividing
+-- For NUMs, that number is `is.bins=16` (say) (and after dividing
 -- the column into, say, 16 bins, then we call `mergeAny` to see
 -- how many of them can be combined with their neighboring bin).
-function bins(cols,rowss)
-  local out = {}
-  for _,col in pairs(cols) do
-    local n,ranges = 0,{}
-    for y,rows in pairs(rowss) do
-      for _,row in pairs(rows) do
-        local x,k = row[col.at]
-        if x ~= "?" then
-          n = n + 1
-          k = bin(col,x)
-          ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
-          extend(ranges[k], x, y) end end end
-    ranges = sort(map(ranges,itself),lt"lo")
-    out[1+#out] = (col.isSym and ranges) or 
-                  merges(ranges,n/the.bins, the.d*div(col)) end
-  return out end
+function bins(cols,rowss,      with1Col,withAllRows)
+  function with1Col(col,     n,ranges)
+    n,ranges = withAllRows(col)
+    ranges   = sort(map(ranges,itself),lt"lo") -- keyArray to numArray, sorted
+    if   col.isSym 
+    then return ranges 
+    else return merges(ranges, n/is.bins, is.d*div(col)) end end
+  function withAllRows(col,    n,ranges,xy)
+    function xy(x,y,      k)
+      if x ~= "?" then 
+        n = n + 1
+        k = bin(col,x)
+        ranges[k] = ranges[k] or RANGE(col.at,col.txt,x)
+        extend(ranges[k], x, y) end 
+    end -----------
+    n,ranges = 0,{}
+    for y,rows in pairs(rowss) do for _,row in pairs(rows) do xy(row[col.at],y) end end
+    return n, ranges 
+  end --------------
+  return map(cols, with1Col) end
 
 -- Map `x` into a small number of bins. `SYM`s just get mapped
--- to themselves but `NUM`s get mapped to one of `the.bins` values.
+-- to themselves but `NUM`s get mapped to one of `is.bins` values.
 -- Called by function `bins`.
 function bin(col,x,      tmp)
   if x=="?" or col.isSym then return x end
-  tmp = (col.hi - col.lo)/(the.bins - 1)
+  tmp = (col.hi - col.lo)/(is.bins - 1)
   return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
 
 -- Given a sorted list of ranges, try fusing adjacent items
 -- (stopping when no more fuse-ings can be found). When done,
 -- make the ranges run from minus to plus infinity
 -- (with no gaps in between).
-function merges(ranges0,nSmall,nFar,     noGaps)
+function merges(ranges0,nSmall,nFar,     noGaps,try2Merge)
   function noGaps(t)
     for j = 2,#t do t[j].lo = t[j-1].hi end
     t[1].lo  = -m.huge
     t[#t].hi =  m.huge
-    return t 
-  end ------
-  local ranges1,j,left,right,y = {},1
+    return t end
+  function try2Merge(left,right,j,     y)
+    y = merged(left.y, right.y, nSmall, nFar)
+    if y then 
+      j = j+1 -- next round, skip over right.
+      left.hi, left.y = right.hi, y end 
+    return j , left 
+  end -------------
+  local ranges1,j,here = {},1
   while j <= #ranges0 do
-    left, right = ranges0[j], ranges0[j+1]
-    if right then
-      y = merged(left.y, right.y, nSmall,nFar)
-      if y then
-        j = j+1 -- next round, skip over right.
-        left.hi, left.y = right.hi, y end end
-    push(ranges1,left)
-    j = j+1 
-  end
+    here = ranges0[j]
+    if j < #ranges0 then j,here = try2Merge(here, ranges0[j+1], j) end 
+    j=j+1
+    push(ranges1,here) end
   return #ranges0==#ranges1 and noGaps(ranges0) or merges(ranges1,nSmall,nFar) end
 
 -- If (1) the parts are too small or
@@ -414,6 +420,7 @@ function contrast(data)
         local ranges,one,tmp
         ranges= map(slice(t,1,i),at"range")
         one=    RULE(ranges)
+        showRule(one)
         tmp=    v({best= #selects(one,best.rows), 
                    rest= #selects(one,rest.rows)})
         if tmp > most then most,rule = tmp,one end end end 
@@ -424,7 +431,7 @@ function contrast(data)
       push(all, {range=range, val= v(range.y.has)})  end end
   return pick(sort(all,gt"val")) end
 
-function showRule(rule,      finalize,merge)
+function showRule(rule,      silly,show1,show,mergefinalize,merge)
   function silly(t)
     if not t[1].lo  == -m.huge then return false end
     if not t[#t].hi ==  m.huge then return false end
@@ -448,7 +455,7 @@ function showRule(rule,      finalize,merge)
 end
 
 function selects(rule,rows,    oneOfThem,allOfThem)
-  function oneOfThem(ranges,row) 
+  function oneOfThem(ranges,row,    x) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
@@ -502,7 +509,7 @@ function cliffsDelta(ns1,ns2)
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  return m.abs(lt - gt)/n > the.cliffs end
+  return m.abs(lt - gt)/n > is.cliffs end
 
 -- Given two tables with the same keys, report if their
 -- values are different.
@@ -596,15 +603,15 @@ function o(t,    fun)
 -- the command-line flag `-g xx`. Show the help
 -- string if the `-h` flag is set. Return to the operating
 -- system the number of failing `funs`.
-function main(funs,the,help,    y,n,saved,k,val,ok)
-  y,n,saved = 0,0,copy(the)
-  if   the.help 
+function main(funs,is,help,    y,n,saved,k,val,ok)
+  y,n,saved = 0,0,copy(is)
+  if   is.help 
   then os.exit(print(help)) end
   for _,pair in pairs(funs) do
     k = pair.key
-    if k:find(".*"..the.go..".*") then
-      for k,v in pairs(saved) do the[k]=v end
-      Seed = the.seed
+    if k:find(".*"..is.go..".*") then
+      for k,v in pairs(saved) do is[k]=v end
+      Seed = is.seed
       math.randomseed(Seed)
       print(fmt("\n▶️  %s %s",k,("-"):rep(60)))
       ok,val = pcall(pair.fun)
@@ -648,7 +655,7 @@ function go(key,xplain,fun)
 -- Disable an example by renaming it `no`. 
 function no(_,__,___) return true end
 
-go("the","show options",function() oo(the) end)
+go("Is","show options",function() oo(is) end)
 
 go("rand","demo random number generation", function(     t,u)
   Seed=1; t={}; for i=1,1000 do push(t,rint(100)) end
@@ -656,7 +663,7 @@ go("rand","demo random number generation", function(     t,u)
   for k,v in pairs(t) do assert(v==u[k]) end end)
 
 go("some","demo of reservoir sampling", function(     num1)
-  the.Max = 32
+  is.Max = 32
   num1 = NUM()
   for i=1,10000 do add(num1,i) end
   oo(has(num1)) end)
@@ -675,17 +682,17 @@ go("syms","demo SYMS", function(    sym)
   return 1.38 == rnd(div(sym)) end)
 
 go("csv","reading csv files", function(     n)
-  n=0; csv(the.file, function(t) n=n+#t end) 
+  n=0; csv(is.file, function(t) n=n+#t end) 
   return 3192 == n end)
 
 go("data", "showing data sets", function(    data,col) 
-  data=DATA(the.file)
+  data=DATA(is.file)
   col=data.cols.x[1]
   print(col.lo,col.hi, mid(col),div(col))
   oo(stats(data)) end)
 
 go("clone","replicate structure of a DATA",function(    data1,data2)
-  data1=DATA(the.file)
+  data1=DATA(is.file)
   data2=DATA(data1,data1.rows) 
   oo(stats(data1))
   oo(stats(data2)) end)
@@ -706,14 +713,14 @@ go("cliffs","stats tests", function(   t1,t2,t3)
     j=j*1.025 end end)
 
 go("dist","distance test", function(    data,num)
-  data = DATA(the.file)
+  data = DATA(is.file)
   num  = NUM()
   for _,row in pairs(data.rows) do
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
 go("half","divide data in halg", function(   data,l,r)
-  data = DATA(the.file)
+  data = DATA(is.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
   l,r = DATA(data,left), DATA(data,right)
@@ -721,10 +728,10 @@ go("half","divide data in halg", function(   data,l,r)
   print("r",o(stats(r))) end)
  
 go("tree","make snd show tree of clusters", function(   data,l,r)
-  showTree(tree(DATA(the.file))) end)
+  showTree(tree(DATA(is.file))) end)
 
 go("sway","optimizing", function(    data,best,rest)
-  data = DATA(the.file)
+  data = DATA(is.file)
   best,rest = sway(data)
   print("\nall ", o(stats(data))) 
   print("    ",   o(stats(data,div))) 
@@ -736,7 +743,7 @@ go("sway","optimizing", function(    data,best,rest)
   print("best ~= rest?", o(diffs(best.cols.y, rest.cols.y))) end)
 
 go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
-  data = DATA(the.file)
+  data = DATA(is.file)
   best,rest = sway(data)
   print("all","","","",o{best=#best.rows, rest=#rest.rows})
   for k,t in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
@@ -748,18 +755,19 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            o(range.y.has)) end end end)
 
 go("contrast","explore contrast sets", function(     rule,most)
-  rule,most= contrast(DATA(the.file)) 
+  print(1)
+  rule,most= contrast(DATA(is.file)) 
   print(most,o(rule)) end)
 
 
 -- ## Start-up
 
 --  Parse the `help` string to make the `the` config variables.
-help:gsub(magic, function(k,v) the[k] = coerce(v) end)
+help:gsub(magic, function(k,v) is[k] = coerce(v) end)
 
 -- If not being loaded by other file, then return whatever `main` returns.
 if   not pcall(debug.getlocal,4,1) 
-then os.exit( main(egs, cli(the), help) ) end
+then os.exit( main(egs, cli(is), help) ) end
 
 -- Else, bundle the locals (so the other file can use them), and return them.
 local _locals,_i={},1 
