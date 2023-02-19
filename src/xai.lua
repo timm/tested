@@ -54,12 +54,12 @@ local magic = "\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"
 -- Trick for finding rogue names,  escaped into the global space.
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 -- Trick that lets us define everything in any order.
-local adds,add,any,at,better,bin,bins
-local contrast,copy,cli,csv,cells,cliffsDelta,coerce
-local diffs,dist,div,eg,extend,fmt,gt,half,has,go,itself
+local adds,add,any,better,betters,bin,bins
+local copy,cli,csv,cells,cliffsDelta,coerce
+local diffs,dist,div,eg,extend,firstN,fmt,gt,half,has,go,itself
 local kap,keys,lines,locals,lt,main,many,map,merge,merged,merges,mid
-local no,norm,o,oo,per,push,rint,rand,rnd,row,rogues
-local say,sayln,Seed,selects,showTree,showRule,sort,slice,stats,sway,tree,value
+local no,norm,o,on,oo,per,prune,push,rint,rand,rnd,row,rogues
+local say,sayln,Seed,selects,showTree,showRule,sort,slice,stats,sway,tree,value,xpln
 local COL,COLS,DATA,NUM,RANGE,RULE,SYM
 -- Trick to  shorten call to maths functions
 local m = math
@@ -114,13 +114,20 @@ function RANGE(at,txt,lo,hi)
 -- Create a  RULE that groups `ranges` by their column id. 
 -- Each group is a disjunction of its contents (and
 -- sets of groups are conjunctions).
-function RULE(ranges,      t)
+function RULE(ranges,maxSize,      t)
   t={}
   for _,range in pairs(ranges) do
     t[range.txt] = t[range.txt] or {}
-    push(t[range.txt], range) end 
-  return t end
+    push(t[range.txt], {lo=range.lo,hi=range.hi,at=range.at}) end 
+  return prune(t, maxSize) end
 
+function prune(rule, maxSize,     n)
+  n=0
+  for txt,ranges in pairs(rule) do
+    n = n+1
+    if #ranges == maxSize[txt] then  n=n+1; rule[txt] = nil end end
+  if n > 0 then return rule end end
+  
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
 -- Optionally, is any `rows` are supplied, load those in.   
 -- Case [1]: `src` is a filename of a csv file
@@ -266,6 +273,10 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
     s2 = s2 - m.exp(col.w * (y-x)/#ys) end
   return s1/#ys < s2/#ys end
 
+function betters(data,  n,    tmp)
+  tmp=sort(data.rows, function(r1,r2) return better(data,r1,r2) end) 
+  return  n and slice(tmp,1,n), slice(tmp,n+1)  or tmp  end
+
 -- ## Clustering
 
 -- Cluster `rows` into two sets by
@@ -274,7 +285,7 @@ function better(data,row1,row2,    s1,s2,ys,x,y)
 -- `some` of the data. Also, to avoid outliers, only look
 -- `is.Far=.95` (say) of the way across the space. 
 function half(data,  rows,cols,above)
-  local left,right,far,gap,some,proj,cos,tmp,A,B,c = {},{}
+  local left,right,evals,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
   function cos(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
   function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
@@ -286,7 +297,8 @@ function half(data,  rows,cols,above)
   B,c  = far.row, far.d
   for n,two in pairs(sort(map(rows,proj),lt"x")) do
     push(n <= #rows/2 and left or right, two.row) end
-  return left,right,A,B,c end
+  evals = is.Reuse and above and 1 or 2
+  return left,right,A,B,c,evals end
 
 -- Cluster, recursively, some `rows` by  dividing them in two, many times
 function tree(data,  rows,cols,above,     here)
@@ -311,17 +323,17 @@ function showTree(tree,  lvl,post)
 
 -- Recursively prune the worst half the data. Return
 -- the survivors and some sample of the rest.
-function sway(data,     worker,best,rest)
-  function worker(rows,worse,  above)
+function sway(data,     worker,best,rest,c,evals)
+  function worker(rows,worse,  evals0,above)
     if   #rows <= (#data.rows)^is.min 
-    then return rows, many(worse, is.rest*#rows) 
-    else local l,r,A,B = half(data, rows, cols, above)
+    then return rows, many(worse, is.rest*#rows),evals0 
+    else local l,r,A,B,c,evals = half(data, rows, cols, above)
          if better(data,B,A) then l,r,A,B = r,l,B,A end
          map(r, function(row) push(worse,row) end) 
-         return worker(l,worse,A) end 
+         return worker(l,worse,evals+evals0,A) end 
   end ----------------------------------
-  best,rest = worker(data.rows,{})
-  return DATA(data,best), DATA(data,rest) end 
+  best,rest,evals = worker(data.rows,{},0)
+  return DATA(data,best), DATA(data,rest),evals end 
 
 -- ## Discretization
 
@@ -406,56 +418,53 @@ function merge(col1,col2,    new)
   return new end
 
 -- ## Contrast Sets
-
-function contrast(data)
-  local best,rest = sway(data)
-  local all,v,pick = {}
-  function v(has) return value(has, #best.rows, #rest.rows, "best") end
-  function pick(t)
-    local most,first,rule = -1,t[1].val
-    for i=1,#t do
-      if t[i].val > .05 and t[i].val > first/10 then 
-        local ranges,one,tmp, bestr,restr
-        ranges= map(slice(t,1,i),at"range")
-        one=    RULE(ranges)
-        bestr= selects(one,best.rows)
-        restr= selects(one,rest.rows)
-        tmp=    v({best= #bestr, rest=#restr})
-           print(i,100,tmp, o(showRule(one)))
-        if #bestr + #restr > 0 and tmp > most then 
-           most,rule = tmp,one end end end 
-    return rule,most
-  end ---------
+-- Collect all the ranges into one flat list and sort them by their `value`.
+function xpln(data,        best,rest,maxSizes,tmp,v,score)
+  function v(has) 
+    return value(has, #best.rows, #rest.rows, "best") end
+  function score(ranges,       rule,bestr,restr)
+    rule = RULE(ranges,maxSizes)
+    if rule then
+      bestr= selects(rule, best.rows)
+      restr= selects(rule, rest.rows)
+      if #bestr + #restr > 0 then 
+        return v({best= #bestr, rest=#restr}),rule end end 
+  end ---------------------------------------------------
+  best,rest,evals = sway(data)
+  tmp,maxSizes = {},{}
   for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
+    maxSizes[ranges[1].txt] = #ranges
     for _,range in pairs(ranges) do
-      push(all, {range=range, val= v(range.y.has)})  end end
-  return pick(sort(all,gt"val")) end
+      push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end
+  local rule,most=firstN(sort(tmp,gt"val"),score)
+  return best,rest,rule,most,evals end
 
-function showRule(rule,      silly,show1,show,mergefinalize,merge)
-  function silly(t)
-    if not t[1].lo  == -m.huge then return false end
-    if not t[#t].hi ==  m.huge then return false end
-    for i=2,#t do if not t[i].lo == t[i-1].hi then return false end end
-    return true  end
-  function show1(range) 
-    return range.lo==range.hi and range.lo  or {lo=range.lo, hi=range.hi} end
-  function show(t)
-    return map(t, show1)  end 
-    --if not silly(t) then return map(t, show1)  end end
+function firstN(sortedRanges,scoreFun,           first,useful,most,out)
+  first = sortedRanges[1].val
+  function useful(range)
+    if range.val>.05 and range.val> first/10 then return range end
+  end -------------------------------
+  sortedRanges = map(sortedRanges,useful) -- reject  useless ranges
+  most,out = -1
+  for n=1,#sortedRanges do
+    local tmp,rule = scoreFun(map(slice(sortedRanges,1,n),on"range"))
+    if tmp and tmp > most then out,most = rule,tmp end end 
+  return out,most end
+
+function  showRule(rule,    merges,merge,pretty)
+  function pretty(range)
+    return range.lo==range.hi and range.lo or {range.lo, range.hi} end
+  function merges(attr,ranges) 
+   return map(merge(sort(ranges,lt"lo")),pretty),attr end
   function merge(t0)
-    local j,t,left,right = 1,{}
-    while j <= #t0 do
-      left, right = t0[j], t0[j+1]
-      if right then
-        print(left.txt,left.hi,right.lo,right.hi)
-        if left.hi==right.lo then left.hi=right.hi; j=j+1 end  end
-      push(t,left)
-      j = j + 1 
-    end
-    return #t0 == #t and t0 or merge(t) 
-  end -----------------------------------------
-  return kap(rule, function(attr,t) return show(merge(sort(t,lt"lo"))),attr end) 
-end
+    local t,j, left,right={},1
+    while j<=#t0 do
+      left,right = t0[j],t0[j+1]
+      if right and left.hi == right.lo then left.hi = right.hi; j=j+1 end
+      push(t, {lo=left.lo, hi=left.hi})
+      j=j+1 end
+    return #t0==#t and t or merge(t) end 
+  return kap(rule,merges) end
 
 function selects(rule,rows,    oneOfThem,allOfThem)
   function oneOfThem(ranges,row,    x) 
@@ -554,7 +563,7 @@ function csv(sFilename,fun)
 -- Map a function on  table (results in items 1,2,3...)    
 push = function(t,x) t[#t+1]=x; return x end
 sort = function(t,f) table.sort(t,f); return t end
-at   = function(x)   return function(t) return t[x] end end
+on   = function(x)   return function(t) return t[x] end end
 lt   = function(x)   return function(a,b) return a[x] < b[x] end end
 gt   = function(x)   return function(a,b) return a[x] > b[x] end end
 any  = function(t)   return t[rint(#t)] end
@@ -622,7 +631,7 @@ function main(funs,is,help,    y,n,saved,k,val,ok)
                                     sayln(debug.traceback()) 
       elseif val==false then n=n+1; sayln("❌ FAIL %s",k)
       else                   y=y+1; sayln("✅ PASS %s",k) end end end
-  if y+n>0 then sayln("\n🔆 %s\n",o({pass=y, fail=n, success=100*y/(y+n)//1})) end
+  if y+n>0 then sayln("🔆 %s",o({pass=y, fail=n, success=100*y/(y+n)//1})) end
   rogues()
   return fails end
 
@@ -722,7 +731,7 @@ go("dist","distance test", function(    data,num)
     add(num,dist(data, row, data.rows[1])) end
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} end)
 
-go("half","divide data in halg", function(   data,l,r)
+go("half","divide data in half", function(   data,l,r)
   data = DATA(is.file)
   local left,right,A,B,c = half(data) 
   print(#left,#right)
@@ -757,11 +766,18 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("contrast","explore contrast sets", function(     rule,most)
-  print(1)
-  rule,most= contrast(DATA(is.file)) 
-  print(most,o(rule)) end)
-
+go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
+  data=DATA(is.file)
+  best,rest,rule,most,evals= xpln(data)
+  print("explain=", o(showRule(rule)))
+  data1= DATA(data,selects(rule,data.rows))
+  print("all               ",o(stats(data)),o(stats(data,div)))
+  print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
+  print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
+  top,_ = betters(data, #best.rows)
+  top = DATA(data,top)
+  print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div)))
+end)  
 
 -- ## Start-up
 

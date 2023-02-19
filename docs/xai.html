@@ -24,11 +24,11 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <!-- vim: set syntax=lua ts=2 sw=2 et : -->
-<p><img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=left width=135></p>
+<img style="padding:3px;" src="https://raw.githubusercontent.com/timm/tested/main/etc/img/script.png" align=left width=135>
 <p style="text-align: right;">
  <a 
   href="https://zenodo.org/badge/latestdoi/569981645"> <img 
@@ -43,11 +43,11 @@
 <a href="https://github.com/timm/tested/blob/main/etc/data/auto93.csv">example data</a> <br>
 <a href="#license">license</a> <br>
 <a href="https://github.com/timm/tested/issues">issues</a><br clear=all>
-
+       
 <p style="text-align: left;">
 This code supports multi-goal semi-supervised explanation.  Here,  optimization 
 is treated as a kind of data mining; i.e.  we recursively bi-cluster (using the 
-distance to two remote points), all the while pruning the  “worst” half of the 
+distance to two remote points), all the while pruning the  "worst" half of the 
 data (as measured by a multi-goal domination predicate).
 During this, we  only label one or two points per cluster. Afterwards, 
 the rules we generate to explain the better rows is generated from the delta between best cluster and the rest.</p>
@@ -64,7 +64,7 @@ USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
-  -c  --cliffs  cliff's delta threshold      = .147
+  -c  --cliffs  cliff&#x27;s delta threshold      = .147
   -d  --d       different is over sd*d       = .35
   -f  --file    data file                    = ../etc/data/auto93.csv
   -F  --Far     distance to distant          = .95
@@ -85,8 +85,8 @@ OPTIONS:
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h2 id="tricks">Tricks</h2>
 
@@ -98,14 +98,14 @@ OPTIONS:
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Magic regex trick to match keys and values from <code>help</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">local</span> magic = <span class="hljs-string">"\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">local</span> magic = <span class="hljs-string">&quot;\n[%s]+[-][%S][%s]+[-][-]([%S]+)[^\n]+= ([%S]+)&quot;</span></pre></div></div>
             
         </li>
         
@@ -113,8 +113,8 @@ OPTIONS:
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Trick for finding rogue names,  escaped into the global space.</p>
 
@@ -128,8 +128,8 @@ OPTIONS:
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Trick that lets us define everything in any order.</p>
 
@@ -149,8 +149,8 @@ OPTIONS:
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Trick to  shorten call to maths functions</p>
 
@@ -164,10 +164,10 @@ OPTIONS:
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h2 id="-a-name-create-creation-a-"><a name=create>Creation</a></h2>
+              <h2 id="creation"><a name=create>Creation</a></h2>
 
             </div>
             
@@ -177,8 +177,8 @@ OPTIONS:
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Create a <code>NUM</code> or a <code>SYM</code>. Column
 names are a little language that<br>e.g. makes <code>NUM</code>s if name starts in upper case; or
@@ -188,10 +188,10 @@ the maximize (<code>+</code>) or minimize (<code>-</code>) or klass (<code>!</co
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">COL</span><span class="hljs-params">(n,s,    col)</span></span>
-   col = s:<span class="hljs-built_in">find</span><span class="hljs-string">"^[A-Z]"</span> <span class="hljs-keyword">and</span> NUM(n,s) <span class="hljs-keyword">or</span> SYM(n,s) 
-   col.isIgnored  = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">"X$"</span>
-   col.isKlass    = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">"!$"</span>
-   col.isGoal     = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">"[!+-]$"</span>
+   col = s:<span class="hljs-built_in">find</span><span class="hljs-string">&quot;^[A-Z]&quot;</span> <span class="hljs-keyword">and</span> NUM(n,s) <span class="hljs-keyword">or</span> SYM(n,s) 
+   col.isIgnored  = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">&quot;X$&quot;</span>
+   col.isKlass    = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">&quot;!$&quot;</span>
+   col.isGoal     = col.txt:<span class="hljs-built_in">find</span><span class="hljs-string">&quot;[!+-]$&quot;</span>
    <span class="hljs-keyword">return</span> col <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -200,18 +200,18 @@ the maximize (<code>+</code>) or minimize (<code>-</code>) or klass (<code>!</co
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Create a <code>NUM</code> to summarize a stream of numbers.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">NUM</span><span class="hljs-params">(n,s)</span></span> 
-  <span class="hljs-keyword">return</span> {at= n <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>, txt= s <span class="hljs-keyword">or</span> <span class="hljs-string">""</span>, n=<span class="hljs-number">0</span>,
+  <span class="hljs-keyword">return</span> {at= n <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>, txt= s <span class="hljs-keyword">or</span> <span class="hljs-string">&quot;&quot;</span>, n=<span class="hljs-number">0</span>,
           hi= -m.<span class="hljs-built_in">huge</span>, lo= m.<span class="hljs-built_in">huge</span>, 
           ok=<span class="hljs-literal">true</span>, has={},
-          w= (s <span class="hljs-keyword">or</span> <span class="hljs-string">""</span>):<span class="hljs-built_in">find</span><span class="hljs-string">"-$"</span> <span class="hljs-keyword">and</span> <span class="hljs-number">-1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>} <span class="hljs-keyword">end</span></pre></div></div>
+          w= (s <span class="hljs-keyword">or</span> <span class="hljs-string">&quot;&quot;</span>):<span class="hljs-built_in">find</span><span class="hljs-string">&quot;-$&quot;</span> <span class="hljs-keyword">and</span> <span class="hljs-number">-1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>} <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -219,15 +219,15 @@ the maximize (<code>+</code>) or minimize (<code>-</code>) or klass (<code>!</co
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create a <code>SYM</code> to summarize a stream of symbols.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">SYM</span><span class="hljs-params">(n,s)</span></span>
-  <span class="hljs-keyword">return</span> {at=n <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>, txt=s <span class="hljs-keyword">or</span> <span class="hljs-string">""</span>, n=<span class="hljs-number">0</span>, 
+  <span class="hljs-keyword">return</span> {at=n <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>, txt=s <span class="hljs-keyword">or</span> <span class="hljs-string">&quot;&quot;</span>, n=<span class="hljs-number">0</span>, 
           mode=<span class="hljs-literal">nil</span>,  most=<span class="hljs-number">0</span>,
           isSym=<span class="hljs-literal">true</span>, has={}} <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -237,8 +237,8 @@ the maximize (<code>+</code>) or minimize (<code>-</code>) or klass (<code>!</co
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create a set of <code>NUM</code>s or <code>SYM</code>s columns.
 Once created, all cols are stored in <code>all</code>
@@ -262,8 +262,8 @@ either <code>cols.x</code> independent input variables or
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Create a RANGE  that tracks the y dependent values seen in 
 the range <code>lo</code> to <code>hi</code> some independent variable in column number <code>at</code> whose name is <code>txt</code>. 
@@ -281,8 +281,8 @@ for  symbolic columns, <code>lo</code> is always the same as <code>hi</code>.</p
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Create a  RULE that groups <code>ranges</code> by their column id. 
 Each group is a disjunction of its contents (and
@@ -303,8 +303,8 @@ sets of groups are conjunctions).</p>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Create a <code>DATA</code> to contain <code>rows</code>, summarized in <code>cols</code>.
 Optionally, is any <code>rows</code> are supplied, load those in.<br>Case [1]: <code>src</code> is a filename of a csv file
@@ -320,7 +320,7 @@ column structure.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DATA</span><span class="hljs-params">(src,  rows,     data,add)</span></span>
   data= {rows={},cols=<span class="hljs-literal">nil</span>} <span class="hljs-comment">-- initially, no cols</span>
   add = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t)</span></span> row(data,t) <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">if</span> <span class="hljs-built_in">type</span>(src)==<span class="hljs-string">"string"</span> <span class="hljs-keyword">then</span> csv(src,add) <span class="hljs-keyword">else</span> data.cols=COLS(src.cols.names) <span class="hljs-keyword">end</span> 
+  <span class="hljs-keyword">if</span> <span class="hljs-built_in">type</span>(src)==<span class="hljs-string">&quot;string&quot;</span> <span class="hljs-keyword">then</span> csv(src,add) <span class="hljs-keyword">else</span> data.cols=COLS(src.cols.names) <span class="hljs-keyword">end</span> 
   map(rows <span class="hljs-keyword">or</span> {}, add)
   <span class="hljs-keyword">return</span> data <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -330,8 +330,8 @@ column structure.</p>
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h2 id="update">Update</h2>
 
@@ -343,8 +343,8 @@ column structure.</p>
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Update <code>data</code> with  row <code>t</code>. If <code>data.cols</code>
 does not exist, the use <code>t</code> to create <code>data.cols</code>.
@@ -369,8 +369,8 @@ over <code>cols.x</code> and <code>cols.y</code>.</p>
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Update one COL with <code>x</code> (values from one cells of one row).
 Used  by (e.g.) the <code>row</code> and <code>adds</code> function.
@@ -392,7 +392,7 @@ may not longer be sorted so set <code>col.ok=false</code>.</p>
     <span class="hljs-keyword">if</span>     #t &lt; is.Max           <span class="hljs-keyword">then</span> col.ok=<span class="hljs-literal">false</span>; t[#t + <span class="hljs-number">1</span>]=x 
     <span class="hljs-keyword">elseif</span> rand() &lt; is.Max/col.n <span class="hljs-keyword">then</span> col.ok=<span class="hljs-literal">false</span>; t[rint(<span class="hljs-number">1</span>, #t)]=x <span class="hljs-keyword">end</span> 
   <span class="hljs-keyword">end</span> <span class="hljs-comment">------------ </span>
-  <span class="hljs-keyword">if</span> x ~= <span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span>
+  <span class="hljs-keyword">if</span> x ~= <span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">then</span>
     n = n <span class="hljs-keyword">or</span> <span class="hljs-number">1</span>
     col.n = col.n + n
     <span class="hljs-keyword">if</span> col.isSym <span class="hljs-keyword">then</span> sym(col.has) <span class="hljs-keyword">else</span> num(col.has) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span></pre></div></div>
@@ -403,8 +403,8 @@ may not longer be sorted so set <code>col.ok=false</code>.</p>
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Update a COL with multiple items from <code>t</code>. This is useful when <code>col</code> is being
 used outside of some DATA.</p>
@@ -420,8 +420,8 @@ used outside of some DATA.</p>
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Update a RANGE to cover <code>x</code> and <code>y</code></p>
 
@@ -438,8 +438,8 @@ used outside of some DATA.</p>
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h2 id="query">Query</h2>
 
@@ -451,8 +451,8 @@ used outside of some DATA.</p>
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>A query that returns contents of a column. If <code>col</code> is a <code>NUM</code> with
 unsorted contents, then sort before return the contents.
@@ -462,7 +462,7 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">has</span><span class="hljs-params">(col)</span></span>
   <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> col.isSym <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> col.ok <span class="hljs-keyword">then</span> <span class="hljs-built_in">sort</span>(col.has) <span class="hljs-keyword">end</span> 
-  col.ok = <span class="hljs-literal">true</span> <span class="hljs-comment">-- the invariant here is that "has" is ready to be shared.</span>
+  col.ok = <span class="hljs-literal">true</span> <span class="hljs-comment">-- the invariant here is that &quot;has&quot; is ready to be shared.</span>
   <span class="hljs-keyword">return</span> col.has <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -471,8 +471,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>A query that  returns a <code>cols</code>‘s central tendency<br>(mode for <code>SYM</code>s and median for <code>NUM</code>s). Called by (e.g.) the <code>stats</code> function.</p>
 
@@ -487,8 +487,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>A query that returns a <code>col</code>‘s deviation from central tendency<br>(entropy for <code>SYM</code>s and standard deviation for <code>NUM</code>s)..</p>
 
@@ -507,8 +507,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>A query that returns <code>mid</code> or <code>div</code> of <code>cols</code> (defaults to <code>data.cols.y</code>).</p>
 
@@ -518,7 +518,7 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
   cols= cols <span class="hljs-keyword">or</span> data.cols.y
   tmp = kap(cols,
             <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(k,col)</span></span> <span class="hljs-keyword">return</span> rnd((fun <span class="hljs-keyword">or</span> mid)(col),nPlaces), col.txt <span class="hljs-keyword">end</span>)
-  tmp[<span class="hljs-string">"N"</span>] = #data.rows
+  tmp[<span class="hljs-string">&quot;N&quot;</span>] = #data.rows
   <span class="hljs-keyword">return</span> tmp,map(cols,mid)  <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -527,15 +527,15 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>A query that normalizes <code>n</code> 0..1. Called by (e.g.) the <code>dist</code> function.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">norm</span><span class="hljs-params">(num,n)</span></span>
-  <span class="hljs-keyword">return</span> n==<span class="hljs-string">"?"</span> <span class="hljs-keyword">and</span> n <span class="hljs-keyword">or</span> (n - num.lo)/(num.hi - num.lo + <span class="hljs-number">1</span>/m.<span class="hljs-built_in">huge</span>) <span class="hljs-keyword">end</span></pre></div></div>
+  <span class="hljs-keyword">return</span> n==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">and</span> n <span class="hljs-keyword">or</span> (n - num.lo)/(num.hi - num.lo + <span class="hljs-number">1</span>/m.<span class="hljs-built_in">huge</span>) <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -543,8 +543,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>A query that returns the score a distribution of symbols inside a SYM.</p>
 
@@ -564,8 +564,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>A query that returns the distances 0..1 between rows <code>t1</code> and <code>t2</code>.<br>If any values are unknown, assume max distances.</p>
 
@@ -575,11 +575,11 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sym</span><span class="hljs-params">(x,y)</span></span> 
     <span class="hljs-keyword">return</span> x==y <span class="hljs-keyword">and</span> <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">num</span><span class="hljs-params">(x,y)</span></span> 
-    <span class="hljs-keyword">if</span> x==<span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span> x= y&lt;<span class="hljs-number">.5</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>	
-    <span class="hljs-keyword">if</span> y==<span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span> y= x&lt;<span class="hljs-number">.5</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>	
+    <span class="hljs-keyword">if</span> x==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">then</span> x= y&lt;<span class="hljs-number">.5</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>	
+    <span class="hljs-keyword">if</span> y==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">then</span> y= x&lt;<span class="hljs-number">.5</span> <span class="hljs-keyword">and</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>	
     <span class="hljs-keyword">return</span> m.<span class="hljs-built_in">abs</span>(x-y) <span class="hljs-keyword">end</span> 
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dist1</span><span class="hljs-params">(col,x,y)</span></span>
-    <span class="hljs-keyword">if</span> x==<span class="hljs-string">"?"</span> <span class="hljs-keyword">and</span> y==<span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">if</span> x==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">and</span> y==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
     <span class="hljs-keyword">return</span> col.isSym <span class="hljs-keyword">and</span> sym(x,y) <span class="hljs-keyword">or</span> num(norm(col,x), norm(col,y)) 
   <span class="hljs-keyword">end</span> <span class="hljs-comment">-------------</span>
   d, cols = <span class="hljs-number">0</span>, (cols <span class="hljs-keyword">or</span> data.cols.x)	
@@ -593,8 +593,8 @@ Called by (e.g.) the <code>mid</code> and <code>div</code> functions.</p>
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>A query that returns true if <code>row1</code> is better than another.
 This is Zitzler’s indicator predicate that
@@ -621,8 +621,8 @@ The jump that losses least indicates which is the best row.</p>
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h2 id="clustering">Clustering</h2>
 
@@ -634,8 +634,8 @@ The jump that losses least indicates which is the best row.</p>
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Cluster <code>rows</code> into two sets by
 dividing the data via their distance to two remote points.
@@ -653,10 +653,10 @@ To speed up finding those remote points, only look at
   rows = rows <span class="hljs-keyword">or</span> data.rows
   some = many(rows,is.Halves)
   A    = (is.Reuse <span class="hljs-keyword">and</span> above) <span class="hljs-keyword">or</span> any(some)
-  tmp  = <span class="hljs-built_in">sort</span>(map(some,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(r)</span></span> <span class="hljs-keyword">return</span> {row=r, d=gap(r,A)} <span class="hljs-keyword">end</span> ),lt<span class="hljs-string">"d"</span>)
+  tmp  = <span class="hljs-built_in">sort</span>(map(some,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(r)</span></span> <span class="hljs-keyword">return</span> {row=r, d=gap(r,A)} <span class="hljs-keyword">end</span> ),lt<span class="hljs-string">&quot;d&quot;</span>)
   far  = tmp[(#tmp*is.Far)//<span class="hljs-number">1</span>]
   B,c  = far.row, far.d
-  <span class="hljs-keyword">for</span> n,two <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(<span class="hljs-built_in">sort</span>(map(rows,proj),lt<span class="hljs-string">"x"</span>)) <span class="hljs-keyword">do</span>
+  <span class="hljs-keyword">for</span> n,two <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(<span class="hljs-built_in">sort</span>(map(rows,proj),lt<span class="hljs-string">&quot;x&quot;</span>)) <span class="hljs-keyword">do</span>
     push(n &lt;= #rows/<span class="hljs-number">2</span> <span class="hljs-keyword">and</span> left <span class="hljs-keyword">or</span> right, two.row) <span class="hljs-keyword">end</span>
   <span class="hljs-keyword">return</span> left,right,A,B,c <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -666,8 +666,8 @@ To speed up finding those remote points, only look at
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Cluster, recursively, some <code>rows</code> by  dividing them in two, many times</p>
 
@@ -688,8 +688,8 @@ To speed up finding those remote points, only look at
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Cluster can be displayed by this function.</p>
 
@@ -698,8 +698,8 @@ To speed up finding those remote points, only look at
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showTree</span><span class="hljs-params">(tree,  lvl,post)</span></span>
   <span class="hljs-keyword">if</span> tree <span class="hljs-keyword">then</span> 
     lvl  = lvl <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
-    <span class="hljs-built_in">io</span>.<span class="hljs-built_in">write</span>(fmt(<span class="hljs-string">"%s[%s] "</span>,(<span class="hljs-string">"|.. "</span>):<span class="hljs-built_in">rep</span>(lvl), #(tree.data.rows)))
-    <span class="hljs-built_in">print</span>((lvl==<span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> tree.left) <span class="hljs-keyword">and</span> o(stats(tree.data)) <span class="hljs-keyword">or</span> <span class="hljs-string">""</span>)
+    <span class="hljs-built_in">io</span>.<span class="hljs-built_in">write</span>(fmt(<span class="hljs-string">&quot;%s[%s] &quot;</span>,(<span class="hljs-string">&quot;|.. &quot;</span>):<span class="hljs-built_in">rep</span>(lvl), #(tree.data.rows)))
+    <span class="hljs-built_in">print</span>((lvl==<span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> tree.left) <span class="hljs-keyword">and</span> o(stats(tree.data)) <span class="hljs-keyword">or</span> <span class="hljs-string">&quot;&quot;</span>)
     showTree(tree.left, lvl+<span class="hljs-number">1</span>)
     showTree(tree.right,lvl+<span class="hljs-number">1</span>) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -709,8 +709,8 @@ To speed up finding those remote points, only look at
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h2 id="optimization">Optimization</h2>
 
@@ -722,8 +722,8 @@ To speed up finding those remote points, only look at
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Recursively prune the worst half the data. Return
 the survivors and some sample of the rest.</p>
@@ -748,8 +748,8 @@ the survivors and some sample of the rest.</p>
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h2 id="discretization">Discretization</h2>
 
@@ -761,8 +761,8 @@ the survivors and some sample of the rest.</p>
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Return RANGEs that distinguish sets of rows (stored in <code>rowss</code>).
 To reduce the search space,
@@ -776,13 +776,13 @@ how many of them can be combined with their neighboring bin).</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bins</span><span class="hljs-params">(cols,rowss,      with1Col,withAllRows)</span></span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">with1Col</span><span class="hljs-params">(col,     n,ranges)</span></span>
     n,ranges = withAllRows(col)
-    ranges   = <span class="hljs-built_in">sort</span>(map(ranges,itself),lt<span class="hljs-string">"lo"</span>) <span class="hljs-comment">-- keyArray to numArray, sorted</span>
+    ranges   = <span class="hljs-built_in">sort</span>(map(ranges,itself),lt<span class="hljs-string">&quot;lo&quot;</span>) <span class="hljs-comment">-- keyArray to numArray, sorted</span>
     <span class="hljs-keyword">if</span>   col.isSym 
     <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> ranges 
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> merges(ranges, n/is.bins, is.d*div(col)) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withAllRows</span><span class="hljs-params">(col,    n,ranges,xy)</span></span>
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">xy</span><span class="hljs-params">(x,y,      k)</span></span>
-      <span class="hljs-keyword">if</span> x ~= <span class="hljs-string">"?"</span> <span class="hljs-keyword">then</span> 
+      <span class="hljs-keyword">if</span> x ~= <span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">then</span> 
         n = n + <span class="hljs-number">1</span>
         k = bin(col,x)
         ranges[k] = ranges[k] <span class="hljs-keyword">or</span> RANGE(col.at,col.txt,x)
@@ -800,8 +800,8 @@ how many of them can be combined with their neighboring bin).</p>
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Map <code>x</code> into a small number of bins. <code>SYM</code>s just get mapped
 to themselves but <code>NUM</code>s get mapped to one of <code>is.bins</code> values.
@@ -810,7 +810,7 @@ Called by function <code>bins</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bin</span><span class="hljs-params">(col,x,      tmp)</span></span>
-  <span class="hljs-keyword">if</span> x==<span class="hljs-string">"?"</span> <span class="hljs-keyword">or</span> col.isSym <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> x <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">if</span> x==<span class="hljs-string">&quot;?&quot;</span> <span class="hljs-keyword">or</span> col.isSym <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> x <span class="hljs-keyword">end</span>
   tmp = (col.hi - col.lo)/(is.bins - <span class="hljs-number">1</span>)
   <span class="hljs-keyword">return</span> col.hi == col.lo <span class="hljs-keyword">and</span> <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> m.<span class="hljs-built_in">floor</span>(x/tmp + <span class="hljs-number">.5</span>)*tmp <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -820,8 +820,8 @@ Called by function <code>bins</code>.</p>
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Given a sorted list of ranges, try fusing adjacent items
 (stopping when no more fuse-ings can be found). When done,
@@ -857,8 +857,8 @@ make the ranges run from minus to plus infinity
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>If (1) the parts are too small or
 (2) the whole is as good (or simpler) than the parts,
@@ -879,8 +879,8 @@ then return the merge.</p>
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Merge two <code>cols</code>. Called by function <code>merged</code>.</p>
 
@@ -901,8 +901,8 @@ then return the merge.</p>
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h2 id="contrast-sets">Contrast Sets</h2>
 
@@ -912,13 +912,13 @@ then return the merge.</p>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">contrast</span><span class="hljs-params">(data)</span></span>
   <span class="hljs-keyword">local</span> best,rest = sway(data)
   <span class="hljs-keyword">local</span> all,v,pick = {}
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">v</span><span class="hljs-params">(has)</span></span> <span class="hljs-keyword">return</span> value(has, #best.rows, #rest.rows, <span class="hljs-string">"best"</span>) <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">v</span><span class="hljs-params">(has)</span></span> <span class="hljs-keyword">return</span> value(has, #best.rows, #rest.rows, <span class="hljs-string">&quot;best&quot;</span>) <span class="hljs-keyword">end</span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pick</span><span class="hljs-params">(t)</span></span>
     <span class="hljs-keyword">local</span> most,first,rule = <span class="hljs-number">-1</span>,t[<span class="hljs-number">1</span>].val
     <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,#t <span class="hljs-keyword">do</span>
       <span class="hljs-keyword">if</span> t[i].val &gt; <span class="hljs-number">.05</span> <span class="hljs-keyword">and</span> t[i].val &gt; first/<span class="hljs-number">10</span> <span class="hljs-keyword">then</span> 
         <span class="hljs-keyword">local</span> ranges,one,tmp, bestr,restr
-        ranges= map(slice(t,<span class="hljs-number">1</span>,i),at<span class="hljs-string">"range"</span>)
+        ranges= map(slice(t,<span class="hljs-number">1</span>,i),at<span class="hljs-string">&quot;range&quot;</span>)
         one=    RULE(ranges)
         bestr= selects(one,best.rows)
         restr= selects(one,rest.rows)
@@ -931,7 +931,7 @@ then return the merge.</p>
   <span class="hljs-keyword">for</span> _,ranges <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(bins(data.cols.x,{best=best.rows, rest=rest.rows})) <span class="hljs-keyword">do</span>
     <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(ranges) <span class="hljs-keyword">do</span>
       push(all, {range=range, val= v(range.y.has)})  <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">return</span> pick(<span class="hljs-built_in">sort</span>(all,gt<span class="hljs-string">"val"</span>)) <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">return</span> pick(<span class="hljs-built_in">sort</span>(all,gt<span class="hljs-string">&quot;val&quot;</span>)) <span class="hljs-keyword">end</span>
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showRule</span><span class="hljs-params">(rule,      silly,show1,show,mergefinalize,merge)</span></span>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">silly</span><span class="hljs-params">(t)</span></span>
@@ -950,8 +950,8 @@ then return the merge.</p>
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>if not silly(t) then return map(t, show1)  end end</p>
 
@@ -969,7 +969,7 @@ then return the merge.</p>
     <span class="hljs-keyword">end</span>
     <span class="hljs-keyword">return</span> #t0 == #t <span class="hljs-keyword">and</span> t0 <span class="hljs-keyword">or</span> merge(t) 
   <span class="hljs-keyword">end</span> <span class="hljs-comment">-----------------------------------------</span>
-  <span class="hljs-keyword">return</span> kap(rule, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attr,t)</span></span> <span class="hljs-keyword">return</span> show(merge(<span class="hljs-built_in">sort</span>(t,lt<span class="hljs-string">"lo"</span>))),attr <span class="hljs-keyword">end</span>) 
+  <span class="hljs-keyword">return</span> kap(rule, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(attr,t)</span></span> <span class="hljs-keyword">return</span> show(merge(<span class="hljs-built_in">sort</span>(t,lt<span class="hljs-string">&quot;lo&quot;</span>))),attr <span class="hljs-keyword">end</span>) 
 <span class="hljs-keyword">end</span>
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">selects</span><span class="hljs-params">(rule,rows,    oneOfThem,allOfThem)</span></span>
@@ -977,7 +977,7 @@ then return the merge.</p>
     <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(ranges) <span class="hljs-keyword">do</span>
       <span class="hljs-keyword">local</span> lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
-      <span class="hljs-keyword">if</span> x == <span class="hljs-string">"?"</span>         <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">end</span>
+      <span class="hljs-keyword">if</span> x == <span class="hljs-string">&quot;?&quot;</span>         <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">end</span>
       <span class="hljs-keyword">if</span> lo==hi <span class="hljs-keyword">and</span> lo==x <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">end</span>
       <span class="hljs-keyword">if</span> lo&lt;=x  <span class="hljs-keyword">and</span> x&lt; hi <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span> 
@@ -993,8 +993,8 @@ then return the merge.</p>
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h2 id="miscellaneous-support-code">Miscellaneous Support Code</h2>
 <h3 id="meta">Meta</h3>
@@ -1007,8 +1007,8 @@ then return the merge.</p>
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Return self</p>
 
@@ -1022,8 +1022,8 @@ then return the merge.</p>
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h3 id="maths">Maths</h3>
 
@@ -1035,8 +1035,8 @@ then return the merge.</p>
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Round numbers</p>
 
@@ -1052,8 +1052,8 @@ then return the merge.</p>
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Random number generation.</p>
 
@@ -1074,8 +1074,8 @@ then return the merge.</p>
         <li id="section-48">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Non-parametric effect-size test
  M.Hess, J.Kromrey. 
@@ -1104,8 +1104,8 @@ then return the merge.</p>
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>Given two tables with the same keys, report if their
 values are different.</p>
@@ -1122,8 +1122,8 @@ values are different.</p>
         <li id="section-50">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h3 id="string-to-thing">String to thing</h3>
 
@@ -1135,8 +1135,8 @@ values are different.</p>
         <li id="section-51">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Coerce string to boolean, int,float or (failing all else) strings.</p>
 
@@ -1144,9 +1144,9 @@ values are different.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">coerce</span><span class="hljs-params">(s,    fun)</span></span> 
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun</span><span class="hljs-params">(s1)</span></span>
-    <span class="hljs-keyword">if</span> s1==<span class="hljs-string">"true"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">elseif</span> s1==<span class="hljs-string">"false"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">if</span> s1==<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">elseif</span> s1==<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">end</span>
     <span class="hljs-keyword">return</span> s1 <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-built_in">math</span>.tointeger(s) <span class="hljs-keyword">or</span> <span class="hljs-built_in">tonumber</span>(s) <span class="hljs-keyword">or</span> fun(s:<span class="hljs-built_in">match</span><span class="hljs-string">"^%s*(.-)%s*$"</span>) <span class="hljs-keyword">end</span></pre></div></div>
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">math</span>.tointeger(s) <span class="hljs-keyword">or</span> <span class="hljs-built_in">tonumber</span>(s) <span class="hljs-keyword">or</span> fun(s:<span class="hljs-built_in">match</span><span class="hljs-string">&quot;^%s*(.-)%s*$&quot;</span>) <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -1154,15 +1154,15 @@ values are different.</p>
         <li id="section-52">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Split a string <code>s</code>  on commas.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cells</span><span class="hljs-params">(s,    t)</span></span>
-  t={}; <span class="hljs-keyword">for</span> s1 <span class="hljs-keyword">in</span> s:<span class="hljs-built_in">gmatch</span>(<span class="hljs-string">"([^,]+)"</span>) <span class="hljs-keyword">do</span> t[<span class="hljs-number">1</span>+#t] = coerce(s1) <span class="hljs-keyword">end</span>; <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span></pre></div></div>
+  t={}; <span class="hljs-keyword">for</span> s1 <span class="hljs-keyword">in</span> s:<span class="hljs-built_in">gmatch</span>(<span class="hljs-string">&quot;([^,]+)&quot;</span>) <span class="hljs-keyword">do</span> t[<span class="hljs-number">1</span>+#t] = coerce(s1) <span class="hljs-keyword">end</span>; <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -1170,8 +1170,8 @@ values are different.</p>
         <li id="section-53">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>Run <code>fun</code> for all lines in a file.</p>
 
@@ -1188,8 +1188,8 @@ values are different.</p>
         <li id="section-54">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Run <code>fun</code> on the cells  in each row of a csv file.</p>
 
@@ -1204,8 +1204,8 @@ values are different.</p>
         <li id="section-55">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <h3 id="lists">Lists</h3>
 
@@ -1217,8 +1217,8 @@ values are different.</p>
         <li id="section-56">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Push an item <code>x</code> onto  a list.<br>Return a list, sorted on <code>fun</code>.<br>Return a function sorting down on field <code>x</code>.<br>Return a function sorting up on field <code>x</code>.<br>Return one item at random.<br>Return many items, selected at random.<br>Map a function on  table (results in items 1,2,3…)    </p>
 
@@ -1240,8 +1240,8 @@ keys = <span class="hljs-function"><span class="hljs-keyword">function</span><sp
         <li id="section-57">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Map a function on table (results in items key1,key2,…)</p>
 
@@ -1256,8 +1256,8 @@ keys = <span class="hljs-function"><span class="hljs-keyword">function</span><sp
         <li id="section-58">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Return the <code>p</code>-ratio item in <code>t</code>; e.g. <code>per(t,.5)</code> returns the medium.</p>
 
@@ -1272,15 +1272,15 @@ keys = <span class="hljs-function"><span class="hljs-keyword">function</span><sp
         <li id="section-59">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>Deep copy of a table <code>t</code>.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copy</span><span class="hljs-params">(t,    u)</span></span> 
-  <span class="hljs-keyword">if</span>  <span class="hljs-built_in">type</span>(t)~=<span class="hljs-string">"table"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">if</span>  <span class="hljs-built_in">type</span>(t)~=<span class="hljs-string">&quot;table&quot;</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span>
   u={}; <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(t) <span class="hljs-keyword">do</span> u[k] = copy(v) <span class="hljs-keyword">end</span>; <span class="hljs-keyword">return</span> u <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -1289,8 +1289,8 @@ keys = <span class="hljs-function"><span class="hljs-keyword">function</span><sp
         <li id="section-60">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Return a portion of <code>t</code>; go,stop,inc defaults to 1,#t,1.
 Negative indexes are supported.</p>
@@ -1310,8 +1310,8 @@ Negative indexes are supported.</p>
         <li id="section-61">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <h3 id="strings">Strings</h3>
 
@@ -1323,8 +1323,8 @@ Negative indexes are supported.</p>
         <li id="section-62">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>fmt</code> means <code>string.format</code>.</p>
 
@@ -1338,15 +1338,15 @@ Negative indexes are supported.</p>
         <li id="section-63">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>print to standard error</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">say</span><span class="hljs-params">(...)</span></span>   <span class="hljs-built_in">io</span>.<span class="hljs-built_in">stderr</span>:<span class="hljs-built_in">write</span>(fmt(...)) <span class="hljs-keyword">end</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayln</span><span class="hljs-params">(...)</span></span> <span class="hljs-built_in">io</span>.<span class="hljs-built_in">stderr</span>:<span class="hljs-built_in">write</span>(fmt(...)..<span class="hljs-string">"\n"</span>) <span class="hljs-keyword">end</span></pre></div></div>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayln</span><span class="hljs-params">(...)</span></span> <span class="hljs-built_in">io</span>.<span class="hljs-built_in">stderr</span>:<span class="hljs-built_in">write</span>(fmt(...)..<span class="hljs-string">&quot;\n&quot;</span>) <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -1354,8 +1354,8 @@ Negative indexes are supported.</p>
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>Print a nested table (sorted by the keys of the table).</p>
 
@@ -1363,9 +1363,9 @@ Negative indexes are supported.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">oo</span><span class="hljs-params">(t)</span></span> <span class="hljs-built_in">print</span>(o(t)); <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">o</span><span class="hljs-params">(t,    fun)</span></span> 
-  <span class="hljs-keyword">if</span> <span class="hljs-built_in">type</span>(t)~=<span class="hljs-string">"table"</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">tostring</span>(t) <span class="hljs-keyword">end</span>
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun</span> <span class="hljs-params">(k,v)</span></span> <span class="hljs-keyword">return</span> fmt(<span class="hljs-string">":%s %s"</span>,k,o(v)) <span class="hljs-keyword">end</span> 
-  <span class="hljs-keyword">return</span> <span class="hljs-string">"{"</span>..<span class="hljs-built_in">table</span>.<span class="hljs-built_in">concat</span>(#t&gt;<span class="hljs-number">0</span>  <span class="hljs-keyword">and</span> map(t,o) <span class="hljs-keyword">or</span> <span class="hljs-built_in">sort</span>(kap(t,fun)),<span class="hljs-string">" "</span>)..<span class="hljs-string">"}"</span> <span class="hljs-keyword">end</span></pre></div></div>
+  <span class="hljs-keyword">if</span> <span class="hljs-built_in">type</span>(t)~=<span class="hljs-string">&quot;table&quot;</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">tostring</span>(t) <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun</span> <span class="hljs-params">(k,v)</span></span> <span class="hljs-keyword">return</span> fmt(<span class="hljs-string">&quot;:%s %s&quot;</span>,k,o(v)) <span class="hljs-keyword">end</span> 
+  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;{&quot;</span>..<span class="hljs-built_in">table</span>.<span class="hljs-built_in">concat</span>(#t&gt;<span class="hljs-number">0</span>  <span class="hljs-keyword">and</span> map(t,o) <span class="hljs-keyword">or</span> <span class="hljs-built_in">sort</span>(kap(t,fun)),<span class="hljs-string">&quot; &quot;</span>)..<span class="hljs-string">&quot;}&quot;</span> <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -1373,8 +1373,8 @@ Negative indexes are supported.</p>
         <li id="section-65">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <h3 id="main-control">Main Control</h3>
 
@@ -1386,8 +1386,8 @@ Negative indexes are supported.</p>
         <li id="section-66">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>Rune all the functions whose name matches
 the command-line flag <code>-g xx</code>. Show the help
@@ -1402,17 +1402,17 @@ system the number of failing <code>funs</code>.</p>
   <span class="hljs-keyword">then</span> <span class="hljs-built_in">os</span>.<span class="hljs-built_in">exit</span>(<span class="hljs-built_in">print</span>(help)) <span class="hljs-keyword">end</span>
   <span class="hljs-keyword">for</span> _,pair <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(funs) <span class="hljs-keyword">do</span>
     k = pair.key
-    <span class="hljs-keyword">if</span> k:<span class="hljs-built_in">find</span>(<span class="hljs-string">".*"</span>..is.go..<span class="hljs-string">".*"</span>) <span class="hljs-keyword">then</span>
+    <span class="hljs-keyword">if</span> k:<span class="hljs-built_in">find</span>(<span class="hljs-string">&quot;.*&quot;</span>..is.go..<span class="hljs-string">&quot;.*&quot;</span>) <span class="hljs-keyword">then</span>
       <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(saved) <span class="hljs-keyword">do</span> is[k]=v <span class="hljs-keyword">end</span>
       Seed = is.seed
       <span class="hljs-built_in">math</span>.<span class="hljs-built_in">randomseed</span>(Seed)
-      <span class="hljs-built_in">print</span>(fmt(<span class="hljs-string">"\n▶️  %s %s"</span>,k,(<span class="hljs-string">"-"</span>):<span class="hljs-built_in">rep</span>(<span class="hljs-number">60</span>)))
+      <span class="hljs-built_in">print</span>(fmt(<span class="hljs-string">&quot;\n▶️  %s %s&quot;</span>,k,(<span class="hljs-string">&quot;-&quot;</span>):<span class="hljs-built_in">rep</span>(<span class="hljs-number">60</span>)))
       ok,val = <span class="hljs-built_in">pcall</span>(pair.fun)
-      <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ok         <span class="hljs-keyword">then</span> n=n+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">"❌ FAIL %s %s"</span>,k,val); 
+      <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ok         <span class="hljs-keyword">then</span> n=n+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">&quot;❌ FAIL %s %s&quot;</span>,k,val); 
                                     sayln(<span class="hljs-built_in">debug</span>.<span class="hljs-built_in">traceback</span>()) 
-      <span class="hljs-keyword">elseif</span> val==<span class="hljs-literal">false</span> <span class="hljs-keyword">then</span> n=n+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">"❌ FAIL %s"</span>,k)
-      <span class="hljs-keyword">else</span>                   y=y+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">"✅ PASS %s"</span>,k) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">if</span> y+n&gt;<span class="hljs-number">0</span> <span class="hljs-keyword">then</span> sayln(<span class="hljs-string">"\n🔆 %s\n"</span>,o({pass=y, fail=n, success=<span class="hljs-number">100</span>*y/(y+n)//<span class="hljs-number">1</span>})) <span class="hljs-keyword">end</span>
+      <span class="hljs-keyword">elseif</span> val==<span class="hljs-literal">false</span> <span class="hljs-keyword">then</span> n=n+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">&quot;❌ FAIL %s&quot;</span>,k)
+      <span class="hljs-keyword">else</span>                   y=y+<span class="hljs-number">1</span>; sayln(<span class="hljs-string">&quot;✅ PASS %s&quot;</span>,k) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">if</span> y+n&gt;<span class="hljs-number">0</span> <span class="hljs-keyword">then</span> sayln(<span class="hljs-string">&quot;\n🔆 %s\n&quot;</span>,o({pass=y, fail=n, success=<span class="hljs-number">100</span>*y/(y+n)//<span class="hljs-number">1</span>})) <span class="hljs-keyword">end</span>
   rogues()
   <span class="hljs-keyword">return</span> fails <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -1422,8 +1422,8 @@ system the number of failing <code>funs</code>.</p>
         <li id="section-67">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>Return any rogue locals (i.e. all those we did not
 trap in the <code>b4</code> list at top of file).</p>
@@ -1432,7 +1432,7 @@ trap in the <code>b4</code> list at top of file).</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">rogues</span><span class="hljs-params">()</span></span> 
   <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(<span class="hljs-built_in">_ENV</span>) <span class="hljs-keyword">do</span> 
-    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> b4[k] <span class="hljs-keyword">then</span> <span class="hljs-built_in">print</span>(fmt(<span class="hljs-string">"#W ?%s %s"</span>,k,<span class="hljs-built_in">type</span>(v))) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span></pre></div></div>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> b4[k] <span class="hljs-keyword">then</span> <span class="hljs-built_in">print</span>(fmt(<span class="hljs-string">&quot;#W ?%s %s&quot;</span>,k,<span class="hljs-built_in">type</span>(v))) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
         
@@ -1440,8 +1440,8 @@ trap in the <code>b4</code> list at top of file).</p>
         <li id="section-68">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>Update <code>t</code> using command-line options. For boolean
 flags, just flip the default values. For others, read
@@ -1453,8 +1453,8 @@ the new value from the command line.</p>
   <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(t) <span class="hljs-keyword">do</span>
     v = <span class="hljs-built_in">tostring</span>(v)
     <span class="hljs-keyword">for</span> n,x <span class="hljs-keyword">in</span> <span class="hljs-built_in">ipairs</span>(<span class="hljs-built_in">arg</span>) <span class="hljs-keyword">do</span>
-      <span class="hljs-keyword">if</span> x==<span class="hljs-string">"-"</span>..(k:<span class="hljs-built_in">sub</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>)) <span class="hljs-keyword">or</span> x==<span class="hljs-string">"--"</span>..k <span class="hljs-keyword">then</span>
-        v= v==<span class="hljs-string">"false"</span> <span class="hljs-keyword">and</span> <span class="hljs-string">"true"</span> <span class="hljs-keyword">or</span> v==<span class="hljs-string">"true"</span> <span class="hljs-keyword">and</span> <span class="hljs-string">"false"</span> <span class="hljs-keyword">or</span> <span class="hljs-built_in">arg</span>[n+<span class="hljs-number">1</span>] <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> 
+      <span class="hljs-keyword">if</span> x==<span class="hljs-string">&quot;-&quot;</span>..(k:<span class="hljs-built_in">sub</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>)) <span class="hljs-keyword">or</span> x==<span class="hljs-string">&quot;--&quot;</span>..k <span class="hljs-keyword">then</span>
+        v= v==<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-keyword">and</span> <span class="hljs-string">&quot;true&quot;</span> <span class="hljs-keyword">or</span> v==<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-keyword">and</span> <span class="hljs-string">&quot;false&quot;</span> <span class="hljs-keyword">or</span> <span class="hljs-built_in">arg</span>[n+<span class="hljs-number">1</span>] <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> 
     t[k] = coerce(v) <span class="hljs-keyword">end</span> 
   <span class="hljs-keyword">return</span> t <span class="hljs-keyword">end</span></pre></div></div>
             
@@ -1464,10 +1464,10 @@ the new value from the command line.</p>
         <li id="section-69">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
-              <h2 id="-a-name-egs-examples-a-"><a name=egs>Examples</a></h2>
+              <h2 id="examples"><a name=egs>Examples</a></h2>
 
             </div>
             
@@ -1477,15 +1477,15 @@ the new value from the command line.</p>
         <li id="section-70">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>Place to store examples.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">local</span> egs = {}
-help = help .. <span class="hljs-string">"\nACTIONS:\n"</span></pre></div></div>
+help = help .. <span class="hljs-string">&quot;\nACTIONS:\n&quot;</span></pre></div></div>
             
         </li>
         
@@ -1493,15 +1493,15 @@ help = help .. <span class="hljs-string">"\nACTIONS:\n"</span></pre></div></div>
         <li id="section-71">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>Used <code>go</code> to define an example</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">go</span><span class="hljs-params">(key,xplain,fun)</span></span>
-  help =  help ..fmt(<span class="hljs-string">"  -g  %s\t%s\n"</span>,key,xplain)
+  help =  help ..fmt(<span class="hljs-string">&quot;  -g  %s\t%s\n&quot;</span>,key,xplain)
   egs[<span class="hljs-number">1</span>+#egs] = {key=key,fun=fun} <span class="hljs-keyword">end</span></pre></div></div>
             
         </li>
@@ -1510,8 +1510,8 @@ help = help .. <span class="hljs-string">"\nACTIONS:\n"</span></pre></div></div>
         <li id="section-72">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>Disable an example by renaming it <code>no</code>. </p>
 
@@ -1519,20 +1519,20 @@ help = help .. <span class="hljs-string">"\nACTIONS:\n"</span></pre></div></div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">no</span><span class="hljs-params">(_,__,___)</span></span> <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">end</span>
 
-go(<span class="hljs-string">"Is"</span>,<span class="hljs-string">"show options"</span>,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span> oo(is) <span class="hljs-keyword">end</span>)
+go(<span class="hljs-string">&quot;Is&quot;</span>,<span class="hljs-string">&quot;show options&quot;</span>,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span> oo(is) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"rand"</span>,<span class="hljs-string">"demo random number generation"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     t,u)</span></span>
+go(<span class="hljs-string">&quot;rand&quot;</span>,<span class="hljs-string">&quot;demo random number generation&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     t,u)</span></span>
   Seed=<span class="hljs-number">1</span>; t={}; <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">1000</span> <span class="hljs-keyword">do</span> push(t,rint(<span class="hljs-number">100</span>)) <span class="hljs-keyword">end</span>
   Seed=<span class="hljs-number">1</span>; u={}; <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">1000</span> <span class="hljs-keyword">do</span> push(u,rint(<span class="hljs-number">100</span>)) <span class="hljs-keyword">end</span>
   <span class="hljs-keyword">for</span> k,v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(t) <span class="hljs-keyword">do</span> <span class="hljs-built_in">assert</span>(v==u[k]) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"some"</span>,<span class="hljs-string">"demo of reservoir sampling"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     num1)</span></span>
+go(<span class="hljs-string">&quot;some&quot;</span>,<span class="hljs-string">&quot;demo of reservoir sampling&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     num1)</span></span>
   is.Max = <span class="hljs-number">32</span>
   num1 = NUM()
   <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">10000</span> <span class="hljs-keyword">do</span> add(num1,i) <span class="hljs-keyword">end</span>
   oo(has(num1)) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"nums"</span>,<span class="hljs-string">"demo of NUM"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     num1,num2)</span></span>
+go(<span class="hljs-string">&quot;nums&quot;</span>,<span class="hljs-string">&quot;demo of NUM&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     num1,num2)</span></span>
   num1,num2 = NUM(), NUM()
   <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">10000</span> <span class="hljs-keyword">do</span> add(num1, rand()) <span class="hljs-keyword">end</span>
   <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">10000</span> <span class="hljs-keyword">do</span> add(num2, rand()^<span class="hljs-number">2</span>) <span class="hljs-keyword">end</span>
@@ -1540,85 +1540,85 @@ go(<span class="hljs-string">"nums"</span>,<span class="hljs-string">"demo of NU
   <span class="hljs-built_in">print</span>(<span class="hljs-number">2</span>,rnd(mid(num2)), rnd(div(num2))) 
   <span class="hljs-keyword">return</span> <span class="hljs-number">.5</span> == rnd(mid(num1)) <span class="hljs-keyword">and</span> mid(num1)&gt; mid(num2) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"syms"</span>,<span class="hljs-string">"demo SYMS"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    sym)</span></span>
-  sym=adds(SYM(), {<span class="hljs-string">"a"</span>,<span class="hljs-string">"a"</span>,<span class="hljs-string">"a"</span>,<span class="hljs-string">"a"</span>,<span class="hljs-string">"b"</span>,<span class="hljs-string">"b"</span>,<span class="hljs-string">"c"</span>})
+go(<span class="hljs-string">&quot;syms&quot;</span>,<span class="hljs-string">&quot;demo SYMS&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    sym)</span></span>
+  sym=adds(SYM(), {<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;b&quot;</span>,<span class="hljs-string">&quot;b&quot;</span>,<span class="hljs-string">&quot;c&quot;</span>})
   <span class="hljs-built_in">print</span> (mid(sym), rnd(div(sym))) 
   <span class="hljs-keyword">return</span> <span class="hljs-number">1.38</span> == rnd(div(sym)) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"csv"</span>,<span class="hljs-string">"reading csv files"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     n)</span></span>
+go(<span class="hljs-string">&quot;csv&quot;</span>,<span class="hljs-string">&quot;reading csv files&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     n)</span></span>
   n=<span class="hljs-number">0</span>; csv(is.file, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(t)</span></span> n=n+#t <span class="hljs-keyword">end</span>) 
   <span class="hljs-keyword">return</span> <span class="hljs-number">3192</span> == n <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"data"</span>, <span class="hljs-string">"showing data sets"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,col)</span></span> 
+go(<span class="hljs-string">&quot;data&quot;</span>, <span class="hljs-string">&quot;showing data sets&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,col)</span></span> 
   data=DATA(is.file)
   col=data.cols.x[<span class="hljs-number">1</span>]
   <span class="hljs-built_in">print</span>(col.lo,col.hi, mid(col),div(col))
   oo(stats(data)) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"clone"</span>,<span class="hljs-string">"replicate structure of a DATA"</span>,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data1,data2)</span></span>
+go(<span class="hljs-string">&quot;clone&quot;</span>,<span class="hljs-string">&quot;replicate structure of a DATA&quot;</span>,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data1,data2)</span></span>
   data1=DATA(is.file)
   data2=DATA(data1,data1.rows) 
   oo(stats(data1))
   oo(stats(data2)) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"cliffs"</span>,<span class="hljs-string">"stats tests"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   t1,t2,t3)</span></span>
-  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">false</span> == cliffsDelta( {<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>},{<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>}),<span class="hljs-string">"1"</span>)
-  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">true</span>  == cliffsDelta( {<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>}, {<span class="hljs-number">9</span>,<span class="hljs-number">9</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">10</span>,<span class="hljs-number">9</span>,<span class="hljs-number">6</span>}),<span class="hljs-string">"2"</span>) 
+go(<span class="hljs-string">&quot;cliffs&quot;</span>,<span class="hljs-string">&quot;stats tests&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   t1,t2,t3)</span></span>
+  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">false</span> == cliffsDelta( {<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>},{<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>}),<span class="hljs-string">&quot;1&quot;</span>)
+  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">true</span>  == cliffsDelta( {<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">6</span>,<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">8</span>,<span class="hljs-number">7</span>,<span class="hljs-number">3</span>}, {<span class="hljs-number">9</span>,<span class="hljs-number">9</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">10</span>,<span class="hljs-number">9</span>,<span class="hljs-number">6</span>}),<span class="hljs-string">&quot;2&quot;</span>) 
   t1,t2={},{}
   <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">1000</span> <span class="hljs-keyword">do</span> push(t1,rand()) <span class="hljs-keyword">end</span> <span class="hljs-comment">--rand()/10) end</span>
   <span class="hljs-keyword">for</span> i=<span class="hljs-number">1</span>,<span class="hljs-number">1000</span> <span class="hljs-keyword">do</span> push(t2,rand()^<span class="hljs-number">.5</span>) <span class="hljs-keyword">end</span> <span class="hljs-comment">--rand()*10) end</span>
-  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">false</span> == cliffsDelta(t1,t1),<span class="hljs-string">"3"</span>) 
-  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">true</span>  == cliffsDelta(t1,t2),<span class="hljs-string">"4"</span>) 
+  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">false</span> == cliffsDelta(t1,t1),<span class="hljs-string">&quot;3&quot;</span>) 
+  <span class="hljs-built_in">assert</span>(<span class="hljs-literal">true</span>  == cliffsDelta(t1,t2),<span class="hljs-string">&quot;4&quot;</span>) 
   <span class="hljs-keyword">local</span> diff,j=<span class="hljs-literal">false</span>,<span class="hljs-number">1.0</span>
   <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> diff  <span class="hljs-keyword">do</span>
     t3=map(t1,<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x)</span></span> <span class="hljs-keyword">return</span> x*j <span class="hljs-keyword">end</span>)
     diff=cliffsDelta(t1,t3)
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">"&gt;"</span>,rnd(j),diff) 
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;&gt;&quot;</span>,rnd(j),diff) 
     j=j*<span class="hljs-number">1.025</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"dist"</span>,<span class="hljs-string">"distance test"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,num)</span></span>
+go(<span class="hljs-string">&quot;dist&quot;</span>,<span class="hljs-string">&quot;distance test&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,num)</span></span>
   data = DATA(is.file)
   num  = NUM()
   <span class="hljs-keyword">for</span> _,row <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(data.rows) <span class="hljs-keyword">do</span>
     add(num,dist(data, row, data.rows[<span class="hljs-number">1</span>])) <span class="hljs-keyword">end</span>
   oo{lo=num.lo, hi=num.hi, mid=rnd(mid(num)), div=rnd(div(num))} <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"half"</span>,<span class="hljs-string">"divide data in halg"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   data,l,r)</span></span>
+go(<span class="hljs-string">&quot;half&quot;</span>,<span class="hljs-string">&quot;divide data in halg&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   data,l,r)</span></span>
   data = DATA(is.file)
   <span class="hljs-keyword">local</span> left,right,A,B,c = half(data) 
   <span class="hljs-built_in">print</span>(#left,#right)
   l,r = DATA(data,left), DATA(data,right)
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"l"</span>,o(stats(l)))
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"r"</span>,o(stats(r))) <span class="hljs-keyword">end</span>)
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;l&quot;</span>,o(stats(l)))
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;r&quot;</span>,o(stats(r))) <span class="hljs-keyword">end</span>)
  
-go(<span class="hljs-string">"tree"</span>,<span class="hljs-string">"make snd show tree of clusters"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   data,l,r)</span></span>
+go(<span class="hljs-string">&quot;tree&quot;</span>,<span class="hljs-string">&quot;make snd show tree of clusters&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(   data,l,r)</span></span>
   showTree(tree(DATA(is.file))) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"sway"</span>,<span class="hljs-string">"optimizing"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,best,rest)</span></span>
+go(<span class="hljs-string">&quot;sway&quot;</span>,<span class="hljs-string">&quot;optimizing&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,best,rest)</span></span>
   data = DATA(is.file)
   best,rest = sway(data)
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"\nall "</span>, o(stats(data))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"    "</span>,   o(stats(data,div))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"\nbest"</span>, o(stats(best))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"    "</span>,   o(stats(best,div))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"\nrest"</span>, o(stats(rest))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"    "</span>,   o(stats(rest,div))) 
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"\nall ~= best?"</span>, o(diffs(best.cols.y, data.cols.y)))
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"best ~= rest?"</span>, o(diffs(best.cols.y, rest.cols.y))) <span class="hljs-keyword">end</span>)
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nall &quot;</span>, o(stats(data))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;    &quot;</span>,   o(stats(data,div))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nbest&quot;</span>, o(stats(best))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;    &quot;</span>,   o(stats(best,div))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nrest&quot;</span>, o(stats(rest))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;    &quot;</span>,   o(stats(rest,div))) 
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nall ~= best?&quot;</span>, o(diffs(best.cols.y, data.cols.y)))
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;best ~= rest?&quot;</span>, o(diffs(best.cols.y, rest.cols.y))) <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"bins"</span>, <span class="hljs-string">"find deltas between best and rest"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,best,rest, b4)</span></span>
+go(<span class="hljs-string">&quot;bins&quot;</span>, <span class="hljs-string">&quot;find deltas between best and rest&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(    data,best,rest, b4)</span></span>
   data = DATA(is.file)
   best,rest = sway(data)
-  <span class="hljs-built_in">print</span>(<span class="hljs-string">"all"</span>,<span class="hljs-string">""</span>,<span class="hljs-string">""</span>,<span class="hljs-string">""</span>,o{best=#best.rows, rest=#rest.rows})
+  <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;all&quot;</span>,<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;&quot;</span>,o{best=#best.rows, rest=#rest.rows})
   <span class="hljs-keyword">for</span> k,t <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(bins(data.cols.x,{best=best.rows, rest=rest.rows})) <span class="hljs-keyword">do</span>
     <span class="hljs-keyword">for</span> _,range <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(t) <span class="hljs-keyword">do</span>
-      <span class="hljs-keyword">if</span> range.txt ~= b4 <span class="hljs-keyword">then</span> <span class="hljs-built_in">print</span><span class="hljs-string">""</span> <span class="hljs-keyword">end</span>
+      <span class="hljs-keyword">if</span> range.txt ~= b4 <span class="hljs-keyword">then</span> <span class="hljs-built_in">print</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">end</span>
       b4 = range.txt
       <span class="hljs-built_in">print</span>(range.txt,range.lo,range.hi,
-           rnd(value(range.y.has, #best.rows,#rest.rows,<span class="hljs-string">"best"</span>)), 
+           rnd(value(range.y.has, #best.rows,#rest.rows,<span class="hljs-string">&quot;best&quot;</span>)), 
            o(range.y.has)) <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span> <span class="hljs-keyword">end</span>)
 
-go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explore contrast sets"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     rule,most)</span></span>
+go(<span class="hljs-string">&quot;contrast&quot;</span>,<span class="hljs-string">&quot;explore contrast sets&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(     rule,most)</span></span>
   <span class="hljs-built_in">print</span>(<span class="hljs-number">1</span>)
   rule,most= contrast(DATA(is.file)) 
   <span class="hljs-built_in">print</span>(most,o(rule)) <span class="hljs-keyword">end</span>)</pre></div></div>
@@ -1629,8 +1629,8 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
         <li id="section-73">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <h2 id="start-up">Start-up</h2>
 
@@ -1642,8 +1642,8 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
         <li id="section-74">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p> Parse the <code>help</code> string to make the <code>the</code> config variables.</p>
 
@@ -1657,8 +1657,8 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
         <li id="section-75">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>If not being loaded by other file, then return whatever <code>main</code> returns.</p>
 
@@ -1673,8 +1673,8 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
         <li id="section-76">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p>Else, bundle the locals (so the other file can use them), and return them.</p>
 
@@ -1684,7 +1684,7 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
 <span class="hljs-keyword">while</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">do</span>
   <span class="hljs-keyword">local</span> _name, _value = <span class="hljs-built_in">debug</span>.<span class="hljs-built_in">getlocal</span>(<span class="hljs-number">1</span>, _i)
   <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> _name <span class="hljs-keyword">then</span> <span class="hljs-keyword">break</span> <span class="hljs-keyword">end</span>
-  <span class="hljs-keyword">if</span> _name:<span class="hljs-built_in">sub</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>) ~= <span class="hljs-string">"_"</span> <span class="hljs-keyword">then</span> _locals[_name]=_value <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">if</span> _name:<span class="hljs-built_in">sub</span>(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>) ~= <span class="hljs-string">&quot;_&quot;</span> <span class="hljs-keyword">then</span> _locals[_name]=_value <span class="hljs-keyword">end</span>
   _i = _i + <span class="hljs-number">1</span> <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">return</span> _locals</pre></div></div>
             
@@ -1694,10 +1694,10 @@ go(<span class="hljs-string">"contrast"</span>,<span class="hljs-string">"explor
         <li id="section-77">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
-              <h2 id="-a-name-about-about-this-code-a-"><a name=about>About this code</a></h2>
+              <h2 id="about-this-code"><a name=about>About this code</a></h2>
 <p style="text-align: left;">
 The aim here was to achieve as much functionality in as few lines as possible
 (to simplify teaching these ideas as well as any further experimentation).
@@ -1705,19 +1705,20 @@ All the code for the above functionality comes in at just
 under 300 lines of AI code (plus another 200 lines of  misc support routines). 
 <p style="text-align: left;">
 To read this, code:<br>
-FIRST skim the <code>help</code> string (at top);  <br><br>SECOND browse the structs (see “<a href="#create">Creation</a>“);  <br> 
+FIRST skim the `help` string (at top);  <br>   
+SECOND browse the structs (see "<a href="#create">Creation</a>");  <br> 
 THIRD read  the <a href="#egs">examples</a> at end.  </p>
 <p style="text-align: left;">
 Note that any of the examples can be run from the command line; 
-e.g. “-g show” runs
-all the actions that start with “show”. 
+e.g. "-g show" runs
+all the actions that start with "show". 
 Also, all the settings in the help string can
-be changed on the command line; e.g. “lua fetchr.lua -s 3” sets the seed to 3.
-Those settings are stored in”the” table, which is generated from
-“help”. </p>
+be changed on the command line; e.g. "lua fetchr.lua -s 3" sets the seed to 3.
+Those settings are stored in"the" table, which is generated from
+"help". </p>
 <p style="text-align: left;">
 In the function arguments, the following conventions apply (usually):</p>
-
+    
 <ul>
 <li>Two spaces denote start of optional args</li>
 <li>Four spaces denote start of local args. </li>
@@ -1732,34 +1733,36 @@ In the function arguments, the following conventions apply (usually):</p>
 <li>xs == a table of “x”; e.g. “ns” is a list of numbers</li>
 </ul>
 <p style="text-align: left;">
-In this language (LUA) vars are global by default unless marked with “local” or 
+In this language (LUA) vars are global by default unless marked with "local" or 
 defined in function argument lists.
-Also,  there is only one data structure called a “table”.
+Also,  there is only one data structure called a "table".
 that can have numeric or symbolic keys.
 The tables start and end with {} and #t is length of a table
 (and empty tables have #t==0).
 Tables can have numeric or symbolic fields. Note that
-<code>for pos,x in pairs(t) do</code> is the same as python’s 
-<code>for pos,x in enumerate(t) do</code>.</p>
+`for pos,x in pairs(t) do` is the same as python's 
+`for pos,x in enumerate(t) do`.</p>
 
-<p><a name=license></p>
+<a name=license>
+   
 <h2 id="bsd-2-clause-license">BSD 2-Clause License</h2>
-<p><p style="text-align: left;">
+<p style="text-align: left;">
 Copyright (c) 2022, Tim Menzies
-All rights reserved.</p>
-<p><p style="text-align: left;">
+All rights reserved.
+    
+<p style="text-align: left;">
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:</p>
-<p><p style="text-align: left;"></p>
-<ol>
-<li>Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.<p style="text-align: left;"></li>
-<li>Redistributions in binary form must reproduce the above copyright notice,
+modification, are permitted provided that the following conditions are met:
+<p style="text-align: left;">
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+<p style="text-align: left;">
+2. Redistributions in binary form must reproduce the above copyright notice,
 this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.</li>
-</ol>
-<p><p style="text-align: left;">
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+ and/or other materials provided with the distribution.
+  
+<p style="text-align: left;">
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -1768,7 +1771,7 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             </div>
             
