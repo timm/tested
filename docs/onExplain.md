@@ -168,9 +168,9 @@ IEEE Access 6 (2018): 52138-52160.
 
 Volone and Longa [^vilone] offer many cool examples. They note that there are many kinds of explaiantion outputs including
 - visual
-    - numerical 
-        - rules
-        - mixed
+- numerical 
+- rules
+- mixed
 
 <img align=right width=400  src="/etc/img/surface.png">
 
