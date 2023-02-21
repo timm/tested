@@ -172,18 +172,16 @@ Volone and Longa [^vilone] offer many cool examples. They note that there are ma
         - rules
         - mixed
 
-            <img align=right width=400  src="/etc/img/surface.png">
+<img align=right width=400  src="/etc/img/surface.png">
 
 Our clustering tools would be called "numerical" by Volone. Here's an example of _surface charts_ from that  paper.
 
-            <img src="/etc/img/nasa.png" align=right width=400>
+<br clear=all><img src="/etc/img/nasa.png" align=right width=400>
 
-            In the past NASA used my methods to "explain" how best to cinfigure control software for re-entry systems. Suppose you search
+In the past NASA used my methods to "explain" how best to cinfigure control software for re-entry systems. Suppose you search
             your discretization ranges (from last week) for the best two (that best seem to distinguihs best from rest). You can then show
             the users some surface charts of where you find best perfromace:
 
-            are
-            some ranges weem more 
 
 If a model is not interpretable, there are some explanation
 algorithms that might mitigate that problem. For example:
