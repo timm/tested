@@ -75,9 +75,11 @@ hand:
    to invest in data analytics initiatives [^sawyer]. 
 
 Cynthia Rudin is adamant on the need for interpretable models [^rudin].
-She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
-"risk reduction" platform. She compares it to a three line open source model, which has a similar performance,
+- She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
+"risk reduction" platform. 
+- She compares it to a three line open source model, which has a similar performance,
 and is not marketed by anyone. 
+- Rhetorically, she asks which would you want to use?
 
 [^rudin]: Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead
  Cynthia Rudin 
@@ -123,7 +125,7 @@ by Safiya Umoja Noble
 Published by: NYU Press, 2018
 
 
-<img align=right width=300 src="/etc/img/lime.png">
+<img align=right width=300 src="/etc/img/lime.pdf">
 
 An alternative to standard testing is to run an _explanation_ algorithm that offers a high-level picture of 
 how model features influence each other. Unfortunately,  the better we get at  generating explanations,
