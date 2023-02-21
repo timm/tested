@@ -17,7 +17,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 
 
-# Explanation
+# XAI (Explainable AI)
 
 ## ASE23 Homework
 
@@ -140,6 +140,16 @@ The Slack et al.'s results are particularly troubling.
 book _Algorithms of Oppression_ offers a long list of other models with
 discriminatory properties [^noble].
 
+Cynthia Rudin is adamant on the need for interpretable models [^rudin].
+- She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
+"risk reduction" platform. 
+- She compares it to a three line open source model, which has a similar performance,
+and is not marketed by anyone. 
+- Rhetorically, she asks which would you want to use?
+
+
+## HOW
+
 Adadi and Berrada [^adadi] identified 17 XAI techniques by surveying
 381 papers published between 2004 and 2018.
 - According to the survey, most 
@@ -151,15 +161,6 @@ explanation.
 [^adadi]: Adadi, Amina and Mohammed Berrada. 
   [“Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI).”](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8466590)
 IEEE Access 6 (2018): 52138-52160.
-
-## HOW
-
-Cynthia Rudin is adamant on the need for interpretable models [^rudin].
-- She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
-"risk reduction" platform. 
-- She compares it to a three line open source model, which has a similar performance,
-and is not marketed by anyone. 
-- Rhetorically, she asks which would you want to use?
 
 If a model is not interpretable, there are some explanation
 algorithms that might mitigate that problem. For example:
