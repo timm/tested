@@ -162,9 +162,27 @@ exemplars selected from each cluster (see below)
 
 Such explanation facilities are post-processors to the original learning method. 
 An alternative simpler approach would be to use learners that generate comprehensible models in the first place
-e.g. here are the FFT trees built by [^chen18].
+e.g. here are the FFT trees as defined by Phillips et al. [^phillips]  by used by Chen et al. [^chen18].
+- An FFT is a binary decision tree of limited depth $d$
+- At each level there is one sub-tree and one  leaf node that selects for either one of the two classes
+  - So there are two choices at each level
+- At the leaves there are two leaves, one to each class (serves  as a final "catch all").
+- Chen et al. used FFT for multi-goal reasoning:
+  - At each level discritzation was repeated looking for the sinple
+    split that best satisfied some multi-goal criteria (e.g. find the fewest methods with most
+    errors and least false alarms).
+  - For trees of size $d$, Chen generated $2^d$ trees and, using the training data, selected the one
+    with overall best score. This one tree was then applied to the test data.
 
-<img iimg="/src/etc/img/fft.png">
+[^phillips]:  Phillips, N., Neth, H., Woike, J., & Gaissmaier, W. (2017). 
+  [FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf)
+  Judgment and Decision Making, 12(4), 344-368. doi:10.1017/S1930297500006239
+
+  XX statrt here
+[^Gigerenzer]: Gigerenzer, G. (2008). [Why Heuristics Work](https://library.mpib-berlin.mpg.de/ft/gg/GG_Why_2008.pdf). 
+    Perspectives on Psychological Science, 3(1), 20–29. https://doi.org/10.1111/j.1745-6916.2008.00058.x
+
+<img src="/src/etc/img/fft.png">
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
