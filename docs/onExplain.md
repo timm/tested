@@ -31,12 +31,13 @@ Things to look for in the following (that will help the final project):
 [ [code](/src/xpln.lua) | [required output](/etc/out/xpln.out) ]
 
 _If you cannot – in the long run – tell everyone what you have been doing, your doing has been worthless._  
-— Erwin Schrödinger
+- Erwin Schrödinger
 
-_A theory that you can't explain to a bartender is probably no damn good_
-- Ernst Rutherford
+_A theory that you can't explain to a bartender is probably no damn good_    
+-  Ernst Rutherford
 
 For some good clean fun, have a read about explanation and sewer control [^malt21].
+- Offers a very practical example of how explanation can be used in modern SE.
 
 [^malt21]: [XAI Tools in the Public Sector: A Case Study on Predicting Combined Sewer Overflows](https://www.evernote.com/shard/s14/sh/25f4e214-e798-4fea-b978-e70426adb942/c17a39dbe423d1ec88dec8c7633ba365)
 Nicholas Maltbie, Nan Niu, Matthew Van Doren, and Reese Johnson. 2021.
@@ -45,26 +46,28 @@ ing Conference and Symposium on the Foundations of Software Engineering
 (ESEC/FSE ’21), August 23ś28, 2021, Athens, Greece.
 
 
-From Chen et al. [^chen18]: If no human ever needs
+From Chen et al. [^chen18]:
+- If no human ever needs
 to understand a model, then it does not need to be comprehensible.
 For example, a neural net could control the carburetor of an internal
 combustion engine since that carburetor will never dispute the model
-or ask for clarification of any of its reasoning. <p> On the other
+or ask for clarification of any of its reasoning. 
+- On the other
 hand:
-- if a model is to be used to persuade software engineers to
-change what they are doing, it needs to be comprehensible so humans
-can debate the merits of its conclusions
-- Several researchers
-demand that software analytics models needs to be expressed in a
-simple way that is easy for software practitioners to interpret
-[^dam, ^rahul].
-- According to Kim et al. [^kim], software analytics aim
-to obtain actionable insights from software artifacts that help
-practitioners accomplish tasks related to software development,
-systems, and users.
-- Sawyer et al.
-comments that actionable insight is the key driver for businesses
-to invest in data analytics initiatives [^sawyer]. 
+   - if a model is to be used to persuade software engineers to
+   change what they are doing, it needs to be comprehensible so humans
+   can debate the merits of its conclusions
+   - Several researchers
+   demand that software analytics models needs to be expressed in a
+   simple way that is easy for software practitioners to interpret
+   [^dam, ^rahul].
+   - According to Kim et al. [^kim], software analytics aim
+   to obtain actionable insights from software artifacts that help
+   practitioners accomplish tasks related to software development,
+   systems, and users.
+   - Sawyer et al.
+   comments that actionable insight is the key driver for businesses
+   to invest in data analytics initiatives [^sawyer]. 
 
 Cynthia Rudin is adamant on the need for interpretable models [^rudin].
 She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
