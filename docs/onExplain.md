@@ -155,12 +155,35 @@ Adadi and Berrada [^adadi] identified 17 XAI techniques by surveying
 - According to the survey, most 
 recent work done in the XAI field offers a post-hoc, local
 explanation. 
+  - i.e. AFTER some other model has run
+  - offer some details about one particular examples
 - In this class we explore semi-local explanation (generating explanations after generating different classes).
 
 
 [^adadi]: Adadi, Amina and Mohammed Berrada. 
   [“Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI).”](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8466590)
 IEEE Access 6 (2018): 52138-52160.
+[^vilone]: Vilone, Giulia, and Luca Longo. ["Classification of explainable artificial intelligence methods through their output formats."](https://www.mdpi.com/2504-4990/3/3/32/pdf)
+ Machine Learning and Knowledge Extraction 3.3 (2021): 615-661.
+
+Volone and Longa [^vilone] offer many cool examples. They note that there are many kinds of explaiantion outputs including
+- visual
+    - numerical 
+        - rules
+        - mixed
+
+            <img align=right width=400  src="/etc/img/surface.png">
+
+Our clustering tools would be called "numerical" by Volone. Here's an example of _surface charts_ from that  paper.
+
+            <img src="/etc/img/nasa.png" align=right width=400>
+
+            In the past NASA used my methods to "explain" how best to cinfigure control software for re-entry systems. Suppose you search
+            your discretization ranges (from last week) for the best two (that best seem to distinguihs best from rest). You can then show
+            the users some surface charts of where you find best perfromace:
+
+            are
+            some ranges weem more 
 
 If a model is not interpretable, there are some explanation
 algorithms that might mitigate that problem. For example:
@@ -214,9 +237,6 @@ So, sometimes, there is no explanation tax. That is, we can explain something wi
 predictive performance.
 
 <br clear=all>
-
-[^vilone]: Vilone, Giulia, and Luca Longo. ["Classification of explainable artificial intelligence methods through their output formats."](https://www.mdpi.com/2504-4990/3/3/32/pdf)
-Machine Learning and Knowledge Extraction 3.3 (2021): 615-661.
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
