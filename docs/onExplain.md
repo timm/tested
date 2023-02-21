@@ -193,11 +193,12 @@ implemented by Phillips et al. [^phillips]  and used by Chen et al. [^chen18].
 <img src="/etc/img/fft.png">
 
 
+<img align=right src="/etc/img/fft-results.png">
+
 To say the least, this kicked as*. Here is FFT trees compared to number other supposedly better learning 
-methods. This trick of "try building the model a few different ways, then pick the best"
+methods [^chen18]. This trick of "try building the model a few different ways, then pick the best"
 seems to work much better than forging ahead with only a single model-generation strategy.
 
-<img src="/etc/img/fft-results.png">
 
 So, sometimes, there is no explanation tax. That is, we can explain something without compromising
 predictive performance.
