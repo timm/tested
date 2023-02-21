@@ -38,7 +38,7 @@ _If you cannot – in the long run – tell everyone what you have been doing, y
 
 _A theory that you can't explain to a bartender is probably no damn good_<br>- Ernst Rutherford
 
-## Explanation in SE
+## Why Explanations?
 
 For some good clean fun, have a read about explanation and sewer control [^malt21].
 - Offers a very practical example of how explanation can be used in modern SE.
@@ -72,13 +72,6 @@ hand:
    - Sawyer et al.
    comments that actionable insight is the key driver for businesses
    to invest in data analytics initiatives [^sawyer]. 
-
-Cynthia Rudin is adamant on the need for interpretable models [^rudin].
-- She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
-"risk reduction" platform. 
-- She compares it to a three line open source model, which has a similar performance,
-and is not marketed by anyone. 
-- Rhetorically, she asks which would you want to use?
 
 [^rudin]: Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead
  Cynthia Rudin 
@@ -152,7 +145,16 @@ explanation.
   [“Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI).”](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8466590)
 IEEE Access 6 (2018): 52138-52160.
 
-If a model is not comprehensible, there are some explanation
+## HOW
+
+Cynthia Rudin is adamant on the need for interpretable models [^rudin].
+- She laments the proprietary COMPAS model, which contains hundreds of variables, and is sold by a marketing team as part of a
+"risk reduction" platform. 
+- She compares it to a three line open source model, which has a similar performance,
+and is not marketed by anyone. 
+- Rhetorically, she asks which would you want to use?
+
+If a model is not interpretable, there are some explanation
 algorithms that might mitigate that problem. For example:
 - In _secondary learning_ (or post-hoc learning) the examples given to (say) a neural network
 are used to train a rule-based learner and those learners could
