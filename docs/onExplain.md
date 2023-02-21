@@ -52,7 +52,7 @@ ing Conference and Symposium on the Foundations of Software Engineering
 
 From Chen et al. [^chen18]:
 - If no human ever needs
-to understand a model, then it does not need to be comprehensible.
+to understand a model [^haha], then it does not need to be comprehensible.
 For example, a neural net could control the carburetor of an internal
 combustion engine since that carburetor will never dispute the model
 or ask for clarification of any of its reasoning. 
@@ -72,6 +72,8 @@ hand:
    - Sawyer et al.
    comments that actionable insight is the key driver for businesses
    to invest in data analytics initiatives [^sawyer]. 
+
+[^haha]: This is very rarely the case especially during debugging.
 
 [^rudin]: Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead
  Cynthia Rudin 
