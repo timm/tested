@@ -157,9 +157,23 @@ recent work done in the XAI field offers a post-hoc, local
 explanation. 
   - i.e. AFTER some other model has run
   - offer some details about one particular examples
-- In this class we explore semi-local explanation (generating explanations after generating different classes).
+- In this class we explore
+  - semi-local ante-hoc explanation (generating explanations from data, with no other model intervening)
 
-<img src="/etc/img/explainWhen.png">
+<img width=600 src="/etc/img/explainWhen.png">
+
+<img align=right width=500 src="/etc/img/lime.png">
+
+Examples of post-hoe local explanation
+- LIME [^lime]
+- Given a model with uncertain class boundaries
+- Sample around some local example, building lots of little regressions models (lots of straingth lines in a tiny region)
+- Average out the effects in that model to see how changing each variable changes the class.
+
+[^lime]: Marco Tulio Ribeiro, Sameer Singh, and Carlos Guestrin. 2016. 
+  ["Why Should I Trust You?": Explaining the Predictions of Any Classifier"](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf).
+  In Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD '16). 
+  Association for Computing Machinery, New York, NY, USA, 1135–1144. https://doi.org/10.1145/2939672.2939778
 
 [^adadi]: Adadi, Amina and Mohammed Berrada. 
   [“Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI).”](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8466590)
