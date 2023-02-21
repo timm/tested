@@ -19,22 +19,27 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 # Explanation
 
-Things to look for in the following (that will help the final project):
+## ASE23 Homework
+
+[ [code](/src/xpln.lua) | [required output](/etc/out/xpln.out) ]
+
+## Things to Watch For
+The following ideas will be useful for the final project
 
 - the _sampling tax_: if we only look at small percent of the data, then we may miss some important features
 - the _explanation tax_ : simplistic explanations of  complex multi-dimensional spaces can behave poorly.
 - _explanation variance_ : explanations generated from a few random probes of a complex multi-dimensional
    can be widely variable.
 
-## ASE23 Homework
-
-[ [code](/src/xpln.lua) | [required output](/etc/out/xpln.out) ]
+## Quotes on Explanation
 
 _If you cannot – in the long run – tell everyone what you have been doing, your doing has been worthless._  
 - Erwin Schrödinger
 
 _A theory that you can't explain to a bartender is probably no damn good_    
 -  Ernst Rutherford
+
+## Explanation in SE
 
 For some good clean fun, have a read about explanation and sewer control [^malt21].
 - Offers a very practical example of how explanation can be used in modern SE.
