@@ -162,7 +162,9 @@ exemplars selected from each cluster (see below)
 
 Such explanation facilities are post-processors to the original learning method. 
 An alternative simpler approach would be to use learners that generate comprehensible models in the first place
-e.g. see [^chen18].
+e.g. here are the FFT trees built by [^chen18].
+
+<img iimg="/src/etc/img/fft.png">
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
