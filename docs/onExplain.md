@@ -225,21 +225,21 @@ ranges:
 
 
 ```lua
-Clndrs	-inf	4
-Clndrs	4	    inf
+Clndrs   -inf   4
+Clndrs   4      inf
 
-Volume	-inf	90
-Volume	90	    115
-Volume	115	    inf
+Volume   -inf   90
+Volume   90     115
+Volume   115    inf
 
-Model	-inf	76
-Model	76	    79
-Model	79   	80
-Model	80	    inf
+Model   -inf    76
+Model   76      79
+Model   79      80
+Model   80      inf
 
-origin	1	1
-origin	2	2
-origin	3	3
+origin   1      1
+origin   2      2
+origin   3      3
 ```
 (Aside: note difference to last week. Here I demand ranges have to have at least 1/bins of the data.)
 
