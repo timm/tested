@@ -119,7 +119,7 @@ LIME and SHAP: Adversarial attacks on post hoc explanation
 method" in 3rd AAAI/ACM Conference on AI, Ethics, and Society,
 2020
 
-[^noble]: Algorithms of Oppression
+[^noble]: Algorithms of Oppression  
 How Search Engines Reinforce Racism
 by Safiya Umoja Noble
 Published by: NYU Press, 2018
