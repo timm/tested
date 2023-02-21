@@ -125,7 +125,7 @@ by Safiya Umoja Noble
 Published by: NYU Press, 2018
 
 
-<img align=right width=300 src="../etc/img/lime.pdf">
+<img align=right width=300 src="/etc/img/lime.png">
 
 An alternative to standard testing is to run an _explanation_ algorithm that offers a high-level picture of 
 how model features influence each other. Unfortunately,  the better we get at  generating explanations,
