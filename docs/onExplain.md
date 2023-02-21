@@ -195,13 +195,18 @@ implemented by Phillips et al. [^phillips]  and used by Chen et al. [^chen18].
 
 <img align=right src="/etc/img/fft-results.png">
 
-To say the least, this kicked as*. Here is FFT trees compared to number other supposedly better learning 
+To say the least, this approach can kicked b*tt. Here is FFT trees compared to number other supposedly better learning 
 methods [^chen18]. This trick of "try building the model a few different ways, then pick the best"
 seems to work much better than forging ahead with only a single model-generation strategy.
 
 
 So, sometimes, there is no explanation tax. That is, we can explain something without compromising
 predictive performance.
+
+<br clear=all>
+
+[^vilone]: Vilone, Giulia, and Luca Longo. ["Classification of explainable artificial intelligence methods through their output formats."](https://www.mdpi.com/2504-4990/3/3/32/pdf)
+Machine Learning and Knowledge Extraction 3.3 (2021): 615-661.
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
