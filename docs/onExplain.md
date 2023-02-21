@@ -26,8 +26,9 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 ## Things to Watch For
 The following ideas will be useful for the final project
 
-- the _sampling tax_: if we only look at small percent of the data, then we may miss some important features
-- the _explanation tax_ : simplistic explanations of  complex multi-dimensional spaces can behave poorly.
+- the _sampling tax_: the less we look, the more we miss important stuff.
+- the _explanation tax_ : prediction is hard and the simplifications we use for explanation compromise
+    predictive performance.
 - _explanation variance_ : explanations generated from a few random probes of a complex multi-dimensional
    can be widely variable.
 
@@ -161,14 +162,22 @@ clustered and users are shown the difference between a few
 exemplars selected from each cluster (see below)
 
 Such explanation facilities are post-processors to the original learning method. 
-An alternative simpler approach would be to use learners that generate comprehensible models in the first place
-e.g. here are the FFT trees as defined by Phillips et al. [^phillips]  by used by Chen et al. [^chen18].
+An alternative simpler approach would be to use learners that generate comprehensible models in the first place.
+Gigerenzer [^Gigerenzer] argues convincingly 
+for the construction of tiny models comprising
+tiny rule fragments that can be quickly comprehended by (e,g,)
+- doctors in emergency rooms making rapid decisions;
+- or by soldiers on guard making snap decisions about whether to fire or not on a potential enemy; 
+- or by stockbrokers making instant decisions about buying or selling stock.
+
+Here are the "fast and frugal trees" (FFT)  as approved by Gigerenzer and 
+implemented by Phillips et al. [^phillips]  and used by Chen et al. [^chen18].
 - An FFT is a binary decision tree of limited depth $d$
 - At each level there is one sub-tree and one  leaf node that selects for either one of the two classes
   - So there are two choices at each level
 - At the leaves there are two leaves, one to each class (serves  as a final "catch all").
 - Chen et al. used FFT for multi-goal reasoning:
-  - At each level discritzation was repeated looking for the sinple
+  - At each level discretiztion  was repeated looking for the simple
     split that best satisfied some multi-goal criteria (e.g. find the fewest methods with most
     errors and least false alarms).
   - For trees of size $d$, Chen generated $2^d$ trees and, using the training data, selected the one
@@ -178,11 +187,20 @@ e.g. here are the FFT trees as defined by Phillips et al. [^phillips]  by used b
   [FFTrees: A toolbox to create, visualize, and evaluate fast-and-frugal decision trees](https://journal.sjdm.org/17/17217/jdm17217.pdf)
   Judgment and Decision Making, 12(4), 344-368. doi:10.1017/S1930297500006239
 
-  XX statrt here
 [^Gigerenzer]: Gigerenzer, G. (2008). [Why Heuristics Work](https://library.mpib-berlin.mpg.de/ft/gg/GG_Why_2008.pdf). 
     Perspectives on Psychological Science, 3(1), 20–29. https://doi.org/10.1111/j.1745-6916.2008.00058.x
 
-<img src="/src/etc/img/fft.png">
+<img src="/etc/img/fft.png">
+
+
+To say the least, this kicked as*. Here is FFT trees compared to number other supposedly better learning 
+methods. This trick of "try building the model a few different ways, then pick the best"
+seems to work much better than forging ahead with only a single model-generation strategy.
+
+<img src="/etc/img/fft-results.png">
+
+So, sometimes, there is no explanation tax. That is, we can explain something without compromising
+predictive performance.
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
