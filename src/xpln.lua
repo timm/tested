@@ -442,6 +442,8 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
   return rule,most end
 
 function firstN(sortedRanges,scoreFun,           first,useful,most,out)
+  print""
+  map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
   first = sortedRanges[1].val
   function useful(range)
     if range.val>.05 and range.val> first/10 then return range end

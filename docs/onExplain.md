@@ -189,6 +189,7 @@ Volone and Longa [^vilone] offer many cool examples. They note that there are ma
 
 <img src="/etc/img/explainEg.png">
 
+
 <img align=right width=400  src="/etc/img/surface.png">
 
 Our clustering tools would be called "numerical" by Volone. Here's an example of _surface charts_ from that  paper.
@@ -255,6 +256,10 @@ predictive performance.
 <br clear=all>
 
 ## Explanation via contrast set learning for instance-based reasoning 
+
+### Changes to Cofe
+- `the` ==> `is`
+-  Now  I demand ranges have to have at least `1/is.bins` of the rows
 
 Data is
 clustered and users are shown the difference between a few
@@ -329,13 +334,43 @@ origin   1      1
 origin   2      2
 origin   3      3
 ```
-(Aside: note difference to last week. Here I demand ranges have to have at least 1/bins of the data.)
 
-For example, here are all the ranges sorted by their "value" (described below).
-Then _for i=1 to numberOfRanges_, we apply the first "i" ranges and see what happens.
-Here, we return the rule that does best from that search.
 
-So h
+Lets sort these ranges by how well they select for `best` using probability $\times$  support; i.e. $b^2/(b+r)$.
+
+```lua
+-- A query that scores a distribution by b^2/(b+r)
+-- e.g. value({:best 12 :rest 7}, 12, 48, "best") ==> 0.87
+function value(has,  nB,nR,sGoal,    b,r)
+  b,r = 0,0
+  for x,n in pairs(has) do
+    if x==sGoal then b = b + n else r = r + n end end
+  b,r = b/(nB+1/m.huge), r/(nR+1/m.huge) -- handling zero divide errors
+  return b^2/(b+r) end
+```
+
+Here's what that returns:
+
+```
+                  Val:  {:best 12 :rest 48}  <== ALL
+                  ====   ==================
+origin     3   3  0.87  {:best 12 :rest 7}
+Clndrs  -inf   4  0.72  {:best 12 :rest 19}
+Volume  -inf  90  0.69  {:best 9 :rest 3}
+Model     79  80  0.43  {:best 6 :rest 4}
+Model     76  79  0.36  {:best 6 :rest 9}
+Volume    90 115  0.17  {:best 3 :rest 6}
+origin    2    2  0.0           {:rest 8}
+origin    1    1  0.0           {:rest 33}
+Volume  115  inf  0.0           {:rest 39}
+Model    80  inf  0.0           {:rest 8}
+Clndrs    4  inf  0.0           {:rest 29}
+Model  -inf   76  0.0           {:rest 27}
+```
+
+So now lets try rules using the first item, the first 2 items, the first 3 items etc):
+
+
 ```lua
 {:origin {3}}
 {:Clndrs {{-inf 4}} :origin {3}}
@@ -343,11 +378,20 @@ So h
 {:Clndrs {{-inf 4}} :Model {{79 80}} :Volume {{-inf 90}} :origin {3}}
 {:Clndrs {{-inf 4}} :Model {{76 80}} :Volume {{-inf 90}} :origin {3}}
 {:Clndrs {{-inf 4}} :Model {{76 80}} :Volume {{-inf 115}} :origin {3}}
+```
+Something to think about:
+- Most of these values are ranges $\text{lo}{\le}x<\text{hi}$ but for `origin` all we see is `{3}`. Why?
+- In line 4 of this display, `Model` is shown as `{79 80}` but in line5 it is shown as `{76 80}`. Why?
 
------------
+Anyway, it turns out that nothing is beating just the first rule so lets see how well that works:
+
+```
 explain=	{:origin {3}}
-all               	{:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}	{:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
+all               	    {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}	{:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
 sway with     6 evals	{:Acc+ 16.6 :Lbs- 2019.0 :Mpg+ 40.0 :N 12}	{:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
+```
+Here we show the explanation of how to select for best
+
 xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}	{:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
 sort with   398 evals	{:Acc+ 18.8 :Lbs- 1985.0 :Mpg+ 40.0 :N 12}	{:Acc+ 2.48 :Lbs- 200.39 :Mpg+ 0.0 :N 12}
 
