@@ -148,7 +148,7 @@ and is not marketed by anyone.
 - Rhetorically, she asks which would you want to use?
 
 
-## HOW
+## How
 
 Adadi and Berrada [^adadi] identified 17 XAI techniques by surveying
 381 papers published between 2004 and 2018.
@@ -159,6 +159,7 @@ explanation.
   - offer some details about one particular examples
 - In this class we explore semi-local explanation (generating explanations after generating different classes).
 
+<img src="/etc/img/explainWhen.png">
 
 [^adadi]: Adadi, Amina and Mohammed Berrada. 
   [“Peeking Inside the Black-Box: A Survey on Explainable Artificial Intelligence (XAI).”](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8466590)
