@@ -64,7 +64,7 @@ hand:
    - Several researchers
    demand that software analytics models needs to be expressed in a
    simple way that is easy for software practitioners to interpret
-   [^dam, ^rahul].
+   [^dam][^rahul].
    - According to Kim et al. [^kim], software analytics aim
    to obtain actionable insights from software artifacts that help
    practitioners accomplish tasks related to software development,
