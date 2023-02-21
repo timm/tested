@@ -33,11 +33,9 @@ The following ideas will be useful for the final project
 
 ## Quotes on Explanation
 
-_If you cannot – in the long run – tell everyone what you have been doing, your doing has been worthless._  
-- Erwin Schrödinger
+_If you cannot – in the long run – tell everyone what you have been doing, your doing has been worthless._<br>- Erwin Schrödinger
 
-_A theory that you can't explain to a bartender is probably no damn good_    
--  Ernst Rutherford
+_A theory that you can't explain to a bartender is probably no damn good_<br>- Ernst Rutherford
 
 ## Explanation in SE
 
