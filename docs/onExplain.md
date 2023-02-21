@@ -125,16 +125,18 @@ Published by: NYU Press, 2018
 <img align=right width=500 src="/etc/img/lime.png">
 
 An alternative to standard testing is to run an _explanation_ algorithm that offers a high-level picture of 
-how model features influence each other. Unfortunately,  the better we get at  generating explanations,
+how model features influence each other. 
+- Unfortunately,  the better we get at  generating explanations,
 the better we also get at generating misleading explanations. 
-For example, Slack et al.'s lying algorithm [^slack]
+- For example, Slack et al.'s lying algorithm [^slack]
 knows how to detect explanation algorithms.
-That liar algorithm can then switch to  models which, by design,   disguise  biases against  marginalized groups (e.g. some specific gender, race, or age grouping). 
+- That liar algorithm can then switch to  models which, by design,   disguise  biases against  marginalized groups (e.g. some specific gender, race, or age grouping). 
 
 The Slack et al.'s results are particularly troubling.
-An alarming number   commercially deployed models  having discriminatory properties [^noble]
-For example, the (in)famous COMPAS model decides the likelihood of a criminal defendant reoffending. 
-The model suffers from alarmingly different false positive rates for Black defendants than White defendants.  Noble's
+- An alarming number   commercially deployed models  having discriminatory properties [^noble]
+- For example, the (in)famous COMPAS model decides the likelihood of a criminal defendant reoffending. 
+-The model suffers from alarmingly different false positive rates for Black defendants than White defendants.  
+- Noble's
 book _Algorithms of Oppression_ offers a long list of other models with
 discriminatory properties [^noble].
 
