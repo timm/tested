@@ -166,15 +166,18 @@ IEEE Access 6 (2018): 52138-52160.
 [^vilone]: Vilone, Giulia, and Luca Longo. ["Classification of explainable artificial intelligence methods through their output formats."](https://www.mdpi.com/2504-4990/3/3/32/pdf)
  Machine Learning and Knowledge Extraction 3.3 (2021): 615-661.
 
-Volone and Longa [^vilone] offer many cool examples. They note that there are many kinds of explaiantion outputs including
-- visual
-- numerical 
-- rules
-- mixed
+Volone and Longa [^vilone] offer many cool examples. They note that there are many kinds of explanation outputs including
+- visual (eg. see example below)
+- numerical  (e.g. surface charts, see below)
+- textual (e.g. rules)
+- mixed (see example below)
+
+<img src="/etc/img/explainEg.png">
 
 <img align=right width=400  src="/etc/img/surface.png">
 
 Our clustering tools would be called "numerical" by Volone. Here's an example of _surface charts_ from that  paper.
+- And this week's homework is to go from numerical to textual
 
 <br clear=all><img src="/etc/img/nasa.png" align=right width=250>
 
