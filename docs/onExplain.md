@@ -168,7 +168,7 @@ Examples of post-hoe local explanation
 - LIME [^lime]
 - Given a model with uncertain class boundaries
 - Sample around some local example, building lots of little regressions models (lots of straingth lines in a tiny region)
-- Average out the effects in that model to see how changing each variable changes the class.
+- Average out the effects in that model to see how changing each variable changes the class.<br clear=all>
 
 [^lime]: Marco Tulio Ribeiro, Sameer Singh, and Carlos Guestrin. 2016. 
   ["Why Should I Trust You?": Explaining the Predictions of Any Classifier"](https://www.kdd.org/kdd2016/papers/files/rfp0573-ribeiroA.pdf).
