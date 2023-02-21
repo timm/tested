@@ -380,7 +380,7 @@ So now lets try rules using the first item, the first 2 items, the first 3 items
 {:Clndrs {{-inf 4}} :Model {{76 80}} :Volume {{-inf 115}} :origin {3}}
 ```
 Something to think about:
-- Most of these values are ranges $\text{lo}{\le}x<\text{hi}$ but for `origin` all we see is `{3}`. Why?
+- Most of these values are ranges $\text{lo}\;{\le}\;x\;<\;\text{hi}$ but for `origin` all we see is `{3}`. Why?
 - In line 4 of this display, `Model` is shown as `{79 80}` but in line5 it is shown as `{76 80}`. Why?
 
 Anyway, it turns out that nothing is beating just the first rule so lets see how well that works:
