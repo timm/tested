@@ -94,15 +94,18 @@ hand:
    In Proceedings of the 40th International Conference on Software Engineering: New Ideas and Emerging Results (ICSE-NIER '18). Association for Computing Machinery, New York, NY, USA, 53–56. https://doi.org/10.1145/3183399.3183424
 
 More generally, in SE, there are many available models-as-a-service,
-not all of which can be   inspected. "Model stores" are cloud-based
+not all of which can be   inspected
+- "Model stores" are cloud-based
 services that charge a fee for using models hidden away behind a
 firewall (e.g. AWS market-place, and the Wolfram neural net repository.
-Adams et al. [^xiu] discusses model stores (also known as  "machine
+- Adams et al. [^xiu] discusses model stores (also known as  "machine
 learning as a service"), and warns that  these models  are often
 low quality   (e.g. if it comes from  a hastily constructed prototype
 from a Github repository, dropped into a container, and then sold
-as a cloud-based service). Ideally, we use software testing to
-defend ourselves against potentially low quality models. But   model
+as a cloud-based service).
+- Ideally, we use software testing to
+defend ourselves against potentially low quality models. 
+- But   model
 owners may not publish verification results or detailed specifications--
 which means standard testing methods are unsure what to test for.
 
