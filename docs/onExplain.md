@@ -396,7 +396,8 @@ So now lets try rules using the first item, the first 2 items, the first 3 items
 ...
 ```
 Something to think about:
-- Most of these values are ranges $\text{lo} {\le} x < \text{hi}$ but for `origin` all we see is `{3}`. Why?
+- Most of these values are ranges 
+     $\text{lo} {\le} x < \text{hi}$ but for `origin` all we see is `{3}`. Why?
 - In line 4 of this display, `Model` is shown as `{79 80}` but in line5 it is shown as `{76 80}`. Why?
 
 Anyway, even after trying all that, it turns out that nothing is beating using just the first rule. So lets see how that works out:
@@ -424,7 +425,7 @@ Ok, so with just 6 evals:
   - ie. in this case, the sampling tax is very small
   - yes, the `mid` values are differenet but looking at the `div`s for those values, it may be sol close to be within noise.
 
-==> Your challenge: for multiple runs with different random seeds, can you keep the sampling tax low?
+==> Your challenge for the end of term project: for multiple runs with different random seeds, can you keep the sampling tax low?
 
 ### Explanation Tax
 
@@ -446,7 +447,7 @@ Here comes the _explanation tax_. Note that even though our rules are trying to 
 - and we can change mid acceleration from 20 to 30
 - both of which is _less_ that the improvements seen 
 
-==> Your challenge, can you reduce this explanation tax?
+==> Your challenge for the end-of-term project, can you reduce this explanation tax?
 
 ### Explanation Variance
 Recall that the explanation variance comes from 20 repeated runs with different random number seeds. We find:
@@ -465,5 +466,62 @@ repeats|Model                    | selected instances | comment
 1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420 :Mpg+ 20 :N 1}| :x: :white_check_mark:|
 
 
-==> Your challenge: for multiple runs with different random seeds, can you keep your explanation variance low?
+==> Your challenge for the end-of-term project: for multiple runs with different random seeds, can you keep your explanation variance low?
 
+## Coding Details
+
+RULEs storage ranges from different columns, sorted out into their different columns:
+
+```lua
+function RULE(ranges,maxSize,      t)
+  t={}
+  for _,range in pairs(ranges) do
+    t[range.txt] = t[range.txt] or {}
+    push(t[range.txt], {lo=range.lo,hi=range.hi,at=range.at}) end 
+  return prune(t, maxSize) end
+```
+
+Lets say some attribute (say, day of week) has (say) 7 ranges and this rule contains all 7 ranges. That means that that part of the rule will
+select for anything at all (day=mon or day=tues or day=wed or day=thurs or day=frid or day=sat or day=sund). Such tests
+are superfluous and we can return them.  If all the attributes are superfluous, then we can actually delete the rule.
+
+
+```lua
+function prune(rule, maxSize,     n)
+  n=0
+  for txt,ranges in pairs(rule) do
+    n = n+1
+    if #ranges == maxSize[txt] then  n=n+1; rule[txt] = nil end end
+  if n > 0 then return rule end end -- returns nil if all attributes pruned
+``` 
+
+One thing a rule can do is select some subset of the rows. Now this is a little bit tricky since this divides into two problems:
+- Conjunctive case: for _one_ rule with _multiple_ attributes, if any attribute does not match the row, we return false.
+- Disjunctive case: for _one_ attribute with _multiple_ ranges, if any range matches the row,  we return true.
+
+Other nuances are that if a row has an unknown value, then we will just accept it (and this policy is debatable).
+
+Also, depending on how you built your ranges, there are factors to consider. In my ranges.
+- for numeric ranges, recall our bins are $\text{lo} {\le} x < \text{hi}$ 
+- for symblic ranges, `lo`==`hi` and we justneed to test for `lo`.
+- Your ranges may differ. Reflect on your code. Do the right thing.
+
+```lua
+function selects(rule,rows,    disjunction,conjunction)
+  function disjunction(ranges,row,    x) 
+    for _,range in pairs(ranges) do
+      local lo, hi, at = range.lo, range.hi, range.at
+      x = row[at]
+      if x == "?"         then return true end
+      if lo==hi and lo==x then return true end
+      if lo<=x  and x< hi then return true end end 
+    return false end 
+  function conjunction(row)
+    for _,ranges in pairs(rule) do 
+      if not disjunction(ranges,row) then return false end end
+    return true end 
+  return map(rows, function(r) if conjunction(r) then return r end end) end
+
+``` 
+
+. If a rule sees the same column name more than once, then 

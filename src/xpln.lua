@@ -470,8 +470,8 @@ function  showRule(rule,    merges,merge,pretty)
     return #t0==#t and t or merge(t) end 
   return kap(rule,merges) end
 
-function selects(rule,rows,    oneOfThem,allOfThem)
-  function oneOfThem(ranges,row,    x) 
+function selects(rule,rows,    oneOfThem,conjunction)
+  function disjunction(ranges,row,    x) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
@@ -479,11 +479,11 @@ function selects(rule,rows,    oneOfThem,allOfThem)
       if lo==hi and lo==x then return true end
       if lo<=x  and x< hi then return true end end 
     return false end 
-  function allOfThem(row)
+  function conjunction(row)
     for _,ranges in pairs(rule) do 
-      if not oneOfThem(ranges,row) then return false end end
+      if not disjunction(ranges,row) then return false end end
     return true end 
-  return map(rows, function(r) if allOfThem(r) then return r end end) end
+  return map(rows, function(r) if conjunction(r) then return r end end) end
       
 -- ## Miscellaneous Support Code
 -- ### Meta
