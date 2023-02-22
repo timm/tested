@@ -454,12 +454,12 @@ Recall that the explanation variance comes from 20 repeated runs with different 
 repeats|Model                    | selected instances | comment
 -|-------------------------|-----------------------------------------|-------
 1|true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  | |
-9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} | :thumbsup: :thumbsup: :thumbsup:|
-6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}| :thumbsup: :thumbsup:|
-1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}| :thumbsup: :thumbsup: :thumbsup:|
-1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}| :thumbsup: :thumbsup:|
-2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}| :thumbsdown: :thumbsup:|
-1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}| :thumbsdown: :thumbsup:|
+9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} | :white_check_mark: :white_check_mark: :white_check_mark:|
+6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}| :white_check_mark: :white_check_mark:|
+1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}| :white_check_mark: :white_check_mark: :white_check_mark:|
+1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}| :white_check_mark: :white_check_mark:|
+2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}| :x: :white_check_mark:|
+1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}| :x: :white_check_mark:|
 
 
 ==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
