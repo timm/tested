@@ -451,69 +451,30 @@ Here comes the _explanation tax_. Note that even though our rules are trying to 
 ### Explanation Variance
 Recall that the explanation variance comes from 20 repeated runs with different random number seeds:
 
-```
-all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  
--------------------------------------------------------------------
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+Model                    | selected instances
+-------------------------|-----------------------------------------
+true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  
+{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} 
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 7
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+|	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+|	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+|	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+| {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+|	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+|	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}	
+{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}
+{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}
+{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
+|	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
+{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}
 
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 7
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
-
-explain=	{:origin {3}}
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
---------------------------------------------------------------------
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-
-explain=	{:Model {{81 inf}}}
-xpln on       6 evals	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}
-
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-
-explain=	{:origin {2}}
-xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}	
---------------------------------------------------------------------
-explain=	{:Clndrs {{-inf 5}} :origin {2}}
-xpln on       6 evals	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}
---------------------------------------------------------------------
-explain=	{:Clndrs {{-inf 4}}}
-xpln on       6 evals	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
-
-explain=	{:Clndrs {{-inf 4}}}
-xpln on       6 evals	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
---------------------------------------------------------------------
-explain=	{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}
-xpln on       6 evals	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}
-````
 
 ==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
 ### 
