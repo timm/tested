@@ -451,15 +451,15 @@ Here comes the _explanation tax_. Note that even though our rules are trying to 
 ### Explanation Variance
 Recall that the explanation variance comes from 20 repeated runs with different random number seeds:
 
-repeats|Model                    | selected instances
--|-------------------------|-----------------------------------------
-1|true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  
-9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} 
-6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
-1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}
-1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}
-2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
-1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}
+repeats|Model                    | selected instances | comment
+-|-------------------------|-----------------------------------------|-------
+1|true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  |
+9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} | :thumbsup:
+6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}|
+1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}|
+1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}|
+2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}|
+1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}|
 
 
 ==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
