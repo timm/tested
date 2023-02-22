@@ -424,7 +424,7 @@ Ok, so with just 6 evals:
   - ie. in this case, the sampling tax is very small
   - yes, the `mid` values are differenet but looking at the `div`s for those values, it may be sol close to be within noise.
 
-==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
+==> Your challenge: for multiple runs with different random seeds, can you keep the sampling tax low?
 
 ### Explanation Tax
 
@@ -446,10 +446,13 @@ Here comes the _explanation tax_. Note that even though our rules are trying to 
 - and we can change mid acceleration from 20 to 30
 - both of which is _less_ that the improvements seen 
 
-==> your challenge, can you reduce this explanation tax?
+==> Your challenge, can you reduce this explanation tax?
 
 ### Explanation Variance
-Recall that the explanation variance comes from 20 repeated runs with different random number seeds:
+Recall that the explanation variance comes from 20 repeated runs with different random number seeds. We find:
+- six different kinds of rules
+- of which 15/20 say `origin` is the key factor;
+- of which 2/20 take us to worse place;
 
 repeats|Model                    | selected instances | comment
 -|-------------------------|-----------------------------------------|-------
@@ -462,9 +465,5 @@ repeats|Model                    | selected instances | comment
 1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420 :Mpg+ 20 :N 1}| :x: :white_check_mark:|
 
 
-==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
-### 
-For this week, we will apply a very simple greedy search fo
-
-For example, 
+==> Your challenge: for multiple runs with different random seeds, can you keep your explanation variance low?
 
