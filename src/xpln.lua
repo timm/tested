@@ -470,7 +470,7 @@ function  showRule(rule,    merges,merge,pretty)
     return #t0==#t and t or merge(t) end 
   return kap(rule,merges) end
 
-function selects(rule,rows,    oneOfThem,conjunction)
+function selects(rule,rows,    disjunction,conjunction)
   function disjunction(ranges,row,    x) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
@@ -769,12 +769,6 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
       print(range.txt,range.lo,range.hi,
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
-
-go("xplns","explore explanation variance", function()
-    for _,one in pairs(egs) do
-      if one.key == "xpln" then
-        for i=1,20 do one.fun() end
-        return true end end end)
 
 go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
   data=DATA(is.file)
