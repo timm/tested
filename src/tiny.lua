@@ -1,3 +1,4 @@
+--<!-- vim: set syntax=lua ts=2 sw=2 expandtab: -->
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local is = {
       p    = 2,
@@ -23,11 +24,15 @@ local function kap(t, fun,     u)
 
 local function map(t, fun) return kap(t, function(_,v) return fun(v) end) end
 
+local function rnd(n, nPlaces) 
+  if type(n) ~= "number" then return n end
+  local mult = 10^(nPlaces or 2)
+  return math.floor(n * mult + 0.5) / mult end
+
 local Seed=937162211 -- seed
 local function rand(nlo,nhi) -- random floats
-  nlo, nhi = nlo or 0, nhi or 1
   Seed = (16807 * Seed) % 2147483647
-  return nlo + (nhi-nlo) * Seed / 2147483647 end
+  return (nlo or 0) + ((nhi or 1) - (nlo or 0)) * Seed / 2147483647 end
 
 local function rint(nlo,nhi)  -- random ints  
   return m.floor(0.5 + rand(nlo,nhi)) end
@@ -63,7 +68,8 @@ local function cli(k,v)
   return coerce(v) end 
 ------------------------
 local function NUM(n,s) 
-  return {at=n, txt=s or "", n=0, hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
+  return {at=n, txt=s or "", n=0, mu=0, m2=0,
+          hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
 
 local function SYM(n,s) 
   return {at=n, txt=s or "", n=0, has={}, isSym=true} end
@@ -71,8 +77,24 @@ local function SYM(n,s)
 local function add(col,x,  inc)
   if x~="?" then 
     if col.isSym then col.has[x] = (inc or 1) + (col.has[x] or 0) else 
+      local d = x - self.mu
+      self.mu = self.mu + d/self.n
+      self.m2 = self.m2 + d*(n-self.mu)
       col.hi = m.max(x, col.hi)
       col.lo = m.min(x, col.lo) end end end 
+
+local function mid(col,      most,mode)
+  if not col.isSym then return col.mu else
+    most=0
+    for x,n in pairs(col.has) do if n > most then most, mode =n,x end end
+    return mode end end
+
+local function div(col,     e,fun)
+  if col.isSym then 
+    fun = function (p) return p*math.log(p,2) end
+    e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
+    return e 
+  else return self.n < 2 and 0 or ((self.m2)/(self.n-1))^.5 end end  
 ------------------------
 local function COL(n,s,    col)
    col = s:find"^[A-Z]" and NUM(n,s) or SYM(n,s) 
@@ -99,11 +121,17 @@ local function row(data,t)
 local function DATA(src, rows,     data,fun)
   data = {rows={}, cols=nil}
   fun  = function(t) row(data,t) end 
-  if type(src)=="string" then csv(file, fun) 
+  if     type(src)=="string" then csv(file, fun) 
   elseif type(src)=="table" then 
     if src.rows then row(data, src.cols.names) else map(src,fun) end end 
   map(rows or {}, fun)
   return data end
+
+local function stats(data,  fun,cols,nPlaces,     tmp,fun)
+  fun = function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end
+  tmp = kap(cols or data.cols.y, fun)
+  tmp["N"] = #data.rows
+  return tmp end
 ------------------------
 local function norm(num,n)
   return n=="?" and n or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
