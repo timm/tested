@@ -770,6 +770,12 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
+go("xplns","explore explanation variance", function()
+    for _,one in pairs(egs) do
+      if one.key == "xpln" then
+        for i=1,20 do one.fun() end
+        return true end end end)
+
 go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
   data=DATA(is.file)
   best,rest,evals = sway(data)

@@ -35,6 +35,12 @@ The following ideas will be useful for the final project
    can be widely variable.
    - We can calculate this by running our explanation algorithm many times with different random number seeds.
 
+To say that another way
+
+- _sampleTax_ = all - sway
+- _explanationTax_ = sway - explain
+- _explanation variance_ = run model $N$ times, printing model
+
 ## Quotes on Explanation
 
 _If you cannot – in the long run – tell everyone what you have been doing, your doing has been worthless._<br>- Erwin Schrödinger
@@ -403,7 +409,9 @@ sort with   398 evals   {:Acc+ 18.8 :Lbs- 1985.0 :Mpg+ 40.0 :N 12}  {:Acc+ 2.48 
 sway with     6 evals   {:Acc+ 16.6 :Lbs- 2019.0 :Mpg+ 40.0 :N 12}   {:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
 ```
 
-sampling teax
+### Sampling Tax
+
+Recall that the sampling tax is ALL - SWAY.
 
 The line `sort with 398 evals` assumes we can look at all the variables (i.e. we score EVERYTHING then sorted using 
 [`better`](https://github.com/timm/tested/blob/main/src/xpln.lua#L267-L274).
@@ -416,6 +424,12 @@ Ok, so with just 6 evals:
   - ie. in this case, the sampling tax is very small
   - yes, the `mid` values are differenet but looking at the `div`s for those values, it may be sol close to be within noise.
 
+==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
+
+### Explanation Tax
+
+Recall that the explanation tax is SWAY - EXPLAIN.
+
 Ok, that was Sway
 How well does our rule `{:origin {3}}` select
 for the that best sway cluster? To answer that question, we apply our rule to `all` and look at what we get:
@@ -424,6 +438,7 @@ for the that best sway cluster? To answer that question, we apply our rule to `a
 ```
                         Mid                                          Div
                         ------------------------------------------   ----------------------------------------
+all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
 xpln on       6 evals   {:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}  {:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
 ```
 Here comes the _explanation tax_. Note that even though our rules are trying to select for `best`, they only get some way there
@@ -432,8 +447,76 @@ Here comes the _explanation tax_. Note that even though our rules are trying to 
 - both of which is _less_ that the improvements seen 
 
 ==> your challenge, can you reduce this explanation tax?
-```
 
+### Explanation Variance
+Recall that the explanation variance comes from 20 repeated runs with different random number seeds:
+
+```
+all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  
+-------------------------------------------------------------------
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 7
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+
+explain=	{:origin {3}}
+xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}
+--------------------------------------------------------------------
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+
+explain=	{:Model {{81 inf}}}
+xpln on       6 evals	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}
+
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}
+
+explain=	{:origin {2}}
+xpln on       6 evals	{:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}	
+--------------------------------------------------------------------
+explain=	{:Clndrs {{-inf 5}} :origin {2}}
+xpln on       6 evals	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}
+--------------------------------------------------------------------
+explain=	{:Clndrs {{-inf 4}}}
+xpln on       6 evals	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
+
+explain=	{:Clndrs {{-inf 4}}}
+xpln on       6 evals	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}
+--------------------------------------------------------------------
+explain=	{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}
+xpln on       6 evals	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}
+````
+
+==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
+### 
 For this week, we will apply a very simple greedy search fo
 
 For example, 
