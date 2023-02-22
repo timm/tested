@@ -590,7 +590,10 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
       push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end       -- [1]
   local rule,most=firstN(sort(tmp,gt"val"),score)                              -- [2,3,6]
   return rule,most end
+```
 
+Here's the actual search. Note that this is a greedy search and can probably be improved 100 ways.
+```lua
 -- [1] For i=1 to #ranges do, try the first one, then the first two, then firtt three...
 -- [2] Watch and keep the best rule seen so far.
 -- [3] Only some ranges are useful, we should skip the rest.
