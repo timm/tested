@@ -375,12 +375,12 @@ Volume  -inf  90  0.69  {:best 9 :rest 3}
 Model     79  80  0.43  {:best 6 :rest 4}
 Model     76  79  0.36  {:best 6 :rest 9}
 Volume    90 115  0.17  {:best 3 :rest 6}
-origin    2    2  0.0           {:rest 8}
-origin    1    1  0.0           {:rest 33}
-Volume  115  inf  0.0           {:rest 39}
-Model    80  inf  0.0           {:rest 8}
-Clndrs    4  inf  0.0           {:rest 29}
-Model  -inf   76  0.0           {:rest 27}
+origin    2    2  0             {:rest 8}
+origin    1    1  0             {:rest 33}
+Volume  115  inf  0             {:rest 39}
+Model    80  inf  0             {:rest 8}
+Clndrs    4  inf  0             {:rest 29}
+Model  -inf   76  0             {:rest 27}
 ```
 
 So now lets try rules using the first item, the first 2 items, the first 3 items etc):
@@ -402,11 +402,11 @@ Something to think about:
 Anyway, even after trying all that, it turns out that nothing is beating using just the first rule. So lets see how that works out:
 
 ```
-                         Mid                                          Div
-                         ------------------------------------------   ----------------------------------------
-all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
-sort with   398 evals   {:Acc+ 18.8 :Lbs- 1985.0 :Mpg+ 40.0 :N 12}  {:Acc+ 2.48 :Lbs- 200.39 :Mpg+ 0.0 :N 12}
-sway with     6 evals   {:Acc+ 16.6 :Lbs- 2019.0 :Mpg+ 40.0 :N 12}   {:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
+                         Mid                                     Div
+                         -------------------------------------   ----------------------------------------
+all                     {:Acc+ 15.5 :Lbs- 2800 :Mpg+ 20 :N 398}  {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
+sort with   398 evals   {:Acc+ 18.8 :Lbs- 1985 :Mpg+ 40 :N 12}   {:Acc+ 2.48 :Lbs- 200.39 :Mpg+ 0 :N 12}
+sway with     6 evals   {:Acc+ 16.6 :Lbs- 2019 :Mpg+ 40 :N 12}   {:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
 ```
 
 ### Sampling Tax
@@ -436,10 +436,10 @@ for the that best sway cluster? To answer that question, we apply our rule to `a
 
 
 ```
-                        Mid                                          Div
-                        ------------------------------------------   ----------------------------------------
-all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
-xpln on       6 evals   {:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}  {:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
+                        Mid                                      Div
+                        ---------------------------------------  ----------------------------------------
+all                     {:Acc+ 15.5 :Lbs- 2800 :Mpg+ 20 :N 398} {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
+xpln on       6 evals   {:Acc+ 16.4 :Lbs- 2155 :Mpg+ 30 :N 79}  {:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
 ```
 Here comes the _explanation tax_. Note that even though our rules are trying to select for `best`, they only get some way there
 - we can change mid weight from 2800 to 2155
@@ -453,13 +453,13 @@ Recall that the explanation variance comes from 20 repeated runs with different 
 
 repeats|Model                    | selected instances | comment
 -|-------------------------|-----------------------------------------|-------
-1|true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  | |
-9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79} | :white_check_mark: :white_check_mark: :white_check_mark:|
-6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234.0 :Mpg+ 30.0 :N 70}| :white_check_mark: :white_check_mark:|
-1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395.0 :Mpg+ 30.0 :N 60}| :white_check_mark: :white_check_mark: :white_check_mark:|
-1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219.0 :Mpg+ 30.0 :N 63}| :white_check_mark: :white_check_mark:|
-2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330.0 :Mpg+ 20.0 :N 4}| :x: :white_check_mark:|
-1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420.0 :Mpg+ 20.0 :N 1}| :x: :white_check_mark:|
+1|true (use all the data)  |         {:Acc+ 15.5 :Lbs- 2800 :Mpg+ 20 :N 398}  | |
+9|{:origin {3}} | 	{:Acc+ 16.4 :Lbs- 2155 :Mpg+ 30 :N 79} | :white_check_mark: :white_check_mark: :white_check_mark:|
+6|{:origin {2}} | {:Acc+ 15.7 :Lbs- 2234 :Mpg+ 30 :N 70}| :white_check_mark: :white_check_mark:|
+1|{:Model {{81 inf}}} | 	{:Acc+ 16.2 :Lbs- 2395 :Mpg+ 30 :N 60}| :white_check_mark: :white_check_mark: :white_check_mark:|
+1|{:Clndrs {{-inf 5}} :origin {2}} | 	{:Acc+ 15.5 :Lbs- 2219 :Mpg+ 30 :N 63}| :white_check_mark: :white_check_mark:|
+2|{:Clndrs {{-inf 4}}} | 	{:Acc+ 13.5 :Lbs- 2330 :Mpg+ 20 :N 4}| :x: :white_check_mark:|
+1|{:Clndrs {{-inf 4}} :Model {{79 81}} :Volume {{-inf 112}} :origin {2 3}}|	{:Acc+ 12.5 :Lbs- 2420 :Mpg+ 20 :N 1}| :x: :white_check_mark:|
 
 
 ==> your challenge: for multiple runs with different random seeds, can you show the sampling tax remains low?
