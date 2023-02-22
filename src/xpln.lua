@@ -25,10 +25,10 @@
 -- For help with code, see comments at the <a href="#about">end of this file</a>.</p>
 local is,help = {}, [[
   
-xai: multi-goal semi-supervised explanation
+xpln: multi-goal semi-supervised explanation
 (c) 2023 Tim Menzies <timm@ieee.org> BSD-2
   
-USAGE: lua xai.lua [OPTIONS] [-g ACTIONS]
+USAGE: lua xpln.lua [OPTIONS] [-g ACTIONS]
   
 OPTIONS:
   -b  --bins    initial number of bins       = 16
@@ -419,27 +419,31 @@ function merge(col1,col2,    new)
 
 -- ## Contrast Sets
 -- Collect all the ranges into one flat list and sort them by their `value`.
-function xpln(data,        best,rest,maxSizes,tmp,v,score)
+function xpln(data,best,rest,      maxSizes,tmp,v,score)
   function v(has) 
     return value(has, #best.rows, #rest.rows, "best") end
   function score(ranges,       rule,bestr,restr)
     rule = RULE(ranges,maxSizes)
     if rule then
+      oo(showRule(rule))
       bestr= selects(rule, best.rows)
       restr= selects(rule, rest.rows)
       if #bestr + #restr > 0 then 
         return v({best= #bestr, rest=#restr}),rule end end 
   end ---------------------------------------------------
-  best,rest,evals = sway(data)
   tmp,maxSizes = {},{}
   for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
     maxSizes[ranges[1].txt] = #ranges
+    print""
     for _,range in pairs(ranges) do
+      print(range.txt, range.lo, range.hi)
       push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end
   local rule,most=firstN(sort(tmp,gt"val"),score)
-  return best,rest,rule,most,evals end
+  return rule,most end
 
 function firstN(sortedRanges,scoreFun,           first,useful,most,out)
+  print""
+  map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
   first = sortedRanges[1].val
   function useful(range)
     if range.val>.05 and range.val> first/10 then return range end
@@ -466,8 +470,8 @@ function  showRule(rule,    merges,merge,pretty)
     return #t0==#t and t or merge(t) end 
   return kap(rule,merges) end
 
-function selects(rule,rows,    oneOfThem,allOfThem)
-  function oneOfThem(ranges,row,    x) 
+function selects(rule,rows,    disjunction,conjunction)
+  function disjunction(ranges,row,    x) 
     for _,range in pairs(ranges) do
       local lo, hi, at = range.lo, range.hi, range.at
       x = row[at]
@@ -475,11 +479,11 @@ function selects(rule,rows,    oneOfThem,allOfThem)
       if lo==hi and lo==x then return true end
       if lo<=x  and x< hi then return true end end 
     return false end 
-  function allOfThem(row)
+  function conjunction(row)
     for _,ranges in pairs(rule) do 
-      if not oneOfThem(ranges,row) then return false end end
+      if not disjunction(ranges,row) then return false end end
     return true end 
-  return map(rows, function(r) if allOfThem(r) then return r end end) end
+  return map(rows, function(r) if conjunction(r) then return r end end) end
       
 -- ## Miscellaneous Support Code
 -- ### Meta
@@ -768,8 +772,9 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
 
 go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
   data=DATA(is.file)
-  best,rest,rule,most,evals= xpln(data)
-  print("explain=", o(showRule(rule)))
+  best,rest,evals = sway(data)
+  rule,most= xpln(data,best,rest)
+  print("\n-----------\nexplain=", o(showRule(rule)))
   data1= DATA(data,selects(rule,data.rows))
   print("all               ",o(stats(data)),o(stats(data,div)))
   print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
