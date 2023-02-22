@@ -27,10 +27,13 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 The following ideas will be useful for the final project
 
 - the _sampling tax_: the less we look, the more we miss important stuff.
+  - We can calculate that by comparing (a) what happens what we get with SWAY with (b) what we get after evaluating `all` examples 
 - the _explanation tax_ : prediction is hard and the simplifications we use for explanation compromise
     predictive performance.
+  - We can calculate that by comparing (a) what happens what we get with SWAY with (b) what we get after building and applying some explanation
 - _explanation variance_ : explanations generated from a few random probes of a complex multi-dimensional
    can be widely variable.
+   - We can calculate this by running our explanation algorithm many times with different random number seeds.
 
 ## Quotes on Explanation
 
@@ -257,9 +260,15 @@ predictive performance.
 
 ## Explanation via contrast set learning for instance-based reasoning 
 
-### Changes to Cofe
+### Changes to Code
 - `the` ==> `is`
 -  Now  I demand ranges have to have at least `1/is.bins` of the rows
+- if `is.Reuse` is false, then when exploring sub-trees we do not use one of the poles from the parent
+  - which will nearly double the number of evaluations
+- My `sway` function now returns the number of evaluations made to the `y` variables.
+  - So we get difference counts if we do/do not use `is.Reuse`.
+
+### Algorithm
 
 Data is
 clustered and users are shown the difference between a few
@@ -378,23 +387,52 @@ So now lets try rules using the first item, the first 2 items, the first 3 items
 {:Clndrs {{-inf 4}} :Model {{79 80}} :Volume {{-inf 90}} :origin {3}}
 {:Clndrs {{-inf 4}} :Model {{76 80}} :Volume {{-inf 90}} :origin {3}}
 {:Clndrs {{-inf 4}} :Model {{76 80}} :Volume {{-inf 115}} :origin {3}}
+...
 ```
 Something to think about:
 - Most of these values are ranges $\text{lo} {\le} x < \text{hi}$ but for `origin` all we see is `{3}`. Why?
 - In line 4 of this display, `Model` is shown as `{79 80}` but in line5 it is shown as `{76 80}`. Why?
 
-Anyway, it turns out that nothing is beating just the first rule so lets see how well that works:
+Anyway, even after trying all that, it turns out that nothing is beating using just the first rule. So lets see how that works out:
 
 ```
-explain=	{:origin {3}}
-all               	    {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}	{:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
-sway with     6 evals	{:Acc+ 16.6 :Lbs- 2019.0 :Mpg+ 40.0 :N 12}	{:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
+                         Mid                                          Div
+                         ------------------------------------------   ----------------------------------------
+all                     {:Acc+ 15.5 :Lbs- 2800.0 :Mpg+ 20.0 :N 398}  {:Acc+ 2.71 :Lbs- 887.21 :Mpg+ 7.75 :N 398}
+sort with   398 evals   {:Acc+ 18.8 :Lbs- 1985.0 :Mpg+ 40.0 :N 12}  {:Acc+ 2.48 :Lbs- 200.39 :Mpg+ 0.0 :N 12}
+sway with     6 evals   {:Acc+ 16.6 :Lbs- 2019.0 :Mpg+ 40.0 :N 12}   {:Acc+ 2.6 :Lbs- 129.84 :Mpg+ 7.75 :N 12}
 ```
-Here we show the explanation of how to select for best
 
-xpln on       6 evals	{:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}	{:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
-sort with   398 evals	{:Acc+ 18.8 :Lbs- 1985.0 :Mpg+ 40.0 :N 12}	{:Acc+ 2.48 :Lbs- 200.39 :Mpg+ 0.0 :N 12}
+sampling teax
 
+The line `sort with 398 evals` assumes we can look at all the variables (i.e. we score EVERYTHING then sorted using 
+[`better`](https://github.com/timm/tested/blob/main/src/xpln.lua#L267-L274).
+(which is is the _opposite_ of fishing). The _smapling_ tax is how much we lose by looking at just 6 $y$ variables (and not 398).
+In this case, the tax was very small:
+Ok, so with just 6 evals:
+- SWAY  knocked 50% of the median weight
+- SWAY doubled miles per hour. 
+- and when SWAY (with 6 evals) is comapred to using all 398 $Y$ values, we see very small deltas; 
+  - ie. in this case, the sampling tax is very small
+  - yes, the `mid` values are differenet but looking at the `div`s for those values, it may be sol close to be within noise.
+
+Ok, that was Sway
+How well does our rule `{:origin {3}}` select
+for the that best sway cluster? To answer that question, we apply our rule to `all` and look at what we get:
+
+
+```
+                        Mid                                          Div
+                        ------------------------------------------   ----------------------------------------
+xpln on       6 evals   {:Acc+ 16.4 :Lbs- 2155.0 :Mpg+ 30.0 :N 79}  {:Acc+ 2.13 :Lbs- 349.61 :Mpg+ 7.75 :N 79}
+```
+Here comes the _explanation tax_. Note that even though our rules are trying to select for `best`, they only get some way there
+- we can change mid weight from 2800 to 2155
+- and we can change mid acceleration from 20 to 30
+- both of which is _less_ that the improvements seen 
+
+==> your challenge, can you reduce this explanation tax?
+```
 
 For this week, we will apply a very simple greedy search fo
 
