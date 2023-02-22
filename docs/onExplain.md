@@ -521,7 +521,92 @@ function selects(rule,rows,    disjunction,conjunction)
       if not disjunction(ranges,row) then return false end end
     return true end 
   return map(rows, function(r) if conjunction(r) then return r end end) end
-
 ``` 
 
-. If a rule sees the same column name more than once, then 
+Printing a rule is surprisingly tricky
+- One one range continues into the next, then you should print them both as one 
+  -e.g not _model = 65 to 77 and 77 to 90_
+    - but _model = 65 to 90_
+- Ranges (as we built them last week) contain a lot of details we do not need to see in a rule pretty-print. So `pretty` cleans up those details.
+
+```lua
+function  showRule(rule,    merges,merge,pretty)
+  function pretty(range)
+    return range.lo==range.hi and range.lo or {range.lo, range.hi} end
+  function merges(attr,ranges) 
+   return map(merge(sort(ranges,lt"lo")),pretty),attr end
+  function merge(t0) -- similar merge algorithm to discritization. If anything merges, loop agian
+    local t,j, left,right={},1
+    while j<=#t0 do
+      left,right = t0[j],t0[j+1]
+      if right and left.hi == right.lo then left.hi = right.hi; j=j+1 end
+      push(t, {lo=left.lo, hi=left.hi})
+      j=j+1 end
+    return #t0==#t and t or merge(t) end 
+  return kap(rule,merges) end
+```
+
+And that's nearly all there is to the rule generation, except for the top-level processing:
+- Start by calling SWAY to find `best` and `rest`
+- Then call `bins` to find the ranges that distinguish `best` from `rest`.
+- Sort the ranges by their values (using the `value` function, see above)
+- Try the first ranked range
+- Try a combination of the first and second ranked range
+- Try a combination of the first and second and third ranked range
+- etc
+- Return the best rule (as decided by `value` (see above).
+
+There are a few tricky bits:
+- We need to find out the max number of ranges per attribute (since RULE needs that to make and prune a RULE)
+- When we try to create a new rule, sometimes that returns nil (see above) so we need to skip that case.
+- At least in my code, I found that that everything I wanted to score things was in my `scocre` function,
+  so I passed that to my subroutine.
+
+```lua
+-- [1] Collect all the ranges into one flat list
+-- [2] sort them by their `value`.
+-- [3] then pass all that to `firstN`
+-- [4] along the way, keep track of max ranges per attribute
+-- [5] skip over rules that prune themselves to nil
+-- [6] pass my score function to `firstN`
+function xpln(data,best,rest,      maxSizes,tmp,v,score)
+  function v(has) 
+    return value(has, #best.rows, #rest.rows, "best") end
+  function score(ranges,       rule,bestr,restr)
+    rule = RULE(ranges,maxSizes)
+    if rule then                                                              -- [5]
+      oo(showRule(rule))
+      bestr= selects(rule, best.rows)
+      restr= selects(rule, rest.rows)
+      if #bestr + #restr > 0 then 
+        return v({best= #bestr, rest=#restr}),rule end end 
+  end ---------------------------------------------------
+  tmp,maxSizes = {},{}
+  for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
+    maxSizes[ranges[1].txt] = #ranges                                          -- [4]
+    print""
+    for _,range in pairs(ranges) do
+      print(range.txt, range.lo, range.hi)
+      push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end       -- [1]
+  local rule,most=firstN(sort(tmp,gt"val"),score)                              -- [2,3,6]
+  return rule,most end
+
+-- [1] For i=1 to #ranges do, try the first one, then the first two, then firtt three...
+-- [2] Watch and keep the best rule seen so far.
+-- [3] Only some ranges are useful, we should skip the rest.
+function firstN(sortedRanges,scoreFun,           first,useful,most,out)
+  print""
+  map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
+  first = sortedRanges[1].val
+  function useful(range)
+    if range.val>.05 and range.val> first/10 then return range end      --- [3]
+  end -------------------------------
+  sortedRanges = map(sortedRanges,useful) -- reject  useless ranges
+  most,out = -1
+  for n=1,#sortedRanges do                                              --- [1]
+    local tmp,rule = scoreFun(map(slice(sortedRanges,1,n),on"range"))
+    if tmp and tmp > most then out,most = rule,tmp end end              --- [2]
+  return out,most end
+```
+
+
