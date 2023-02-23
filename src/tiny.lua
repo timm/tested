@@ -205,10 +205,11 @@ local function split(col,rows,best,    xy,fun,B,R)
   for i,xy in pairs(t) do
     left.b = left.b + xy.b; right.b = right.b - xy.b
     left.r = left.r + xy.r; right.r = right.r - xy.r
-    if i>B/4 and (B+R)-i > B/4 and xy.x ~= t[i+1] then
-      down = goal[is.goal](left.b/B, left.r/R)
-      up   = goal[is.goal](right.b/B, right.r/R)
-      if down > up then {xy[1].
+    if i>B/4 and (B+R)-i > B/4 and xy.x ~= t[i+1].x then
+      down = {lo=t[1].x, hi=xy.x,    val=goal[is.goal](left.b/B, left.r/R)}
+      up   = {lo=xy.x,   hi=t[#t].x, val=goall[is.goal](right.b/B, right.r/R)}
+      if up.val > down.val and up.val   > most then most, best = up.val,up end
+      if up.val < down.val and down.val > most then most, best = down.val,down end end end end 
 
 local function xys(rows,best,     x,xy,B,R)
   B,R,t = 0,0,{}
