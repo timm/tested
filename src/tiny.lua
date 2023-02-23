@@ -145,7 +145,7 @@ local function dist(data,t1,t2,  cols,    d,dist1,sym,num)
                          return col.isSym and sym(x,y) or num(norm(col,x), norm(col,y)) end
   d, cols = 0, (cols or data.cols.x)	
   for _,col in pairs(cols) do
-    d = d + ga[(col, t1[col.at], t2[col.at])^is.p end 
+    d = d + gap(col, t1[col.at], t2[col.at])^is.p end 
   return (d/#cols)^(1/is.p) end
 
 local function around(data,t1,  rows,cols,     fun)
@@ -193,6 +193,34 @@ local function sway(data)
    best,rest,evals = betters(data, data.rows, #data.rows^is.min, {}, 0)
    return DATA(data,best), DATA(data,rest), evals end
 
+local goal={}
+goal.plan    = function(b,r) return b^2/(b+r) end
+goal.monitor = function(b,r) return r^2/(b+r) end
+
+local function split(col,rows,best,    xy,fun,B,R)
+  t,B,R = xys(rows,best)
+  B,R   = B+1/m.huge, R+1/m.huge
+  left  = {b=0,r=0}
+  right = {b=B,r=B}
+  for i,xy in pairs(t) do
+    left.b = left.b + xy.b; right.b = right.b - xy.b
+    left.r = left.r + xy.r; right.r = right.r - xy.r
+    if i>B/4 and (B+R)-i > B/4 and xy.x ~= t[i+1] then
+      down = goal[is.goal](left.b/B, left.r/R)
+      up   = goal[is.goal](right.b/B, right.r/R)
+      if down > up then {xy[1].
+
+local function xys(rows,best,     x,xy,B,R)
+  B,R,t = 0,0,{}
+  for klass,tmp in pairs(rows)  do
+    for _,row in pairs(tmp) do
+      x = row[col.at]
+      if x ~= "?" then
+        if klass==best then B = B+1 else R = R+1 end
+        push(t,{x=x, b= klass==best, r=klass~=best}) end end end 
+  return sort(t,lt"x"),B,R end 
+
+  
 -----------------
 local function tests(      copy,ok)
   copy = {}
