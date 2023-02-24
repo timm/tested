@@ -90,7 +90,7 @@ local function add(col,x,  inc)
 
 local function mid(x,      most,mode)
   if isNum(x) then return x.mu end
-  if isSum(x) then
+  if isSym(x) then
     most=0
     for s,n in pairs(x.has) do if n > most then most, mode = n,s end end
     return mode end 
@@ -205,18 +205,6 @@ local goal={}
 goal.plan    = function(b,r) return b^2/(b+r) end
 goal.monitor = function(b,r) return r^2/(b+r) end
 
-local function split(col,rows,best,    xy,fun,B,R)
-  t,B,R = xys(rows,best)
-  lb,rb,lr,rr,tiny = 0,B,0,R,1/m.huge
-  for i,xy in pairs(t) do
-    lb = lb + xy.b; rb = rb - xy.b
-    lr = lr + xy.r; rr = rr - xy.r
-    if i >= (B+R)/2 then
-      v1 = goal[is.goal](lb/(B+tiny), lr/(R+tiny))
-      v2 = goal[is.goal](rb/(B+tiny), rr/(R+tiny))
-      if v1>v2 then return {lo=t[1].x, hi=xy.x,    at=col.at, txt=col.txt} end
-      if v2>v1 then return {lo=xy.x  , hi=t[#t].x, at=col.at, txt=col.txt} end end end end
-
 local function xys(rows,best,     x,xy,B,R)
   B,R,t = 0,0,{}
   for klass,tmp in pairs(rows)  do
@@ -224,10 +212,43 @@ local function xys(rows,best,     x,xy,B,R)
       x = row[col.at]
       if x ~= "?" then
         if klass==best then B = B+1 else R = R+1 end
-        push(t,{x=x, b= klass==best, r=klass~=best}) end end end 
+        push(t,{x=x, y= klass==best}) end end end 
   return sort(t,lt"x"),B,R end 
-  
------------------
+
+local function split1(col,rows,best)
+  local t,B,R,lb,lr,rb,rr,val,tiny,range
+  range = function(lo,hi,v)     return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
+  val   = function(b,r,     z)  tiny=1/m.huge
+                                return goal[is.goal]( b/(B+z), r/(R+z)) end
+  t,B,R = xys(rows,best)
+  lb,lr,rb,rr = 0,0,B,R
+  for i,xy in pairs(t) do
+    if xy.y then lb = lb+1; rb = rb-1 else lr = lr-1; rr = rr-1 end
+    if i >= (B+R)/2 then
+      v1,v2 = val(lb,lr), val(rb,rr)
+      if v1 >= v2 then return range(t[1].x, xy.x,    v1) end
+      if v2 <  v1 then return range(xy.x,   t[#t].x, v2) end end end end
+
+local function split(cols,rows,best)
+   return sort(map(cols,function(col) return split1(col,rows,best) end), gt"val")[1] end
+
+local function selects(range,rows,     yes,no)
+  yes,no = {}
+  for _,row in pairs(row) do
+    x = row[range.at]
+    if x == "?" then push(yes,row) 
+    elseif range.lo == range.hi and range.lo == x then push(yes,row)
+    elseif range.lo <= x and x < range.hi then push(yes,row)
+    else   push(no,row) end end
+  return yes,no end
+
+function fftTrees(data,best,rows,out)
+  rows  = rows or data.rows
+  range = split(data,cols,rows,best)
+  left,right = selects(range,rows)
+end
+
+------------------------------------
 local function tests(      copy,ok)
   copy = {}
   for k,v in pairs(is) do copy[k]=v end
