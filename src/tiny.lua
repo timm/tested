@@ -2,9 +2,10 @@
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
 local is = {
       p    = 2,
+      rest = 4,
       Far  = .95,
       min  = .5,
-      rest = 4,
+      goal = "plan",
       seed =  937162211,
       file = "../etc/data/auto93.csv"}
 ---------------------------------------
@@ -67,30 +68,37 @@ local function cli(k,v)
       v= v=="false" and "true" or v=="true" and "false" or arg[n+1] end end 
   return coerce(v) end 
 ------------------------
+local function isNum(col)  return col.lo   end
+local function isSym(col)  return col.has  end
+local function isData(col) return col.rows end
+
 local function NUM(n,s) 
   return {at=n, txt=s or "", n=0, mu=0, m2=0,
           hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
 
 local function SYM(n,s) 
-  return {at=n, txt=s or "", n=0, has={}, isSym=true} end
+  return {at=n, txt=s or "", n=0, has={}} end
 
 local function add(col,x,  inc)
   if x~="?" then 
-    if col.isSym then col.has[x] = (inc or 1) + (col.has[x] or 0) else 
+    if isSym(col) then col.has[x] = (inc or 1) + (col.has[x] or 0) else 
       local d = x - self.mu
       self.mu = self.mu + d/self.n
       self.m2 = self.m2 + d*(n-self.mu)
       col.hi = m.max(x, col.hi)
       col.lo = m.min(x, col.lo) end end end 
 
-local function mid(col,      most,mode)
-  if not col.isSym then return col.mu else
+local function mid(x,      most,mode)
+  if isNum(x) then return x.mu end
+  if isSum(x) then
     most=0
-    for x,n in pairs(col.has) do if n > most then most, mode =n,x end end
-    return mode end end
+    for s,n in pairs(x.has) do if n > most then most, mode = n,s end end
+    return mode end 
+  if isData(x) then 
+    return map(x.cols.all, function(col) return mid(col) end) end end
 
 local function div(col,     e,fun)
-  if col.isSym then 
+  if isSym(col) then 
     fun = function (p) return p*math.log(p,2) end
     e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
     return e 
@@ -122,8 +130,8 @@ local function DATA(src, rows,     data,fun)
   data = {rows={}, cols=nil}
   fun  = function(t) row(data,t) end 
   if     type(src)=="string" then csv(file, fun) 
-  elseif type(src)=="table" then 
-    if src.rows then row(data, src.cols.names) else map(src,fun) end end 
+  elseif tyepe(src)=="table" then 
+    if isData(src) then row(data, src.cols.names) else map(src,fun) end end 
   map(rows or {}, fun)
   return data end
 
@@ -142,7 +150,7 @@ local function dist(data,t1,t2,  cols,    d,dist1,sym,num)
                      if y=="?" then y= x<.5 and 1 or 1 end	
                      return m.abs(x-y) end 
   gap= function(col,x,y) if x=="?" and y=="?" then return 1 end
-                         return col.isSym and sym(x,y) or num(norm(col,x), norm(col,y)) end
+                         return isSym(col) and sym(x,y) or num(norm(col,x), norm(col,y)) end
   d, cols = 0, (cols or data.cols.x)	
   for _,col in pairs(cols) do
     d = d + gap(col, t1[col.at], t2[col.at])^is.p end 
@@ -199,17 +207,15 @@ goal.monitor = function(b,r) return r^2/(b+r) end
 
 local function split(col,rows,best,    xy,fun,B,R)
   t,B,R = xys(rows,best)
-  B,R   = B+1/m.huge, R+1/m.huge
-  left  = {b=0,r=0}
-  right = {b=B,r=B}
+  lb,rb,lr,rr,tiny = 0,B,0,R,1/m.huge
   for i,xy in pairs(t) do
-    left.b = left.b + xy.b; right.b = right.b - xy.b
-    left.r = left.r + xy.r; right.r = right.r - xy.r
-    if i>B/4 and (B+R)-i > B/4 and xy.x ~= t[i+1].x then
-      down = {lo=t[1].x, hi=xy.x,    val=goal[is.goal](left.b/B, left.r/R)}
-      up   = {lo=xy.x,   hi=t[#t].x, val=goall[is.goal](right.b/B, right.r/R)}
-      if up.val > down.val and up.val   > most then most, best = up.val,up end
-      if up.val < down.val and down.val > most then most, best = down.val,down end end end end 
+    lb = lb + xy.b; rb = rb - xy.b
+    lr = lr + xy.r; rr = rr - xy.r
+    if i >= (B+R)/2 then
+      v1 = goal[is.goal](lb/(B+tiny), lr/(R+tiny))
+      v2 = goal[is.goal](rb/(B+tiny), rr/(R+tiny))
+      if v1>v2 then return {lo=t[1].x, hi=xy.x,    at=col.at, txt=col.txt} end
+      if v2>v1 then return {lo=xy.x  , hi=t[#t].x, at=col.at, txt=col.txt} end end end end
 
 local function xys(rows,best,     x,xy,B,R)
   B,R,t = 0,0,{}
@@ -220,7 +226,6 @@ local function xys(rows,best,     x,xy,B,R)
         if klass==best then B = B+1 else R = R+1 end
         push(t,{x=x, b= klass==best, r=klass~=best}) end end end 
   return sort(t,lt"x"),B,R end 
-
   
 -----------------
 local function tests(      copy,ok)
