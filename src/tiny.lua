@@ -128,11 +128,11 @@ local function COLS(ss,     col,cols)
     if not col.isIgnored then push(col.isGoal and cols.y or cols.x, col) end end 
   return cols end
 ------------------------
-local function row(data,t)
+local function row(data,t,     fun)
+  fun = function(col) add(col, t[col.at]) end
   if data.cols then 
     push(data.rows,t)
-    for _,cols in pairs{data.cols.x, data.cols.y} do
-      for _,col in pairs(cols) do add(col,t[col.at]) end end
+    for _,cols in pairs{data.cols.x, data.cols.y} do map(cols,fun) end
   else data.cols = COLS(t) end end
 
 local function DATA(src, rows,     data,fun)
