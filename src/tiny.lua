@@ -5,6 +5,7 @@ local is = {
       rest = 4,
       Far  = .95,
       min  = .5,
+      Max  = 512,
       goal = "plan",
       seed =  937162211,
       file = "../etc/data/auto93.csv"}
@@ -12,6 +13,9 @@ local is = {
 local m    = math
 local fmt  = string.format
 local sort = table.sort
+
+function per(t,p) 
+  return t[ m.max(1, m.min(#t, (((p or .5)*#t) + .5) // 1)) ] end
 
 local function lt(x) return function(a,b) return a[x] < b[x] end end
 
@@ -69,40 +73,45 @@ local function cli(k,v)
   return coerce(v) end 
 ------------------------
 local function isNum(col)  return col.lo   end
-local function isSym(col)  return col.has  end
+local function isSym(col)  return col.most end
 local function isData(col) return col.rows end
 
 local function NUM(n,s) 
-  return {at=n, txt=s or "", n=0, mu=0, m2=0,
+  return {at=n, txt=s or "", n=0, has={}, ok=true,
           hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
 
 local function SYM(n,s) 
-  return {at=n, txt=s or "", n=0, has={}} end
+  return {at=n, txt=s or "", n=0, has={}, most=0, mode=nil} end
 
-local function add(col,x,  inc)
-  if x~="?" then 
-    if isSym(col) then col.has[x] = (inc or 1) + (col.has[x] or 0) else 
-      local d = x - self.mu
-      self.mu = self.mu + d/self.n
-      self.m2 = self.m2 + d*(n-self.mu)
-      col.hi = m.max(x, col.hi)
-      col.lo = m.min(x, col.lo) end end end 
+local function add(col,x,  inc,pos)
+  sym = function(t)
+          t[x] = inc + (t[x] or 0) 
+          if t[x] > col.most then col.mast, col.mode = t[x], x end end
+  num = function(t,     pos)
+          col.lo = m.min(x, col.lo)
+          col.hi = m.max(x, col.hi) 
+          pos    = #t<i.Max and #t+1 or rand()<is>max/col.n and rint(1,#t)
+          if pos then t[pos] = x
+                      col.ok = false end end
+  if x~="?" then  
+    inc   = inc + 1
+    col.n = col.n + inc
+    return isSym(col) and sym(col.has)  or num(col.has) end end 
+
+local function holds(num) 
+  if not num.ok then sort(num.has) ; num.ok=true end
+  return num.has end
 
 local function mid(x,      most,mode)
-  if isNum(x) then return x.mu end
-  if isSym(x) then
-    most=0
-    for s,n in pairs(x.has) do if n > most then most, mode = n,s end end
-    return mode end 
-  if isData(x) then 
-    return map(x.cols.all, function(col) return mid(col) end) end end
+  return isSym(x) and col.mode or per(holds(col), .5) end
 
-local function div(col,     e,fun)
-  if isSym(col) then 
-    fun = function (p) return p*math.log(p,2) end
-    e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
-    return e 
-  else return self.n < 2 and 0 or ((self.m2)/(self.n-1))^.5 end end  
+local function div(col,    num,sym)
+  num = function(t) return (per(t,.9) - per(t,.1))/2.58 end
+  sym = function (t,    e,fun)
+          fun = function (p) return p*math.log(p,2) end
+          e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
+          return e end 
+  return isSym(col) and num(holds(col)) or sym(col.has) end
 ------------------------
 local function COL(n,s,    col)
    col = s:find"^[A-Z]" and NUM(n,s) or SYM(n,s) 
@@ -144,13 +153,14 @@ local function stats(data,  fun,cols,nPlaces,     tmp,fun)
 local function norm(num,n)
   return n=="?" and n or (n - num.lo)/(num.hi - num.lo + 1/m.huge) end
 
-local function dist(data,t1,t2,  cols,    d,dist1,sym,num)
-  sym= function(x,y) return x==y and 0 or 1 end
-  num= function(x,y) if x=="?" then x= y<.5 and 1 or 1 end	
-                     if y=="?" then y= x<.5 and 1 or 1 end	
-                     return m.abs(x-y) end 
-  gap= function(col,x,y) if x=="?" and y=="?" then return 1 end
-                         return isSym(col) and sym(x,y) or num(norm(col,x), norm(col,y)) end
+local function dist(data,t1,t2,  cols,    d,gap,sym,num)
+  sym = function(x,y) return x==y and 0 or 1 end
+  num = function(x,y) if x=="?" then x= y<.5 and 1 or 1 end	
+                      if y=="?" then y= x<.5 and 1 or 1 end	
+                      return m.abs(x-y) end 
+  gap = function(col,x,y) 
+          if x=="?" and y=="?" then return 1 end
+          return isSym(col) and sym(x,y) or num(norm(col,x), norm(col,y)) end
   d, cols = 0, (cols or data.cols.x)	
   for _,col in pairs(cols) do
     d = d + gap(col, t1[col.at], t2[col.at])^is.p end 
@@ -215,19 +225,26 @@ local function xys(rows,best,     x,xy,B,R)
         push(t,{x=x, y= klass==best}) end end end 
   return sort(t,lt"x"),B,R end 
 
-local function split1(col,rows,best)
-  local t,B,R,lb,lr,rb,rr,val,tiny,range
-  range = function(lo,hi,v)     return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
-  val   = function(b,r,     z)  tiny=1/m.huge
-                                return goal[is.goal]( b/(B+z), r/(R+z)) end
+local function split1(col,rows,best,      min)
+  local t,B,R,lb,lr,rb,rr,val,tiny,range,most
+  range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
+  val   = function(b,r,     z)  
+            tiny=1/m.huge
+            return goal[is.goal]( b/(B+z), r/(R+z)) end
   t,B,R = xys(rows,best)
   lb,lr,rb,rr = 0,0,B,R
+  min = is.median and (B+R)/2 or B/3
+  most = -1
   for i,xy in pairs(t) do
     if xy.y then lb = lb+1; rb = rb-1 else lr = lr-1; rr = rr-1 end
-    if i >= (B+R)/2 then
+    if i >= min and i <= #t - min + 1 then
       v1,v2 = val(lb,lr), val(rb,rr)
-      if v1 >= v2 then return range(t[1].x, xy.x,    v1) end
-      if v2 <  v1 then return range(xy.x,   t[#t].x, v2) end end end end
+      if v1 > v2 and v1>most then 
+        most,out= v1,range(t[1].x, xy.x, v1) end
+      if v2 > v1 and v2>most then 
+        most,out= v2,range(xy.x, t[#t].x, v2) end 
+      if is.median then break end end end 
+  return out end
 
 local function split(cols,rows,best)
    return sort(map(cols,function(col) return split1(col,rows,best) end), gt"val")[1] end
