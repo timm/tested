@@ -27,8 +27,9 @@ USAGE:
 OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
   -d --dull  effect size threshold (.147=small)       = .147
+  -D --D     cohen's effect size                      = .35
   -f --file  file to read data                        = data.txt
-  -F --Fmt   number format for display                = %5.2f
+  -F --Fmt   number format for display                = %6.2f
   -g --go    start-up actions                         = nothing
   -h --help  show help                                = false
   -s --seed  random number seed                       = 1
@@ -78,7 +79,7 @@ BUGS:
 --- - lower = instance; e.g. rx is an instance of RX
 --- - xs == a table of "x"; e.g. "ns" is a list of numbers
 
-local coerce,cli,lt,fmt,map,oo,o,median,push,settings,slurp,sort,tiles,words
+local coerce,cli,lt,fmt,map,oo,o,median,std,push,settings,slurp,sort,tiles,words
 local RX,rank,add,adds,sk,cliffsDelta,mwu,ranks,critical
 ----------------------------------------------------------------------------------------------------
 -- ## RX objects
@@ -133,7 +134,7 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
   the.conf  = nConf or the.conf or 95 -- for effect size test; threshold for "small effect"
   the.dull  = nDull or the.dull or .147  -- width of text display of numbers
   the.width = nWidth or the.width or 40  -- for significance test; confidence for testing 'distinguish-ability'
-  local ranking,rxs,argmax
+  local ranking,rxs,argmax,all,cohen
   function argmax(lo,hi) -- find `cut` in `rxs` that maximizes difference in medians
     local b4,max,mid,n,cut -- if cut always remains `nil` then no cut found
     b4 = adds(rxs,lo,hi)
@@ -144,20 +145,25 @@ function sk(t,  nConf,nDull,nWidth) --> rxs; main. ranks treatments on stats
       r = adds(rxs,i+1,hi)
       n1,n2 = #l.t, #r.t
       tmp = n1/n*math.abs(mid - median(l.t)) + n2/n*math.abs(mid - median(r.t))
-      if tmp > max then max,cut = tmp,i end 
+      if tmp > max and (median(r.t) - median(l.t) > cohen) then max,cut = tmp,i end 
     end  
     if   cut 
     then local l,r = adds(rxs,lo,cut), adds(rxs,cut+1,hi)
          if mwu(r.t,l.t) and not cliffsDelta(r.t, l.t) then
+         --if not cliffsDelta(r.t, l.t) then
            argmax(lo,cut)
            return argmax(cut+1,hi)  end end -- return here (so we skip over the next 2 lines) 
     for i=lo,hi do rxs[i].rank = ranking end -- if we did not cut, label all current `rx` as `rank`
     ranking = ranking+1 -- increment `rank` (so next thing has rank+1)
   end --------------------------------------------------------------------
-  ranking = 1
+  all={}
   rxs = {}
-  for k,t1 in pairs(t) do rxs[1+#rxs]= RX(sort(t1),k) end
+  for k,t1 in pairs(t) do 
+      for _,n in pairs(t1) do push(all,n) end
+     rxs[1+#rxs]= RX(sort(t1),k) end
+  cohen = the.D * std(sort(all))
   rxs = sort(rxs, function(a,b) return median(a.t) < median(b.t) end) -- sorted on median
+  ranking = 1
   argmax(1, #rxs) -- recursively split
   return tiles(rxs) end 
 -----------------------------------------------------------------------------------------------
@@ -265,6 +271,9 @@ function median(t) --> n; assumes t is sorted
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 
+function std(t) --> n; assumes t is sorted 
+  return (t[9*#t//10] - t[#t//10])/2.58 end
+
 function push(t,x) t[1+#t]=x; return x end
 
 function settings(s,t) --> t; extra key value pairs from the help string `s`
@@ -326,32 +335,73 @@ function tiles(rxs) --> ss; makes on string per treatment showing rank, distribu
   return rxs end
 --------------------------------------------------------------------------------------------------
 --- TESTS
-local norm,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9,eg10
-function norm(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
+local gaussian,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9,eg10
+function gaussian(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R())  end
 
 function eg1()
-  print("false",mwu( {8,7,6,2,5,8,7,3},{8,7,6,2,5,8,7,3}))
-  print("true",mwu( {8,7,6,2,5,8,7,3}, {9,9,7,8,10,9,6})) end
-
+  print("\neg1")
+  math.randomseed(the.seed)
+  print("\t\tfalse", mwu( {8, 7, 6, 2, 5, 8, 7, 3}, 
+                          {8, 7, 6, 2, 5, 8, 7, 3}),
+         not cliffsDelta( {8, 7, 6, 2, 5, 8, 7, 3}, 
+                          {8, 7, 6, 2, 5, 8, 7, 3}))
+  print("\t\ttrue", mwu(  {8, 7, 6, 2, 5, 8, 7, 3},  
+                          {9, 9, 7, 8, 10, 9, 6}),
+         not cliffsDelta( {8, 7, 6, 2, 5, 8, 7, 3},  
+                          {9, 9, 7, 8, 10, 9, 6})) end
 function eg2()
+  print("\neg2")
+  math.randomseed(the.seed)
   print""
-  print("true",mwu({0.34,0.49,0.51,0.6,.34,.49,.51,.6},{0.6,0.7,0.8,0.9,.6,.7,.8,.9}))
-  print("true",mwu({0.15,0.25,0.4,0.35,0.15,0.25,0.4,0.35},{0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9}))
-  print("false",mwu({0.6,0.7,0.8,0.9,.6,.7,.8,.9},{0.6,0.7,0.8,0.9,0.6,0.7,0.8,0.9}))
+  print("\t\ttrue", 
+                    mwu({0.34, 0.49, 0.51, 0.6,   .34,  .49,  .51, .6}, 
+                        {0.6,  0.7,  0.8,  0.9,   .6,   .7,   .8,  .9}),
+                    
+        not cliffsDelta({0.34, 0.49, 0.51, 0.6,   .34,  .49,  .51, .6}, 
+                        {0.6,  0.7,  0.8,  0.9,   .6,   .7,   .8,  .9})
+   )
+  print("\t\ttrue", 
+                    mwu({0.15, 0.25, 0.4,  0.35, 0.15, 0.25, 0.4, 0.35}, 
+                        {0.6,  0.7,  0.8,  0.9,  0.6,  0.7,  0.8, 0.9}),
+        not cliffsDelta({0.15, 0.25, 0.4,  0.35, 0.15, 0.25, 0.4, 0.35}, 
+                        {0.6,  0.7,  0.8,  0.9,  0.6,  0.7,  0.8, 0.9})
+                      )
+  print("\t\tfalse", 
+                     mwu({0.6, 0.7,  0.8,  0.9,   .6,   .7,   .8,  .9}, 
+                         {0.6, 0.7,  0.8,  0.9,  0.6,  0.7,  0.8, 0.9}),
+         not cliffsDelta({0.6, 0.7,  0.8,  0.9,   .6,   .7,   .8,  .9}, 
+                         {0.6, 0.7,  0.8,  0.9,  0.6,  0.7,  0.8, 0.9})
+                      )
   print""
-  print("true",mwu({0.34,0.49,0.51,0.6},{0.6,0.7,0.8,0.9}))
-  print("true",mwu({0.15,0.25,0.4,0.35},{0.6,0.7,0.8,0.9}))
-  print("false",mwu({0.6,0.7,0.8,0.9},{0.6,0.7,0.8,0.9})) end
+  print("\t\ttrue", 
+                    mwu({0.34, 0.49, 0.51, 0.6}, 
+                        {0.6,  0.7,  0.8,  0.9}),
+        not cliffsDelta({0.34, 0.49, 0.51, 0.6}, 
+                        {0.6,  0.7,  0.8,  0.9})
+                      )
+  print("\t\ttrue", 
+                    mwu({0.15, 0.25, 0.4,  0.35}, 
+                        {0.6,  0.7,  0.8,  0.9}),
+       not cliffsDelta({0.15, 0.25, 0.4,  0.35}, 
+                        {0.6,  0.7,  0.8,  0.9})
+                      )
+  print("\t\tfalse", 
+                     mwu({0.6, 0.7,  0.8,  0.9}, 
+                         {0.6, 0.7,  0.8,  0.9}),
+         not cliffsDelta({0.6, 0.7,  0.8,  0.9}, 
+                         {0.6, 0.7,  0.8,  0.9})
+                     ) end
 
 function eg3()
+  print("\neg3")
   local d=1
-  math.randomseed(1)
+  math.randomseed(the.seed)
   for i=1,10 do
     local t1,t2={},{}
-    for j=1,2560 do t1[1+#t1]=norm(10,1); t2[1+#t2]=norm(d*10,1) end
-    print(d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
+    for j=1,2560 do t1[1+#t1]=gaussian(10,1); t2[1+#t2]=gaussian(d*10,1) end
+    print("\t",d,d<1.15 and "false" or "true",mwu(t1,t2),mwu(t1,t1))
     d=d+0.1 end end
 
 function eg0(txt,data)
@@ -359,6 +409,7 @@ function eg0(txt,data)
   for _,rx in pairs(sk(data)) do print("\t",rx.name,rx.rank, rx.show) end end
 
 function eg4()
+  math.randomseed(the.seed)
   eg0("eg4",{
          x1={0.34,0.49,0.51,0.6,.34,.49,.51,.6},
          x2={0.6,0.7,0.8,0.9,.6,.7,.8,.9},
@@ -367,17 +418,20 @@ function eg4()
          x5={0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4}}) end
 
 function eg5()
+  math.randomseed(the.seed)
   eg0("eg5",{
         x1= { 0.34,0.49,0.51,0.6,0.34,0.49,0.51,0.6},
         x2={ 6,7,8,9 ,6,7,8,9}}) end
 
 function eg6()
+  math.randomseed(the.seed)
   eg0("eg6",{
    x1={ 0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4},
    x2={ 0.1,0.2,0.3,0.4,0.1,0.2,0.3,0.4},
    x3={6,7,8,9,6,7,8,9}}) end
 
 function eg7()
+  math.randomseed(the.seed)
   eg0("eg7",{
     x1={101,100,99,101,99.5,101,100,99,101,99.5},
     x2={101,100,99,101,100,101,100,99,101,100},
@@ -385,6 +439,7 @@ function eg7()
     x4={101,100,99,101,100,101,100,99,101,100}}) end
 
 function eg8()
+  math.randomseed(the.seed)
   eg0("eg8",{
     x1={11,12,13,11,12,13},
     x2={14,13,15 ,14,12,12},
@@ -392,42 +447,44 @@ function eg8()
     x4={32,33,34,32,33,34}}) end
 
 function eg9()
-  map(sk(slurp("../etc/data/stats.txt")), 
-      function(rx) print(rx.rank,rx.name,rx.show) end) end
+  math.randomseed(the.seed)
+  print("\neg9")
+  map(sk("../etc/data/stats.txt"), 
+      function(rx) print("","",rx.rank,rx.name,rx.show) end) end
 
 function eg10()
+  math.randomseed(the.seed)
   local data= {
                 x1={},x2={},x3={},x4={},x5={},
                 x6={},x7={},x8={},x9={},x10={},
               }
-  for i=1,1000 do push(data.x1, norm(10,1)) end
-  for i=1,1000 do push(data.x2, norm(10.1,1)) end
-  for i=1,1000 do push(data.x3, norm(20,1)) end
-  for i=1,1000 do push(data.x4, norm(30,1)) end
-  for i=1,1000 do push(data.x5, norm(30.1,1)) end
-  for i=1,1000 do push(data.x6, norm(10,1)) end
-  for i=1,1000 do push(data.x7, norm(10.1,1)) end
-  for i=1,1000 do push(data.x8, norm(20,1)) end
-  for i=1,1000 do push(data.x9, norm(30,1)) end
-  for i=1,1000 do push(data.x10, norm(30.1,1)) end
+  for i=1,32 do push(data.x1, gaussian(10,1)) end
+  for i=1,32 do push(data.x2, gaussian(10.1,1)) end
+  for i=1,32 do push(data.x3, gaussian(20,1)) end
+  for i=1,32 do push(data.x4, gaussian(30,1)) end
+  for i=1,32 do push(data.x5, gaussian(30.1,1)) end
+  for i=1,32 do push(data.x6, gaussian(10,1)) end
+  --for i=1,32 do push(data.x7, gaussian(10.1,1)) end
+  for k,v in pairs(data) do if #v==0 then data[k]=nil end end 
   eg0("eg10",data) end
 
-the=settings(help,the)
+local function egs()
+  the=cli(help,the)
+  --eg2() eg2(); eg3(); eg4(); eg5(); 
+  --eg6(); eg7();
+  eg8() --eg9(); 
+  eg10() 
+end
 
-eg1(); eg2(); 
-eg3(); eg4(); eg5(); eg6(); eg7();eg8()
-eg4(); eg10()
--- for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end
--- if   pcall(debug.getlocal,4,1) 
--- then return sk
--- else the=cli(help,the)
---      for _,rx in pairs(sk(the.file)) do print(rx.rank,rx.name,rx.show) end end
---
---
---      -- Returns the p-value for the given U value and sample sizes
--- local function get_p_value(U, n1, n2)
---   local m = n1 * n2
---   local s = math.sqrt(m * (n1 + n2 + 1) / 12)
---   local z = (U - n1 * n2 / 2) / s
---   return math.exp(-z^2/2) / math.sqrt(2 * math.pi)
--- end
+--------------
+function locals(    t,i,s,x)
+  t,i,s,x = {},1 
+  while true do
+    s, x = debug.getlocal(2, i)
+    if not s then break end
+    if s:sub(1,1) ~= "" then t[s]=x ; print(s,x) end
+    i = i + 1 end
+  return t end
+
+the=settings(help,the)
+return pcall(debug.getlocal,4,1) and locals() or egs()
