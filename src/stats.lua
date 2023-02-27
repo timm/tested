@@ -488,10 +488,11 @@ function eg10()
 local function egs()
   the=cli(help,the)
   egTiles()
-  --eg2() eg2(); eg3(); eg4(); eg5(); 
-  --eg6(); eg7();
-  --eg8() --eg9(); 
-  --eg10() 
+  eg1();
+  eg2() eg2(); eg3(); eg4(); eg5(); 
+  eg6(); eg7();
+  eg8() eg9(); 
+  eg10() 
 end
 
 --------------
