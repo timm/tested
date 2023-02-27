@@ -285,7 +285,7 @@ RX2 : 1, 2, 3, 4,    6
 ```
 
 Rank them smallest to largest 1 to 10 (and tied numbers get the average rank). 
-- So for N numbers, first and last number gets 1...N (if no ties for first and last place)
+- Prundence check: for N numbers, first and last number gets 1...N (if no ties for first and last place)
 
 ```
 RX1' :         4.5, 6, 7.5, 9, 10       sum = R1 = 37
