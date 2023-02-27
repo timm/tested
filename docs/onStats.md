@@ -220,8 +220,9 @@ e.g. for papers using deep learners and the learning time is sooooo veeeeeery lo
 do multiple runs. Instead, we do one run with DL, other run with other methods, and look for some pattern
 that holds across multiple data sets
 - In the following, we find the BEST (e.g.) recall and mark in gray everything within cohen's-d of that best:
-- 
-![image](https://user-images.githubusercontent.com/29195/221665722-aada3e5b-bcf2-4e2c-81f3-00203effa918.png)
+
+<img width=600 align=center
+src="https://user-images.githubusercontent.com/29195/221665722-aada3e5b-bcf2-4e2c-81f3-00203effa918.png">
 
 
 For more complexity (but not much more), we turn to the `cliff's Delta`.
