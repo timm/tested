@@ -216,6 +216,14 @@ Parametric methods assume that the numbers come from a bell-shaped curve
 [^saw]: Sawilowsky, S.S.: New effect size rules of thumb. Journal of Modern Applied Statistical
 Methods 8(2), 26 (2009)
 
+e.g. for papers using deep learners and the learning time is sooooo veeeeeery looooooong then we cannot
+do multiple runs. Instead, we do one run with DL, other run with other methods, and look for some pattern
+that holds across multiple data sets
+- In the following, we find the BEST (e.g.) recall and mark in gray everything within cohen's-d of that best:
+- 
+![image](https://user-images.githubusercontent.com/29195/221665722-aada3e5b-bcf2-4e2c-81f3-00203effa918.png)
+
+
 For more complexity (but not much more), we turn to the `cliff's Delta`.
 - One number `x` (from distribution1) have `gt` and `lt` numbers greater and less than it in
   distribution2 
