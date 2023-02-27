@@ -118,12 +118,11 @@ function egTiles()
   for i=1,32 do push(data[5],  gaussian(30.1,  1)) end
   for i=1,32 do push(data[6],  gaussian(10,    1)) end
   for k,v in pairs(data) do data[k] =  RX(sort(v),k) end
-  data = sort(data,function(a,b) return median(a.t) < median(b.t) end ) -- sort via median)
+  data = sort(data,function(a,b) return median(a.t) < median(b.t) end ) -- sort via median
   for k,v in pairs(tiles(data)) do
     print("rx["..v.name.."]",o(v.show)) end end
 ```
-
-And this produces:
+The `tiles` function (shown below) pretty prints the distributions:
 ```
 rx[1]	 -*--          |                 {  8.34,   9.06,   9.69,  10.52,  10.92}
 rx[6]	---*-          |                 {  7.66,   9.24,   9.80,  10.44,  11.11}
@@ -135,45 +134,39 @@ rx[4]	               |           -*--  { 28.84,  29.59,  30.06,  30.26,  31.20}
 Note we might think that these results divide into three groups (1,6,2). That is
 our intuition. Lets see below if the stats works for us.
 
-We'll store the numbers in an `RX` object (rx=treatments).
-```lua
-function RX(t,s)  --> `t` is all the numbers, sorted
-  return {name=s or"",rank=0,t=sort(t or {})} end 
-```
 To print multiple `RX` objects:
-- first find the most `lo` and `hi` values in all the treatments. 
+- first find the most `lo` and `hi` values in all the treatments [1]. 
 - then, for each treatment, generate a print string add it as a `.show` field.
-  - by normalizing each number 0..1 from `lo` to `hi`
+  - by normalizing each number 0..1 from `lo` to `hi`  [2]
   - the showing it as a number somewhere between `lo` to `hi` (see `at`)
   - show the `A=10`,`B=30` percentile as `-` and
   - show the `D=70`,`E=90` percentile as `-` and
   - show the `C=50th` median as `\*`
   - then, at the end, show the numbers for the `A,B,C,D,E` numbers.
+  - Aside: make sure all our psoitions are  integer [3]
 
 ```lua
-function median(t) --> n; assumes t is sorted 
-  local n = #t//2
-  return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
-
 -- in the following the.width = 32
 function tiles(rxs) 
   local lo,hi = math.huge, -math.huge
   for _,rx in pairs(rxs) do 
-    lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end
+    lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end  -- [1]
   for _,rx in pairs(rxs) do
     local t,u = rx.t,{}
     local function of(x,max) return math.max(1, math.min(max, x)) end
     local function at(x)  return t[of(#t*x//1, #t)] end
-    local function pos(x) return math.floor(of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)) end
-    for i=1,the.width do u[1+#u]=" " end
-    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
-    local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e)
-    for i=A,B do u[i]="-" end
-    for i=D,E do u[i]="-" end
-    u[the.width//2] = "|" 
-    u[C] = "*"
-    rx.show = table.concat(u) 
-    rx.show = rx.show.." {"..table.concat(
+    local function pos(x) return math.floor(                                        -- [3]
+                                  of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)  -- [2]
+                                 ) end 
+    for i=1,the.width do u[1+#u]=" " end                    -- initialize the show strong to blanks
+    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) -- find percentiles lo to hi
+    local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e) -- find positions of percentiles.
+    for i=A,B do u[i]="-" end                               -- add "-" to the 10th to30th range
+    for i=D,E do u[i]="-" end                               -- add "-" to the 70th to 90th range
+    u[the.width//2] = "|"                                   -- add "|" to the middle 
+    u[C] = "*"                                              -- marked "C" (the .5 pos) with "*"
+    rx.show = table.concat(u)                               -- build the tile string
+    rx.show = rx.show.." {"..table.concat(                  -- add the numbers for 10th,30th,50th, etc.
                                map({a,b,c,d,e},
                                  function(x) 
                                    return string.format(the.Fmt,x) end),", ") .."}"
