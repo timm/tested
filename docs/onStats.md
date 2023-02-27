@@ -234,6 +234,7 @@ the non-parametric
     - i.e. it falls into the middle
 
 Cliff’s d can be interpreted as negligible (<0.147), small (<0.33), medium (<0.474) and large (otheriwse) effects[^romo].
+- so we will use .4 as the threshold between medium and small.
 
 [^romo]: Romano, J., Kromrey, J. D., Coraggio, J., & Skowronek, J. (2006, February). 
   Appropriate statistics for ordinal level data: Should we really be using t-test and 
@@ -272,10 +273,10 @@ Non-parametric significance tests
 - Mann-Whitney U-test (sometimes called the Mann Whitney Wilcoxon Test or the Wilcoxon Rank Sum Test)
 - Don't compare numbers, compare ranks
 
-``
+```
 RX1: 7, 5, 6, 4, 12   
 RX2: 3, 6, 4, 2, 1
-``
+```
 Sort the numbers
 
 ``
@@ -287,10 +288,10 @@ Rank them smallest to largest 1 to 10 (and tied numbers get the average rank).
 - So for N numbers, first and last number gets 1...N (if no ties for first and last place)
 
 ```
-RX1' :         4.5, 6, 7.5, 9, 10       &sigma; = R1 = 37
-RX2' :1, 2, 3, 4.5,    7.5              &sigma; = R2 = 18
+RX1' :         4.5, 6, 7.5, 9, 10       sum = R1 = 37
+RX2' :1, 2, 3, 4.5,    7.5              sum = R2 = 18
 ```
 Now comes the mathemagic:
 - $U_1 = n_1n_2 + \frac{n_1(n_1+1)}{2} - R_1$ = 5\*5 - 5\*6/2 - 37 = 3
-- $U_2 = n_1n_2 + \frac{n_2(n_2+1)}{2} - R_2i$ = 5\*5 - 5\*6/2 - 18 = 22
+- $U_2 = n_1n_2 + \frac{n_2(n_2+1)}{2} - R_2$ = 5\*5 - 5\*6/2 - 18 = 22
 
