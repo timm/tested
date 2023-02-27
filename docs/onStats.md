@@ -141,7 +141,7 @@ To print multiple `RX` objects:
 - first find the most `lo` and `hi` values in all the treatments [1]. 
 - then, for each treatment, generate a print string add it as a `.show` field.
   - by normalizing each number 0..1 from `lo` to `hi`  [2]
-  - the showing it as a number somewhere between `lo` to `hi` (see `at`)
+  - the showing it as a number somewhere between `lo` to `hi` (see the `at` function, inside `tiles`)
   - Aside: make sure all our psoitions are  integer [3]
 
 ```lua
@@ -176,7 +176,7 @@ function tiles(rxs)
 
 As to statistical tests,   two kinds of background assumptions
 
-| analysis| assumptions  | effect-size  | significance test|
+| analysis| assumptions  | effect-size: different by more than a trivial amount? | significance test: how much does one overlap the other?|
 |---------|--------------|--------------|------------------|
 |parametric | data look like bell-shaped curves| e.g. cohen-D | t-test|
 |non-parametric | nil | cliff's delta | mann-whitney U test|
@@ -184,12 +184,13 @@ As to statistical tests,   two kinds of background assumptions
 <img src="https://www.rasch.org/rmt/gifs/101over.gif" align=right width=400>
 
 Note the different kinds of test:
-- effect size: are two distributions different by more than a trivial amount?
+- effect size: 
+  - are two distributions different by more than a trivial amount?
 - significance test (poorly named, maybe "_distinguishable_" test would be a better name): 
-    if I pull numbers from one distribution, how likely
-    is it that that number comes from the other distribution?
-- If two treatments pass _both_ tests then we can compare their differences to say "worse" or
-  "better". 
+  - if I pull numbers from one distribution
+    -  how likely is it that that number comes from the other distribution?
+- If two treatments  are significantly different _and_ are different by more than a small amunt 
+  - only then can we say "worse" or "better". 
   - Otherwise, we can make no conclusions.
 
 <br clear=all>
