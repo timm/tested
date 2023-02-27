@@ -299,6 +299,9 @@ function sort(t,fun) table.sort(t,fun) return t end --> t; returns `t` sorted by
 function map(t,fun) --> t; returns copy of `t`, all items filtered by `fun`.
   local u={}; for _,x in pairs(t) do u[1+#u]=fun(x) end; return u end
 
+function kap(t,fun) --> t; returns copy of `t`, all items filtered by `fun`.
+  local u={}; for k,x in pairs(t) do u[k]=fun(k,x) end; return u end
+
 -- ### Thing to String
 
 function oo(t)  --> t; print `t` then return `t`.
@@ -339,6 +342,20 @@ local gaussian,eg0,eg1,eg2,eg3,eg4,eg5,eg6,eg7,eg8,eg9,eg10
 function gaussian(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
   local sq,pi,log,cos,R = math.sqrt,math.pi,math.log,math.cos,math.random
   return  mu + sd * sq(-2*log(R())) * cos(2*pi*R())  end
+
+function egTiles()
+  math.randomseed(the.seed)
+  local data= {{},{},{},{},{},{}}
+  for i=1,32 do push(data[1], gaussian(10,1)) end
+  for i=1,32 do push(data[2], gaussian(10.1,1)) end
+  for i=1,32 do push(data[3], gaussian(20,1)) end
+  for i=1,32 do push(data[4], gaussian(30,1)) end
+  for i=1,32 do push(data[5], gaussian(30.1,1)) end
+  for i=1,32 do push(data[6], gaussian(10,1)) end
+  for k,v in pairs(data) do data[k] =  RX(sort(v),k) end
+  data = sort(data,function(a,b) return median(a.t) < median(b.t) end )
+  for k,v in pairs(tiles(data)) do
+    print("rx["..v.name.."]",o(v.show)) end end
 
 function eg1()
   print("\neg1")
@@ -470,10 +487,11 @@ function eg10()
 
 local function egs()
   the=cli(help,the)
+  egTiles()
   --eg2() eg2(); eg3(); eg4(); eg5(); 
   --eg6(); eg7();
-  eg8() --eg9(); 
-  eg10() 
+  --eg8() --eg9(); 
+  --eg10() 
 end
 
 --------------
