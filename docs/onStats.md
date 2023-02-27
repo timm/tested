@@ -177,7 +177,7 @@ As to statistical tests,   two kinds of background assumptions
 
 | analysis| assumptions  | effect-size  | significance test|
 |---------|--------------|--------------|------------------|
-|parametric | data look like bell-shaped curves| e.g. cohen's D | t-test|
+|parametric | data look like bell-shaped curves| e.g. cohen-D | t-test|
 |non-parametric | nil | cliff's delta | mann-whitney U test|
 
 <img src="https://www.rasch.org/rmt/gifs/101over.gif" align=right width=400>
@@ -187,7 +187,9 @@ Note the different kinds of test:
 - significance test (poorly named, maybe "_distinguishable_" test would be a better name): 
     if I pull numbers from one distribution, how likely
     is it that that number comes from the other distribution?
-- recommended: show that this is NOT a small effect and the distributions ARE distinguishable
+- If two treatments pass _both_ tests then we can compare their differences to say "worse" or
+  "better". 
+  - Otherwise, we can make no conclusions.
 
 <br clear=all>
 
@@ -197,7 +199,7 @@ src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distributi
 Parametric methods assume that the numbers come from a bell-shaped curve 
 (single max value, symmetrical distributions).
 - those assumptions can be unrealistic but they do simplify the analysis.
-- e.g. cohen-D: two numbers are different if their separation is larger than `std*d`
+- e.g. the `cohen-D` parametric effect-size method says that  two numbers are different if their separation is larger than `std*d`
   - As to what value of d to use, a
     widely cited paper by Sawilowsky [^saw] (this 2009 paper has 1100 citations).
     asserts that “small” and “medium” effects can be measured using
@@ -210,4 +212,20 @@ Parametric methods assume that the numbers come from a bell-shaped curve
 [^saw]: Sawilowsky, S.S.: New effect size rules of thumb. Journal of Modern Applied Statistical
 Methods 8(2), 26 (2009)
 
-A non
+For more complexity (but not much more), we turn to the `cliff's Delta`.
+- One number `x` (from distribution1) have `gt` and `lt` numbers greater and less than it in
+  distribution2 
+  - `x` is likely to belong in distribution2 if `gt-lt =0`.
+    - i.e. it falls into the middle
+
+
+```lua
+function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
+  local n,gt,lt = 0,0,0
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
+      n = n + 1
+      if x > y then gt = gt + 1 end
+      if x < y then lt = lt + 1 end end end
+  return math.abs(lt - gt)/n <= (dull or the.dull) end
+```
