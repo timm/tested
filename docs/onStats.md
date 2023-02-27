@@ -98,7 +98,8 @@ function median(t) --> n; assumes t is sorted
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 ```
-Now, just for a demo, will create six sets of results with different means (but same standard deviations:
+Now, just for a demo, will create six sets of results with different means (but same standard deviations).
+Note that when we create a list of treatments, we sort them by their median.
 ```lua
 local m=math
 local sq,pi,log,cos,r,gaussian = m.sqrt,m.pi,m.log,m.cos,m.random
@@ -117,7 +118,7 @@ function egTiles()
   for i=1,32 do push(data[5],  gaussian(30.1,  1)) end
   for i=1,32 do push(data[6],  gaussian(10,    1)) end
   for k,v in pairs(data) do data[k] =  RX(sort(v),k) end
-  data = sort(data,function(a,b) return median(a.t) < median(b.t) end )
+  data = sort(data,function(a,b) return median(a.t) < median(b.t) end ) -- sort via median)
   for k,v in pairs(tiles(data)) do
     print("rx["..v.name.."]",o(v.show)) end end
 ```
