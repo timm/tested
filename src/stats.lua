@@ -26,7 +26,7 @@ USAGE:
 
 OPTIONS:
   -c --conf  hypothesis test confidence; one of 95,99 = 95
-  -d --dull  effect size threshold (.147=small)       = .147
+  -d --dull  effect size threshold (.147=small)       = .4
   -D --D     cohen's effect size                      = .35
   -f --file  file to read data                        = data.txt
   -F --Fmt   number format for display                = %6.2f
@@ -481,6 +481,8 @@ function eg10()
   for i=1,32 do push(data.x4, gaussian(30,1)) end
   for i=1,32 do push(data.x5, gaussian(30.1,1)) end
   for i=1,32 do push(data.x6, gaussian(10,1)) end
+  --for i=1,32 do push(data.x7, gaussian(40,1)) end
+  --for i=1,32 do push(data.x8, gaussian(50,1)) end
   --for i=1,32 do push(data.x7, gaussian(10.1,1)) end
   for k,v in pairs(data) do if #v==0 then data[k]=nil end end 
   eg0("eg10",data) end

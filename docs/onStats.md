@@ -220,17 +220,25 @@ e.g. for papers using deep learners and the learning time is sooooo veeeeeery lo
 do multiple runs. Instead, we do one run with DL, other run with other methods, and look for some pattern
 that holds across multiple data sets
 - In the following, we find the BEST (e.g.) recall and mark in gray everything within cohen's-d of that best:
+- THen see if some effect holds across multiple data sets.
 
 <img width=600 align=center
 src="https://user-images.githubusercontent.com/29195/221665722-aada3e5b-bcf2-4e2c-81f3-00203effa918.png">
 
-
-For more complexity (but not much more), we turn to the `cliff's Delta`.
-- One number `x` (from distribution1) have `gt` and `lt` numbers greater and less than it in
+If you doubt Cohen's-D (cause you doubt the normal assumption) then we can use
+the non-parametric
+`cliff's Delta` effect size test:
+- We say say that any number `x` (from distribution1) has `gt` and `lt` numbers greater and less than it in
   distribution2 
-  - `x` is likely to belong in distribution2 if `gt-lt =0`.
+  - So `x` is likely to belong in distribution2 if `abs(gt-lt) =0`.
     - i.e. it falls into the middle
 
+Cliff’s d can be interpreted as negligible (<0.147), small (<0.33), medium (<0.474) and large (otheriwse) effects[^romo].
+
+[^romo]: Romano, J., Kromrey, J. D., Coraggio, J., & Skowronek, J. (2006, February). 
+  Appropriate statistics for ordinal level data: Should we really be using t-test and 
+  Cohen’sd for evaluating group differences on the NSSE and other surveys. 
+  In annual meeting of the Florida Association of Institutional Research (Vol. 177, p. 34).
 
 ```lua
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
@@ -240,12 +248,12 @@ function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amo
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
-  return math.abs(lt - gt)/n <= (dull or the.dull) end
+  return math.abs(lt - gt)/n <= (dull or the.dull) end -- 0.147
 ```
 
 ### Significance Tests (which should be called "Distinguisnable")
 
-Parametric: t-tests (which I don't condone). Two normal  distributions $i,j$ are different if their means $\mu_i$
+Parametric: t-tests (which I don't approve... assumes gauusians). Two normal  distributions $i,j$ are different if their means $\mu_i$
 are different by more than some
 threshold $t$ (looked up from some 
 [table](https://statisticsbyjim.com/hypothesis-testing/t-distribution-table/)):
@@ -259,3 +267,30 @@ Notes:
 - _sample size_ effect: 
   - The large the same size $n_i,n_j$ the more certain we become 
   - So we use the fraction $\sigma/n$ to attenuate the $\sigma$ effect
+
+Non-parametric significance tests
+- Mann-Whitney U-test (sometimes called the Mann Whitney Wilcoxon Test or the Wilcoxon Rank Sum Test)
+- Don't compare numbers, compare ranks
+
+``
+RX1: 7, 5, 6, 4, 12   
+RX2: 3, 6, 4, 2, 1
+``
+Sort the numbers
+
+``
+RX1 :          4, 5, 6, 7, 12
+RX2 : 1, 2, 3, 4,    6
+``
+
+Rank them smallest to largest 1 to 10 (and tied numbers get the average rank). 
+- So for N numbers, first and last number gets 1...N (if no ties for first and last place)
+
+```
+RX1' :         4.5, 6, 7.5, 9, 10       &sigma; = R1 = 37
+RX2' :1, 2, 3, 4.5,    7.5              &sigma; = R2 = 18
+```
+Now comes the mathemagic:
+- $U_1 = n_1n_2 + \frac{n_1(n_1+1)}{2} - R_1$ = 5\*5 - 5\*6/2 - 37 = 3
+- $U_2 = n_1n_2 + \frac{n_2(n_2+1)}{2} - R_2i$ = 5\*5 - 5\*6/2 - 18 = 22
+
