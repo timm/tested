@@ -481,9 +481,9 @@ function eg10()
   for i=1,32 do push(data.x4, gaussian(30,1)) end
   for i=1,32 do push(data.x5, gaussian(30.1,1)) end
   for i=1,32 do push(data.x6, gaussian(10,1)) end
-  --for i=1,32 do push(data.x7, gaussian(40,1)) end
-  --for i=1,32 do push(data.x8, gaussian(50,1)) end
-  --for i=1,32 do push(data.x7, gaussian(10.1,1)) end
+  for i=1,32 do push(data.x7, gaussian(40,1)) end
+  for i=1,32 do push(data.x8, gaussian(50,1)) end
+  for i=1,32 do push(data.x9, gaussian(10.1,1)) end
   for k,v in pairs(data) do if #v==0 then data[k]=nil end end 
   eg0("eg10",data) end
 
