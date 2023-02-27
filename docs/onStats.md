@@ -139,10 +139,6 @@ To print multiple `RX` objects:
 - then, for each treatment, generate a print string add it as a `.show` field.
   - by normalizing each number 0..1 from `lo` to `hi`  [2]
   - the showing it as a number somewhere between `lo` to `hi` (see `at`)
-  - show the `A=10`,`B=30` percentile as `-` and
-  - show the `D=70`,`E=90` percentile as `-` and
-  - show the `C=50th` median as `\*`
-  - then, at the end, show the numbers for the `A,B,C,D,E` numbers.
   - Aside: make sure all our psoitions are  integer [3]
 
 ```lua
@@ -154,7 +150,7 @@ function tiles(rxs)
   for _,rx in pairs(rxs) do
     local t,u = rx.t,{}
     local function of(x,max) return math.max(1, math.min(max, x)) end
-    local function at(x)  return t[of(#t*x//1, #t)] end
+    local function at(x)  return t[ of(#t*x//1, #t) ] end   -- find the xth percentile in "rx.t" 
     local function pos(x) return math.floor(                                        -- [3]
                                   of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)  -- [2]
                                  ) end 
