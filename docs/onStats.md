@@ -66,36 +66,44 @@ But when you gotta do stats:
 ## Visualize the Data
 
 Let us look at 1000 numbers whose median value is 70 and whose 30th to 70th percentile
-range is 30 to 80
+range is 40 to 80
+
 ```
-   -----      *   ------- 
+0   20   40   60    80   100
+|----|----|----|----|----|
+     ------       * ------ 
    
-   ^   ^      ^   ^     ^
-   |   |      |   |     |
- q10   q30    q50 q70   q90      
-   20  30     70  80    100
+     ^   ^        ^ ^    ^
+     |   |        | |    |
+   q10   q30    q50 q70  q90      
 ```
+
 The advantage of percentile charts is that we can show a lot of data in
-very little space.
+very little space. E.g. the above chart could be show 30 numbers, or 30,000
 
 <img align=right width=300 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
-Lets look even more looking at 6 sets of results (where results
-have 32 values) ranging from 6 to 33,
-with medians ranges 9.69 to 30.06. 
+Lets look another example, this time from half a dozen experiments (each experiemtn ueilding 32 numbers
+ranging from 6 to 33,
+with medians ranges 9.69 to 30.06). 
+
+First we  need a place to put the treatments. Note that when we store the numbers, we sort them
 ```lua
-local m=math
-local sq,pi,log,cos,r,gaussian = m.sqrt,m.pi,m.log,m.cos,m.random
-
-function gaussian(mu,sd) 
-  return mu + sd * sq(-2*log(r())) * cos(2*pi*r()) end
-
+function RX(t,s)  
+  return {name=s or"",rank=0,t=sort(t or {})} end 
+```
+Then we might need to some way to find (e.g.) the median of those results `median(rx.t)`.
+```lua
 function median(t) --> n; assumes t is sorted 
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
-
-function RX(t,s)  --> `t` is all the numbers, sorted
-  return {name=s or"",rank=0,t=sort(t or {})} end 
+```
+Now, just for a demo, will create six sets of results with different means (but same standard deviations:
+```lua
+local m=math
+local sq,pi,log,cos,r,gaussian = m.sqrt,m.pi,m.log,m.cos,m.random
+function gaussian(mu,sd) 
+  return mu + sd * sq(-2*log(r())) * cos(2*pi*r()) end
 
 function egTiles()
   math.randomseed(the.seed)
