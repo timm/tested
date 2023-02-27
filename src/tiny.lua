@@ -275,7 +275,7 @@ local function fftTrees(data,best,rows,out)
 end
 ------------------------------------
 local go,no,copy,fails = {},{},{},0
-local ok,todo,locals,main
+local ok,todo,locals,main,showHelp
 
 function ok(test, txt)  
   if not test then fails = fails + 1 end 
@@ -288,16 +288,17 @@ function todo(what,fun)
   io.write(fmt(">>  %s ",what)) 
   fun() end
 
-local function showHelp(the)
-  if the.help then 
-    print("\n"..help,"\nUSAGE:\n   lua tiny.lua [OPTIONS] [--go ACTION]\n\nOPTIONS:")
-    map(sort(kap(the,function(k,v) return fmt("   --%-8s%s",k,v) end)),print)
-    print("\nACTIONS:")
-    for k,_ in pairs(go) do print("   lua tiny.lua --go "..k) end end end 
- 
+function showHelp(the)
+  print("\n"..help,
+        "\nUSAGE:\n   lua tiny.lua [OPTIONS] [--go ACTION]\n\nOPTIONS:")
+  map(sort(kap(the,function(k,v) return fmt("   --%-8s%s",k,v) end)),
+      print)
+  print("\nACTIONS:")
+  for k,_ in pairs(go) do print("   lua tiny.lua --go "..k) end end 
+
 function main()
   the = kap(the,cli)
-  showHelp(the)
+  if the.help then showHelp(the) end
   for k,v in pairs(the) do copy[k]=v end
   for what,fun in pairs(go) do
     if the.go == "all" or the.go == what then 
