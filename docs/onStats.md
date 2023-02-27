@@ -81,7 +81,7 @@ very little space.
 <img align=right width=300 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
 Lets look even more looking at 6 sets of results (where results
-have 32 values) ranging from 6 to 33,  
+have 32 values) ranging from 6 to 33,
 with medians ranges 9.69 to 30.06. 
 ```lua
 local m=math
