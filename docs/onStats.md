@@ -87,10 +87,13 @@ Lets look another example, this time from half a dozen experiments (each experie
 ranging from 6 to 33,
 with medians ranges 9.69 to 30.06). 
 
-First we  need a place to put the treatments. Note that when we store the numbers, we sort them
+First we  need a place to put the treatments. Note that:
+- when we store the numbers, we sort them;
+- each treatment has a `show` string, initialized to "" (and we will change that, below).
+
 ```lua
 function RX(t,s)  
-  return {name=s or"",rank=0,t=sort(t or {})} end 
+  return {name=s or"",rank=0,t=sort(t or {}), show=""} end 
 ```
 Then we might need to some way to find (e.g.) the median of those results `median(rx.t)`.
 ```lua
@@ -154,12 +157,12 @@ function tiles(rxs)
     local function pos(x) return math.floor(                                        -- [3]
                                   of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)  -- [2]
                                  ) end 
-    for i=1,the.width do u[1+#u]=" " end                    -- initialize the show strong to blanks
-    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) -- find percentiles lo to hi
+    for i=1,the.width do u[1+#u]=" " end                    -- file the  the show string with blanks
+    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) -- find the 20th percentile breaks
     local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e) -- find positions of percentiles.
     for i=A,B do u[i]="-" end                               -- add "-" to the 10th to30th range
     for i=D,E do u[i]="-" end                               -- add "-" to the 70th to 90th range
-    u[the.width//2] = "|"                                   -- add "|" to the middle 
+    u[ the.width//2 ] = "|"                                 -- add "|" to the middle 
     u[C] = "*"                                              -- marked "C" (the .5 pos) with "*"
     rx.show = table.concat(u)                               -- build the tile string
     rx.show = rx.show.." {"..table.concat(                  -- add the numbers for 10th,30th,50th, etc.
