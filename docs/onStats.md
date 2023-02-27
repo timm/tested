@@ -195,6 +195,8 @@ Note the different kinds of test:
 
 <br clear=all>
 
+### Effect Size Tests
+
 <img align=right width=300 
 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
@@ -231,3 +233,20 @@ function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amo
       if x < y then lt = lt + 1 end end end
   return math.abs(lt - gt)/n <= (dull or the.dull) end
 ```
+
+### Significance Tests (which should be called "Distinguisnable")
+
+Parametric: t-tests (which I don't condone). Two normal  distributions $i,j$ are different if their means $\mu_i$
+are different by more than some
+threshold $t$ (looked up from some table:  
+[table](https://statisticsbyjim.com/hypothesis-testing/t-distribution-table/)).
+
+$$\frac{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_i}{n_i}} > t$$
+
+Caveates:
+- $\sigma$ effect: 
+  - The larger the standard deviations $\sigma_i,\sigma_j$, the harder it becomes to tell them apart
+  - So we see the $\sigma$ terms in a denominator attenuating the different in the means efffect.
+- {\em sample size} effect: 
+  - The large the same size $n_i,n_j$ the more certain we become 
+  - So we use the fraction $\sigma/n$ to attenuate the $\sigma$ effect
