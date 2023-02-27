@@ -189,6 +189,8 @@ Note the different kinds of test:
     is it that that number comes from the other distribution?
 - recommended: show that this is NOT a small effect and the distributions ARE distinguishable
 
+<br clear=all>
+
 <img align=right width=300 
 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
