@@ -1,12 +1,15 @@
--- tiny.lua : lots of AI in a tiny box
--- (c) 2023, Tim Menzies <timm@ieee.org> BSD-2
 --<!-- vim: set syntax=lua ts=2 sw=2 expandtab: -->
 local b4={}; for k,v in pairs(_ENV) do b4[k]=v end 
+local help=[[
+tiny.lua : lots of AI in a tiny box
+(c) 2023, Tim Menzies <timm@ieee.org> BSD-2
+]]
 local the  = {
       Far  = .95,
       go   = "nothing",
       file = "../etc/data/auto93.csv",
       goal = "plan",
+      help = false,
       Max  = 512,
       min  = .5,
       p    = 2,
@@ -285,12 +288,16 @@ function todo(what,fun)
   io.write(fmt(">>  %s ",what)) 
   fun() end
  
-function main(eg)
-  oo(the)
+function main()
   the = kap(the,cli)
+  if the.help then 
+    print("\n"..help,"\nUSAGE: lua tiny.lua [OPTIONS] [--go ACTION]\n\nOPTIONS:")
+    map(sort(kap(the,function(k,v) return fmt("    --%-8s%s",k,v) end)),print)
+    print("\nACTIONS:")
+    for k,_ in pairs(go) do print("    lua tiny.lua --go "..k) end 
+  end
   for k,v in pairs(the) do copy[k]=v end
   for what,fun in pairs(go) do
-
     if the.go == "all" or the.go == what then 
       todo(what,fun) end end
   for k,v in pairs(_ENV) do if not b4[k] then print(k,type(v)) end end 
