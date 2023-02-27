@@ -176,7 +176,7 @@ function tiles(rxs)
 As to statistical tests,   two kinds of background assumptions
 
 | analysis| assumptions  | effect-size  | significance test|
-|---------|--------------|--------------|-------0----------|
+|---------|--------------|--------------|------------------|
 |parametric | data look like bell-shaped curves| e.g. cohen's D | t-test|
 |non-parametric | nil | cliff's delta | mann-whitney U test|
 
