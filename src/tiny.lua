@@ -287,15 +287,17 @@ function todo(what,fun)
   m.randomseed(the.seed)
   io.write(fmt(">>  %s ",what)) 
   fun() end
+
+local function showHelp(the)
+  if the.help then 
+    print("\n"..help,"\nUSAGE:\n   lua tiny.lua [OPTIONS] [--go ACTION]\n\nOPTIONS:")
+    map(sort(kap(the,function(k,v) return fmt("   --%-8s%s",k,v) end)),print)
+    print("\nACTIONS:")
+    for k,_ in pairs(go) do print("   lua tiny.lua --go "..k) end end end 
  
 function main()
   the = kap(the,cli)
-  if the.help then 
-    print("\n"..help,"\nUSAGE: lua tiny.lua [OPTIONS] [--go ACTION]\n\nOPTIONS:")
-    map(sort(kap(the,function(k,v) return fmt("    --%-8s%s",k,v) end)),print)
-    print("\nACTIONS:")
-    for k,_ in pairs(go) do print("    lua tiny.lua --go "..k) end 
-  end
+  showHelp(the)
   for k,v in pairs(the) do copy[k]=v end
   for what,fun in pairs(go) do
     if the.go == "all" or the.go == what then 
