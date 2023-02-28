@@ -25,6 +25,17 @@ As a team, implement the [stats.lua](/src/stas.lua) examples shown in
 [stats.out](/etc/out/stats.out)
 
 
+## Todays lecture: does 42==44?
+
+Clearly, "no", if they are point values.
+
+But "yes", if they these are the median of a two different distributions with large variances.
+- In which case we say that they are  _statistically indistinguishably_ by more more than a _small effect_
+
+Wwhy are we asking this question?
+- Because when we get oru fishing gear working, we will compare resutls from different _treatments_
+  (different fishing engines)
+
 ## What Does "equal" Mean?
 
 Take two stochastic search engines 
