@@ -31,6 +31,10 @@ Clearly, "no", if they are point values.
 
 But "yes", if they these are the median of a two different distributions with large variances.
 - In which case we say that they are  _statistically indistinguishably_ by more more than a _small effect_
+- For example, in the following, is "control" equal to "education"?
+
+![image](https://user-images.githubusercontent.com/29195/221987767-8508aed3-c6bd-4350-a1cb-427c8c0259d7.png)
+
 
 Why  are we asking this question?
 - Because when we get our fishing gear working,
