@@ -349,9 +349,9 @@ local function delta(i, other,      y,z,e)
   e, y, z= 1E-32, i, other
   return math.abs(y.mu - z.mu) / ((e + y.sd^2/y.n + z.sd^2/z.n)^.5) end
 ```
+$$\Delta= \fr{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} $$
 
 Notes:
-- $\Delta= \frac{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} $
 - $\sigma$ effect: 
   - The larger the standard deviations $\sigma_i,\sigma_j$, the harder it becomes to tell them apart
   - So we see the $\sigma$ terms in a denominator attenuating the different in the means efffect.
@@ -359,82 +359,62 @@ Notes:
   - The large the same size $n_i,n_j$ the more certain we become 
   - So we use the fraction $\sigma/n$ to attenuate the $\sigma$ effect
 
-Non-parametric significance tests
-- Mann-Whitney U-test (sometimes called the Mann Whitney Wilcoxon Test or the Wilcoxon Rank Sum Test)
-- Don't compare numbers, compare ranks
+Non-parametric significance test that two distributions $y_0,z_0$ are different.
+- Here is the _bootstrap_ procedure recommended by
+  p220 to 223 of the Efron text ‘Introduction to the Boostrap’ https://bit.ly/3iSJz8B
+- $B$ times (say $B=512$)
+  - build a sample of $y_0$ and a sample of $z_0$  (sampling with replacement, may be repeats)
+  - Count "plus one "  if  their `delta` is different to the `delta` from all the data
+- Use that count to report if the distributions are difference"
 
+Here's sampling with replacement (don't use this one... unless your `the.seed` updates
+the system's random number generator):
+```lua
+local function samples(t,n,    u)
+  u= {}; for i=1,n or #t do u[i]=t[math.random(#t)] end; return u end
 ```
-RX1: 7, 5, 6, 4, 12   
-RX2: 3, 6, 4, 2, 1
-```
-Sort the numbers
+Here's something that can summarize a set of numbers:
+```lua
+local add,NUM
+function NUM(  t,    i) 
+  i= {n=0,mu=0,m2=0,sd=0}
+  for _,x in pairs(t or {}) do add(i,x) end 
+  return i end
 
+function add(i,x)  -- how to update a "NUM"
+  i.n  = i.n+1
+  d    = x-i.mu
+  i.mu = i.mu + d/i.n
+  i.m2 = i.m2 + d*(x-i.mu)
+  i.sd = i.n<2 and 0 or (i.m2/(i.n - 1))^.5 end
 ```
-RX1 :          4, 5, 6, 7, 12
-RX2 : 1, 2, 3, 4,    6
+And finally, here's the bootstrap:
+```lua
+-- the.bootstrap=512
+-- the.conf = 0.05 (95% confidence)
+local function bootstrap(y0,z0)
+  local n, x,y,z,xmu,ymu,zmu,yhat,zhat,tobs
+  x, y, z, yhat, zhat = NUM(), NUM(), NUM(), {}, {}
+  -- x will hold all of y0,z0
+  -- y contains just y0
+  -- z contains just z0
+  for _,y1 in pairs(y0) do add(x,y1); add(y,y1) end
+  for _,z1 in pairs(z0) do add(x,z1); add(z,z1) end
+  xmu, ymu, zmu = x.mu, y.mu, z.mu
+  -- yhat and zhat are y,z fiddled to have the same mean (recommended by Efrom)
+  for _,y1 in pairs(y0) do yhat[1+#yhat] = y1 - ymu + xmu end
+  for _,z1 in pairs(z0) do zhat[1+#zhat] = z1 - zmu + xmu end
+  -- tobs is some delta seen in the whole space
+  tobs = delta(y,z)
+  n = 0
+  for _= 1,the.bootstrap do
+    -- here we look at some delta from just part of the space
+    -- it the part delta is bigger than the whole, then increment n
+    if delta(NUM(samples(yhat)), NUM(samples(zhat))) > tobs then n = n + 1 end end
+  -- if we have seen enough n, then we are the same
+  return n / the.bootstrap >= the.conf end
 ```
+On Tuesdays and Thursdays I lie awake at night convinced this should be _&lt; the.conf_"
+- And the above "> obs" should be     
+  _abs(delta - tobs) &gt; someCriticalValue_. 
 
-Rank them smallest to largest 1 to 10 (and tied numbers get the average rank). 
-- Prundence check: for N numbers, first and last number gets 1...N (if no ties for first and last place)
-
-```
-RX1' :         4.5, 6, 7.5, 9, 10       sum = R1 = 37
-RX2' :1, 2, 3, 4.5,    7.5              sum = R2 = 18
-```
-Now comes the mathemagic:
-- $U_1 = n_1n_2 + \frac{n_1(n_1+1)}{2} - R_1$ = 5\*5 - 5\*6/2 - 37 = 3
-- $U_2 = n_1n_2 + \frac{n_2(n_2+1)}{2} - R_2$ = 5\*5 - 5\*6/2 - 18 = 22
-- $\text{min}(U_1,U_2) = 3$
-- no difference if min $U_i$ less than some critical value:
-
-To get critical values:
-- by convention, degrees of freedom is $n_i-2$
-- after some threshold, just use max values
-- here is the critical value at 99 and 95 percent confidence.
-
-```
-function critical(c,n1,n2)
-  local t={
-    [99]={{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2,  2,  2,  3,  3},
-          {0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 5,  6,  6,  7,  8},
-          {0, 0, 0, 1, 1, 2, 3, 4, 5, 6, 7, 7, 8, 9, 10, 11, 12, 13},
-          {0, 0, 1, 2, 3, 4, 5, 6, 7, 9,10,11,12,13, 15, 16, 17, 18},
-          {0, 0, 1, 3, 4, 6, 7, 9,10,12,13,15,16,18, 19, 21, 22, 24},
-          {0, 1, 2, 4, 6, 7, 9,11,13,15,17,18,20,22, 24, 26, 28, 30},
-          {0, 1, 3, 5, 7, 9,11,13,16,18,20,22,24,27, 29, 31, 33, 36},
-          {0, 2, 4, 6, 9,11,13,16,18,21,24,26,29,31, 34, 37, 39, 42},
-          {0, 2, 5, 7,10,13,16,18,21,24,27,30,33,36, 39, 42, 45, 48},
-          {1, 3, 6, 9,12,15,18,21,24,27,31,34,37,41, 44, 47, 51, 54},
-          {1, 3, 7,10,13,17,20,24,27,31,34,38,42,45, 49, 53, 56, 60},
-          {1, 4, 7,11,15,18,22,26,30,34,38,42,46,50, 54, 58, 63, 67},
-          {2, 5, 8,12,16,20,24,29,33,37,42,46,51,55, 60, 64, 69, 73},
-          {2, 5, 9,13,18,22,27,31,36,41,45,50,55,60, 65, 70, 74, 79},
-          {2, 6,10,15,19,24,29,34,39,44,49,54,60,65, 70, 75, 81, 86},
-          {2, 6,11,16,21,26,31,37,42,47,53,58,64,70, 75, 81, 87, 92},
-          {3, 7,12,17,22,28,33,39,45,51,56,63,69,74, 81, 87, 93, 99},
-          {3, 8,13,18,24,30,36,42,48,54,60,67,73,79, 86, 92, 99,105}},
-    [95]={{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6,  6,  7,  7,  8},
-          {0, 0, 1, 2, 3, 4, 4, 5, 6, 7, 8, 9,10,11, 11, 12, 13, 14},
-          {0, 1, 2, 3, 5, 6, 7, 8, 9,11,12,13,14,15, 17, 18, 19, 20},
-          {1, 2, 3, 5, 6, 8,10,11,13,14,16,17,19,21, 22, 24, 25, 27},
-          {1, 3, 5, 6, 8,10,12,14,16,18,20,22,24,26, 28, 30, 32, 34},
-          {2, 4, 6, 8,10,13,15,17,19,22,24,26,29,31, 34, 36, 38, 41},
-          {2, 4, 7,10,12,15,17,20,23,26,28,31,34,37, 39, 42, 45, 48},
-          {3, 5, 8,11,14,17,20,23,26,29,33,36,39,42, 45, 48, 52, 55},
-          {3, 6, 9,13,16,19,23,26,30,33,37,40,44,47, 51, 55, 58, 62},
-          {4, 7,11,14,18,22,26,29,33,37,41,45,49,53, 57, 61, 65, 69},
-          {4, 8,12,16,20,24,28,33,37,41,45,50,54,59, 63, 67, 72, 76},
-          {5, 9,13,17,22,26,31,36,40,45,50,55,59,64, 67, 74, 78, 83},
-          {5,10,14,19,24,29,34,39,44,49,54,59,64,70, 75, 80, 85, 90},
-          {6,11,15,21,26,31,37,42,47,53,59,64,70,75, 81, 86, 92, 98},
-          {6,11,17,22,28,34,39,45,51,57,63,67,75,81, 87, 93, 99,105},
-          {7,12,18,24,30,36,42,48,55,61,67,74,80,86, 93, 99,106,112},
-          {7,13,19,25,32,38,45,52,58,65,72,78,85,92, 99,106,113,119},
-          {8,14,20,27,34,41,48,55,62,69,76,83,90,98,105,112,119,127}}}
-    n1,n2 = n1-2,n2-2
-    local u=t[c]
-    assert(u,"confidence level unknown")
-    local n1 = math.min(n1,#u[1])
-    local n2 = math.min(n2,#u)
-    return u[n2][n1] end
-```
