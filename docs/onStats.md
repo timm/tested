@@ -257,7 +257,7 @@ Remember our stats' result above?
 This result tells us that there are two kinds of statistical tests:
 
 | analysis| assumptions  | effect-size:<br>different by more than a trivial amount? | significance test:<br>how much does one overlap the other?|
-|---------|--------------|--------------|------------------|
+|---------:|:-------------:|:------------:|:----------------:|
 |parametric | data look like bell-shaped curves| e.g. cohen-D | t-test|
 |non-parametric | nil | cliff's delta | mann-whitney U test,<br>bootstrap(see below)|
 
