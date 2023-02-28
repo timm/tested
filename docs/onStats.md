@@ -426,3 +426,6 @@ FYI: On Tuesdays and Thursdays I lie awake at night convinced this should be "_&
 ### Ranking Multiple Treatments
 
 So far we ahve only comapred two treatments but, in reality, we often have to compare many more
+
+![image](https://user-images.githubusercontent.com/29195/222006150-536b19aa-735e-4fe9-8bef-dc0b1ec9f7c3.png)
+
