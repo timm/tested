@@ -414,7 +414,12 @@ local function bootstrap(y0,z0)
   -- if we have seen enough n, then we are the same
   return n / the.bootstrap >= the.conf end
 ```
-On Tuesdays and Thursdays I lie awake at night convinced this should be _&lt; the.conf_"
+FYI: On Tuesdays and Thursdays I lie awake at night convinced this should be "_&lt; the.conf_"
 - And the above "> obs" should be     
   _abs(delta - tobs) &gt; someCriticalValue_. 
+- But then I try it the next morning and the above works. Which tells me that Dr. Efron
+  knows more about stats that I do.
 
+### Ranking Multiple Treatments
+
+So far we ahve only comapred two treatments but, in reality, we often have to compare many more
