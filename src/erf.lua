@@ -49,10 +49,14 @@ local function add(i,x)
   i.m2 = i.m2 + d*(x-i.mu)
   i.sd = i.n<2 and 0 or (i.m2/(i.n - 1))^.5 end
 
-local function NUM(  t,    i) 
-  i= {n=0,mu=0,m2=0,sd=0} 
-  for _,x in pairs(t or {}) do add(i, x) end
+local adds,NUM
+function adds(x,i)
+  i = i or NUM()
+  for _,x in pairs(t or {}) do add(i,x) end 
   return i end
+
+function NUM(  t,    i) 
+  return adds(t, {n=0,mu=0,m2=0,sd=0}) end
 
 local function delta(i, other,      y,z,e)
   e, y, z= 1E-32, i, other
@@ -61,15 +65,25 @@ local function delta(i, other,      y,z,e)
 local function bootstrap(y0,z0)
   local n, x,y,z,xmu,ymu,zmu,yhat,zhat,tobs
   x, y, z, yhat, zhat = NUM(), NUM(), NUM(), {}, {}
+  -- x will hold all of y0,z0
+  -- y contains just y0
+  -- z contains just z0
   for _,y1 in pairs(y0) do add(x,y1); add(y,y1) end
   for _,z1 in pairs(z0) do add(x,z1); add(z,z1) end
   xmu, ymu, zmu = x.mu, y.mu, z.mu
+  -- yhat and zhat are y,z fiddled to have the same mean
   for _,y1 in pairs(y0) do yhat[1+#yhat] = y1 - ymu + xmu end
   for _,z1 in pairs(z0) do zhat[1+#zhat] = z1 - zmu + xmu end
+  -- tobs is some difference seen in the whole space
   tobs = delta(y,z)
   n = 0
   for _= 1,the.bootstrap do
+    -- here we look at some delta from just part of the space
+    -- it the part delta is bigger than the whole, then increment n
     if delta(NUM(samples(yhat)), NUM(samples(zhat))) > tobs then n = n + 1 end end
+  -- if we have seen enough n, then we are the same
+  -- On Tuesdays and Thursdays I lie awake at night convinced this should be "<"
+  -- and the above "> obs" should be "abs(delta - tobs) > someCriticalValue". 
   return n / the.bootstrap >= the.conf end
 
 function RX(t,s) 
@@ -238,16 +252,16 @@ eg.six=function()
 
 eg.sk =function(        rxs,a,b,c,d,e,f,g,h,j,k)
   rxs,a,b,c,d,e,f,g,h,j,k={},{},{},{},{},{},{},{},{},{},{}
-  for i=1,32 do a[1+#a] = gaussian(10,1) end
-  for i=1,32 do b[1+#b] = gaussian(10.1,1) end
-  for i=1,32 do c[1+#c] = gaussian(20,1) end
-  for i=1,32 do d[1+#d] = gaussian(30,1) end
-  for i=1,32 do e[1+#e] = gaussian(30.1,1) end
-  for i=1,32 do f[1+#f] = gaussian(10,1) end
-  for i=1,32 do g[1+#g] = gaussian(10,1) end
-  for i=1,32 do h[1+#h] = gaussian(40,1) end
-  for i=1,32 do j[1+#j] = gaussian(40,3) end
-  for i=1,32 do k[1+#k] = gaussian(10,1) end
+  for i=1,1000 do a[1+#a] = gaussian(10,1) end
+  for i=1,1000 do b[1+#b] = gaussian(10.1,1) end
+  for i=1,1000 do c[1+#c] = gaussian(20,1) end
+  for i=1,1000 do d[1+#d] = gaussian(30,1) end
+  for i=1,1000 do e[1+#e] = gaussian(30.1,1) end
+  for i=1,1000 do f[1+#f] = gaussian(10,1) end
+  for i=1,1000 do g[1+#g] = gaussian(10,1) end
+  for i=1,1000 do h[1+#h] = gaussian(40,1) end
+  for i=1,1000 do j[1+#j] = gaussian(40,3) end
+  for i=1,1000 do k[1+#k] = gaussian(10,1) end
   for k,v in pairs{a,b,c,d,e,f,g,h,j,k} do rxs[k] =  RX(v,"rx"..k) end
   for _,rx in pairs(tiles(scottKnot(rxs))) do
     print("",rx.rank,rx.name,rx.show) end end

@@ -25,16 +25,21 @@ As a team, implement the [stats.lua](/src/stas.lua) examples shown in
 [stats.out](/etc/out/stats.out)
 
 
-## Todays lecture: does 42==44?
+## Today's lecture: does 42==44?
 
 Clearly, "no", if they are point values.
 
 But "yes", if they these are the median of a two different distributions with large variances.
 - In which case we say that they are  _statistically indistinguishably_ by more more than a _small effect_
 
-Wwhy are we asking this question?
-- Because when we get oru fishing gear working, we will compare resutls from different _treatments_
+Why  are we asking this question?
+- Because when we get our fishing gear working,
+- we will compare results from different _treatments_
   (different fishing engines)
+  - some of which use stochastic methods
+  - so they will have to be re-run 20 times 
+  - so we will be comparing 20 numbers from different treatments
+  - welcome to stats.
 
 ## What Does "equal" Mean?
 
@@ -77,11 +82,13 @@ But when you gotta do stats:
 ## Visualize the Data
 
 Let us look at 1000 numbers whose median value is 70 and whose 30th to 70th percentile
-range is 40 to 80
+range is 40 to 80. We can visualize this using a horizontal percentil plot:
+
 
 ```
 0   20   40   60    80   100
 |----|----|----|----|----|
+
      ------       * ------ 
    
      ^   ^        ^ ^    ^
@@ -89,12 +96,31 @@ range is 40 to 80
    q10   q30    q50 q70  q90      
 ```
 
-The advantage of percentile charts is that we can show a lot of data in
-very little space. E.g. the above chart could be show 30 numbers, or 30,000
+The advantage of percentile plots is that we can show a lot of data in
+very little space. E.g. the above chart could be show 30 numbers, or 30,000. 
+And the chart below shows 10,000 numbers (1000 per treatment).
+- Note that the _rank_ number of the LHS: 
+  - this shows the treatments divided into groups.
+  - Using the methods described below.
+
+```
+rank    rx       percentile plot                            10th    30th   50th    70th    90th
+----    ----     --------------------------------------   --------------------------------------
+    1    rx6     -*-               |                     {  8.79,   9.46,   9.97,  10.52,  11.29}
+    1    rx1     -*-               |                     {  8.67,   9.43,  10.00,  10.54,  11.23}
+    1    rx10     -*-              |                     {  8.75,   9.52,  10.03,  10.52,  11.33}
+    1    rx7     -*-               |                     {  8.81,   9.51,  10.03,  10.51,  11.22}
+    1    rx2     -*-               |                     {  8.84,   9.58,  10.04,  10.59,  11.40}
+    2    rx3              -*--     |                     { 18.69,  19.45,  19.99,  20.50,  21.36}
+    3    rx4                       |-*-                  { 28.71,  29.41,  29.97,  30.48,  31.22}
+    3    rx5                       |-*-                  { 28.75,  29.50,  30.00,  30.58,  31.29}
+    4    rx9                       |       ---* ---      { 36.13,  38.43,  39.90,  41.55,  43.83}
+    4    rx8                       |         -*--        { 38.71,  39.51,  39.98,  40.46,  41.28}
+```
 
 <img align=right width=300 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
-Lets look another example, this time from half a dozen experiments (each experiemtn ueilding 32 numbers
+Lets look another example, this time from half a dozen experiments (each experiment balding 32 numbers
 ranging from 6 to 33,
 with medians ranges 9.69 to 30.06). 
 
@@ -108,10 +134,29 @@ function RX(t,s)
 ```
 Then we might need to some way to find (e.g.) the median of those results `median(rx.t)`.
 ```lua
-function median(t) --> n; assumes t is sorted 
+function mid(t,     n)    -- assime t is sorted
+  t= t.has and t.has or t -- so we can find the mid of lists or RXs
   local n = #t//2
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 ```
+We can also find the standard deviation (`div`) of a treatment via the distance
+from the 10th to the 90th percentile:
+```lua
+function div(t)
+  t= t.has and t.has or t
+  return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.58 end
+```
+If we merge two RXs, better make sure the merged data is also sorted.
+```lua
+function merge(rx1,rx2,    rx3) 
+  rx3 = RX({}, rx1.name)
+  for _,t in pairs{rx1.has,rx2.has} do
+     for _,x in pairs(t) do rx3.has[1+#rx3.has] = x end end
+  table.sort(rx3.has) -- <== important step
+  rx3.n = #rx3.has
+  return rx3 end
+```
+
 Now, just for a demo, will create six sets of results with different means (but same standard deviations).
 Note that when we create a list of treatments, we sort them by their median.
 ```lua
