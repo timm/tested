@@ -367,6 +367,9 @@ Non-parametric significance test that two distributions $y_0,z_0$ are different.
   - Count "plus one "  if  their `delta` is different to the `delta` from all the data
 - Use that count to report if the distributions are difference"
 
+![image](https://user-images.githubusercontent.com/29195/221997957-a8ebc7e8-ed5c-4ff6-8b59-8c641e4166f6.png)
+
+
 Here's sampling with replacement (don't use this one... unless your `the.seed` updates
 the system's random number generator):
 ```lua
