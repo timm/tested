@@ -122,21 +122,21 @@ rank    rx       percentile plot                            10th    30th   50th 
     4    rx8                       |         -*--        { 38.71,  39.51,  39.98,  40.46,  41.28}
 ```
 
-<img align=right width=300 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
+Note one small detail in the above:
+- One RX (e.g. Rx6)  may run from 8 to 12
+- But before we can draw it, we need to know everyone's `lo` and `hi` 
+  - So we can draw them on the same playing field
+  - In this example, around 8 to 42
 
-Lets look another example, this time from half a dozen experiments (each experiment balding 32 numbers
-ranging from 6 to 33,
-with medians ranges 9.69 to 30.06). 
-
-First we  need a place to put the treatments. Note that:
+Now before we can report treatments, we first we  need a place to put the treatments. Note that:
 - when we store the numbers, we sort them;
-- each treatment has a `show` string, initialized to "" (and we will change that, below).
+- each treatment has a `show` string, initialized to "" (and, later, this will hold the lines above)
 
 ```lua
 function RX(t,s)  
   return {name=s or"",rank=0,t=sort(t or {}), show=""} end 
 ```
-Then we might need to some way to find (e.g.) the median of those results `median(rx.t)`.
+We might need to some way to find (e.g.) the median of those results `median(rx.t)`.
 ```lua
 function mid(t,     n)    -- assime t is sorted
   t= t.has and t.has or t -- so we can find the mid of lists or RXs
@@ -144,12 +144,19 @@ function mid(t,     n)    -- assime t is sorted
   return #t%2==0 and (t[n] +t[n+1])/2 or t[n+1] end
 ```
 We can also find the standard deviation (`div`) of a treatment via the distance
-from the 10th to the 90th percentile:
+from the 10th to the 90th percentile.
 ```lua
 function div(t)
   t= t.has and t.has or t
   return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.58 end
 ```
+Why 2.58? well:
+- ±2,2.58,3 standard deviations covers 66,90,95%, 
+    <img src="/etc/img/128.png" align=right width=300>
+    of the mass.  
+- So one standard deviation is (90-10)th divide by 2.58 times σ. 
+
+
 If we merge two RXs, better make sure the merged data is also sorted.
 ```lua
 function merge(rx1,rx2,    rx3) 
@@ -160,8 +167,8 @@ function merge(rx1,rx2,    rx3)
   rx3.n = #rx3.has
   return rx3 end
 ```
-
-Now, just for a demo, will create six sets of results with different means (but same standard deviations).
+To draw a list or RXs (as shown above), we need to add a `show` string to each RX. Some nuances:
+-Now, just for a demo, will create six sets of results with different means (but same standard deviations).
 Note that when we create a list of treatments, we sort them by their median.
 ```lua
 local m=math
