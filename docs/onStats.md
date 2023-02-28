@@ -30,7 +30,7 @@ As a team, implement the [stats.lua](/src/stats.lua) examples shown in
 Clearly, "no", if they are point values.
 
 But "yes", if they these are the median of a two different distributions with large variances.
-- In which case we say that they are  _statistically indistinguishably_ by more more than a _small effect_
+- In which case we say that they are  _statistically insignificantly distinguishable_ by more more than a _small effect_
 - For example, in the following, is "control" equal to "education"?
 
 ![image](https://user-images.githubusercontent.com/29195/221987767-8508aed3-c6bd-4350-a1cb-427c8c0259d7.png)
@@ -148,13 +148,14 @@ from the 10th to the 90th percentile.
 ```lua
 function div(t)
   t= t.has and t.has or t
-  return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.58 end
+  return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.56 end
 ```
 Why 2.58? well:
-- ±2,2.58,3 standard deviations covers 66,90,95%, 
+- Anyone who has done a stats course knows that ±2, 3 standard deviations covers 66,95%, 
     <img src="/etc/img/128.png" align=right width=300>
     of the mass.  
-- So one standard deviation is (90-10)th divide by 2.58 times σ. 
+- A lesser known threshold is that ±2.58 standard deviations covers 90% of the mass
+- So one standard deviation is (90-10)th divide by 2.56 times σ. 
 
 
 If we merge two RXs, better make sure the merged data is also sorted.
@@ -167,86 +168,98 @@ function merge(rx1,rx2,    rx3)
   rx3.n = #rx3.has
   return rx3 end
 ```
-To draw a list or RXs (as shown above), we need to add a `show` string to each RX. Some nuances:
--Now, just for a demo, will create six sets of results with different means (but same standard deviations).
-Note that when we create a list of treatments, we sort them by their median.
+To print multiple `RX` objects:
+- first find the most `lo` and `hi` values in all the treatments [1]. 
+- then, for each treatment, generate a print string add it as a `.show` field.
+  - fill the `show` string with blanks.   [2]
+  - normalizing each number 0..1 from `lo` to `hi`  [3]
+  - the showing it as a number somewhere between `lo` to `hi` (see the `at` function, inside `tiles`)
+  - Aside: make sure all our positions are  integer [4]
+
+(If you do not understand the following code, just start from [5] and read downwards. Then
+look at the above ascii plot to work out what the `of,at,pos` functions do.)
+```lua
+-- in the following the.width = 32
+-- THis code assumes `rxs` is pre-sorted on `mid`.
+function tiles(rxs) --> ss; makes on string per treatment showing rank, distribution, and values
+  local huge,min,max,floor = math.huge,math.min,math.max,math.floor
+  local lo,hi = huge, -huge
+  for _,rx in pairs(rxs) do 
+    lo,hi = min(lo,rx.has[1]), max(hi, rx.has[#rx.has]) end  ----- [1]
+  for _,rx in pairs(rxs) do
+    local t,u = rx.has,{}
+    local function of(x,most) return max(1, min(most, x)) end
+    local function at(x)  return t[of(#t*x//1, #t)] end     ------ [3,4]
+    local function pos(x) 
+       return floor(of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)) end
+    ----- [5]
+    for i=1,the.width do u[1+#u]=" " end                   ------- [2]
+    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) 
+    local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e)
+    for i=A,B do u[i]="-" end
+    for i=D,E do u[i]="-" end
+    u[the.width//2] = "|" 
+    u[C] = "*"
+    rx.show = table.concat(u)  -- equivalent to python ', '.join(lst)
+    rx.show = rx.show .." {"..string.format(the.Fmt,a)
+    for _,x in pairs{b,c,d,e} do 
+      rx.show=rx.show.. ", "..string.format(the.Fmt,x) end
+    rx.show = rx.show .."}"
+  end
+  return rxs end
+```
+To demo this code, we need a quick way to generate some sample data.
 ```lua
 local m=math
 local sq,pi,log,cos,r,gaussian = m.sqrt,m.pi,m.log,m.cos,m.random
 function gaussian(mu,sd) 
   return mu + sd * sq(-2*log(r())) * cos(2*pi*r()) end
-
-function egTiles()
-  math.randomseed(the.seed)
-  local data= {{},{},{},{},{},{}}
-                                     -- mu     std
-                                     -------   ---
-  for i=1,32 do push(data[1],  gaussian(10,    1)) end
-  for i=1,32 do push(data[2],  gaussian(10.1,  1)) end
-  for i=1,32 do push(data[3],  gaussian(20,    1)) end
-  for i=1,32 do push(data[4],  gaussian(30,    1)) end
-  for i=1,32 do push(data[5],  gaussian(30.1,  1)) end
-  for i=1,32 do push(data[6],  gaussian(10,    1)) end
-  for k,v in pairs(data) do data[k] =  RX(sort(v),k) end
-  data = sort(data,function(a,b) return median(a.t) < median(b.t) end ) -- sort via median
-  for k,v in pairs(tiles(data)) do
-    print("rx["..v.name.."]",o(v.show)) end end
 ```
-The `tiles` function (shown below) pretty prints the distributions:
-```
-rx[1]	 -*--          |                 {  8.34,   9.06,   9.69,  10.52,  10.92}
-rx[6]	---*-          |                 {  7.66,   9.24,   9.80,  10.44,  11.11}
-rx[2]	---*-          |                 {  8.08,   9.38,   9.80,  10.74,  11.18}
-rx[3]	             --*--               { 18.20,  19.32,  19.90,  20.66,  21.07}
-rx[5]	               |           -*-   { 29.04,  29.52,  29.81,  30.27,  30.97}
-rx[4]	               |           -*--  { 28.84,  29.59,  30.06,  30.26,  31.20}
-```
-Note we might think that these results divide into three groups (1,6,2). That is
-our intuition. Lets see below if the stats works for us.
-
-To print multiple `RX` objects:
-- first find the most `lo` and `hi` values in all the treatments [1]. 
-- then, for each treatment, generate a print string add it as a `.show` field.
-  - by normalizing each number 0..1 from `lo` to `hi`  [2]
-  - the showing it as a number somewhere between `lo` to `hi` (see the `at` function, inside `tiles`)
-  - Aside: make sure all our psoitions are  integer [3]
-
+Now we can build treatments of 1000 numbers taken from different distributions.
+Note, in the third last line, the all important sort f the treatments:
 ```lua
--- in the following the.width = 32
-function tiles(rxs) 
-  local lo,hi = math.huge, -math.huge
-  for _,rx in pairs(rxs) do 
-    lo,hi = math.min(lo,rx.t[1]), math.max(hi, rx.t[#rx.t]) end  -- [1]
-  for _,rx in pairs(rxs) do
-    local t,u = rx.t,{}
-    local function of(x,max) return math.max(1, math.min(max, x)) end
-    local function at(x)  return t[ of(#t*x//1, #t) ] end   -- find the xth percentile in "rx.t" 
-    local function pos(x) return math.floor(                                        -- [3]
-                                  of(the.width*(x-lo)/(hi-lo+1E-32)//1, the.width)  -- [2]
-                                 ) end 
-    for i=1,the.width do u[1+#u]=" " end                    -- file the  the show string with blanks
-    local a,b,c,d,e= at(.1), at(.3), at(.5), at(.7), at(.9) -- find the 20th percentile breaks
-    local A,B,C,D,E= pos(a), pos(b), pos(c), pos(d), pos(e) -- find positions of percentiles.
-    for i=A,B do u[i]="-" end                               -- add "-" to the 10th to30th range
-    for i=D,E do u[i]="-" end                               -- add "-" to the 70th to 90th range
-    u[ the.width//2 ] = "|"                                 -- add "|" to the middle 
-    u[C] = "*"                                              -- marked "C" (the .5 pos) with "*"
-    rx.show = table.concat(u)                               -- build the tile string
-    rx.show = rx.show.." {"..table.concat(                  -- add the numbers for 10th,30th,50th, etc.
-                               map({a,b,c,d,e},
-                                 function(x) 
-                                   return string.format(the.Fmt,x) end),", ") .."}"
-  end
-  return rxs end
+eg={}
+eg.tiles =function(        rxs,a,b,c,d,e,f,g,h,j,k)
+  rxs,a,b,c,d,e,f,g,h,j,k={},{},{},{},{},{},{},{},{},{},{}
+  for i=1,1000 do a[1+#a] = gaussian(10,1) end
+  for i=1,1000 do b[1+#b] = gaussian(10.1,1) end
+  for i=1,1000 do c[1+#c] = gaussian(20,1) end
+  for i=1,1000 do d[1+#d] = gaussian(30,1) end
+  for i=1,1000 do e[1+#e] = gaussian(30.1,1) end
+  for i=1,1000 do f[1+#f] = gaussian(10,1) end
+  for i=1,1000 do g[1+#g] = gaussian(10,1) end
+  for i=1,1000 do h[1+#h] = gaussian(40,1) end
+  for i=1,1000 do j[1+#j] = gaussian(40,3) end
+  for i=1,1000 do k[1+#k] = gaussian(10,1) end
+  for k,v in pairs{a,b,c,d,e,f,g,h,j,k} do rxs[k] =  RX(v,"rx"..k) end
+  table.sort(rxs,function(a,b) return mid(a) < mid(b) end)
+  for _,rx in pairs(tiles(rxs)) do
+    print("",rx.name,rx.show) end end
+```
+This almost generated the above display, except for the LHS ranking numbers.
+And for that, we'll need a little more theory (about statistics)
+```
+	rx6	 -*-               |                     {  8.79,   9.46,   9.97,  10.52,  11.29}
+	rx1	 -*-               |                     {  8.67,   9.43,  10.00,  10.54,  11.23}
+	rx10	 -*-               |                     {  8.75,   9.52,  10.03,  10.52,  11.33}
+	rx7	 -*-               |                     {  8.81,   9.51,  10.03,  10.51,  11.22}
+	rx2	 -*-               |                     {  8.84,   9.58,  10.04,  10.59,  11.40}
+	rx3	          -*--     |                     { 18.69,  19.45,  19.99,  20.50,  21.36}
+	rx4	                   |-*-                  { 28.71,  29.41,  29.97,  30.48,  31.22}
+	rx5	                   |-*-                  { 28.75,  29.50,  30.00,  30.58,  31.29}
+	rx9	                   |       ---* ---      { 36.13,  38.43,  39.90,  41.55,  43.83}
+	rx8	                   |         -*--        { 38.71,  39.51,  39.98,  40.46,  41.28}
 ```
 ## Statistics
+Remember our stats' result above?
+- _statistically insignificantly distinguishable_ by more more than a _small effect_
 
-As to statistical tests,   two kinds of background assumptions
+This result tells us that there are two kinds of statistical tests:
 
-| analysis| assumptions  | effect-size: different by more than a trivial amount? | significance test: how much does one overlap the other?|
+| analysis| assumptions  | effect-size:<br>different by more than a trivial amount? | significance test:<br>how much does one overlap the other?|
 |---------|--------------|--------------|------------------|
 |parametric | data look like bell-shaped curves| e.g. cohen-D | t-test|
-|non-parametric | nil | cliff's delta | mann-whitney U test|
+|non-parametric | nil | cliff's delta | mann-whitney U test,<br>bootstrap(see below)|
 
 <img src="https://www.rasch.org/rmt/gifs/101over.gif" align=right width=400>
 

@@ -1,22 +1,61 @@
 
-pre
-
-eg3
-		1	true	true	true
-		1.05	true	true	true
-		1.1	false	false	true
-		1.15	false	false	true
-		1.2	false	false	true
-		1.25	false	false	true
-		1.3	false	false	true
-		1.35	false	false	true
-		1.4	false	false	true
-		1.45	false	false	true
+gauss
+	10000	9.9942281899452	1.9932113919898
 
 ok
 
+basic
+		truee	true	true
+		false	false	false
+		false	false	false
+
+bootsd
+	mu	sd	cliffs	boot	both
+	--	--	------	----	----
+	12	1	false	false	false
+	12	2	false	false	false
+	12	3	false	false	false
+	12	4	false	false	false
+	12	5	true	false	false
+	12	6	true	false	false
+	12	7	true	true	true
+	12	8	true	false	false
+	12	9	true	false	false
+	12	10	true	false	false
+
 num
 	10	5.5	3.0276503540975
+
+sample
+	beade
+	ceecb
+	cdcea
+	eecba
+	bcecc
+	aeddd
+	becae
+	ceead
+	dcaeb
+	bbedb
+
+five
+rx5	1	-   *   -------    |                     {  0.10,   0.10,   0.20,   0.30,   0.40}
+rx3	1	 -    *    ----    |                     {  0.15,   0.15,   0.25,   0.35,   0.40}
+rx1	2	           -      *|-----                {  0.34,   0.34,   0.49,   0.51,   0.60}
+rx2	3	                   |    -    *    ------ {  0.60,   0.60,   0.70,   0.80,   0.90}
+rx4	3	                   |    -    *    ------ {  0.60,   0.60,   0.70,   0.80,   0.90}
+
+tiles
+	rx6	 -*-               |                     {  8.79,   9.46,   9.97,  10.52,  11.29}
+	rx1	 -*-               |                     {  8.67,   9.43,  10.00,  10.54,  11.23}
+	rx10	 -*-               |                     {  8.75,   9.52,  10.03,  10.52,  11.33}
+	rx7	 -*-               |                     {  8.81,   9.51,  10.03,  10.51,  11.22}
+	rx2	 -*-               |                     {  8.84,   9.58,  10.04,  10.59,  11.40}
+	rx3	          -*--     |                     { 18.69,  19.45,  19.99,  20.50,  21.36}
+	rx4	                   |-*-                  { 28.71,  29.41,  29.97,  30.48,  31.22}
+	rx5	                   |-*-                  { 28.75,  29.50,  30.00,  30.58,  31.29}
+	rx9	                   |       ---* ---      { 36.13,  38.43,  39.90,  41.55,  43.83}
+	rx8	                   |         -*--        { 38.71,  39.51,  39.98,  40.46,  41.28}
 
 sk
 	1	rx6	 -*-               |                     {  8.79,   9.46,   9.97,  10.52,  11.29}
@@ -36,18 +75,6 @@ rx3	1	----------         *                   - { 99.00,  99.50, 100.00, 101.00, 
 rx2	1	-------------------*                   - { 99.00, 100.00, 100.00, 101.00, 101.00}
 rx4	1	-------------------*                   - { 99.00, 100.00, 100.00, 101.00, 101.00}
 
-sample
-	beade
-	ceecb
-	cdcea
-	eecba
-	bcecc
-	aeddd
-	becae
-	ceead
-	dcaeb
-	bbedb
-
 bootmu
 	mu	sd	cliffs	boot	both
 	--	--	------	----	----
@@ -63,31 +90,16 @@ bootmu
 	10.9	1	false	false	false
 	11.0	1	false	false	false
 
-bootsd
-	mu	sd	cliffs	boot	both
-	--	--	------	----	----
-	12	1	false	false	false
-	12	2	false	false	false
-	12	3	false	false	false
-	12	4	false	false	false
-	12	5	true	false	false
-	12	6	true	false	false
-	12	7	true	true	true
-	12	8	true	false	false
-	12	9	true	false	false
-	12	10	true	false	false
+pre
 
-gauss
-	10000	9.9942281899452	1.9932113919898
-
-basic
-		truee	true	true
-		false	false	false
-		false	false	false
-
-five
-rx5	1	-   *   -------    |                     {  0.10,   0.10,   0.20,   0.30,   0.40}
-rx3	1	 -    *    ----    |                     {  0.15,   0.15,   0.25,   0.35,   0.40}
-rx1	2	           -      *|-----                {  0.34,   0.34,   0.49,   0.51,   0.60}
-rx2	3	                   |    -    *    ------ {  0.60,   0.60,   0.70,   0.80,   0.90}
-rx4	3	                   |    -    *    ------ {  0.60,   0.60,   0.70,   0.80,   0.90}
+eg3
+		1	true	true	true
+		1.05	true	true	true
+		1.1	false	false	true
+		1.15	false	false	true
+		1.2	false	false	true
+		1.25	false	false	true
+		1.3	false	false	true
+		1.35	false	false	true
+		1.4	false	false	true
+		1.45	false	false	true

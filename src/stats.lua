@@ -246,6 +246,23 @@ eg.six=function()
          RX({101,100,99,101,100,101,100,99,101,100},"rx4")})) do
     print(rx.name,rx.rank,rx.show) end end
 
+eg.tiles =function(        rxs,a,b,c,d,e,f,g,h,j,k)
+  rxs,a,b,c,d,e,f,g,h,j,k={},{},{},{},{},{},{},{},{},{},{}
+  for i=1,1000 do a[1+#a] = gaussian(10,1) end
+  for i=1,1000 do b[1+#b] = gaussian(10.1,1) end
+  for i=1,1000 do c[1+#c] = gaussian(20,1) end
+  for i=1,1000 do d[1+#d] = gaussian(30,1) end
+  for i=1,1000 do e[1+#e] = gaussian(30.1,1) end
+  for i=1,1000 do f[1+#f] = gaussian(10,1) end
+  for i=1,1000 do g[1+#g] = gaussian(10,1) end
+  for i=1,1000 do h[1+#h] = gaussian(40,1) end
+  for i=1,1000 do j[1+#j] = gaussian(40,3) end
+  for i=1,1000 do k[1+#k] = gaussian(10,1) end
+  for k,v in pairs{a,b,c,d,e,f,g,h,j,k} do rxs[k] =  RX(v,"rx"..k) end
+  table.sort(rxs,function(a,b) return mid(a) < mid(b) end)
+  for _,rx in pairs(tiles(rxs)) do
+    print("",rx.name,rx.show) end end
+
 eg.sk =function(        rxs,a,b,c,d,e,f,g,h,j,k)
   rxs,a,b,c,d,e,f,g,h,j,k={},{},{},{},{},{},{},{},{},{},{}
   for i=1,1000 do a[1+#a] = gaussian(10,1) end
