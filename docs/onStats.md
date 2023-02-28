@@ -261,6 +261,10 @@ This result tells us that there are two kinds of statistical tests:
 |parametric | data look like bell-shaped curves| e.g. cohen-D | t-test|
 |non-parametric | nil | cliff's delta | mann-whitney U test,<br>bootstrap(see below)|
 
+Parametric methods assume that the numbers come from a bell-shaped curve 
+(single max value, symmetrical distributions).
+- those assumptions can be unrealistic but they do simplify the analysis (see below)
+
 <img src="https://www.rasch.org/rmt/gifs/101over.gif" align=right width=400>
 
 Note the different kinds of test:
@@ -280,7 +284,7 @@ Note the different kinds of test:
 <img align=right width=300 
 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/1440px-Normal_Distribution_PDF.svg.png">
 
-Parametric methods assume that the numbers come from a bell-shaped curve 
+Recall thatarametric methods assume that the numbers come from a bell-shaped curve 
 (single max value, symmetrical distributions).
 - those assumptions can be unrealistic but they do simplify the analysis.
 - e.g. the `cohen-D` parametric effect-size method says that  two numbers are different if their separation is larger than `std*d`
@@ -324,8 +328,8 @@ Cliff’s d can be interpreted as negligible (<0.147), small (<0.33), medium (<0
 ```lua
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
-  for _,x in pairs(ns1) do
-    for _,y in pairs(ns2) do
+  for \_,x in pairs(ns1) do
+    for \_,y in pairs(ns2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
@@ -339,7 +343,11 @@ are different by more than some
 threshold $t$ (looked up from some 
 [table](https://statisticsbyjim.com/hypothesis-testing/t-distribution-table/)):
 
-$$\frac{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} > t$$
+```lua
+local function delta(i, other,      y,z,e)
+  e, y, z= 1E-32, i, other
+  return math.abs(y.mu - z.mu) / ((e + y.sd^2/y.n + z.sd^2/z.n)^.5) end
+```
 
 Notes:
 - $\sigma$ effect: 
