@@ -86,18 +86,18 @@ But when you gotta do stats:
 ## Visualize the Data
 
 Let us look at 1000 numbers whose median value is 70 and whose 30th to 70th percentile
-range is 40 to 80. We can visualize this using a horizontal percentil plot:
+range is 40 to 80. We can visualize this using a horizontal percentile plot:
 
 
 ```
-0   20   40   60    80   100
-|----|----|----|----|----|
-
-     ------       * ------ 
-   
-     ^   ^        ^ ^    ^
-     |   |        | |    |
-   q10   q30    q50 q70  q90      
+                        0   20   40   60    80   100
+                        |----|----|----|----|----|
+                        
+percentile plot ==>          ------       * ------ 
+                           
+                             ^   ^        ^ ^    ^
+                             |   |        | |    |
+                           q10   q30    q50 q70  q90      
 ```
 
 The advantage of percentile plots is that we can show a lot of data in
