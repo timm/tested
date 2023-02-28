@@ -21,7 +21,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 
 ## Your task this week
 
-As a team, implement the [stats.lua](/src/stas.lua) examples shown in
+As a team, implement the [stats.lua](/src/stats.lua) examples shown in
 [stats.out](/etc/out/stats.out)
 
 
