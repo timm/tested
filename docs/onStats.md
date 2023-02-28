@@ -317,7 +317,7 @@ the non-parametric
   - So `x` is likely to belong in distribution2 if `abs(gt-lt) =0`.
     - i.e. it falls into the middle
 
-Cliff’s d can be interpreted as negligible (<0.147), small (<0.33), medium (<0.474) and large (otheriwse) effects[^romo].
+Cliff’s d can be interpreted as negligible (&lt;0.147), small (&lt;0.33), medium (&lt;0.474) and large (otheriwse) effects[^romo].
 - so we will use .4 as the threshold between medium and small.
 
 [^romo]: Romano, J., Kromrey, J. D., Coraggio, J., & Skowronek, J. (2006, February). 
@@ -328,8 +328,8 @@ Cliff’s d can be interpreted as negligible (<0.147), small (<0.33), medium (<0
 ```lua
 function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amount
   local n,gt,lt = 0,0,0
-  for \_,x in pairs(ns1) do
-    for \_,y in pairs(ns2) do
+  for _,x in pairs(ns1) do
+    for _,y in pairs(ns2) do
       n = n + 1
       if x > y then gt = gt + 1 end
       if x < y then lt = lt + 1 end end end
@@ -339,9 +339,10 @@ function cliffsDelta(ns1,ns2, dull) --> bool; true if different by a trivial amo
 ### Significance Tests (which should be called "Distinguisnable")
 
 Parametric: t-tests (which I don't approve... assumes gauusians). Two normal  distributions $i,j$ are different if their means $\mu_i$
-are different by more than some
+are different if their `delta` is large that some
 threshold $t$ (looked up from some 
 [table](https://statisticsbyjim.com/hypothesis-testing/t-distribution-table/)):
+
 
 ```lua
 local function delta(i, other,      y,z,e)
@@ -350,6 +351,7 @@ local function delta(i, other,      y,z,e)
 ```
 
 Notes:
+- $\Delta= \frac{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} $
 - $\sigma$ effect: 
   - The larger the standard deviations $\sigma_i,\sigma_j$, the harder it becomes to tell them apart
   - So we see the $\sigma$ terms in a denominator attenuating the different in the means efffect.
