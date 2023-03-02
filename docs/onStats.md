@@ -134,7 +134,7 @@ Now before we can report treatments, we first we  need a place to put the treatm
 
 ```lua
 function RX(t,s)  
-  return {name=s or"",rank=0,t=sort(t or {}), show=""} end 
+  return {name=s or"",rank=0,has=sort(t or {}), show=""} end 
 ```
 We might need to some way to find (e.g.) the median of those results `median(rx.t)`.
 ```lua
