@@ -192,18 +192,6 @@ eg.bootmu = function(     a,b,cl,bs)
     bs=bootstrap(a,b)
     print("",mu,1,cl,bs,cl and bs) end end
 
-eg.bootsd = function(     a,b,cl,bs)
-  a={}
-  for i=1,100 do a[1+#a]= gaussian(10,1) end
-  print("","mu","sd","cliffs","boot","both")
-  print("","--","--","------","----","----")
-  for sd=1,10,1 do
-    b={}
-    for i=1,100 do b[1+#b]= gaussian(12,sd) end
-    cl=cliffsDelta(a,b)
-    bs=bootstrap(a,b)
-    print("",12,sd,cl, bs, cl and bs) end end
-
 function eg.basic()
   print("\t\ttruee", bootstrap( {8, 7, 6, 2, 5, 8, 7, 3}, 
                                 {8, 7, 6, 2, 5, 8, 7, 3}),
