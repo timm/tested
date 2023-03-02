@@ -93,7 +93,7 @@ function mid(t,     n)
 
 function div(t)
   t= t.has and t.has or t
-  return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.58 end
+  return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.56 end
 
 function merge(rx1,rx2,    rx3) 
   rx3 = RX({}, rx1.name)

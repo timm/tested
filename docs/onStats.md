@@ -150,11 +150,11 @@ function div(t)
   t= t.has and t.has or t
   return (t[ #t*9//10 ] - t[ #t*1//10 ])/2.56 end
 ```
-Why 2.58? well:
+Why 2.56? well:
 - Anyone who has done a stats course knows that ±2, 3 standard deviations covers 66,95%, 
     <img src="/etc/img/128.png" align=right width=300>
     of the mass.  
-- A lesser known threshold is that ±2.58 standard deviations covers 90% of the mass
+- A lesser known threshold is that ±2.56 standard deviations covers 90% of the mass
 - So one standard deviation is (90-10)th divide by 2.56 times σ. 
 
 
@@ -295,7 +295,7 @@ Recall thatarametric methods assume that the numbers come from a bell-shaped cur
   - Splitting the difference, we will analyze
     this data looking for differences larger than d = (0.5 + 0.2)/2 = 0.35.
   - And finding the standard deviation is easy:   
-    (90th - 10th) percentile of a sorted number, divided by 2.58.
+    (90th - 10th) percentile of a sorted number, divided by 2.56.
 
 [^saw]: Sawilowsky, S.S.: New effect size rules of thumb. Journal of Modern Applied Statistical
 Methods 8(2), 26 (2009)
