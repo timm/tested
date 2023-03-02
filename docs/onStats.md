@@ -349,7 +349,7 @@ local function delta(i, other,      y,z,e)
   e, y, z= 1E-32, i, other
   return math.abs(y.mu - z.mu) / ((e + y.sd^2/y.n + z.sd^2/z.n)^.5) end
 ```
-$$\Delta= \fr{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} $$
+$$\Delta= \frac{abs(\mu_i - \mu_j)}{\frac{\sigma_i}{n_i} - \frac{\sigma_j}{n_j}} $$
 
 Notes:
 - $\sigma$ effect: 
