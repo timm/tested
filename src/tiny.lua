@@ -191,7 +191,7 @@ function half(data,  rows,cols,above)
   cos  = function(a,b) return (a^2 + c^2 - b^2)/(2*c) end
   proj = function(r) return {row=r, x=cos(gap(r,A), gap(r,B), c)} end
   some = many(rows,the.Halves)
-  A    = above or any(some)
+  A    = above or far(data,any(some),some,cols)
   B    = far(data,A,some,cols)
   c    = gap(A,B)
   left, right = {},{}
