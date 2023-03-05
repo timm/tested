@@ -97,8 +97,7 @@ function add(col,x,  inc,pos,num,sym)
           col.lo = m.min(x, col.lo)
           col.hi = m.max(x, col.hi) 
           pos    = #t<the.Max and #t+1 or rand()<the.Max/col.n and rint(1,#t)
-          if pos then col.ok=false
-                      t[pos] = x end end
+          if pos then col.ok=false; t[pos] = x end end
   if x~="?" then  
     inc   = inc or 1
     col.n = col.n + inc
@@ -164,13 +163,13 @@ function norm(num,n)
 
 function dist(data,t1,t2,  cols,    d,gap,sym,num)
   sym = function(x,y) return x==y and 0 or 1 end
-  num = function(x,y) if x=="?" then x= y<.5 and 1 or 1 end	
-                      if y=="?" then y= x<.5 and 1 or 1 end	
+  num = function(x,y) if x=="?" then x= y<.5 and 1 or 1 end  
+                      if y=="?" then y= x<.5 and 1 or 1 end  
                       return m.abs(x-y) end 
   gap = function(col,x,y) 
           if x=="?" and y=="?" then return 1 end
           return isSym(col) and sym(x,y) or num(norm(col,x), norm(col,y)) end
-  d, cols = 0, (cols or data.cols.x)	
+  d, cols = 0, (cols or data.cols.x)  
   for _,col in pairs(cols) do
     d = d + gap(col, t1[col.at], t2[col.at])^the.p end 
   return (d/#cols)^(1/the.p) end
@@ -223,7 +222,7 @@ local function sway(data)
 local goal={}
 goal.plan    = function(b,r) return b^2/(b+r) end
 goal.monitor = function(b,r) return r^2/(b+r) end
-goal.explore = function(b,r) return r^2/(b+r) end
+goal.explore = function(b,r) return 1/(b+r)   end
 
 local function xys(datas,best,     x,xy,B,R)
   B,R,t = 0,0,{}
@@ -234,25 +233,22 @@ local function xys(datas,best,     x,xy,B,R)
         push(t,{x=x, y= klass==best}) end end end 
   return sort(t,lt"x"),B,R end 
 
-local function split1(col,rows,best,      min)
-  local t,B,R,lb,lr,rb,rr,val,tiny,range,most
-  range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
-  val   = function(b,r,     z)  
-            tiny=1/m.huge
-            return goal[the.goal]( b/(B+z), r/(R+z)) end
-  t,B,R = xys(rows,best)
-  lb,lr,rb,rr = 0,0,B,R
-  min = the.median and (B+R)/2 or B/3
-  most = -1
-  for i,xy in pairs(t) do
-    if xy.y then lb = lb+1; rb = rb-1 else lr = lr-1; rr = rr-1 end
+local function split1(col,rows,best)
+  local t,B,R = xys(rows,best)
+  local range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
+  local val = function(b,r) return goal[the.goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
+  local min = the.median and (B+R)/2 or B/3
+  local most,out = -1, range(t[1].x, t[#t].x, 0) 
+  local lb,lr,rb,rr = 0,0,B,R 
+  for i,xy in pairs(t) do -- walk left to right, moving best,rest counts from rb,rr to lb,lr
+    if xy.y then lb = lb+1; rb = rb-1 else lr = lr+1; rr = rr-1 end
     if i >= min and i <= #t - min + 1 then
-      v1,v2 = val(lb,lr), val(rb,rr)
-      if v1 > v2 and v1>most then 
-        most,out= v1,range(t[1].x, xy.x, v1) end
-      if v2 > v1 and v2>most then 
-        most,out= v2,range(xy.x, t[#t].x, v2) end 
-      if the.median then break end end end 
+      if xy.x ~= t[i+1].x then
+        v1 = val(lb,lr)
+        if v1 > most then most,out= v1, range(t[1].x, xy.x, v1) end
+        v2 = val(rb,rr)
+        if v2 > most then most,out= v2, range(xy.x, t[#t].x, v2) end 
+        if the.median then break end end end end
   return out end
 
 local function split(cols,rows,best)
@@ -270,8 +266,10 @@ local function selects(range,rows,     yes,no)
 
 local function fftTrees(data,best,rows,out)
   rows  = rows or data.rows
+  out   = out or {}
   range = split(data,cols,rows,best)
   left,right = selects(range,rows)
+
 end
 ------------------------------------
 local go,no,copy,fails = {},{},{},0
