@@ -239,14 +239,14 @@ local function split1(col,rows,best)
   local val = function(b,r) return goal[the.goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
   local min = the.median and (B+R)/2 or B/3
   local most,out = -1, range(t[1].x, t[#t].x, 0) 
-  local lb,lr,rb,rr = 0,0,B,R 
-  for i,xy in pairs(t) do -- walk left to right, moving best,rest counts from rb,rr to lb,lr
-    if xy.y then lb = lb+1; rb = rb-1 else lr = lr+1; rr = rr-1 end
+  local b,r = 0,0 
+  for i,xy in pairs(t) do -- walk left to right, incrementing  counts from b1,r1
+    if xy.y then b1 = b+1 else r = r+1 end
     if i >= min and i <= #t - min + 1 then
       if xy.x ~= t[i+1].x then
-        v1 = val(lb,lr)
+        local v1 = val(b, r)
         if v1 > most then most,out= v1, range(t[1].x, xy.x, v1) end
-        v2 = val(rb,rr)
+        local v2 = val(B-b, R-r)
         if v2 > most then most,out= v2, range(xy.x, t[#t].x, v2) end 
         if the.median then break end end end end
   return out end
