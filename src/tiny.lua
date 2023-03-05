@@ -68,7 +68,7 @@ function coerce(s,    fun)
 local o,oo
 function oo(t) print(o(t)); return t end
 function o(t,    fun) 
-  fun = function(k,v) return fmt(":%s %s",k,o(v)) end 
+  fun = function(k,v) return fmt(":%s %s",k,v) end 
   return type(t) ~="table" and tostring(t) or 
          "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ").."}" end
 
@@ -80,7 +80,7 @@ local function cli(k,v)
   return coerce(v),k end 
 ------------------------
 local isNum,isSym,isData
-function isNum(col)  return col.lo ~= nil  end
+function isNum(col)  return col.lo   ~= nil end
 function isSym(col)  return col.most ~= nil end
 function isData(col) return col.rows ~= nil end
 
@@ -97,27 +97,30 @@ function add(col,x,  inc,     t)
   inc   = inc or 1
   col.n = col.n + inc
   t=col.has
-  if   isSym(col)
-  then t[x] = inc + (t[x] or 0) 
-       if t[x] > col.most then col.most, col.mode = t[x], x end 
-  else local pos
-       col.lo = m.min(x, col.lo)
-       col.hi = m.max(x, col.hi) 
-       if     #t<the.Max           then col.ok=false; t[1+#t]= x 
-       elseif rand()<the.Max/col.n then col.ok=false; t[rint(1,#t)] = x end end end 
+  if isSym(col) then
+    t[x] = inc + (t[x] or 0) 
+    if t[x] > col.most then col.most, col.mode = t[x], x end 
+  elseif isNum(col) then
+    local pos
+    col.lo = m.min(x, col.lo)
+    col.hi = m.max(x, col.hi) 
+    if     #t<the.Max           then col.ok=false; t[1+#t]= x 
+    elseif rand()<the.Max/col.n then col.ok=false; t[rint(1,#t)] = x end end end
 
 function has(col) 
   if isNum(col) and not col.ok then sort(col.has); col.ok=true end
   return col.has end
 
 function mid(col)
-  return isSym(col) and col.mode or per(has(col), .5) end
+  return isSym(col) and col.mode or isNum(col) and per(has(col), .5) end
 
 function div(col)
-  if isNum(col) then return (per(has(col),.9) - per(has(col),.1))/2.58 end 
-  local e=0
-  for _,n in pairs(col.has) do e = e - n/col.n * m.log(n/col.n,2) end
-  return e end  
+  if isNum(col) then 
+    return (per(has(col),.9) - per(has(col),.1))/2.58 
+  elseif isSym(col) then
+    local e=0
+    for _,n in pairs(col.has) do e = e - n/col.n * m.log(n/col.n,2) end
+    return e  end end
 ------------------------
 local COL,COLS
 function COL(n,s,    col)
@@ -139,7 +142,7 @@ local DATA,row,stats
 function DATA(src, rows,     data,fun)
   data = {rows={}, cols=nil}
   fun  = function(t) row(data,t) end 
-  if     type(src)=="string" then csv(file, fun) 
+  if     type(src)=="string" then csv(src, fun) 
   elseif tyepe(src)=="table" then 
     if isData(src) then row(data, src.cols.names) else map(src,fun) end end 
   map(rows or {}, fun)
@@ -152,8 +155,8 @@ function row(data,t)
       for _,col in pairs(cols) do add(col,t[col.at]) end end
   else data.cols = COLS(t) end end
 
-function stats(data,  fun,cols,nPlaces,     tmp,fun)
-  fun = function(k,col) return rnd((fun or mid)(col),nPlaces), col.txt end
+function stats(data,  what,cols,nPlaces,     tmp,fun)
+  fun = function(k,col) return rnd((what or mid)(col),nPlaces), col.txt end
   tmp = kap(cols or data.cols.y, fun)
   tmp["N"] = #data.rows
   return tmp end
@@ -314,7 +317,7 @@ function locals(    t,i,s,x)
     i = i + 1 end
   return t end
 ------------------------
-go.the = function() oo(the) end
+go.the = function() oo(the); ok(type(the)=="table","the")  end
 
 go.num = function(  num1,num2)
   num1,num2 = NUM(),NUM()
@@ -326,8 +329,7 @@ go.num = function(  num1,num2)
 go.gauss=function( n) 
    n=NUM()
    for i=1,1000 do add(n, gaussian(10,2)) end 
-   ok(9.8 <= mid(n) and mid(n) <= 10.2 and 1.8<=div(n) and div(n) < 2.2,"sd")
-end
+   ok(9.8 <= mid(n) and mid(n) <= 10.2 and 1.8<=div(n) and div(n) < 2.2,"sd") end
 
 go.sym=function(      s)
   s=SYM()
@@ -335,4 +337,20 @@ go.sym=function(      s)
   ok("a" == mid(s),"midsym")
   print(1.37 <= div(s) and div(s) <= 1.39,"divsym") end
 
+go.csv=function(       n)
+  n=0
+  csv(the.file,function(t) n= n+ #t end); ok(3192==n,"csvn") end
+
+go.data=function(      data)
+  data=DATA(the.file) 
+  print(o(stats(data,mid,data.cols.x)), o(stats(data,mid,data.cols.y)))
+  print(o(stats(data,div,data.cols.x)), o(stats(data,div,data.cols.y))) end
+
+go.dist=function(      data)
+  data=DATA(the.file) 
+  for i=1,#data.rows,30 do
+    print(dist(data,data.rows[1],data.rows[i])) end
+  half(data)
+end
+---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
