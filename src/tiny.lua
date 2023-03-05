@@ -37,30 +37,33 @@ function kap(t, fun,     u)
 local function rnd(n, nPlaces) 
   if type(n) ~= "number" then return n end
   local mult = 10^(nPlaces or 2)
-  return math.floor(n * mult + 0.5) / mult end
+  return m.floor(n * mult + 0.5) / mult end
 
-local Seed,rint,rand=937162211 
+local Seed,rint,rand = 937162211 
 function rint(nlo,nhi) return m.floor(0.5 + rand(nlo,nhi)) end
 function rand(nlo,nhi) 
   Seed = (16807 * Seed) % 2147483647
   return (nlo or 0) + ((nhi or 1) - (nlo or 0)) * Seed / 2147483647 end
 
+local function gaussian(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
+  return  (mu or 0) + (sd or 1) * m.sqrt(-2*m.log(rand())) * m.cos(2*m.pi*rand())  end
+
 local coerce,lines,csv
-function coerce(s,    fun) 
-  fun = function(s1)
-          if s1=="true" then return true elseif s1=="false" then return false end
-  return s1 end
-  return m.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
+function csv(sFilename,fun,     cells)
+  cells = function(s,    t)
+    t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
+  lines(sFilename, function(line) fun(cells(line)) end) end
 
 function lines(sFilename,fun,    src,s) 
   src = io.input(sFilename)
   while true do
     s = io.read(); if s then fun(s) else return io.close(src) end end end
 
-function csv(sFilename,fun,     cells)
-  cells = function(s,    t)
-    t={}; for s1 in s:gmatch("([^,]+)") do t[1+#t] = coerce(s1) end; return t end
-  lines(sFilename, function(line) fun(cells(line)) end) end
+function coerce(s,    fun) 
+  fun = function(s1)
+          if s1=="true" then return true elseif s1=="false" then return false end
+  return s1 end
+  return m.tointeger(s) or tonumber(s) or fun(s:match"^%s*(.-)%s*$") end
 
 local o,oo
 function oo(t) print(o(t)); return t end
@@ -77,46 +80,44 @@ local function cli(k,v)
   return coerce(v),k end 
 ------------------------
 local isNum,isSym,isData
-function isNum(col)  return col.lo   end
-function isSym(col)  return col.most end
-function isData(col) return col.rows end
+function isNum(col)  return col.lo ~= nil  end
+function isSym(col)  return col.most ~= nil end
+function isData(col) return col.rows ~= nil end
 
 local NUM,SYM,add,has,mid,div
 function NUM(n,s) 
-  return {at=n, txt=s or "", n=0, has={}, ok=true,
+  return {at=n, txt=s or "", n=0, has={}, ok=false,
           hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
 
 function SYM(n,s) 
   return {at=n, txt=s or "", n=0, has={}, most=0, mode=nil} end
 
-function add(col,x,  inc,pos,num,sym)
-  sym = function(t)
-          t[x] = inc + (t[x] or 0) 
-          if t[x] > col.most then col.mast, col.mode = t[x], x end end
-  num = function(t,     pos)
-          col.lo = m.min(x, col.lo)
-          col.hi = m.max(x, col.hi) 
-          pos    = #t<the.Max and #t+1 or rand()<the.Max/col.n and rint(1,#t)
-          if pos then col.ok=false; t[pos] = x end end
-  if x~="?" then  
-    inc   = inc or 1
-    col.n = col.n + inc
-    return isSym(col) and sym(col.has)  or num(col.has) end end 
+function add(col,x,  inc,     t)
+  if x=="?" then return x end
+  inc   = inc or 1
+  col.n = col.n + inc
+  t=col.has
+  if   isSym(col)
+  then t[x] = inc + (t[x] or 0) 
+       if t[x] > col.most then col.most, col.mode = t[x], x end 
+  else local pos
+       col.lo = m.min(x, col.lo)
+       col.hi = m.max(x, col.hi) 
+       if     #t<the.Max           then col.ok=false; t[1+#t]= x 
+       elseif rand()<the.Max/col.n then col.ok=false; t[rint(1,#t)] = x end end end 
 
 function has(col) 
-  if isNum(col) and not col.ok then sort(col.has) ; col.ok=true end
+  if isNum(col) and not col.ok then sort(col.has); col.ok=true end
   return col.has end
 
-function mid(col,      most,mode)
+function mid(col)
   return isSym(col) and col.mode or per(has(col), .5) end
 
-function div(col,    num,sym)
-  num = function(t) return (per(t,.9) - per(t,.1))/2.58 end
-  sym = function (t,    e,fun)
-          fun = function (p) return p*math.log(p,2) end
-          e=0; for _,n in pairs(self.has) do e = e - fun(n/self.n) end 
-          return e end 
-  return isSym(col) and num(has(col)) or sym(col.has) end
+function div(col)
+  if isNum(col) then return (per(has(col),.9) - per(has(col),.1))/2.58 end 
+  local e=0
+  for _,n in pairs(col.has) do e = e - n/col.n * m.log(n/col.n,2) end
+  return e end  
 ------------------------
 local COL,COLS
 function COL(n,s,    col)
@@ -182,7 +183,7 @@ function far(data,t1,  rows,cols,    tmp)
   tmp = around(data,t1,rows,cols)
   return tmp[(#tmp*the.Far) // 1].row end
 
-function half(data,  rows,cols,above)
+function half(data,  rows,above,cols)
   local d,proj1,cos,same,A,B,c,left,right
   cols = cols or data.cols
   rows = rows or data.rows
@@ -210,7 +211,7 @@ local function better(data,row1,row2,    s1,s2,ys,x,y)
 local function bestHalf(data,rows,stop,worse,evals,  above)
   if   #rows <= stop
   then return rows, many(worse, the.rest*#rows), evals
-  else left,right,A,B,n = half(data,rows,cols,above)
+  else left,right,A,B,n = half(data,rows,above)
        if better(data,B,A) then left,right,A,B = right,left,B,A end
        map(right, function(row) push(worse,row) end)
        return betters(data,left,stop,worse,evals+n,A) end end 
@@ -283,7 +284,7 @@ function todo(what,fun)
   for k,v in pairs(copy) do the[k]=v end
   Seed = the.seed 
   m.randomseed(the.seed)
-  io.write(fmt(">>  %s ",what)) 
+  io.write(fmt(">> %s ",what)) 
   fun() end
 
 function showHelp(the)
@@ -301,7 +302,7 @@ function main()
   for what,fun in pairs(go) do
     if the.go == "all" or the.go == what then 
       todo(what,fun) end end
-  for k,v in pairs(_ENV) do if not b4[k] then print(k,type(v)) end end 
+  for k,v in pairs(_ENV) do if not b4[k] then print("?",k,type(v)) end end 
   os.exit(fails) end 
 
 function locals(    t,i,s,x)
@@ -313,9 +314,25 @@ function locals(    t,i,s,x)
     i = i + 1 end
   return t end
 ------------------------
-go.num = function(  num)
-  num = NUM()
-  for i=1,1000 do add(num,rand()^.5) end
-  print(mid(num)) end
+go.the = function() oo(the) end
+
+go.num = function(  num1,num2)
+  num1,num2 = NUM(),NUM()
+  for i=1,1000 do  add(num1,rand()^2) end
+  for i=1,1000 do  add(num2,rand()) end
+  ok(.24 <=mid(num1) and mid(num1) <= .26 and mid(num1) < mid(num2),"nummid")
+  ok( m.abs(div(num1) - div(num2)) <= .05, "numdiv") end
  
+go.gauss=function( n) 
+   n=NUM()
+   for i=1,1000 do add(n, gaussian(10,2)) end 
+   ok(9.8 <= mid(n) and mid(n) <= 10.2 and 1.8<=div(n) and div(n) < 2.2,"sd")
+end
+
+go.sym=function(      s)
+  s=SYM()
+  for _,x in pairs{"a","a","a","a","b","b","c"} do add(s,x)  end
+  ok("a" == mid(s),"midsym")
+  print(1.37 <= div(s) and div(s) <= 1.39,"divsym") end
+
 return pcall(debug.getlocal,4,1) and locals() or main() 
