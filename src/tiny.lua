@@ -10,6 +10,7 @@ local the  = {
       file = "../etc/data/auto93.csv",
       goal = "plan",
       help = false,
+      Halves=512,
       Max  = 512,
       min  = .5,
       p    = 2,
@@ -22,6 +23,16 @@ local fmt = string.format
 local lt,sort
 function lt(x)       return function(a,b) return a[x] < b[x] end end
 function sort(t,fun) table.sort(t,fun); return t end
+
+local Seed,rint,rand = 937162211 
+function rint(nlo,nhi) return m.floor(0.5 + rand(nlo,nhi)) end
+function rand(nlo,nhi) 
+  Seed = (16807 * Seed) % 2147483647
+  return (nlo or 0) + ((nhi or 1) - (nlo or 0)) * Seed / 2147483647 end
+
+local function gaussian(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
+  return  (mu or 0) + (sd or 1) * m.sqrt(-2*m.log(rand())) * m.cos(2*m.pi*rand())  end
+
 
 local per,any,many,push
 function per(t,p)   return t[ m.max(1, m.min(#t, (((p or .5)*#t) + .5) // 1)) ] end
@@ -38,15 +49,6 @@ local function rnd(n, nPlaces)
   if type(n) ~= "number" then return n end
   local mult = 10^(nPlaces or 2)
   return m.floor(n * mult + 0.5) / mult end
-
-local Seed,rint,rand = 937162211 
-function rint(nlo,nhi) return m.floor(0.5 + rand(nlo,nhi)) end
-function rand(nlo,nhi) 
-  Seed = (16807 * Seed) % 2147483647
-  return (nlo or 0) + ((nhi or 1) - (nlo or 0)) * Seed / 2147483647 end
-
-local function gaussian(mu,sd)  --> n; return a sample from a Gaussian with mean `mu` and sd `sd`
-  return  (mu or 0) + (sd or 1) * m.sqrt(-2*m.log(rand())) * m.cos(2*m.pi*rand())  end
 
 local coerce,lines,csv
 function csv(sFilename,fun,     cells)
@@ -97,22 +99,21 @@ function add(col,x,  inc,     t)
   inc   = inc or 1
   col.n = col.n + inc
   t=col.has
-  if isSym(col) then
-    t[x] = inc + (t[x] or 0) 
-    if t[x] > col.most then col.most, col.mode = t[x], x end 
-  elseif isNum(col) then
-    local pos
-    col.lo = m.min(x, col.lo)
-    col.hi = m.max(x, col.hi) 
-    if     #t<the.Max           then col.ok=false; t[1+#t]= x 
-    elseif rand()<the.Max/col.n then col.ok=false; t[rint(1,#t)] = x end end end
+  if   isSym(col) 
+  then t[x] = inc + (t[x] or 0) 
+       if t[x] > col.most then col.most, col.mode = t[x], x end 
+  else local pos
+       col.lo = m.min(x, col.lo)
+       col.hi = m.max(x, col.hi) 
+       if     #t<the.Max           then col.ok=false; t[1+#t]= x 
+       elseif rand()<the.Max/col.n then col.ok=false; t[rint(1,#t)] = x end end end
 
 function has(col) 
   if isNum(col) and not col.ok then sort(col.has); col.ok=true end
   return col.has end
 
 function mid(col)
-  return isSym(col) and col.mode or isNum(col) and per(has(col), .5) end
+  return isSym(col) and col.mode or  per(has(col), .5) end
 
 function div(col)
   if isNum(col) then 
@@ -187,13 +188,13 @@ function far(data,t1,  rows,cols,    tmp)
   return tmp[(#tmp*the.Far) // 1].row end
 
 function half(data,  rows,above,cols)
-  local d,proj1,cos,same,A,B,c,left,right
-  cols = cols or data.cols
+  local gap,proj,cos,some,A,B,c,left,right
+  cols = cols or data.cols.x
   rows = rows or data.rows
   gap  = function(r1,r2) return dist(data,r1,r2,cols) end
   cos  = function(a,b) return (a^2 + c^2 - b^2)/(2*c) end
   proj = function(r) return {row=r, x=cos(gap(r,A), gap(r,B), c)} end
-  some = many(rows,the.Halves)
+  some = many(rows, m.min(#rows, the.Halves))
   A    = above or far(data,any(some),some,cols)
   B    = far(data,A,some,cols)
   c    = gap(A,B)
@@ -203,7 +204,7 @@ function half(data,  rows,above,cols)
   return left,right,A,B,(above and 1 or 2)  end
 ------------------------
 local function better(data,row1,row2,    s1,s2,ys,x,y) 
-  s1,s2,ys,x,y = 0,0,data.cols.y
+  s1,s2,ys,x,y = 0,0, data.cols.y
   for _,col in pairs(ys) do
     x  = norm(col, row1[col.at] )
     y  = norm(col, row2[col.at] )
@@ -319,6 +320,10 @@ function locals(    t,i,s,x)
 ------------------------
 go.the = function() oo(the); ok(type(the)=="table","the")  end
 
+go.any = function(     t)
+  t={1,2,4,7}
+  for i=1,10 do io.write(" ",(table.concat(many(t,4)))) end ; print"" end
+
 go.num = function(  num1,num2)
   num1,num2 = NUM(),NUM()
   for i=1,1000 do  add(num1,rand()^2) end
@@ -349,8 +354,17 @@ go.data=function(      data)
 go.dist=function(      data)
   data=DATA(the.file) 
   for i=1,#data.rows,30 do
-    print(dist(data,data.rows[1],data.rows[i])) end
-  half(data)
-end
+    print(dist(data,data.rows[1],data.rows[i])) end end
+
+go.half=function(      data,left,right)
+  data=DATA(the.file) 
+  left,right = half(data) 
+  ok(199==#left and 199==#right,"half") end 
+
+go.better=function(      data)
+  data=DATA(the.file) 
+  for i=1,#data.rows,30 do
+    print(i,better(data,data.rows[1],data.rows[i])) end end
+
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
