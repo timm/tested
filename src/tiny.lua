@@ -144,7 +144,7 @@ function DATA(src, rows,     data,fun)
   data = {rows={}, cols=nil}
   fun  = function(t) row(data,t) end 
   if     type(src)=="string" then csv(src, fun) 
-  elseif tyepe(src)=="table" then 
+  elseif type(src)=="table" then 
     if isData(src) then row(data, src.cols.names) else map(src,fun) end end 
   map(rows or {}, fun)
   return data end
@@ -195,7 +195,7 @@ function half(data,  rows,above,cols)
   cos  = function(a,b) return (a^2 + c^2 - b^2)/(2*c) end
   proj = function(r) return {row=r, x=cos(gap(r,A), gap(r,B), c)} end
   some = many(rows, m.min(#rows, the.Halves))
-  A    = above or far(data,any(some),some,cols)
+  A    = above or far(data, any(some), some, cols)
   B    = far(data,A,some,cols)
   c    = gap(A,B)
   left, right = {},{}
@@ -215,13 +215,13 @@ local function better(data,row1,row2,    s1,s2,ys,x,y)
 local function bestHalf(data,rows,stop,worse,evals,  above)
   if   #rows <= stop
   then return rows, many(worse, the.rest*#rows), evals
-  else left,right,A,B,n = half(data,rows,above)
+  else local left,right,A,B,n = half(data,rows)
        if better(data,B,A) then left,right,A,B = right,left,B,A end
        map(right, function(row) push(worse,row) end)
-       return betters(data,left,stop,worse,evals+n,A) end end 
+       return bestHalf(data,left,stop,worse,evals+n,A) end end 
 
-local function sway(data)
-   best,rest,evals = betters(data, data.rows, #data.rows^the.min, {}, 0)
+local function sway(data,     best,rest,evals)
+   best,rest,evals = bestHalf(data, data.rows, (#data.rows)^the.min, {}, 0)
    return DATA(data,best), DATA(data,rest), evals end
 
 local goal={}
@@ -229,9 +229,9 @@ goal.plan    = function(b,r) return b^2/(b+r) end
 goal.monitor = function(b,r) return r^2/(b+r) end
 goal.explore = function(b,r) return 1/(b+r)   end
 
-local function xys(datas,best,     x,xy,B,R)
+local function xys(col,rows,best,     x,xy,B,R)
   B,R,t = 0,0,{}
-  for klass,data in pairs(datas)  do
+  for klass,tmp in pairs(rows)  do
     for _,col in pairs(data.cols.x) do
       for _,z in pairs(has(col)) do
         if klass==best then B = B+1 else R = R+1 end
@@ -239,7 +239,7 @@ local function xys(datas,best,     x,xy,B,R)
   return sort(t,lt"x"),B,R end 
 
 local function split1(col,rows,best)
-  local t,B,R = xys(rows,best)
+  local t,B,R = xys(col,rows,best)
   local range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
   local val = function(b,r) return goal[the.goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
   local min = the.median and (B+R)/2 or B/3
@@ -256,8 +256,9 @@ local function split1(col,rows,best)
         if the.median then break end end end end
   return out end
 
-local function split(cols,rows,best)
-   return sort(map(cols,function(col) return split1(col,rows,best) end), gt"val")[1] end
+local function split(cols,rows,best,    fun)
+   fun = function(col) return split1(col,rows,best) end
+   return sort(map(cols,fun), gt"val")[1] end
 
 local function selects(range,rows,     yes,no)
   yes,no = {}
@@ -363,9 +364,21 @@ go.half=function(      data,left,right)
 
 go.better=function(      data)
   data=DATA(the.file) 
-  print("\n","",o(data.rows[241]))
+  print("\n","",o(data.rows[301]))
   for i=1,#data.rows,30 do
-    print(i,better(data, data.rows[41], data.rows[i]), o(data.rows[i])) end end
+    print(i,better(data, data.rows[301], data.rows[i]), o(data.rows[i])) end end
+
+go.sway=function(      data,best,rest,n)
+  data=DATA(the.file) 
+  print("\nb4   ",o(stats(data,mid,data.cols.y)))
+  best,rest,n = sway(data)
+  print("after", o(stats(best,mid,best.cols.y)),n)
+end
+
+go.split= function(      data,best,rest,n)
+  data=DATA(the.file)
+  best,rest,n = sway(data)
+  split(data.cols, {best=best.rows, rest=rest.rows},"best") end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
