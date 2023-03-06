@@ -232,8 +232,9 @@ goal.explore = function(b,r) return 1/(b+r)   end
 local function xys(col,rows,best,     x,xy,B,R)
   B,R,t = 0,0,{}
   for klass,tmp in pairs(rows)  do
-    for _,col in pairs(data.cols.x) do
-      for _,z in pairs(has(col)) do
+    for _,row in pairs(tmp) do
+      x= row[col.at]
+      if x ~= "?" then
         if klass==best then B = B+1 else R = R+1 end
         push(t,{x=x, y= klass==best}) end end end 
   return sort(t,lt"x"),B,R end 
@@ -245,8 +246,8 @@ local function split1(col,rows,best)
   local min = the.median and (B+R)/2 or B/3
   local most,out = -1, range(t[1].x, t[#t].x, 0) 
   local b,r = 0,0 
-  for i,xy in pairs(t) do -- walk left to right, incrementing  counts from b1,r1
-    if xy.y then b1 = b+1 else r = r+1 end
+  for i,xy in pairs(t) do -- walk left to right, incrementing  counts from b,r
+    if xy.y then b = b+1 else r = r+1 end
     if i >= min and i <= #t - min + 1 then
       if xy.x ~= t[i+1].x then
         local v1 = val(b, r)
