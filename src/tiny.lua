@@ -6,9 +6,9 @@ tiny.lua : lots of AI in a tiny box
 ]]
 local the  = {
       Far  = .95,
-      go   = "nothing",
       file = "../etc/data/auto93.csv",
-      goal = "plan",
+      go   = "nothing",
+      Goal = "plan",
       help = false,
       Halves=512,
       Max  = 512,
@@ -20,8 +20,9 @@ local the  = {
 local m   = math
 local fmt = string.format
 
-local lt,sort
+local lt,gt,sort
 function lt(x)       return function(a,b) return a[x] < b[x] end end
+function gt(x)       return function(a,b) return a[x] > b[x] end end
 function sort(t,fun) table.sort(t,fun); return t end
 
 local Seed,rint,rand = 937162211 
@@ -229,20 +230,27 @@ goal.plan    = function(b,r) return b^2/(b+r) end
 goal.monitor = function(b,r) return r^2/(b+r) end
 goal.explore = function(b,r) return 1/(b+r)   end
 
-local function xys(col,rows,best,     x,xy,B,R)
+local function xys(col,datas,best,     x,xy,B,R)
   B,R,t = 0,0,{}
-  for klass,tmp in pairs(rows)  do
-    for _,row in pairs(tmp) do
+  for klass,data in pairs(datas)  do
+    print(klass)
+    for i,row in pairs(data.rows) do
+      oo(row)
       x= row[col.at]
+      print(x, #row)
       if x ~= "?" then
+        print(klass,i, col.txt,col.at, x, o(row))
         if klass==best then B = B+1 else R = R+1 end
-        push(t,{x=x, y= klass==best}) end end end 
+        print(1)
+        push(t,{x=x, y= klass==best}) 
+        print(2) end end end 
+  print(1000)
   return sort(t,lt"x"),B,R end 
 
-local function split1(col,rows,best)
-  local t,B,R = xys(col,rows,best)
+local function split1(col,datas,best)
+  local t,B,R = xys(col,datas,best)
   local range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
-  local val = function(b,r) return goal[the.goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
+  local val = function(b,r) return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
   local min = the.median and (B+R)/2 or B/3
   local most,out = -1, range(t[1].x, t[#t].x, 0) 
   local b,r = 0,0 
@@ -250,6 +258,7 @@ local function split1(col,rows,best)
     if xy.y then b = b+1 else r = r+1 end
     if i >= min and i <= #t - min + 1 then
       if xy.x ~= t[i+1].x then
+        print(math.huge, the.goal)
         local v1 = val(b, r)
         if v1 > most then most,out= v1, range(t[1].x, xy.x, v1) end
         local v2 = val(B-b, R-r)
@@ -257,8 +266,8 @@ local function split1(col,rows,best)
         if the.median then break end end end end
   return out end
 
-local function split(cols,rows,best,    fun)
-   fun = function(col) return split1(col,rows,best) end
+local function split(cols,datas,best,    fun)
+   fun = function(col) return split1(col,datas,best) end
    return sort(map(cols,fun), gt"val")[1] end
 
 local function selects(range,rows,     yes,no)
@@ -379,7 +388,8 @@ end
 go.split= function(      data,best,rest,n)
   data=DATA(the.file)
   best,rest,n = sway(data)
-  split(data.cols, {best=best.rows, rest=rest.rows},"best") end
+  print(#best.rows,#rest.rows)
+  split(data.cols.x, {best=best, rest=rest},"best") end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
