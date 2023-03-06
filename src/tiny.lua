@@ -5,6 +5,7 @@ tiny.lua : lots of AI in a tiny box
 (c) 2023, Tim Menzies <timm@ieee.org> BSD-2
 ]]
 local the  = {
+      bins = 16,
       Far  = .95,
       file = "../etc/data/auto93.csv",
       go   = "nothing",
@@ -170,7 +171,6 @@ function norm(num,n)
 function dist(data,t1,t2,  cols,    d,gap,sym,num)
   sym = function(x,y) return x==y and 0 or 1 end
   num = function(x,y) if x=="?" then x= y<.5 and 1 or 1 end  
-                      if y=="?" then y= x<.5 and 1 or 1 end  
                       return m.abs(x-y) end 
   gap = function(col,x,y) 
           if x=="?" and y=="?" then return 1 end
@@ -225,49 +225,87 @@ local function sway(data,     best,rest,evals)
    best,rest,evals = bestHalf(data, data.rows, (#data.rows)^the.min, {}, 0)
    return DATA(data,best), DATA(data,rest), evals end
 
-local goal={}
+local goal,val={}
 goal.plan    = function(b,r) return b^2/(b+r) end
 goal.monitor = function(b,r) return r^2/(b+r) end
 goal.explore = function(b,r) return 1/(b+r)   end
 
-local function xys(col,datas,best,     x,xy,B,R)
-  B,R,t = 0,0,{}
-  for klass,data in pairs(datas)  do
-    print(klass)
-    for i,row in pairs(data.rows) do
-      oo(row)
-      x= row[col.at]
-      print(x, #row)
-      if x ~= "?" then
-        print(klass,i, col.txt,col.at, x, o(row))
-        if klass==best then B = B+1 else R = R+1 end
-        print(1)
-        push(t,{x=x, y= klass==best}) 
-        print(2) end end end 
-  print(1000)
-  return sort(t,lt"x"),B,R end 
+function val(range,B,R,     b,r) 
+  b,r = range.has[true], range.has[false]
+ return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
 
-local function split1(col,datas,best)
+local function RANGE(at,txt,lo,hi)
+  return {lo=lo, hi=hi or lo, at=col.at, txt=col.txt, ys=SYM()} end 
+
+local function merge(range1,range2,    range3)
+  range3= RANGE(range1.at, range1.txt, range1.lo, range2.hi)
+  for _,t in pairs{range1.has, range2.has} do
+    for k,n in pairs(t) do add(range3,k,n) end end
+  return range3 end
+
+local function merged(range1,range2,B,R) 
+  range3= merge(range1,range2,B,R)
+  if val(range3,B,R)  > val(range1,B,R) or val(range3,B,R) > val(range2,B,R) then
+    return range3 end end
+   
+local function extend(range, x,y)
+  range.lo = min(range.lo,x)
+  range.hi = max(range.hi,x)
+  add(range.ys, y) end
+
+function bin(col,x,      tmp)
+  if x=="?" or isSym(col)  then return x end
+  tmp = (col.hi - col.lo)/(the.bins - 1)
+  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
+
+local function xys(col,datas,best,     tmp,x,y,B,R.value)
+  B,R,tmp = 0,0,{}
+  for klass,data in pairs(datas)  do
+    for i,row in pairs(data.rows) do
+      x= row[col.at]
+      if x ~= "?" then
+        y = klass==best
+        if y then B = B+1 else R = R+1 end
+        k=bin(col,x)
+        tmp[k] = tmp[k] or RANGE(col.at,col.txt,x)
+        extend(tmp[k], xy.x, y)  end end end  
+  value=function(range)
+          range.val = val(range.has[true], range.has[false],B,R)
+          return range end
+  return sort(tmp,map(tmp,value),t"lo"),B,R end 
+
+local function merge(col,ranges)
+  if isSym(col) then return ranges end
+  
+local function splitsym(col,datas,best)
   local t,B,R = xys(col,datas,best)
-  local range = function(lo,hi,v) return {lo=lo, hi=hi, at=col.at, txt=col.txt,val=v} end 
-  local val = function(b,r) return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
+  for i,xy in pairs(t) do
+    tmp[xy.x] = tmp[xy.x] or NUM()
+    add(tmp[xy.x], xy.x==best) end
+  tmp = kap(tmp,function(k,num) return RANGE(k,k,num.n, val(num.has[best) return RANge(
+    {b=0,r=0}
+    best[xy.x] = best[xy.x] orout[xy.x] =  out[xy.x] or  RANGE(xy.x,xy.x,0,0,col)
+    out[xy.x].n = out[xy.x].n + 1 end
+  map(out,function(range) range.val= val(
+
+local function splitnum(col,datas,best)
+  local t,B,R = xys(col,datas,best)
   local min = the.median and (B+R)/2 or B/3
-  local most,out = -1, range(t[1].x, t[#t].x, 0) 
+  local most,out = -1, RANGE(t[1].x, t[#t].x, B+R,0,col) 
   local b,r = 0,0 
   for i,xy in pairs(t) do -- walk left to right, incrementing  counts from b,r
     if xy.y then b = b+1 else r = r+1 end
     if i >= min and i <= #t - min + 1 then
       if xy.x ~= t[i+1].x then
-        print(math.huge, the.goal)
-        local v1 = val(b, r)
-        if v1 > most then most,out= v1, range(t[1].x, xy.x, v1) end
-        local v2 = val(B-b, R-r)
-        if v2 > most then most,out= v2, range(xy.x, t[#t].x, v2) end 
+        local v1 = val(b, r,B,R)
+        if v1 > most then most,out= v1, RANGE(t[1].x, xy.x, i,v1,col) end
+        local v2 = val(B-b, R-r,B,R)
+        if v2 > most then most,out= v2, RANGE(xy.x, t[#t].x, #t-i, v2,col) end 
         if the.median then break end end end end
   return out end
 
 local function split(cols,datas,best,    fun)
-   fun = function(col) return split1(col,datas,best) end
+   fun = function(col) return (isNump(col) and splitnum or splitsym)(col,datas,best) end
    return sort(map(cols,fun), gt"val")[1] end
 
 local function selects(range,rows,     yes,no)
@@ -389,7 +427,7 @@ go.split= function(      data,best,rest,n)
   data=DATA(the.file)
   best,rest,n = sway(data)
   print(#best.rows,#rest.rows)
-  split(data.cols.x, {best=best, rest=rest},"best") end
+  oo(split(data.cols.x, {best=best, rest=rest},"best")) end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
