@@ -89,7 +89,7 @@ function isData(col) return col.rows ~= nil end
 local NUM,SYM,add,has,mid,div
 function NUM(n,s) 
   return {at=n, txt=s or "", n=0, has={}, ok=false,
-          hi=-m.huge, lo=m.huge, w=(s or ""):find"-$"} end
+          hi=-m.huge, lo=m.huge, w=(s or ""):find"-$" and -1 or 1} end
 
 function SYM(n,s) 
   return {at=n, txt=s or "", n=0, has={}, most=0, mode=nil} end
@@ -204,7 +204,7 @@ function half(data,  rows,above,cols)
   return left,right,A,B,(above and 1 or 2)  end
 ------------------------
 local function better(data,row1,row2,    s1,s2,ys,x,y) 
-  s1,s2,ys,x,y = 0,0, data.cols.y
+  s1, s2, ys, x, y = 0, 0, data.cols.y
   for _,col in pairs(ys) do
     x  = norm(col, row1[col.at] )
     y  = norm(col, row2[col.at] )
@@ -363,8 +363,9 @@ go.half=function(      data,left,right)
 
 go.better=function(      data)
   data=DATA(the.file) 
+  print("\n","",o(data.rows[241]))
   for i=1,#data.rows,30 do
-    print(i,better(data,data.rows[1],data.rows[i])) end end
+    print(i,better(data, data.rows[41], data.rows[i]), o(data.rows[i])) end end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
