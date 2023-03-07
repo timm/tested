@@ -20,6 +20,7 @@ local the  = {
 ---------------------------------------
 local m   = math
 local fmt = string.format
+local same= function(x) return x end
 
 local lt,gt,sort
 function lt(x)       return function(a,b) return a[x] < b[x] end end
@@ -225,17 +226,16 @@ local function sway(data,     best,rest,evals)
    best,rest,evals = bestHalf(data, data.rows, (#data.rows)^the.min, {}, 0)
    return DATA(data,best), DATA(data,rest), evals end
 
-local goal,val={}
-goal.plan    = function(b,r) return b^2/(b+r) end
-goal.monitor = function(b,r) return r^2/(b+r) end
-goal.explore = function(b,r) return 1/(b+r)   end
-
-function val(range,B,R,     b,r) 
-  b,r = range.has[true], range.has[false]
- return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
-
 local function RANGE(at,txt,lo,hi)
-  return {lo=lo, hi=hi or lo, at=col.at, txt=col.txt, ys=SYM()} end 
+  return {lo=lo, hi=hi or lo, at=at, txt=txt, ys=SYM()} end 
+
+local function val(range,B,R,     b,r) 
+  local goal={}
+  goal.plan    = function(b,r) return b^2/(b+r) end
+  goal.monitor = function(b,r) return r^2/(b+r) end
+  goal.explore = function(b,r) return 1/(b+r)   end
+  b,r = (range.ys.has[true] or 0), (range.ys.has[false] or 0)
+  return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
 
 local function merge(range1,range2,    range3)
   range3= RANGE(range1.at, range1.txt, range1.lo, range2.hi)
@@ -243,70 +243,53 @@ local function merge(range1,range2,    range3)
     for k,n in pairs(t) do add(range3,k,n) end end
   return range3 end
 
-local function merged(range1,range2,B,R) 
-  range3= merge(range1,range2,B,R)
-  if val(range3,B,R)  > val(range1,B,R) or val(range3,B,R) > val(range2,B,R) then
-    return range3 end end
-   
 local function extend(range, x,y)
-  range.lo = min(range.lo,x)
-  range.hi = max(range.hi,x)
+  range.lo = m.min(range.lo,x)
+  range.hi = m.max(range.hi,x)
   add(range.ys, y) end
 
-function bin(col,x,      tmp)
+local function merges(ranges0,score)
+  local ranges1,j,here,there,new = {},1
+  while j < #ranges0 do
+    here,there,new = ranges0[j],ranges0[j+1]
+    if there then
+      new = merge(here,there)
+      if score(new) > score(here) or score(new) > score(there) then
+        here = new; j = j+1 end  end
+    ranges1[1+#ranges1] = here
+    j = j + 1 
+  end
+  return #ranges0 == #ranges1 and ranges0 or merges(ranges1,score) end 
+
+local function bin(col,x,      tmp)
   if x=="?" or isSym(col)  then return x end
   tmp = (col.hi - col.lo)/(the.bins - 1)
   return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
 
-local function xys(col,datas,best,     tmp,x,y,B,R.value)
-  B,R,tmp = 0,0,{}
+local function xys(col,datas,best,score)
+  local tmp,all,x,y,k = {},{}
   for klass,data in pairs(datas)  do
     for i,row in pairs(data.rows) do
       x= row[col.at]
       if x ~= "?" then
-        y = klass==best
-        if y then B = B+1 else R = R+1 end
-        k=bin(col,x)
-        tmp[k] = tmp[k] or RANGE(col.at,col.txt,x)
-        extend(tmp[k], xy.x, y)  end end end  
-  value=function(range)
-          range.val = val(range.has[true], range.has[false],B,R)
-          return range end
-  return sort(tmp,map(tmp,value),t"lo"),B,R end 
+        y= klass==best
+        k= bin(col,x)
+        tmp[k] = tmp[k] or push(all,RANGE(col.at,col.txt,x))
+        extend(tmp[k], x, y)  end end end  
+  all = sort(all,lt"lo")
+  return isSym(col) and all or merges(all,score) end
 
-local function merge(col,ranges)
-  if isSym(col) then return ranges end
-  
-local function splitsym(col,datas,best)
-  local t,B,R = xys(col,datas,best)
-  for i,xy in pairs(t) do
-    tmp[xy.x] = tmp[xy.x] or NUM()
-    add(tmp[xy.x], xy.x==best) end
-  tmp = kap(tmp,function(k,num) return RANGE(k,k,num.n, val(num.has[best) return RANge(
-    {b=0,r=0}
-    best[xy.x] = best[xy.x] orout[xy.x] =  out[xy.x] or  RANGE(xy.x,xy.x,0,0,col)
-    out[xy.x].n = out[xy.x].n + 1 end
-  map(out,function(range) range.val= val(
-
-local function splitnum(col,datas,best)
-  local t,B,R = xys(col,datas,best)
-  local min = the.median and (B+R)/2 or B/3
-  local most,out = -1, RANGE(t[1].x, t[#t].x, B+R,0,col) 
-  local b,r = 0,0 
-  for i,xy in pairs(t) do -- walk left to right, incrementing  counts from b,r
-    if xy.y then b = b+1 else r = r+1 end
-    if i >= min and i <= #t - min + 1 then
-      if xy.x ~= t[i+1].x then
-        local v1 = val(b, r,B,R)
-        if v1 > most then most,out= v1, RANGE(t[1].x, xy.x, i,v1,col) end
-        local v2 = val(B-b, R-r,B,R)
-        if v2 > most then most,out= v2, RANGE(xy.x, t[#t].x, #t-i, v2,col) end 
-        if the.median then break end end end end
-  return out end
-
-local function split(cols,datas,best,    fun)
-   fun = function(col) return (isNump(col) and splitnum or splitsym)(col,datas,best) end
-   return sort(map(cols,fun), gt"val")[1] end
+local function split(cols,datas,best)
+  local tmp,B,R,score,order = {}
+  B,R   = #(datas[true].rows), #(datas[false].rows)
+  score = function(range) return val(range,B,R) end
+  order = function(r1,r2) return score(r1) > score(r2) end
+  for _,col in pairs(cols) do
+    print(col.txt)
+    for _,range in pairs(xys(col,datas,best,score)) do
+      print(col.txt,o(range),score(range))
+      push(tmp,range) end end 
+  return sort(tmp,order)[1] end 
 
 local function selects(range,rows,     yes,no)
   yes,no = {}
@@ -427,7 +410,7 @@ go.split= function(      data,best,rest,n)
   data=DATA(the.file)
   best,rest,n = sway(data)
   print(#best.rows,#rest.rows)
-  oo(split(data.cols.x, {best=best, rest=rest},"best")) end
+  oo(split(data.cols.x, {[true]=best, [false]=rest},true)) end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
