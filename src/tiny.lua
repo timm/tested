@@ -22,7 +22,8 @@ local m   = math
 local fmt = string.format
 local same= function(x) return x end
 
-local lt,gt,sort
+local on,lt,gt,sort
+function on(x)       return function(a) return a[x] end end
 function lt(x)       return function(a,b) return a[x] < b[x] end end
 function gt(x)       return function(a,b) return a[x] > b[x] end end
 function sort(t,fun) table.sort(t,fun); return t end
@@ -73,7 +74,7 @@ function coerce(s,    fun)
 local o,oo
 function oo(t) print(o(t)); return t end
 function o(t,    fun) 
-  fun = function(k,v) return fmt(":%s %s",k,v) end 
+  fun = function(k,v) return fmt(":%s %s",k,o(v)) end 
   return type(t) ~="table" and tostring(t) or 
          "{"..table.concat(#t>0 and map(t,o) or sort(kap(t,fun))," ").."}" end
 
@@ -239,8 +240,9 @@ local function val(range,B,R,     b,r)
 
 local function merge(range1,range2,    range3)
   range3= RANGE(range1.at, range1.txt, range1.lo, range2.hi)
-  for _,t in pairs{range1.has, range2.has} do
-    for k,n in pairs(t) do add(range3,k,n) end end
+  for _,has in pairs{range1.ys.has, range2.ys.has} do
+    for k,n in pairs(has) do 
+       add(range3.ys,k,n) end end
   return range3 end
 
 local function extend(range, x,y)
@@ -250,12 +252,12 @@ local function extend(range, x,y)
 
 local function merges(ranges0,score)
   local ranges1,j,here,there,new = {},1
-  while j < #ranges0 do
+  while j <= #ranges0 do
     here,there,new = ranges0[j],ranges0[j+1]
     if there then
       new = merge(here,there)
-      if score(new) > score(here) or score(new) > score(there) then
-        here = new; j = j+1 end  end
+      if score(new) > m.max(score(here),score(there)) then
+        here = new; j = j+1 end end
     ranges1[1+#ranges1] = here
     j = j + 1 
   end
@@ -279,15 +281,13 @@ local function xys(col,datas,best,score)
   all = sort(all,lt"lo")
   return isSym(col) and all or merges(all,score) end
 
-local function split(cols,datas,best)
+local function split(cols,datas,best,    tmp)
   local tmp,B,R,score,order = {}
   B,R   = #(datas[true].rows), #(datas[false].rows)
-  score = function(range) return val(range,B,R) end
+  score = function(range) return range.ys.has[true] and val(range,B,R) or 0 end
   order = function(r1,r2) return score(r1) > score(r2) end
   for _,col in pairs(cols) do
-    print(col.txt)
     for _,range in pairs(xys(col,datas,best,score)) do
-      print(col.txt,o(range),score(range))
       push(tmp,range) end end 
   return sort(tmp,order)[1] end 
 
