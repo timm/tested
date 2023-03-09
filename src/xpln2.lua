@@ -428,7 +428,6 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
   function score(ranges,       rule,bestr,restr)
     rule = RULE(ranges,maxSizes)
     if rule then
-      oo(showRule(rule))
       bestr= selects(rule, best.rows)
       restr= selects(rule, rest.rows)
       if #bestr + #restr > 0 then 
@@ -437,16 +436,13 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
   tmp,maxSizes = {},{}
   for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
     maxSizes[ranges[1].txt] = #ranges
-    print""
     for _,range in pairs(ranges) do
-      print(range.txt, range.lo, range.hi)
       push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end
   local rule,most=firstN(sort(tmp,gt"val"),score)
   return rule,most end
 
 function firstN(sortedRanges,scoreFun,           first,useful,most,out)
-  print""
-  map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
+  --map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
   first = sortedRanges[1].val
   function useful(range)
     if range.val>.05 and range.val> first/10 then return range end
@@ -778,15 +774,44 @@ go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,
   best,rest,evals = sway(data)
   rule,most= xpln(data,best,rest)
   if rule then
-    print("\n-----------\nexplain=", o(showRule(rule)))
+    print("\n-----------\nexplain = = = ", o(showRule(rule)))
     data1= DATA(data,selects(rule,data.rows))
-    print("all               ",o(stats(data)),o(stats(data,div)))
+    print("all  =  =    =    ",o(stats(data)),o(stats(data,div)))
     print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
     print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
     top,_ = betters(data, #best.rows)
     top = DATA(data,top)
     print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div))) end
 end)  
+
+function ys(data)
+  local out,tmp = {}
+  for _,col in pairs(data.cols.y) do 
+    tmp=NUM()
+    for _,row in pairs(data.rows) do add(num,row[col.at]) end
+    out[col.txt] = NUM() end 
+  return out end 
+
+function xplnCollect(logs,     data,data1,rule,most,_,best,rest,top,evals)
+  data=DATA(is.file)
+  best,rest,evals = sway(data)
+  rule,most= xpln(data,best,rest)
+  if rule then
+    data1= DATA(data,selects(rule,data.rows))
+    out.all= out.all or NUM()
+    ys(data)
+    out.
+    print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
+    print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
+    top,_ = betters(data, #best.rows)
+    top = DATA(data,top)
+    print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div))) end
+end 
+
+go("xpln20","20 times",function()
+  for _,tmp in pairs(egs) do
+    if tmp.key == "xpln" then
+       for i=1,20 do print(i); tmp.fun() end end end end)
 
 -- ## Start-up
 

@@ -15,7 +15,7 @@ local the  = {
       Max  = 512,
       min  = .5,
       p    = 2,
-      rest = 4,
+      rest = 5,
       seed =  937162211}
 ---------------------------------------
 local m   = math
@@ -226,10 +226,28 @@ local function bestHalf(data,rows,stop,worse,evals,  above)
 local function sway(data,     best,rest,evals)
    best,rest,evals = bestHalf(data, data.rows, (#data.rows)^the.min, {}, 0)
    return DATA(data,best), DATA(data,rest), evals end
-
+-------------------------------------------------------------------------------
+-- RANGEs select for rows
 local function RANGE(at,txt,lo,hi)
   return {lo=lo, hi=hi or lo, at=at, txt=txt, ys=SYM()} end 
 
+local function selects(range,rows,     yes,no)
+  yes,no = {}
+  for _,row in pairs(row) do
+    x = row[range.at]
+    if x == "?" then push(yes,row) 
+    elseif range.lo == range.hi and range.lo == x then push(yes,row)
+    elseif range.lo <= x and x < range.hi then push(yes,row)
+    else   push(no,row) end end
+  return yes,no end
+
+-- as we grow ranges, the `lo,hi` may extend and the class counts in `ys` increase.
+local function extend(range, x,y)
+  range.lo = m.min(range.lo,x)
+  range.hi = m.max(range.hi,x)
+  add(range.ys, y) end
+
+-- Some ranges are more `val`uable than others.
 local function val(range,B,R,     b,r) 
   local goal={}
   goal.plan    = function(b,r) return b^2/(b+r) end
@@ -238,6 +256,7 @@ local function val(range,B,R,     b,r)
   b,r = (range.ys.has[true] or 0), (range.ys.has[false] or 0)
   return goal[the.Goal]( b/(B+1/m.huge), r/(R+1/m.huge)) end
 
+-- two ranges can merge
 local function merge(range1,range2,    range3)
   range3= RANGE(range1.at, range1.txt, range1.lo, range2.hi)
   for _,has in pairs{range1.ys.has, range2.ys.has} do
@@ -245,11 +264,7 @@ local function merge(range1,range2,    range3)
        add(range3.ys,k,n) end end
   return range3 end
 
-local function extend(range, x,y)
-  range.lo = m.min(range.lo,x)
-  range.hi = m.max(range.hi,x)
-  add(range.ys, y) end
-
+-- more than two ranges can also merge... if we know how to "score" them
 local function merges(ranges0,score)
   local ranges1,j,here,there,new = {},1
   while j <= #ranges0 do
@@ -263,49 +278,40 @@ local function merges(ranges0,score)
   end
   return #ranges0 == #ranges1 and ranges0 or merges(ranges1,score) end 
 
-local function bin(col,x,      tmp)
-  if x=="?" or isSym(col)  then return x end
-  tmp = (col.hi - col.lo)/(the.bins - 1)
-  return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp end
-
-local function xys(col,datas,best,score)
+-- generate ranges for a `col` given datas divides into `{klass1=data1,klass2=data2,...}`
+local function ranges(col,datas,best,score)
+  local function bin(x,      tmp)
+    if x=="?" or isSym(col)  then return x end
+    tmp = (col.hi - col.lo)/(the.bins - 1)
+    return col.hi == col.lo and 1 or m.floor(x/tmp + .5)*tmp 
+  end -----------------------
   local tmp,all,x,y,k = {},{}
   for klass,data in pairs(datas)  do
     for i,row in pairs(data.rows) do
       x= row[col.at]
       if x ~= "?" then
         y= klass==best
-        k= bin(col,x)
+        k= bin(x)
         tmp[k] = tmp[k] or push(all,RANGE(col.at,col.txt,x))
         extend(tmp[k], x, y)  end end end  
   all = sort(all,lt"lo")
   return isSym(col) and all or merges(all,score) end
 
-local function split(cols,datas,best,    tmp)
-  local tmp,B,R,score,order = {}
+local function bestRange(cols,datas,best,    tmp)
+  local tmp,B,R,score = {}
   B,R   = #(datas[true].rows), #(datas[false].rows)
-  score = function(range) return range.ys.has[true] and val(range,B,R) or 0 end
-  order = function(r1,r2) return score(r1) > score(r2) end
+  score = function(range) return val(range,B,R) end
   for _,col in pairs(cols) do
-    for _,range in pairs(xys(col,datas,best,score)) do
-      push(tmp,range) end end 
-  return sort(tmp,order)[1] end 
+    for _,range in pairs(ranges(col,datas,best,score)) do
+      push(tmp,range).val = score(range) end end 
+  return sort(tmp,gt"val")[1]  end 
 
-local function selects(range,rows,     yes,no)
-  yes,no = {}
-  for _,row in pairs(row) do
-    x = row[range.at]
-    if x == "?" then push(yes,row) 
-    elseif range.lo == range.hi and range.lo == x then push(yes,row)
-    elseif range.lo <= x and x < range.hi then push(yes,row)
-    else   push(no,row) end end
-  return yes,no end
-
-local function fftTrees(data,best,rows,out)
-  rows  = rows or data.rows
+local function fftTrees(data,datas,best,out)
   out   = out or {}
-  range = split(data,cols,rows,best)
-  left,right = selects(range,rows)
+  range = bestRange(cols,datas, best)
+  yes,no= {}
+  for klass,data in pairs(datas) do
+    
 
 end
 ------------------------------------
@@ -410,7 +416,7 @@ go.split= function(      data,best,rest,n)
   data=DATA(the.file)
   best,rest,n = sway(data)
   print(#best.rows,#rest.rows)
-  oo(split(data.cols.x, {[true]=best, [false]=rest},true)) end
+  oo(bestRange(data.cols.x, {[true]=best, [false]=rest},true)) end
 
 ---------------------------------------------
 return pcall(debug.getlocal,4,1) and locals() or main() 
