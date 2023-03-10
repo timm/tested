@@ -628,7 +628,7 @@ function main(funs,is,help,    y,n,saved,k,val,ok)
       for k,v in pairs(saved) do is[k]=v end
       Seed = is.seed
       math.randomseed(Seed)
-      print(fmt("\n▶️  %s %s",k,("-"):rep(60)))
+      print(fmt("\n▶️  %s %s",k,("-"):rep(20)))
       ok,val = pcall(pair.fun)
       if not ok         then n=n+1; sayln("❌ FAIL %s %s",k,val); 
                                     sayln(debug.traceback()) 
@@ -769,7 +769,7 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
+go("xpln1","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
   data=DATA(is.file)
   best,rest,evals = sway(data)
   rule,most= xpln(data,best,rest)
@@ -784,34 +784,45 @@ go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,
     print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div))) end
 end)  
 
-function ys(data)
-  local out,tmp = {}
-  for _,col in pairs(data.cols.y) do 
-    tmp=NUM()
-    for _,row in pairs(data.rows) do add(num,row[col.at]) end
-    out[col.txt] = NUM() end 
-  return out end 
+local function ysNums(out,data)
+  for _,num in pairs(out) do
+    for _,row in pairs(data.rows) do
+      add(num, row[num.at]) end end end
 
-function xplnCollect(logs,     data,data1,rule,most,_,best,rest,top,evals)
-  data=DATA(is.file)
-  best,rest,evals = sway(data)
-  rule,most= xpln(data,best,rest)
-  if rule then
-    data1= DATA(data,selects(rule,data.rows))
-    out.all= out.all or NUM()
-    ys(data)
-    out.
-    print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
-    print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
-    top,_ = betters(data, #best.rows)
-    top = DATA(data,top)
-    print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div))) end
+local function xpln20()
+  local out={}
+  for j=1,20 do
+    local data,data1,rule,most,_,best,rest,top,evals
+    data=DATA(is.file)
+    best,rest,evals = sway(data)
+    rule,most= xpln(data,best,rest)
+    if rule then
+      data1= DATA(data,selects(rule,data.rows))
+      out.all = out.all  or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.all, data)
+      out.sway= out.sway or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.sway,best)
+      --out.evals = out.evals or NUM()
+      --add(out.evals, evals)
+      out.xpln= out.xpln or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.xpln,data1)
+      top,_ = betters(data, #best.rows)
+      top = DATA(data,top)
+      out.ztop= out.ztop or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.ztop,top) end
+  end
+  return out
 end 
 
-go("xpln20","20 times",function()
-  for _,tmp in pairs(egs) do
-    if tmp.key == "xpln" then
-       for i=1,20 do print(i); tmp.fun() end end end end)
+go("xpln20","20 times",function(out,num,nums) 
+    out=xpln20()
+    for _,nums in pairs(out) do
+      io.write(".&")
+      for _,k in pairs(keys(nums)) do
+       num= nums[k]
+       io.write("&",num.txt) end; break; end
+    for _,k in pairs(keys(out)) do
+      nums=out[k]
+      io.write("\n"..k)
+      for _,x in pairs(keys(nums)) do
+        num=nums[x]
+        io.write("&", rnd(mid(num),2)) end; end print"" end)
 
 -- ## Start-up
 
