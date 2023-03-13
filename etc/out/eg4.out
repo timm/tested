@@ -1,176 +1,366 @@
 china.csv
 #▶️  xpln20 ----------
 sway evals	10
-#{:Added {{-inf 444} {1255 inf}} :NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 13.4} {19 inf}} :PDR_UFP {{-inf 16}}}
-.                                                                                                                                       N_effort-
-all                                                                                                                                     2308
-sway                                                                                                                                    1829
-xpln                                                                                                                                    1095
-ztop                                                                                                                                    145
+#	{:Added {{-inf 444} {1255 inf}} :NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 13.4} {19 inf}} :PDR_UFP {{-inf 16}}}
+#	{:Enquiry {{-inf 91} {158 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 13.9}} :PDR_UFP {{-inf 15.6} {21.5 inf}}}
+#	{:NPDR_AFP {{-inf 16.5}} :NPDU_UFP {{-inf 17.4}} :PDR_AFP {{-inf 13.6} {19.4 inf}} :PDR_UFP {{-inf 15.9}}}
+#	{:Added {{-inf 444} {981 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.4}} :PDR_AFP {{-inf 13.9} {19.2 inf}} :PDR_UFP {{-inf 16}}}
+#	{:NPDR_AFP {{-inf 9.8} {16.7 28}} :PDR_AFP {{-inf 8.3} {13.6 24.6}} :PDR_UFP {{-inf 9.4}}}
+#	{:Added {{-inf 443} {1240 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.3}} :PDR_AFP {{-inf 13.3}} :PDR_UFP {{-inf 15.9}}}
+#	{:Added {{-inf 444} {981 inf}} :NPDR_AFP {{-inf 9.4}} :NPDU_UFP {{-inf 10.5}}}
+#	{:NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 12.9}} :PDR_UFP {{-inf 15.2}}}
+#	{:NPDR_AFP {{-inf 9.6}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9.3}}}
+#	{:NPDR_AFP {{-inf 16.5}} :NPDU_UFP {{-inf 16.9}} :PDR_AFP {{-inf 13.6} {19.1 inf}} :PDR_UFP {{-inf 15.9}}}
+#	{:NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 13.9} {19.4 inf}} :PDR_UFP {{-inf 16} {22.3 inf}}}
+#	{:NPDR_AFP {{-inf 9.8}} :PDR_AFP {{-inf 8.3}} :PDR_UFP {{-inf 9.3} {22.2 inf}}}
+#	{:Added {{-inf 412} {1256 inf}} :NPDR_AFP {{-inf 10}} :NPDU_UFP {{-inf 10.5}} :PDR_AFP {{-inf 8.3}} :PDR_UFP {{-inf 9.4}}}
+#	{:Added {{-inf 444} {1256 inf}} :NPDR_AFP {{-inf 9.8}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9.3} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 29.1}} :NPDU_UFP {{-inf 45.6}} :PDR_AFP {{-inf 24.6}} :PDR_UFP {{-inf 15.3} {22.3 inf}}}
+#	{:Added {{-inf 444} {1095 inf}} :NPDR_AFP {{-inf 29.8}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 24.7}} :PDR_UFP {{-inf 16} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 9.9}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9}}}
+#	{:NPDR_AFP {{-inf 16.2}} :NPDU_UFP {{-inf 17.6}} :Output {{-inf 377}} :PDR_AFP {{-inf 13.6}} :PDR_UFP {{-inf 16}}}
+#	{:NPDR_AFP {{-inf 16.5}} :PDR_UFP {{-inf 15.6} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.3}} :PDR_AFP {{-inf 13.3}} :PDR_UFP {{-inf 16}}}
+.                                                                                                                                           N_effort-
+all                                                                                                                                         2308
+sway                                                                                                                                        1829
+xpln                                                                                                                                        1095
+ztop                                                                                                                                        145
 .
-.                                                                                                                                       N_effort-
-all to all                                                                                                                              =
-all to sway                                                                                                                             =
-all to xpln                                                                                                                             ≠
-all to ztop                                                                                                                             ≠
+.                                                                                                                                           N_effort-
+all to all                                                                                                                                  =
+all to sway                                                                                                                                 =
+all to xpln                                                                                                                                 ≠
+all to ztop                                                                                                                                 ≠
 rule size	{:mu 12 :std 3.1}
 auto93.csv
 #▶️  xpln20 ----------
 sway evals	10
-#{:origin {3}}
-.                           Acc+    Lbs-    Mpg+
-all                         15.5   2930    20
-sway                        16.4   2144    30
-xpln                        16     2223    30
-ztop                        18.8   2025    40
+#	{:origin {3}}
+#	{:Clndrs {{-inf 5}} :Model {{79 inf}} :Volume {{-inf 141}} :origin {2}}
+#	{:origin {3}}
+#	{:origin {2}}
+#	{:origin {3}}
+#	{:origin {3}}
+#	{:Clndrs {{-inf 4}}}
+#	{:origin {3}}
+#	{:origin {2}}
+#	{:Clndrs {{-inf 5}} :Model {{77 79}} :origin {3}}
+#	{:origin {3}}
+#	{:Clndrs {{-inf 5}} :Model {{79 inf}} :Volume {{-inf 163}} :origin {2}}
+#	{:origin {3}}
+#	{:Model {{79 81}} :origin {2}}
+#	{:Clndrs {{-inf 5}} :Model {{77 79}}}
+#	{:origin {2}}
+#	{:Clndrs {{-inf 4}}}
+#	{:origin {3}}
+#	{:Clndrs {{-inf 5}} :Model {{81 inf}} :origin {1}}
+.                                                                         Acc+    Lbs-    Mpg+
+all                                                                       15.5   2930    20
+sway                                                                      16.4   2144    30
+xpln                                                                      16     2223    30
+ztop                                                                      18.8   2025    40
 .
-.                           Acc+    Lbs-    Mpg+
-all to all                  =      =       =
-all to sway                 ≠      ≠       ≠
-all to xpln                 ≠      ≠       ≠
-all to ztop                 ≠      ≠       ≠
+.                                                                         Acc+    Lbs-    Mpg+
+all to all                                                                =      =       =
+all to sway                                                               ≠      ≠       ≠
+all to xpln                                                               ≠      ≠       ≠
+all to ztop                                                               ≠      ≠       ≠
 rule size	{:mu 1 :std 0.78}
 auto2.csv
 #▶️  xpln20 ----------
 sway evals	8
-#{:type {Small}}
-.                           CityMPG+    Class-    HighwayMPG+    Weight-
-all                         21         18.2      28             3050
-sway                        31         8.6       37             2055
-xpln                        29         9.1       33             2270
-ztop                        39         8.6       43             2045
+#	{:type {Small}}
+#	{:U-turn_space {{-inf 35}}}
+#	{:U-turn_space {{-inf 35}} :Wheelbase {{-inf 97}} :Width {{-inf 64}} :type {Small}}
+#	{:Fuel_tank_capacity {{-inf 12.4}} :Horsepower {{-inf 85}} :domestic {0} :type {Small}}
+#	{:Horsepower {{-inf 85}}}
+#	{:U-turn_space {{-inf 35}} :type {Small}}
+#	{:Engine_size {{-inf 1.6}}}
+#	{:Luggage_capacity {{10 12}} :type {Small}}
+#	{:Engine_revolutions_per_mile {{2710 inf}}}
+#	{:Horsepower {{-inf 82}} :U-turn_space {{-inf 35}} :type {Small}}
+#	{:Wheelbase {{-inf 97}}}
+#	{:Horsepower {{-inf 85}}}
+#	{:Engine_size {{-inf 1.6}} :Fuel_tank_capacity {{-inf 13.2}}}
+#	{:type {Small}}
+#	{:Length {{-inf 173}} :type {Small}}
+#	{:Length {{-inf 168}}}
+#	{:U-turn_space {{-inf 35}}}
+#	{:type {Small}}
+#	{:Engine_revolutions_per_mile {{2510 inf}} :Length {{-inf 168}} :Wheelbase {{-inf 97}} :type {Small}}
+#	{:type {Small}}
+.                                                                                                       CityMPG+    Class-    HighwayMPG+    Weight-
+all                                                                                                     21         17.7      28             3080
+sway                                                                                                    31         8.6       37             2055
+xpln                                                                                                    29         9.1       33             2270
+ztop                                                                                                    39         8.6       43             2045
 .
-.                           CityMPG+    Class-    HighwayMPG+    Weight-
-all to all                  =          =         =              =
-all to sway                 ≠          ≠         ≠              ≠
-all to xpln                 ≠          ≠         ≠              ≠
-all to ztop                 ≠          ≠         ≠              ≠
+.                                                                                                       CityMPG+    Class-    HighwayMPG+    Weight-
+all to all                                                                                              =          =         =              =
+all to sway                                                                                             ≠          ≠         ≠              ≠
+all to xpln                                                                                             ≠          ≠         ≠              ≠
+all to ztop                                                                                             ≠          ≠         ≠              ≠
 rule size	{:mu 1 :std 1.16}
 china.csv
 #▶️  xpln20 ----------
 sway evals	10
-#{:Added {{-inf 444} {1255 inf}} :NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 13.4} {19 inf}} :PDR_UFP {{-inf 16}}}
-.                                                                                                                                       N_effort-
-all                                                                                                                                     2308
-sway                                                                                                                                    1829
-xpln                                                                                                                                    1095
-ztop                                                                                                                                    145
+#	{:Added {{-inf 444} {1255 inf}} :NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 13.4} {19 inf}} :PDR_UFP {{-inf 16}}}
+#	{:Enquiry {{-inf 91} {158 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 13.9}} :PDR_UFP {{-inf 15.6} {21.5 inf}}}
+#	{:NPDR_AFP {{-inf 16.5}} :NPDU_UFP {{-inf 17.4}} :PDR_AFP {{-inf 13.6} {19.4 inf}} :PDR_UFP {{-inf 15.9}}}
+#	{:Added {{-inf 444} {981 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.4}} :PDR_AFP {{-inf 13.9} {19.2 inf}} :PDR_UFP {{-inf 16}}}
+#	{:NPDR_AFP {{-inf 9.8} {16.7 28}} :PDR_AFP {{-inf 8.3} {13.6 24.6}} :PDR_UFP {{-inf 9.4}}}
+#	{:Added {{-inf 443} {1240 inf}} :NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.3}} :PDR_AFP {{-inf 13.3}} :PDR_UFP {{-inf 15.9}}}
+#	{:Added {{-inf 444} {981 inf}} :NPDR_AFP {{-inf 9.4}} :NPDU_UFP {{-inf 10.5}}}
+#	{:NPDR_AFP {{-inf 16.3}} :NPDU_UFP {{-inf 17.8}} :PDR_AFP {{-inf 12.9}} :PDR_UFP {{-inf 15.2}}}
+#	{:NPDR_AFP {{-inf 9.6}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9.3}}}
+#	{:NPDR_AFP {{-inf 16.5}} :NPDU_UFP {{-inf 16.9}} :PDR_AFP {{-inf 13.6} {19.1 inf}} :PDR_UFP {{-inf 15.9}}}
+#	{:NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 13.9} {19.4 inf}} :PDR_UFP {{-inf 16} {22.3 inf}}}
+#	{:NPDR_AFP {{-inf 9.8}} :PDR_AFP {{-inf 8.3}} :PDR_UFP {{-inf 9.3} {22.2 inf}}}
+#	{:Added {{-inf 412} {1256 inf}} :NPDR_AFP {{-inf 10}} :NPDU_UFP {{-inf 10.5}} :PDR_AFP {{-inf 8.3}} :PDR_UFP {{-inf 9.4}}}
+#	{:Added {{-inf 444} {1256 inf}} :NPDR_AFP {{-inf 9.8}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9.3} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 29.1}} :NPDU_UFP {{-inf 45.6}} :PDR_AFP {{-inf 24.6}} :PDR_UFP {{-inf 15.3} {22.3 inf}}}
+#	{:Added {{-inf 444} {1095 inf}} :NPDR_AFP {{-inf 29.8}} :NPDU_UFP {{-inf 17.6}} :PDR_AFP {{-inf 24.7}} :PDR_UFP {{-inf 16} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 9.9}} :NPDU_UFP {{-inf 10.6}} :PDR_AFP {{-inf 8.2}} :PDR_UFP {{-inf 9}}}
+#	{:NPDR_AFP {{-inf 16.2}} :NPDU_UFP {{-inf 17.6}} :Output {{-inf 377}} :PDR_AFP {{-inf 13.6}} :PDR_UFP {{-inf 16}}}
+#	{:NPDR_AFP {{-inf 16.5}} :PDR_UFP {{-inf 15.6} {22.2 inf}}}
+#	{:NPDR_AFP {{-inf 16.7}} :NPDU_UFP {{-inf 17.3}} :PDR_AFP {{-inf 13.3}} :PDR_UFP {{-inf 16}}}
+.                                                                                                                                           N_effort-
+all                                                                                                                                         2308
+sway                                                                                                                                        1829
+xpln                                                                                                                                        1095
+ztop                                                                                                                                        145
 .
-.                                                                                                                                       N_effort-
-all to all                                                                                                                              =
-all to sway                                                                                                                             =
-all to xpln                                                                                                                             ≠
-all to ztop                                                                                                                             ≠
+.                                                                                                                                           N_effort-
+all to all                                                                                                                                  =
+all to sway                                                                                                                                 =
+all to xpln                                                                                                                                 ≠
+all to ztop                                                                                                                                 ≠
 rule size	{:mu 12 :std 3.1}
 nasa93dem.csv
 #▶️  xpln20 ----------
 sway evals	8
-#{:apex {n} :pmat {h} :sced {l} :stor {n}}
-.                                           Defects-    Effort-    Kloc+    Months-
-all                                         1619       278        53       21.3
-sway                                        887        114        21       16.4
-xpln                                        808        90         20       15.3
-ztop                                        109        10.8       3.5      7.8
+#	{:apex {n} :pmat {h} :sced {l} :stor {n}}
+#	{:apex {h} :cplx {h} :data {n} :pvol {l}}
+#	{:acap {n} :pcap {n} :plex {n} :rely {h}}
+#	{:acap {vh} :data {vh}}
+#	{:data {n} :pmat {n}}
+#	{:acap {h} :data {l} :plex {n} :pmat {n} :rely {n}}
+#	{:acap {n} :apex {n} :sced {l}}
+#	{:pmat {h} :sced {l}}
+#	{:cplx {h} :ltex {h} :pvol {l} :tool {n}}
+#	{:acap {n} :data {n} :ltex {n}}
+#	{:time {h}}
+#	{:plex {l} :sced {l}}
+#	{:acap {n} :apex {n} :stor {n} :time {n}}
+#	{:acap {n} :apex {n} :cplx {h vh} :data {n} :ltex {l n} :pcap {n} :plex {l n} :pmat {n} :pvol {h n} :rely {h n} :sced {n} :stor {n vh} :time {n vh} :tool {n}}
+#	{:data {n} :ltex {n}}
+#	{:acap {n} :ltex {n}}
+#	{:acap {n} :apex {n} :ltex {n}}
+#	{:acap {vh} :data {vh}}
+#	{:acap {n} :data {n}}
+#	{:pvol {l} :rely {n}}
+.                                                                                                                                                                Defects-    Effort-    Kloc+    Months-
+all                                                                                                                                                              1619       278        53       21.3
+sway                                                                                                                                                             887        114        21       16.4
+xpln                                                                                                                                                             808        90         20       15.3
+ztop                                                                                                                                                             109        10.8       3.5      7.8
 .
-.                                           Defects-    Effort-    Kloc+    Months-
-all to all                                  =          =          =        =
-all to sway                                 ≠          ≠          ≠        ≠
-all to xpln                                 ≠          ≠          ≠        ≠
-all to ztop                                 ≠          ≠          ≠        ≠
+.                                                                                                                                                                Defects-    Effort-    Kloc+    Months-
+all to all                                                                                                                                                       =          =          =        =
+all to sway                                                                                                                                                      ≠          ≠          ≠        ≠
+all to xpln                                                                                                                                                      ≠          ≠          ≠        ≠
+all to ztop                                                                                                                                                      ≠          ≠          ≠        ≠
 rule size	{:mu 2 :std 0.78}
 coc1000.csv
 #▶️  xpln20 ----------
 sway evals	12
-#{:DATA {{4 inf}}}
-.                           AEXP-    EFFORT-    LOC+    PLEX-    RISK-
-all                         3       18711      1003    3        5
-sway                        3       18577      1088    3        4
-xpln                        3       19664      1041    3        5
-ztop                        2       30241      1543    1        3
+#	{:DATA {{4 inf}}}
+#	{:STOR {{4 5}}}
+#	{:TIME {{5 inf}}}
+#	{:PVOL {{4 inf}} :SCED {{3 4}}}
+#	{:TIME {{3 4}}}
+#	{:PCAP {{4 inf}}}
+#	{:PCON {{3 4}}}
+#	{:TIME {{5 inf}}}
+#	{:PVOL {{3 4}}}
+#	{:STOR {{-inf 4}}}
+#	{:PVOL {{4 inf}}}
+#	{:SITE {{1 2}}}
+#	{:TIME {{5 inf}}}
+#	{:RELY {{1 2}}}
+#	{:PCAP {{4 inf}}}
+#	{:DATA {{4 inf}} :PCAP {{4 inf}} :RELY {{1 2}}}
+.                                                 AEXP-    EFFORT-    LOC+    PLEX-    RISK-
+all                                               3       19198      1073    3        5
+sway                                              3       18577      1088    3        4
+xpln                                              3       21632      1023    3        5
+ztop                                              2       30241      1543    1        3
 .
-.                           AEXP-    EFFORT-    LOC+    PLEX-    RISK-
-all to all                  =       =          =       =        =
-all to sway                 =       =          =       =        ≠
-all to xpln                 =       =          =       =        =
-all to ztop                 ≠       ≠          ≠       ≠        ≠
+.                                                 AEXP-    EFFORT-    LOC+    PLEX-    RISK-
+all to all                                        =       =          =       =        =
+all to sway                                       =       =          =       =        ≠
+all to xpln                                       =       =          =       =        ≠
+all to ztop                                       ≠       =          ≠       ≠        ≠
 rule size	{:mu 1 :std 0.39}
 healthCloseIsses12mths0001-hard.csv
 #▶️  xpln20 ----------
 sway evals	14
-#{:criterion {poisson}}
-.                          ACC+    MRE-    PRED40+
-all                        7.14   75.1    25
-sway                       7.49   73.87   25
-xpln                       7.57   73.98   25
-ztop                       11.55  64.91   25
+#	{:criterion {poisson}}
+#	{:criterion {poisson}}
+#	{:criterion {squared_error}}
+#	{:criterion {poisson}}
+#	{:N_estimators {{150 inf}} :criterion {squared_error}}
+#	{:criterion {poisson}}
+#	{:criterion {squared_error}}
+#	{:criterion {squared_error}}
+#	{:criterion {squared_error}}
+#	{:criterion {squared_error}}
+#	{:criterion {poisson}}
+#	{:criterion {poisson}}
+#	{:criterion {squared_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {poisson}}
+#	{:criterion {poisson}}
+#	{:criterion {squared_error}}
+#	{:criterion {squared_error}}
+#	{:Max_depth {{-inf 9}} :Min_impurity_decrease {{6.25 inf}} :Min_sample_leaves {{10 inf}} :N_estimators {{100 inf}} :criterion {squared_error}}
+#	{:criterion {poisson}}
+.                                                                                                                                                ACC+    MRE-    PRED40+
+all                                                                                                                                              7.13   75.04   25
+sway                                                                                                                                             7.51   73.85   25
+xpln                                                                                                                                             7.47   73.73   25
+ztop                                                                                                                                             11.55  64.86   25
 .
-.                          ACC+    MRE-    PRED40+
-all to all                 =      =       =
-all to sway                ≠      ≠       =
-all to xpln                ≠      ≠       ≠
-all to ztop                ≠      ≠       ≠
+.                                                                                                                                                ACC+    MRE-    PRED40+
+all to all                                                                                                                                       =      =       =
+all to sway                                                                                                                                      ≠      ≠       =
+all to xpln                                                                                                                                      ≠      ≠       ≠
+all to ztop                                                                                                                                      ≠      ≠       ≠
 rule size	{:mu 1 :std 0.0}
 healthCloseIsses12mths0011-easy.csv
 #▶️  xpln20 ----------
 sway evals	14
-#{:criterion {absolute_error}}
-.                               ACC+     MRE-    PRED40+
-all                             -12.24  119.16  0
-sway                            0       0       83.33
-xpln                            0       0       83.33
-ztop                            0       0       83.33
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:Max_depth {{15 inf}} :criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:Max_depth {{15 inf}} :criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:Min_sample_leaves {{15 inf}} :criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+#	{:criterion {absolute_error}}
+.                                                             ACC+     MRE-    PRED40+
+all                                                           -12.24  119.54  0
+sway                                                          0       0       83.33
+xpln                                                          0       0       83.33
+ztop                                                          0       0       83.33
 .
-.                               ACC+     MRE-    PRED40+
-all to all                      =       =       =
-all to sway                     ≠       ≠       ≠
-all to xpln                     ≠       ≠       ≠
-all to ztop                     ≠       ≠       ≠
+.                                                             ACC+     MRE-    PRED40+
+all to all                                                    =       =       =
+all to sway                                                   ≠       ≠       ≠
+all to xpln                                                   ≠       ≠       ≠
+all to ztop                                                   ≠       ≠       ≠
 rule size	{:mu 1 :std 0.78}
 SSN.csv
 #▶️  xpln20 ----------
 sway evals	16
-#{:Rc_lookahead {{56 119}} :no_scenecut {1}}
-.                                             Energy-    PSNR-
-all                                           1244.71   45.83
-sway                                          606.98    43.87
-xpln                                          691.59    45.91
-ztop                                          449.69    26.83
+#	{:Rc_lookahead {{56 119}} :no_scenecut {1}}
+#	{:no_asm {0} :no_cabac {0} :no_mbtree {0} :no_scenecut {0}}
+#	{:Qp {{32 inf}} :no_asm {0} :no_scenecut {1}}
+#	{:no_scenecut {1}}
+#	{:Seek {{612 inf}} :no_cabac {1}}
+#	{:Scenecut {{-inf 36}} :no_mbtree {1}}
+#	{:Qp {{32 inf}} :Seek {{595 inf}} :no_asm {0} :no_cabac {0} :no_scenecut {0}}
+#	{:Seek {{613 inf}} :Threads {{29 63}} :no_scenecut {1}}
+#	{:B_bias {{32 inf}} :no_asm {0} :no_cabac {1} :no_mbtree {0}}
+#	{:Qp {{25 inf}} :Rc_lookahead {{124 inf}} :Seek {{611 inf}} :no_cabac {0} :no_mbtree {0} :no_scenecut {0}}
+#	{:Bframes {{7 13}} :no_scenecut {1}}
+#	{:Bframes {{13 inf}} :Threads {{63 inf}} :no_cabac {1}}
+#	{:Keyint {{563 inf}} :Scenecut {{62 inf}} :no_asm {0} :no_cabac {0} :no_mbtree {0} :no_scenecut {0}}
+#	{:no_asm {1} :no_cabac {1}}
+#	{:Keyint {{499 inf}} :Threads {{63 inf}}}
+#	{:Rc_lookahead {{124 inf}} :Seek {{623 inf}} :Threads {{63 inf}} :no_cabac {1}}
+#	{:Keyint {{499 inf}} :Scenecut {{62 inf}} :Threads {{28 63}}}
+#	{:B_bias {{6 inf}} :Qp {{-inf 18}} :no_scenecut {1}}
+#	{:Seek {{613 inf}} :no_cabac {1}}
+#	{:Keyint {{298 559}} :Scenecut {{-inf 36}} :Seek {{612 inf}} :no_asm {0} :no_cabac {0} :no_mbtree {0} :no_scenecut {0}}
+.                                                                                                                         Energy-    PSNR-
+all                                                                                                                       1245.34   45.75
+sway                                                                                                                      607.69    43.39
+xpln                                                                                                                      710.24    44.37
+ztop                                                                                                                      467.85    26.86
 .
-.                                             Energy-    PSNR-
-all to all                                    =         =
-all to sway                                   ≠         =
-all to xpln                                   ≠         =
-all to ztop                                   ≠         ≠
+.                                                                                                                         Energy-    PSNR-
+all to all                                                                                                                =         =
+all to sway                                                                                                               ≠         =
+all to xpln                                                                                                               ≠         =
+all to ztop                                                                                                               ≠         ≠
 rule size	{:mu 3 :std 1.55}
 SSM.csv
 #▶️  xpln20 ----------
 sway evals	18
-#{:f {0} :lINE {1} :rELAXPARAMETER {0} :v {1}}
-.                                               NUMBERITERATIONS-    TIMETOSOLUTION-
-all                                             7                   139.22
-sway                                            5                   114.84
-xpln                                            6                   120.77
-ztop                                            4                   60.63
+#	{:f {0} :lINE {1} :rELAXPARAMETER {0} :v {1}}
+#	{:f {0} :lINE {1} :rELAXPARAMETER {0} :v {1}}
+#	{:ALPHA {{-inf 55}} :BETA {{55 75}} :POSTSMOOTHING {{-inf 1}} :PRESMOOTHING {{6 inf}} :cOLORGS {1} :f {0} :jACOBI {0} :lINE {0} :rELAXPARAMETER {1} :v {1} :zEBRALINE {0}}
+#	{:lINE {1} :rELAXPARAMETER {1} :v {0}}
+#	{:f {1} :lINE {1} :rELAXPARAMETER {0}}
+#	{:zEBRALINE {1}}
+#	{:cOLORGS {1} :rELAXPARAMETER {1} :v {1}}
+#	{:cOLORGS {1} :rELAXPARAMETER {1} :v {0}}
+#	{:f {0} :rELAXPARAMETER {1} :v {1} :zEBRALINE {1}}
+#	{:lINE {1} :rELAXPARAMETER {0} :v {1}}
+#	{:rELAXPARAMETER {1} :v {1} :zEBRALINE {1}}
+#	{:rELAXPARAMETER {0} :v {1} :zEBRALINE {1}}
+#	{:POSTSMOOTHING {{6 inf}} :cOLORGS {1} :f {0} :jACOBI {0} :lINE {0} :rELAXPARAMETER {1} :v {1} :zEBRALINE {0}}
+#	{:lINE {1} :rELAXPARAMETER {0} :v {1}}
+#	{:cOLORGS {1} :rELAXPARAMETER {1} :v {1}}
+#	{:cOLORGS {1} :rELAXPARAMETER {1} :v {1}}
+#	{:f {0} :rELAXPARAMETER {0} :zEBRALINE {1}}
+#	{:f {0} :lINE {1} :rELAXPARAMETER {0} :v {1}}
+#	{:f {0} :rELAXPARAMETER {0} :v {1} :zEBRALINE {1}}
+#	{:cOLORGS {1} :f {0} :rELAXPARAMETER {0}}
+.                                                                                                                                                                            NUMBERITERATIONS-    TIMETOSOLUTION-
+all                                                                                                                                                                          7                   137.7
+sway                                                                                                                                                                         5                   99.3
+xpln                                                                                                                                                                         5                   109.54
+ztop                                                                                                                                                                         4                   60.21
 .
-.                                               NUMBERITERATIONS-    TIMETOSOLUTION-
-all to all                                      =                   =
-all to sway                                     ≠                   ≠
-all to xpln                                     ≠                   ≠
-all to ztop                                     ≠                   ≠
-rule size	{:mu 4 :std 1.94}
+.                                                                                                                                                                            NUMBERITERATIONS-    TIMETOSOLUTION-
+all to all                                                                                                                                                                   =                   =
+all to sway                                                                                                                                                                  ≠                   ≠
+all to xpln                                                                                                                                                                  ≠                   ≠
+all to ztop                                                                                                                                                                  ≠                   ≠
+rule size	{:mu 3 :std 0.39}
 pom.csv
 #▶️  xpln20 ----------
 sway evals	14
-#{:Size {{0 inf}}}
-.                           Completion+    Cost-    Idle-
-all                         0.89          345.15   0.25
-sway                        0.92          298.47   0.2
-xpln                        0.9           325.82   0.22
-ztop                        1             138.75   0
+#	{:Size {{0 inf}}}
+#	{:Plan {{3 inf}} :Size {{0 inf}}}
+#	{:Plan {{3 inf}} :Size {{0 inf}}}
+#	{:Plan {{3 inf}} :Size {{0 inf}}}
+#	{:Size {{0 inf}}}
+#	{:Size {{0 inf}}}
+.                                   Completion+    Cost-    Idle-
+all                                 0.89          320.72   0.27
+sway                                0.92          298.47   0.2
+xpln                                0.9           324.79   0.27
+ztop                                1             138.75   0
 .
-.                           Completion+    Cost-    Idle-
-all to all                  =             =        =
-all to sway                 =             ≠        ≠
-all to xpln                 =             =        =
-all to ztop                 ≠             ≠        ≠
+.                                   Completion+    Cost-    Idle-
+all to all                          =             =        =
+all to sway                         =             ≠        ≠
+all to xpln                         =             =        =
+all to ztop                         ≠             ≠        ≠
 rule size	{:mu 1 :std 0.39}

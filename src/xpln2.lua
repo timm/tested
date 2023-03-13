@@ -797,7 +797,7 @@ local function ysNums(out,data)
 
 stats=require"stats2"
 local function xpln20()
-  local out,shown,rules={}
+  local out,rules={}
   for j=1,20 do
     io.stderr:write(j," ")
     local data,data1,rule,most,_,best,rest,top,evals
@@ -806,7 +806,7 @@ local function xpln20()
     if j==1 then print("sway evals", evals) end
     rule,most= xpln(data,best,rest)
     if rule then
-      if not shown then io.write("#",o(showRule(rule)),"\n"); shown = true end
+      print("#",o(showRule(rule)))
       rules = rules or NUM()
       add(rules,size(rule))
       data1= DATA(data,selects(rule,data.rows))
