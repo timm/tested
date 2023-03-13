@@ -127,7 +127,13 @@ function prune(rule, maxSize,     n)
     n = n+1
     if #ranges == maxSize[txt] then  n=n-1; rule[txt] = nil end end
   if n > 0 then return rule end end
-  
+
+local function size(rule,    n)
+  n=0
+  for _,ranges in pairs(rule) do 
+    for _,range in pairs(ranges) do
+       n=n+1 end end
+  return n end 
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
 -- Optionally, is any `rows` are supplied, load those in.   
 -- Case [1]: `src` is a filename of a csv file
@@ -789,14 +795,20 @@ local function ysNums(out,data)
     for _,row in pairs(data.rows) do
       add(num, row[num.at]) end end end
 
+stats=require"stats2"
 local function xpln20()
-  local out={}
+  local out,shown,rules={}
   for j=1,20 do
+    io.stderr:write(j," ")
     local data,data1,rule,most,_,best,rest,top,evals
     data=DATA(is.file)
     best,rest,evals = sway(data)
+    if j==1 then print("sway evals", evals) end
     rule,most= xpln(data,best,rest)
     if rule then
+      if not shown then io.write("#",o(showRule(rule)),"\n"); shown = true end
+      rules = rules or NUM()
+      add(rules,size(rule))
       data1= DATA(data,selects(rule,data.rows))
       out.all = out.all  or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.all, data)
       out.sway= out.sway or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.sway,best)
@@ -807,22 +819,33 @@ local function xpln20()
       top = DATA(data,top)
       out.ztop= out.ztop or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.ztop,top) end
   end
-  return out
+  return out,rules
 end 
 
-go("xpln20","20 times",function(out,num,nums) 
-    out=xpln20()
-    for _,nums in pairs(out) do
-      io.write(".&")
-      for _,k in pairs(keys(nums)) do
-       num= nums[k]
-       io.write("&",num.txt) end; break; end
-    for _,k in pairs(keys(out)) do
+go("xpln20","20 times",function(     out,num,nums,header,vars,rules) 
+    out,rules=xpln20()
+    header={"all","sway","xpln","ztop"}
+    for _,nums in pairs(out) do vars = keys(nums) break end
+    print(".&"..table.concat(vars," & "))
+    for _,k in pairs(header) do
       nums=out[k]
       io.write("\n"..k)
-      for _,x in pairs(keys(nums)) do
+      for _,x in pairs(vars) do
         num=nums[x]
-        io.write("&", rnd(mid(num),2)) end; end print"" end)
+        io.write("&", rnd(mid(num),2)) end; end print"" 
+    local fun=function(x) return x and "=" or "≠" end
+    print"."
+    print(".&"..table.concat(vars," & "))
+    for _,h in pairs(header) do
+      io.write("all to ",h)
+      for _,v in pairs(vars) do
+        local t1=out.all[v].has
+        local t2=out[h][v].has
+        io.write(fmt("&%s",fun(stats.bootstrap(t1,t2) and stats.cliffsDelta(t1,t2)))) end 
+      print"" end 
+    if rules.n > 0 then
+      print("rule size",o{mu=mid(rules), std=rnd(div(rules))}) 
+    end end)
 
 -- ## Start-up
 
