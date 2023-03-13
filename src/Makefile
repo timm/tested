@@ -5,3 +5,5 @@ eg1:
 eg2:
 	for((b=1;b<=20;b=b+1)) do echo $$b ; lua xai.lua -s $$RANDOM -g xpln ; done
 
+eg3:
+	lua xpln2.lua -H 512 -R -g xpln20 | column -s\& -t

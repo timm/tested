@@ -42,7 +42,7 @@ OPTIONS:
   -m  --min     size of smallest cluster     = .5
   -M  --Max     numbers                      = 512
   -p  --p       dist coefficient             = 2
-  -r  --rest    how many of rest to sample   = 10
+  -r  --rest    how many of rest to sample   = 4
   -R  --Reuse   child splits reuse a parent pole = true
   -s  --seed    random number seed           = 937162211
 ]]
@@ -125,7 +125,7 @@ function prune(rule, maxSize,     n)
   n=0
   for txt,ranges in pairs(rule) do
     n = n+1
-    if #ranges == maxSize[txt] then  n=n-1; rule[txt] = nil end end
+    if #ranges == maxSize[txt] then  n=n+1; rule[txt] = nil end end
   if n > 0 then return rule end end
   
 -- Create a `DATA` to contain `rows`, summarized in `cols`.
@@ -285,19 +285,16 @@ function betters(data,  n,    tmp)
 -- `some` of the data. Also, to avoid outliers, only look
 -- `is.Far=.95` (say) of the way across the space. 
 function half(data,  rows,cols,above)
-  local left,right,evals,far,gap,some,around,proj,cos,tmp,A,B,c = {},{}
+  local left,right,evals,far,gap,some,proj,cos,tmp,A,B,c = {},{}
   function gap(r1,r2) return dist(data, r1, r2, cols) end
   function cos(a,b,c) return (a^2 + c^2 - b^2)/(2*c) end
   function proj(r)    return {row=r, x=cos(gap(r,A), gap(r,B),c)} end
-  function around(row1,rows) 
-    return sort(map(rows,function(row2) return {row=row2, d=gap(row1,row2)} end ),lt"d") end
-  function far(row,rows)
-    return around(row,rows)[(#rows*is.Far)//1].row end
   rows = rows or data.rows
   some = many(rows,is.Halves)
-  A    = (is.Reuse and above) or far(any(some),some)
-  B    = far(A,some)
-  c    = gap(A,B)
+  A    = (is.Reuse and above) or any(some)
+  tmp  = sort(map(some,function(r) return {row=r, d=gap(r,A)} end ),lt"d")
+  far  = tmp[(#tmp*is.Far)//1]
+  B,c  = far.row, far.d
   for n,two in pairs(sort(map(rows,proj),lt"x")) do
     push(n <= #rows/2 and left or right, two.row) end
   evals = is.Reuse and above and 1 or 2
@@ -428,6 +425,7 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
   function score(ranges,       rule,bestr,restr)
     rule = RULE(ranges,maxSizes)
     if rule then
+      oo(showRule(rule))
       bestr= selects(rule, best.rows)
       restr= selects(rule, rest.rows)
       if #bestr + #restr > 0 then 
@@ -436,13 +434,16 @@ function xpln(data,best,rest,      maxSizes,tmp,v,score)
   tmp,maxSizes = {},{}
   for _,ranges in pairs(bins(data.cols.x,{best=best.rows, rest=rest.rows})) do
     maxSizes[ranges[1].txt] = #ranges
+    print""
     for _,range in pairs(ranges) do
+      print(range.txt, range.lo, range.hi)
       push(tmp, {range=range, max=#ranges,val= v(range.y.has)})  end end
   local rule,most=firstN(sort(tmp,gt"val"),score)
   return rule,most end
 
 function firstN(sortedRanges,scoreFun,           first,useful,most,out)
-  --map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
+  print""
+  map(sortedRanges,function(r) print(r.range.txt,r.range.lo,r.range.hi,rnd(r.val),o(r.range.y.has)) end)
   first = sortedRanges[1].val
   function useful(range)
     if range.val>.05 and range.val> first/10 then return range end
@@ -576,7 +577,7 @@ keys = function(t)      return sort(kap(t,function(k,_) return k end)) end
 
 -- Map a function on table (results in items key1,key2,...)
 function kap(t, fun,     u) 
-  u={}; for k,v in pairs(t or {}) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
+  u={}; for k,v in pairs(t) do v,k=fun(k,v); u[k or (1+#u)]=v; end; return u end
 
 -- Return the `p`-ratio item in `t`; e.g. `per(t,.5)` returns the medium.
 function per(t,p) 
@@ -628,7 +629,7 @@ function main(funs,is,help,    y,n,saved,k,val,ok)
       for k,v in pairs(saved) do is[k]=v end
       Seed = is.seed
       math.randomseed(Seed)
-      print(fmt("\n#▶️  %s %s",k,("-"):rep(10)))
+      print(fmt("\n▶️  %s %s",k,("-"):rep(60)))
       ok,val = pcall(pair.fun)
       if not ok         then n=n+1; sayln("❌ FAIL %s %s",k,val); 
                                     sayln(debug.traceback()) 
@@ -769,60 +770,19 @@ go("bins", "find deltas between best and rest", function(    data,best,rest, b4)
            rnd(value(range.y.has, #best.rows,#rest.rows,"best")), 
            o(range.y.has)) end end end)
 
-go("xpln1","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
+go("xpln","explore explanation sets", function(     data,data1,rule,most,_,best,rest,top,evals)
   data=DATA(is.file)
   best,rest,evals = sway(data)
   rule,most= xpln(data,best,rest)
-  if rule then
-    print("\n-----------\nexplain = = = ", o(showRule(rule)))
-    data1= DATA(data,selects(rule,data.rows))
-    print("all  =  =    =    ",o(stats(data)),o(stats(data,div)))
-    print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
-    print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
-    top,_ = betters(data, #best.rows)
-    top = DATA(data,top)
-    print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div))) end
+  print("\n-----------\nexplain=", o(showRule(rule)))
+  data1= DATA(data,selects(rule,data.rows))
+  print("all               ",o(stats(data)),o(stats(data,div)))
+  print(fmt("sway with %5s evals",evals),o(stats(best)),o(stats(best,div)))
+  print(fmt("xpln on   %5s evals",evals),o(stats(data1)),o(stats(data1,div)))
+  top,_ = betters(data, #best.rows)
+  top = DATA(data,top)
+  print(fmt("sort with %5s evals",#data.rows) ,o(stats(top)), o(stats(top,div)))
 end)  
-
-local function ysNums(out,data)
-  for _,num in pairs(out) do
-    for _,row in pairs(data.rows) do
-      add(num, row[num.at]) end end end
-
-local function xpln20()
-  local out={}
-  for j=1,20 do
-    local data,data1,rule,most,_,best,rest,top,evals
-    data=DATA(is.file)
-    best,rest,evals = sway(data)
-    rule,most= xpln(data,best,rest)
-    if rule then
-      data1= DATA(data,selects(rule,data.rows))
-      out.all = out.all  or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.all, data)
-      out.sway= out.sway or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.sway,best)
-      --out.evals = out.evals or NUM()
-      --add(out.evals, evals)
-      out.xpln= out.xpln or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.xpln,data1)
-      top,_ = betters(data, #best.rows)
-      top = DATA(data,top)
-      out.ztop= out.ztop or kap(data.cols.y,function(_,col) return NUM(col.at,col.txt),col.txt end); ysNums(out.ztop,top) end
-  end
-  return out
-end 
-
-go("xpln20","20 times",function(out,num,nums) 
-    out=xpln20()
-    for _,nums in pairs(out) do
-      io.write(".&")
-      for _,k in pairs(keys(nums)) do
-       num= nums[k]
-       io.write("&",num.txt) end; break; end
-    for _,k in pairs(keys(out)) do
-      nums=out[k]
-      io.write("\n"..k)
-      for _,x in pairs(keys(nums)) do
-        num=nums[x]
-        io.write("&", rnd(mid(num),2)) end; end print"" end)
 
 -- ## Start-up
 
