@@ -39,9 +39,9 @@ auto93.csv | car design | ditto
 china.csv | software project estimation | https://arxiv.org/pdf/1609.05563.pdf#page=5
 coc1000.csv | software project estimation | ditto
 coc10000.csv | software project estimation | ditto
+nasa93dem.csv | software effort+detects estimation | ditto
 healthCloseIsses12mths0001-hard.csv | issue close time | hyperparameter optimzation of random forests (from https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html#sklearn.ensemble.ExtraTreesClassifier)
-healthCloseIsses12mths0011-easy.csv | issue close time |
-nasa93dem.csv | software effort+detects estimation |
+healthCloseIsses12mths0011-easy.csv | issue close time | ditto
 pom.csv   | agile project management |
 SSM.csv  | computational physics| See "trimesh" in https://arxiv.org/pdf/1801.02175.pdf#page=2 |
 SSN.csv | computational physics |
