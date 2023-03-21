@@ -44,7 +44,7 @@ healthCloseIsses12mths0001-hard.csv | issue close time | hyperparameter optimzat
 healthCloseIsses12mths0011-easy.csv | issue close time | ditto
 pom.csv   | agile project management | see section 4.1.2 in https://arxiv.org/pdf/1608.07617.pdf
 SSM.csv  | computational physics| See "trimesh" in https://arxiv.org/pdf/1801.02175.pdf#page=2 |
-SSN.csv | computational physics |
+SSN.csv | computational physics | ditto
 
 IMPORTANT NOTE: some of the above data sets are tricky and your optimizations may faial. Welcome to the real world were
 nature is unimpressed with the elegance of your algorithms.
