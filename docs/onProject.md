@@ -97,7 +97,7 @@ Expected Sections of the paper:
 
 
 |Masters Grade| Phd Grade| Part|
-|-----:|-------|----|
+|-----:|------:|----|
 |10   | 10   |Intro|
 |20   | 20   |Related work: [random projections](https://en.wikipedia.org/wiki/Random_projection), [semi-supervised learning](https://www.molgen.mpg.de/3659531/MITPress--SemiSupervised-Learning.pdf) [why heuristics work](http://library.mpib-berlin.mpg.de/ft/gg/gg_why_2008.pdf)|
 |20   | 10   |Methods: (e.g. see section3 of https://arxiv.org/pdf/2112.01598.pdf)<br> here is where you would describe your design of sway2 and xpln2. |
