@@ -15,6 +15,10 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
  href="https://zenodo.org/badge/latestdoi/569981645"> <img 
  src="https://zenodo.org/badge/569981645.svg" alt="DOI"></a></p>
 
+Rule0: ignore me, when you want to.
+you know best about your code. if some of my ideas dont apply to your team then, no question about it,
+ you are right and i am wrong.
+
 Lua
 - confusing keys arrays with num arrays
 #t returns 0 for keys and you can't sort them
