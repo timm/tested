@@ -19,11 +19,7 @@ href="https://github.com/timm/tested/actions/workflows/tests.yml"> <img
 ## Project 
 
 
-(Note: you may not understand some parts of the following... yet;  patience, dear reader.)
-
-
-Using at least 10 data set for [here](https://github.com/timm/tested/tree/main/etc/data)
-write a 
+Write a 
 multi-objective  
 semi-supervised explanation system:
 - Multi-objective; i.e. $|Y|>1$
@@ -34,25 +30,84 @@ semi-supervised explanation system:
    $m \ll N$ good examples
     will be selected (and "good" means "has good $Y$ values).
 
+Test your code on these 10 data set for [here](https://gist.github.com/timm/d47b8699d9953eef14d516d6e54e742e) with multiple goals:
 
-Note: avoid many-goal problems at this point. That will be bonus marks, below.
+data | domain| for more information
+-----|-------|----------------------
+auto2.csv | car design | https://archive.ics.uci.edu/ml/datasets/auto+mpg
+auto93.csv | car design | ditto
+china.csv | software project estimation | https://arxiv.org/pdf/1609.05563.pdf#page=5
+coc1000.csv | software project estimation | ditto
+coc10000.csv | software project estimation | ditto
+nasa93dem.csv | software effort+detects estimation | ditto
+healthCloseIsses12mths0001-hard.csv | issue close time | hyperparameter optimzation of random forests (from https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html#sklearn.ensemble.ExtraTreesClassifier)
+healthCloseIsses12mths0011-easy.csv | issue close time | ditto
+pom.csv   | agile project management | see section 4.1.2 in https://arxiv.org/pdf/1608.07617.pdf
+SSM.csv  | computational physics| See "trimesh" in https://arxiv.org/pdf/1801.02175.pdf#page=2 |
+SSN.csv | computational physics | ditto
 
+IMPORTANT NOTE: some of the above data sets are tricky and your optimizations may faial. Welcome to the real world were
+nature is unimpressed with the elegance of your algorithms.
 
-Expected Sections:
+As aprt of your report, generate tables (in Lated) that look lke this. Note that following are **made up numbers** and may not be what you get.
+
+```
+                   CityMPG+    Class-    HighwayMPG+    Weight-
+all                   21         17.7      28             3080
+sway1                 31         12.6      33             2055
+xpln1                 25         15.1      30             2270
+sway2                 33         10.1      37             2090
+xpln2                 30         12.1      33             2370
+top                   39         8.6       43             2045
+
+                    CityMPG+    Class-    HighwayMPG+    Weight-
+all   to all          =          =         =              =
+all   to sway1        ≠          ≠         ≠              ≠
+all   to sway2        ≠          ≠         ≠              ≠
+sway1 to sway2        ≠          ≠         ≠              ≠
+sway1  to xpln1       ≠          ≠         ≠              ≠
+sway2 to xpln2        ≠          ≠         ≠              ≠
+sway1   to top        ≠          ≠         ≠              ≠
+```
+
+Note that:
+- the top table shows mean results over 20 repeated runs (with different random number seeds)
+- the bottom table shows the CONJUNCTION of a effect size test and a significance test  that compares 20 "all" results to 20 results from some other treatment
+  - Note the "prudence check": all to all must return "=", by definition
+- "all" shows the raw values of all _M_ rows in the data (so in all 20 trails, this will be the same)
+- "sway1" show values from the _N_ &lt; _M_ examples found in the leaf cluster found by sway1 (the thing your coded in class).
+- "sway2" show values from the _N_ examples found by your better alternative to sway1.
+- "xpln1" and "xpln2" shows values found as follows:
+  - let the examples  found by sway\*  be the _N_  "best" items
+  - let a random sample of all the other data be "rest" (suggestion: pull, say, _3N_ at random of the rest)
+  - some rule learner geenerates a model that distinguishes _N_ best from _3N_ rest.
+  - those rules are then applied to all _M_ rows (from which, we calcuate the values)
+- "all" sorts all _M_ rows (using the Zitzler "better" predicate (from [onCluster](onCluster.md)) then reports values seen in the top _N_ rows.
+  - this shows what can happen when you look at all values.
+- the "explanation tax" is any loss seen between sway and xplan
+  - I expect the explaination tax should be non-zero
+  - why? cause sway is free to combine infleucens from multiple attributes while rule learners are often constrained to much simpler knowledge.
+    - But that's the price of generating simplistic explanations to complex ideas.
+- the "sampling tax" is any loss seen between sway and all
+  - I expect the sampling tax should be non-zero
+  - Why? cause if you don't look at everything, you might miss somethings
+   - But that's the price of taking heuristic peeks at things
+
+Expected Sections of the paper:
 
 
 |Masters Grade| Phd Grade| Part|
-|-----:|-------|----|
+|-----:|------:|----|
 |10   | 10   |Intro|
-|20   | 20   |Related work|
-|20   | 10   |Methods|
-|30   | 20   |Results|
-|20   | 20   |Discussion, Conclusion|
-|5    | 5   |Bonus : requirements study|
-|5    | 5   |Bonus: February study|
-|5    | 5   |Bonus : Ablation study|
-|5    | 5   |Bonus : HPO study|
-|100  | 100   |total |
+|20   | 20   |Related work: [random projections](https://en.wikipedia.org/wiki/Random_projection), [semi-supervised learning](https://www.molgen.mpg.de/3659531/MITPress--SemiSupervised-Learning.pdf) [why heuristics work](http://library.mpib-berlin.mpg.de/ft/gg/gg_why_2008.pdf)|
+|20   | 10   |Methods: (e.g. see section3 of https://arxiv.org/pdf/2112.01598.pdf)<br> here is where you would describe your design of sway2 and xpln2. |
+|30   | 20   |Results: tables, figures, every table and figure is discussed in the paper |
+|20   | 20   |Discussion, Conclusion, Future work|
+|5    | 5    |Bonus : requirements study|
+|5    | 5    |Bonus: February study|
+|5    | 5    |Bonus : Ablation study|
+|5    | 5    |Bonus : HPO study|
+|100  | 100  |total|
 |+20  |  0   |bonus|
 
 
@@ -117,14 +172,7 @@ Expected Sections:
 
 ### Bonus marks
 
-
-#### B1: Repeat the above for many-goal problems.
-
-
-Defined above
-
-
-#### B2: Perform a _REQUIREMENTS STUDY_
+#### B1: Perform a _REQUIREMENTS STUDY_
 - For 5 humans, run 5 repertory grids studies. 
 - Compare the results:
   - against a recursive bi-clustering  of the data plus
@@ -135,7 +183,7 @@ Defined above
 - Include a commentary on your experience with rep grids (any surprises?) 
 
 
-#### B3: Perform a _FEBRUARY STUDY_ 
+#### B2: Perform a _FEBRUARY STUDY_ 
 Requires an explanation facility, as described above.
 - If analysts used budget $B_0$ in January to reach some conclusions, what is learned
    such that this kind of future analysis gets simpler.
@@ -144,12 +192,12 @@ Requires an explanation facility, as described above.
       with less budget $B_1 < B_0$?
 
 
-#### B4: Perform an _ABLATION STUDY_
+#### B3: Perform an _ABLATION STUDY_
 - Given a preferred method $M$ containing two to four main ideas
   - Disable (or change) each one  thing. If anything get worse, declare that thing important.
 
 
-#### B5: Perform an _HPO study_
+#### B4: Perform an _HPO study_
 - Apply these minimal sampling methods to learning good $Z$ values for a learner
 - Your goal should be to compare your minimal sampling methods with some established optimization method.
 
@@ -176,8 +224,10 @@ Create an overleaf.com account
 - Go to https://www.overleaf.com/gallery/tagged/ieee-official
 - Select :IEEE Bare Demo Template for conferences"
   -  https://www.overleaf.com/latex/templates/ieee-bare-demo-template-for-conferences/ypypvwjmvtdf
+  -  \docue
 - Hit "open as template"
 - Add your name and email to list of authors.
+- make this line1 of the doc `\documentclass[9pt,technote]{IEEEtran}`
 -  Add these lines before `\begin{document}`
 
 
